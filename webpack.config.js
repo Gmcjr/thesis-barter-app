@@ -13,11 +13,24 @@ module.exports = {
   },
   mode: process.env.MODE,
   watch: process.env.MODE === 'development',
+  // cache: process.env.MODE === 'development' ? { type: 'filesystem' } : false,
+  resolve: {
+    extensions: ['.tsx', '.ts', '.jsx', '.js'],
+  },
   module: {
-    roles: [
+    rules: [
       {
-        test: /\.?jsx?$/,
-        use: 'babel-loader',
+        test: /\.(js|jsx|ts|tsx)$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: [
+              '@babel/preset-env',
+              '@babel/preset-react',
+            ],
+          },
+        },
       },
     ],
   },
