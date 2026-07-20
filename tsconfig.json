@@ -12,6 +12,7 @@
     "moduleResolution": "bundler",
     "esModuleInterop": true,
     "types": ["node", "pg"],
+    "allowJs": true,
     // "ignoreDeprecations": "6.0",
 
     // Recommended Options
@@ -23,4 +24,6 @@
     "moduleDetection": "force",
     "skipLibCheck": true
   },
+  "include": ["client/src/**/*", "server/**/*", "eslint.config.mjs"],
+  "exclude": ["node_modules", "dist"]
 }

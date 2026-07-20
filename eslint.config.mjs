@@ -1,6 +1,8 @@
 import { FlatCompat } from '@eslint/eslintrc';
 import { fileURLToPath } from 'url';
 import path from 'path';
+import tsParser from '@typescript-eslint/parser';
+import tsPlugin from '@typescript-eslint/eslint-plugin';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -10,7 +12,11 @@ const compat = new FlatCompat({
 });
 
 export default [
-  ...compat.extends('airbnb', 'airbnb/hooks'),
+  ...compat.extends(
+    'airbnb',
+    'airbnb/hooks',
+    'plugin:@typescript-eslint/recommended'
+  ),
   ...compat.env({
     browser: true,
     node: true,
@@ -20,7 +26,11 @@ export default [
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',
+      parser: tsParser,
     },
+    plugins: {
+      '@typescript-eslint': tsPlugin,
+    }
   },
   {
     rules: {
