@@ -40,6 +40,9 @@ export default [
       'no-underscore-dangle': ['error', { allow: ['__filename', '__dirname', '_id'] }],
       'consistent-return': 'warn',
       'import/no-extraneous-dependencies': 'off',
+      'react/jsx-filename-extension': [1, { extensions: ['.jsx', '.tsx'] }],
+      'import/no-unresolved': 'off',
+      'import/extensions': 'off',
     },
   },
 ];
