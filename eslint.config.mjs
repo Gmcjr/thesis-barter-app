@@ -12,6 +12,13 @@ const compat = new FlatCompat({
 });
 
 export default [
+  {
+    ignores: [
+      'client/dist/**',         
+      'server/db/generated/**',  
+      'node_modules/**',   
+    ],      
+  },
   ...compat.extends(
     'airbnb',
     'airbnb/hooks',
