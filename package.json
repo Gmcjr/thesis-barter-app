@@ -16,7 +16,7 @@
   "main": "index.js",
   "scripts": {
     "build": "webpack",
-    "prepare": "node .husky/install.mjs",
+    "prepare": "husky || true",
     "lint": "eslint . --fix",
     "typecheck": "tsc --noEmit"
   },
