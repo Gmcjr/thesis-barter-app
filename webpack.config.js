@@ -6,7 +6,7 @@ const client = path.resolve(__dirname, 'client');
 require('dotenv').config({ path: path.join('config', '.env') });
 
 module.exports = {
-  entry: path.join(client, 'src', 'index.jsx'),
+  entry: path.join(client, 'src', 'index.tsx'),
   output: {
     path: path.join(client, 'dist'),
     filename: 'bundle.js',
