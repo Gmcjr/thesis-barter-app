@@ -11,6 +11,7 @@
     "target": "es2025",
     "moduleResolution": "bundler",
     "esModuleInterop": true,
+    "types": ["node", "pg"],
     // "ignoreDeprecations": "6.0",
 
     // Recommended Options
@@ -21,5 +22,5 @@
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
     "skipLibCheck": true
-  }
+  },
 }
