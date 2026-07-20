@@ -1,7 +1,7 @@
 import * as express from 'express';
 import path from 'path';
 import dotenv from 'dotenv';
-import prisma from './db/index.ts';
+import { prisma } from './db/index.ts';
 
 dotenv.config({ path: './config/.env' });
 
@@ -11,14 +11,16 @@ const port = 3000;
 app.use(express.static(path.join('client', 'dist')));
 app.use(express.json());
 
-console.log(prisma.prisma);
+// console.log(prisma);
 
 app.post('/', async (req, res) => {
   try {
     const { email, name } = req.body;
-    const user = await prisma.prisma.user.create({
-      email,
-      name,
+    const user = await prisma.user.create({
+      data: {
+        email,
+        name,
+      },
     });
     res.status(200).json(user);
   } catch (err) {
