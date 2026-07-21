@@ -13,9 +13,9 @@
   "license": "ISC",
   "author": "Claire Happel, Garrin Costa Jr., Devin Delgado, Christian Fields",
   "type": "module",
-  "main": "index.ts",
   "scripts": {
-    "start": "tsx watch server/index.ts",
+    "dev:server": "tsx watch server/index.ts",
+    "start": "tsx server/index.ts",
     "build": "webpack",
     "prepare": "husky || true",
     "lint": "eslint . --fix",
@@ -37,7 +37,6 @@
     "passport": "^0.7.0",
     "pg": "^8.22.0",
     "react": "^19.2.7",
-    "react-cli": "^0.3.1",
     "react-dom": "^19.2.7",
     "socket.io": "^4.8.3"
   },
@@ -74,5 +73,11 @@
   },
   "overrides": {
     "inflight": "npm:inflight-lru@^1.0.0"
+  },
+  "allowScripts": {
+    "@prisma/engines@7.8.0": true,
+    "esbuild@0.28.1": true,
+    "fsevents@2.3.3": true,
+    "prisma@7.8.0": true
   }
 }

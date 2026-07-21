@@ -1,40 +1,15 @@
-import * as express from 'express';
+import express from 'express';
 import path from 'path';
 import dotenv from 'dotenv';
-import { prisma } from './db/index.ts';
+import router from './routes/router.js';
 
-dotenv.config({ path: './config/.env' });
+dotenv.config({ path: path.join('config', '.env') });
 
-const app = express.default();
-const port = 3000;
+const app = express();
+const port = process.env.PORT || 3000;
 
-app.use(express.static(path.join('client', 'dist')));
 app.use(express.json());
+app.use(express.static(path.join(process.cwd(), 'client', 'dist')));
+app.use('/api', router);
 
-app.get('/ping', (req, res) => {
-  res.send('pong');
-});
-
-app.post('/', async (req, res) => {
-  try {
-    const { email, name } = req.body;
-    const user = await prisma.user.create({
-      data: {
-        email,
-        name,
-      },
-    });
-    res.status(200).json(user);
-  } catch (err) {
-    console.error(err);
-    res.sendStatus(500);
-  }
-});
-
-app.listen(port, () => {
-  console.info(`
-    App listening on:
-    - http://localhost:3000
-    - http://127.0.0.1:3000
-    `);
-});
+app.listen(port, () => console.info(`Listening on http://localhost:${port}`));

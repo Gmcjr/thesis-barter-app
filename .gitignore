@@ -1,5 +1,23 @@
-dist
-node_modules
-package-lock.json
+# Build Output
+dist/
+
+# Node.js Dependencies
+node_modules/
+
+# Environment Secrets
 .env
-/../../../..
+
+# Prisma-Generated Code
+server/db/generated/
+
+# Log Files
+*.log
+
+# Editor Configuration
+.vscode/
+
+# macOS System File
+.DS_Store
+
+# Feature Trials
+my-agent/

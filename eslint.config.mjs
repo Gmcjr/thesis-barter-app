@@ -43,13 +43,19 @@ export default [
     rules: {
       'linebreak-style': 'off',
       'react/function-component-definition': 'off',
+      'react/jsx-filename-extension': [1, { extensions: ['.jsx', '.tsx'] }],
       'no-console': ['error', { allow: ['info', 'warn', 'error'] }],
-      'no-underscore-dangle': ['error', { allow: ['__filename', '__dirname', '_id'] }],
+      'no-underscore-dangle': [
+        'error',
+        { allow: ['__filename', '__dirname', '_id'] },
+      ],
       'consistent-return': 'warn',
       'import/no-extraneous-dependencies': 'off',
-      'react/jsx-filename-extension': [1, { extensions: ['.jsx', '.tsx'] }],
       'import/no-unresolved': 'off',
       'import/extensions': 'off',
+      'import/prefer-default-export': 'off',
+      quotes: ['error', 'single', { avoidEscape: true }],
+      'jsx-quotes': ['error', 'prefer-double'],
     },
   },
 ];
