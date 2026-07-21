@@ -24,11 +24,33 @@ model User {
 enum Role {
   USER
   MODERATOR
-} 
+}
+
+
+model DM {
+  id   Int   @id @default(autoincrement())
+  user User  @relation(fields: [userId], references: [id])
+
+
+}
+
+model Message {
+  id   Int  @id @default(autoincrement())
+  user User @relation(fields: [userId], references: [id])
+
+}
+
+model Log {
+  id   Int  @id @default(autoincrement())
+  user User    @relation(fields: [userId], references: [id])
+
+}
 
 model Post {
-  id Int  @id @default(autoincrement())
-  
+  id   Int  @id @default(autoincrement())
+  user User    @relation(fields: [userId], references: [id])
+  message String
+  isComplete Boolean @default(false)
 }
 
 model Product {
@@ -49,10 +71,10 @@ enum Cond {
 }
 
 model Service {
-  id   Int    @id @default(autoincrement())
-  post Post   @relation(fields: [postId], references: [id])
-  user User   @relation(fields: [userId], references: [id])
-  cat  Cat    @relation(fields: [userId], references: [id])
+  id          Int    @id @default(autoincrement())
+  post        Post   @relation(fields: [postId], references: [id])
+  user        User   @relation(fields: [userId], references: [id])
+  cat         Cat    @relation(fields: [userId], references: [id])
   name        String
   description String
 }
@@ -67,3 +89,4 @@ enum CatType {
   SERVICE
   PRODUCT
 }
+
