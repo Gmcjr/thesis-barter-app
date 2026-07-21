@@ -1,16 +1,15 @@
-const express = require('express');
-const path = require('path');
+import express from 'express';
+import path from 'path';
+import dotenv from 'dotenv';
+import router from './routes/router.js';
+
+dotenv.config({ path: path.join('config', '.env') });
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
-app.use(express.static(path.join('client', 'dist')));
 app.use(express.json());
+app.use(express.static(path.join(process.cwd(), 'client', 'dist')));
+app.use('/api', router);
 
-app.listen(port, () => {
-  console.info(`
-    App listening on:
-    - http://localhost:3000
-    - http://127.0.0.1:3000
-    `);
-});
+app.listen(port, () => console.info(`Listening on http://localhost:${port}`));
