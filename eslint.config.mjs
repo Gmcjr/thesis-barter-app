@@ -14,15 +14,15 @@ const compat = new FlatCompat({
 export default [
   {
     ignores: [
-      'client/dist/**',         
-      'server/db/generated/**',  
-      'node_modules/**',   
-    ],      
+      'client/dist/**',
+      'server/db/generated/**',
+      'node_modules/**',
+    ],
   },
   ...compat.extends(
     'airbnb',
     'airbnb/hooks',
-    'plugin:@typescript-eslint/recommended'
+    'plugin:@typescript-eslint/recommended',
   ),
   ...compat.env({
     browser: true,
