@@ -13,6 +13,10 @@ app.use(express.json());
 
 // console.log(prisma);
 
+app.get('/ping', (req, res) => {
+  res.send('pong');
+});
+
 app.post('/', async (req, res) => {
   try {
     const { email, name } = req.body;
