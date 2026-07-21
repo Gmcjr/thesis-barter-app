@@ -13,16 +13,12 @@ const compat = new FlatCompat({
 
 export default [
   {
-    ignores: [
-      'client/dist/**',         
-      'server/db/generated/**',  
-      'node_modules/**',   
-    ],      
+    ignores: ['client/dist/**', 'server/db/generated/**', 'node_modules/**'],
   },
   ...compat.extends(
     'airbnb',
     'airbnb/hooks',
-    'plugin:@typescript-eslint/recommended'
+    'plugin:@typescript-eslint/recommended',
   ),
   ...compat.env({
     browser: true,
@@ -37,19 +33,31 @@ export default [
     },
     plugins: {
       '@typescript-eslint': tsPlugin,
-    }
+    },
   },
   {
     rules: {
       'linebreak-style': 'off',
       'react/function-component-definition': 'off',
+      'react/jsx-filename-extension': [1, { extensions: ['.jsx', '.tsx'] }],
       'no-console': ['error', { allow: ['info', 'warn', 'error'] }],
-      'no-underscore-dangle': ['error', { allow: ['__filename', '__dirname', '_id'] }],
+      'no-underscore-dangle': [
+        'error',
+        { allow: ['__filename', '__dirname', '_id'] },
+      ],
       'consistent-return': 'warn',
       'import/no-extraneous-dependencies': 'off',
-      'react/jsx-filename-extension': [1, { extensions: ['.jsx', '.tsx'] }],
       'import/no-unresolved': 'off',
       'import/extensions': 'off',
+      'import/prefer-default-export': 'off',
+      quotes: ['error', 'single', { avoidEscape: true }],
+      'jsx-quotes': ['error', 'prefer-double'],
+    },
+  },
+  {
+    files: ['**/*.cjs'],
+    rules: {
+      '@typescript-eslint/no-require-imports': 'off',
     },
   },
 ];
