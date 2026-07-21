@@ -13,17 +13,21 @@ datasource db {
 }
 
 model User {
-  id       Int       @id @default(autoincrement())
-  name     String?
-  email    String    @unique
-  phone    String?
-  posts    Post[]
-  role     Role?
-  dms      DM[]
-  messages Message[]
-  logs     Log[]
-  products Product[]
-  services Service[]
+  id           Int        @id @default(autoincrement())
+
+  posts        Post[]
+  logs         Log[]
+  products     Product[]
+  services     Service[]
+  initiatedDMs DM[]        @relation("initiatedDMs")
+  recievedDMs  DM[]        @relation("recievedDMs")
+  sMessages    Message[]   @relation("sMessages")
+  rMessages    Message[]   @relation("rMessages")
+
+  name         String?
+  email        String      @unique
+  phone        String?
+  role         Role?
 }
 
 enum Role {
@@ -33,15 +37,25 @@ enum Role {
 }
 
 model DM {
-  id     Int  @id @default(autoincrement())
-  user   User @relation(fields: [userId], references: [id])
-  userId Int
+  id       Int    @id @default(autoincrement())
+  user1    User   @relation("initiatedDMs", fields: [user1Id], references: [id])
+  user1Id  Int
+  user2    User   @relation("recievedDMs",fields: [user2Id], references: [id])
+  user2Id  Int
+
+  messages Message[]
 }
 
 model Message {
-  id     Int  @id @default(autoincrement())
-  user   User @relation(fields: [userId], references: [id])
-  userId Int
+  id         Int    @id @default(autoincrement())
+  dm         DM     @relation(fields: [dmId], references: [id])
+  dmId       Int
+  sender     User   @relation("sMessages", fields: [senderId], references: [id])
+  senderId   Int
+  reciever   User   @relation("rMessages", fields: [recieverId], references: [id])
+  recieverId Int
+
+  text     String
 }
 
 model Log {
@@ -54,10 +68,12 @@ model Post {
   id         Int       @id @default(autoincrement())
   user       User      @relation(fields: [userId], references: [id])
   userId     Int
-  message    String
-  isComplete Boolean   @default(false)
+
   products   Product[]
   services   Service[]
+
+  message    String
+  isComplete Boolean   @default(false)
 }
 
 model Product {
@@ -68,6 +84,7 @@ model Product {
   userId      Int
   cat         Cat     @relation(fields: [catId], references: [id])
   catId       Int
+  
   name        String
   description String
   condition   Cond
@@ -88,16 +105,19 @@ model Service {
   userId      Int
   cat         Cat    @relation(fields: [catId], references: [id])
   catId       Int
+
   name        String
   description String
 }
 
 model Cat {
   id       Int       @id @default(autoincrement())
-  name     String    @unique
-  type     CatType
+  
   products Product[]
   services Service[]
+
+  type     CatType
+  name     String    @unique
 }
 
 enum CatType {
