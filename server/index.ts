@@ -11,8 +11,6 @@ const port = 3000;
 app.use(express.static(path.join('client', 'dist')));
 app.use(express.json());
 
-// console.log(prisma);
-
 app.get('/ping', (req, res) => {
   res.send('pong');
 });

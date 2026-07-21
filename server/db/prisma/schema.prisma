@@ -13,8 +13,57 @@ datasource db {
 }
 
 model User {
-    id    Int     @id @default(autoincrement()) 
-    name  String?
-    email String?
-    phone 
+  id    Int       @id @default(autoincrement()) 
+  name  String?
+  email String    @unique
+  phone String?
+  posts Post[]?
+  role  Role?
+}
+
+enum Role {
+  USER
+  MODERATOR
+} 
+
+model Post {
+  id Int  @id @default(autoincrement())
+  
+}
+
+model Product {
+  id          Int     @id @default(autoincrement())
+  post        Post    @relation(fields: [postId], references: [id])
+  user        User    @relation(fields: [userId], references: [id])
+  cat         Cat     @relation(fields: [userId], references: [id])
+  name        String
+  description String
+  condition   Cond
+  location    String?
+}
+
+enum Cond {
+  POOR
+  FAIR
+  NEW
+}
+
+model Service {
+  id   Int    @id @default(autoincrement())
+  post Post   @relation(fields: [postId], references: [id])
+  user User   @relation(fields: [userId], references: [id])
+  cat  Cat    @relation(fields: [userId], references: [id])
+  name        String
+  description String
+}
+
+model Cat {
+  id   Int      @id @default(autoincrement())
+  name String   @unique
+  type CatType  
+}
+
+enum CatType {
+  SERVICE
+  PRODUCT
 }

@@ -19,7 +19,8 @@
     "build": "webpack",
     "prepare": "husky || true",
     "lint": "eslint . --fix",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "migrate": "npx prisma migrate dev"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": "eslint --fix"
