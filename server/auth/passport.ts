@@ -1,0 +1,60 @@
+import dotenv from 'dotenv';
+import passport from 'passport';
+import { Strategy as GoogleStrategy, type Profile } from 'passport-google-oauth20';
+import { prisma } from '../db/index.js';
+
+dotenv.config({ path: './config/.env' });
+
+async function findOrCreateGoogleUser(profile: Profile) {
+  const email = profile.emails?.[0]?.value;
+  if (!email) {
+    throw new Error('Google account has no email');
+  }
+
+  const existing = await prisma.user.findFirst({
+    where: { OR: [{ googleId: profile.id }, { email }] },
+  });
+
+  if (existing) {
+    if (existing.googleId === profile.id) return existing;
+
+    return prisma.user.update({
+      where: { id: existing.id },
+      data: { googleId: profile.id, name: existing.name ?? profile.displayName },
+    });
+  }
+
+  return prisma.user.create({
+    data: { googleId: profile.id, email, name: profile.displayName },
+  });
+}
+
+passport.use(
+  new GoogleStrategy(
+    {
+      clientID: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      callbackURL: process.env.GOOGLE_REDIRECT_URI!,
+    },
+    (accessToken, refreshToken, profile, done) => {
+      findOrCreateGoogleUser(profile)
+        .then((user) => done(null, user))
+        .catch((err: Error) => done(err));
+    },
+  ),
+);
+
+passport.serializeUser((user, done) => {
+  done(null, user.id);
+});
+
+passport.deserializeUser(async (id: number, done) => {
+  try {
+    const user = await prisma.user.findUnique({ where: { id } });
+    done(null, user ?? false);
+  } catch (err) {
+    done(err as Error);
+  }
+});
+
+export default passport;
