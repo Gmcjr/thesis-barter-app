@@ -14,6 +14,7 @@
   "author": "Claire Happel, Garrin Costa Jr., Devin Delgado, Christian Fields",
   "type": "module",
   "scripts": {
+    "postinstall": "prisma generate",
     "dev:server": "tsx watch server/index.ts",
     "start": "tsx server/index.ts",
     "build": "webpack",
