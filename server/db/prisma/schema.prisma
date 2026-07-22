@@ -14,6 +14,7 @@ datasource db {
 
 model User {
   id           Int        @id @default(autoincrement())
+  googleId     String?    @unique
 
   posts        Post[]
   logs         Log[]
@@ -37,10 +38,10 @@ enum Role {
 }
 
 model DM {
-  id       Int    @id @default(autoincrement())
-  user1    User   @relation("initiatedDMs", fields: [user1Id], references: [id])
+  id       Int        @id @default(autoincrement())
+  user1    User       @relation("initiatedDMs", fields: [user1Id], references: [id])
   user1Id  Int
-  user2    User   @relation("recievedDMs",fields: [user2Id], references: [id])
+  user2    User       @relation("recievedDMs",fields: [user2Id], references: [id])
   user2Id  Int
 
   messages Message[]

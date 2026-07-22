@@ -73,7 +73,7 @@ function NavBar() {
               C
             </Avatar>
             <Typography variant="subtitle2" sx={{ fontWeight: 600, fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>
-              Claire
+              <a href="http://localhost:3000/oauth2/redirect/google">Google</a>
             </Typography>
           </Box>
         </Box>

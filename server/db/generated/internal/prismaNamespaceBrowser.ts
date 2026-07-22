@@ -51,7 +51,14 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
-  User: 'User'
+  User: 'User',
+  DM: 'DM',
+  Message: 'Message',
+  Log: 'Log',
+  Post: 'Post',
+  Product: 'Product',
+  Service: 'Service',
+  Cat: 'Cat'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -72,11 +79,87 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 
 export const UserScalarFieldEnum = {
   id: 'id',
+  googleId: 'googleId',
   name: 'name',
-  email: 'email'
+  email: 'email',
+  phone: 'phone',
+  role: 'role'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const DMScalarFieldEnum = {
+  id: 'id',
+  user1Id: 'user1Id',
+  user2Id: 'user2Id'
+} as const
+
+export type DMScalarFieldEnum = (typeof DMScalarFieldEnum)[keyof typeof DMScalarFieldEnum]
+
+
+export const MessageScalarFieldEnum = {
+  id: 'id',
+  dmId: 'dmId',
+  senderId: 'senderId',
+  recieverId: 'recieverId',
+  text: 'text'
+} as const
+
+export type MessageScalarFieldEnum = (typeof MessageScalarFieldEnum)[keyof typeof MessageScalarFieldEnum]
+
+
+export const LogScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId'
+} as const
+
+export type LogScalarFieldEnum = (typeof LogScalarFieldEnum)[keyof typeof LogScalarFieldEnum]
+
+
+export const PostScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  message: 'message',
+  isComplete: 'isComplete'
+} as const
+
+export type PostScalarFieldEnum = (typeof PostScalarFieldEnum)[keyof typeof PostScalarFieldEnum]
+
+
+export const ProductScalarFieldEnum = {
+  id: 'id',
+  postId: 'postId',
+  userId: 'userId',
+  catId: 'catId',
+  name: 'name',
+  description: 'description',
+  condition: 'condition',
+  location: 'location'
+} as const
+
+export type ProductScalarFieldEnum = (typeof ProductScalarFieldEnum)[keyof typeof ProductScalarFieldEnum]
+
+
+export const ServiceScalarFieldEnum = {
+  id: 'id',
+  postId: 'postId',
+  userId: 'userId',
+  catId: 'catId',
+  name: 'name',
+  description: 'description'
+} as const
+
+export type ServiceScalarFieldEnum = (typeof ServiceScalarFieldEnum)[keyof typeof ServiceScalarFieldEnum]
+
+
+export const CatScalarFieldEnum = {
+  id: 'id',
+  type: 'type',
+  name: 'name'
+} as const
+
+export type CatScalarFieldEnum = (typeof CatScalarFieldEnum)[keyof typeof CatScalarFieldEnum]
 
 
 export const SortOrder = {

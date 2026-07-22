@@ -9,4 +9,11 @@
  * 🟢 You can import this file directly.
  */
 export type * from './models/User.ts'
+export type * from './models/DM.ts'
+export type * from './models/Message.ts'
+export type * from './models/Log.ts'
+export type * from './models/Post.ts'
+export type * from './models/Product.ts'
+export type * from './models/Service.ts'
+export type * from './models/Cat.ts'
 export type * from './commonInputTypes.ts'
