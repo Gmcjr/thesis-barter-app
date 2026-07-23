@@ -132,7 +132,7 @@ function NavBar() {
               <Button size="small" onClick={logout}>Log out</Button>
             </Box>
           ) : (
-            <Button variant="contained" color="primary" size="small" href="/oauth2/google">
+            <Button variant="contained" color="primary" size="small" href="/oauth2/login">
               Sign in with Google
             </Button>
           ))}

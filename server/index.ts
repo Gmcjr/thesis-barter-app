@@ -1,10 +1,10 @@
 import express from 'express';
 import path from 'path';
 import dotenv from 'dotenv';
+import passport from 'passport';
 import session from 'express-session';
 import router from './routes/router.js';
-import passport from './auth/passport.js';
-import oauth2Router from './routes/oauth2.js';
+import authRouter from './routes/auth.js';
 
 dotenv.config({ path: path.join('config', '.env') });
 
@@ -24,7 +24,7 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use('/oauth2', oauth2Router);
+app.use('/oauth2', authRouter);
 app.use(express.static(path.join(process.cwd(), 'client', 'dist')));
 app.use('/api', router);
 

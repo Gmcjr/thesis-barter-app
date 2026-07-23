@@ -1,4 +1,4 @@
-import type { UserModel as PrismaUser } from './db/generated/models/User.js';
+import type { UserModel as PrismaUser } from '../db/generated/models/User';
 
 declare global {
   namespace Express {
@@ -6,5 +6,3 @@ declare global {
     interface User extends PrismaUser {}
   }
 }
-
-export {};
