@@ -16,11 +16,6 @@ app.use(session({
   secret: process.env.SESSION_SECRET!,
   resave: false,
   saveUninitialized: false,
-  cookie: {
-    httpOnly: true,
-    secure: process.env.MODE === 'production',
-    maxAge: 1000 * 60 * 60 * 24 * 7,
-  },
 }));
 
 app.use(passport.initialize());
@@ -31,7 +26,7 @@ app.use(express.static(path.join(process.cwd(), 'client', 'dist')));
 app.use('/oauth2', router.auth);
 app.use('/health', router.health);
 
-app.get('*', (req, res) => {
+app.get(/.*/, (req, res) => {
   res.sendFile(path.join(process.cwd(), 'client', 'dist', 'index.html'));
 });
 
