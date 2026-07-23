@@ -56,6 +56,7 @@ export default [
       'import/prefer-default-export': 'off',
       quotes: ['error', 'single', { avoidEscape: true }],
       'jsx-quotes': ['error', 'prefer-double'],
+      "react/recquire-default-props": "off"
     },
   },
 ];

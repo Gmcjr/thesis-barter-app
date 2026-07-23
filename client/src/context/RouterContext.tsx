@@ -1,5 +1,5 @@
 import React, {
-  createContext, useContext, useState, type ReactNode,
+  createContext, useContext, useState, type ComponentType, type ReactNode,
 } from 'react';
 
 interface RouterContextValue {
@@ -28,4 +28,53 @@ export function useRouter() {
   const ctx = useContext(RouterContext);
   if (!ctx) throw new Error('Outside of router context');
   return ctx;
+}
+
+interface LinkProps {
+  to: string;
+  children: ReactNode;
+  className?: string;
+  onClick?: () => void;
+}
+
+export function Link({
+  to, children, className, onClick,
+}: LinkProps) {
+  const { navigate } = useRouter();
+  return (
+    <a
+      href={to}
+      className={className}
+      onClick={(e) => {
+        e.preventDefault();
+        onClick?.();
+        navigate(to);
+      }}
+    >
+      {children}
+    </a>
+  );
+};
+
+export interface RouteDef {
+  path: string;
+  component: ComponentType;
+  requiresAuth?: boolean;
+}
+
+function matchPath(pattern: string, path: string): boolean {
+  const regex = `^${pattern.replace(/:[a-zA-Z]+/g, '([^/]+)').replace(/\/$/, '')}/$`;
+  return new RegExp(regex).test(path);
+}
+
+export function Router({ routes, notFound: NotFound }: {
+  routes: RouteDef[];
+  notFound: ComponentType;
+}) {
+  const { path } = useRouter();
+  const match = routes.find((r) => matchPath(r.path, path));
+
+  if (!match) return <NotFound />;
+  const Component = match.component;
+  return <Component />;
 }
