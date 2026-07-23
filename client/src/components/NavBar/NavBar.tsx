@@ -1,7 +1,12 @@
 import React from 'react';
-import {
-  AppBar, Toolbar, Typography, Button, InputBase, Box, Paper, Avatar,
-} from '@mui/material';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import InputBase from '@mui/material/InputBase';
+import Box from '@mui/material/Box';
+import Paper from '@mui/material/Paper';
+import Avatar from '@mui/material/Avatar';
 
 function NavBar() {
   return (
@@ -58,7 +63,7 @@ function NavBar() {
           <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 0.5, sm: 1 } }}>
             <Button variant="text" color="inherit" size="small" sx={{ minWidth: 'auto', px: { xs: 0.5, sm: 1 }, fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>Home</Button>
             <Button variant="text" color="inherit" size="small" sx={{ minWidth: 'auto', px: { xs: 0.5, sm: 1 }, fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>Messages</Button>
-            <Button variant="text" color="inherit" size="small" sx={{ minWidth: 'auto', px: { xs: 0.5, sm: 1 }, fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>Profile</Button>
+            <Button variant="text" color="inherit" size="small" sx={{ minWidth: 'auto', px: { xs: 0.5, sm: 1 }, fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>Settings</Button>
           </Box>
 
           {/* User Profile Section- using placeholders presently, will need to update later */}
