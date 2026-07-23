@@ -81,3 +81,8 @@ export type Service = Prisma.ServiceModel
  * 
  */
 export type Cat = Prisma.CatModel
+/**
+ * Model Rep
+ * 
+ */
+export type Rep = Prisma.RepModel

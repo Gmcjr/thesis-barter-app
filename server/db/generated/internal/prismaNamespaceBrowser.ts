@@ -58,7 +58,8 @@ export const ModelName = {
   Post: 'Post',
   Product: 'Product',
   Service: 'Service',
-  Cat: 'Cat'
+  Cat: 'Cat',
+  Rep: 'Rep'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -160,6 +161,14 @@ export const CatScalarFieldEnum = {
 } as const
 
 export type CatScalarFieldEnum = (typeof CatScalarFieldEnum)[keyof typeof CatScalarFieldEnum]
+
+
+export const RepScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId'
+} as const
+
+export type RepScalarFieldEnum = (typeof RepScalarFieldEnum)[keyof typeof RepScalarFieldEnum]
 
 
 export const SortOrder = {

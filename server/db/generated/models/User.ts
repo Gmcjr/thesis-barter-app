@@ -232,6 +232,7 @@ export type UserWhereInput = {
   recievedDMs?: Prisma.DMListRelationFilter
   sMessages?: Prisma.MessageListRelationFilter
   rMessages?: Prisma.MessageListRelationFilter
+  rep?: Prisma.RepListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -249,6 +250,7 @@ export type UserOrderByWithRelationInput = {
   recievedDMs?: Prisma.DMOrderByRelationAggregateInput
   sMessages?: Prisma.MessageOrderByRelationAggregateInput
   rMessages?: Prisma.MessageOrderByRelationAggregateInput
+  rep?: Prisma.RepOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -269,6 +271,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   recievedDMs?: Prisma.DMListRelationFilter
   sMessages?: Prisma.MessageListRelationFilter
   rMessages?: Prisma.MessageListRelationFilter
+  rep?: Prisma.RepListRelationFilter
 }, "id" | "googleId" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -311,6 +314,7 @@ export type UserCreateInput = {
   recievedDMs?: Prisma.DMCreateNestedManyWithoutUser2Input
   sMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   rMessages?: Prisma.MessageCreateNestedManyWithoutRecieverInput
+  rep?: Prisma.RepCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -328,6 +332,7 @@ export type UserUncheckedCreateInput = {
   recievedDMs?: Prisma.DMUncheckedCreateNestedManyWithoutUser2Input
   sMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   rMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutRecieverInput
+  rep?: Prisma.RepUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -344,6 +349,7 @@ export type UserUpdateInput = {
   recievedDMs?: Prisma.DMUpdateManyWithoutUser2NestedInput
   sMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   rMessages?: Prisma.MessageUpdateManyWithoutRecieverNestedInput
+  rep?: Prisma.RepUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -361,6 +367,7 @@ export type UserUncheckedUpdateInput = {
   recievedDMs?: Prisma.DMUncheckedUpdateManyWithoutUser2NestedInput
   sMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   rMessages?: Prisma.MessageUncheckedUpdateManyWithoutRecieverNestedInput
+  rep?: Prisma.RepUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -561,6 +568,20 @@ export type UserUpdateOneRequiredWithoutServicesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutServicesInput, Prisma.UserUpdateWithoutServicesInput>, Prisma.UserUncheckedUpdateWithoutServicesInput>
 }
 
+export type UserCreateNestedOneWithoutRepInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutRepInput, Prisma.UserUncheckedCreateWithoutRepInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutRepInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutRepNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutRepInput, Prisma.UserUncheckedCreateWithoutRepInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutRepInput
+  upsert?: Prisma.UserUpsertWithoutRepInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutRepInput, Prisma.UserUpdateWithoutRepInput>, Prisma.UserUncheckedUpdateWithoutRepInput>
+}
+
 export type UserCreateWithoutInitiatedDMsInput = {
   googleId?: string | null
   name?: string | null
@@ -574,6 +595,7 @@ export type UserCreateWithoutInitiatedDMsInput = {
   recievedDMs?: Prisma.DMCreateNestedManyWithoutUser2Input
   sMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   rMessages?: Prisma.MessageCreateNestedManyWithoutRecieverInput
+  rep?: Prisma.RepCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutInitiatedDMsInput = {
@@ -590,6 +612,7 @@ export type UserUncheckedCreateWithoutInitiatedDMsInput = {
   recievedDMs?: Prisma.DMUncheckedCreateNestedManyWithoutUser2Input
   sMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   rMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutRecieverInput
+  rep?: Prisma.RepUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutInitiatedDMsInput = {
@@ -610,6 +633,7 @@ export type UserCreateWithoutRecievedDMsInput = {
   initiatedDMs?: Prisma.DMCreateNestedManyWithoutUser1Input
   sMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   rMessages?: Prisma.MessageCreateNestedManyWithoutRecieverInput
+  rep?: Prisma.RepCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutRecievedDMsInput = {
@@ -626,6 +650,7 @@ export type UserUncheckedCreateWithoutRecievedDMsInput = {
   initiatedDMs?: Prisma.DMUncheckedCreateNestedManyWithoutUser1Input
   sMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   rMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutRecieverInput
+  rep?: Prisma.RepUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutRecievedDMsInput = {
@@ -657,6 +682,7 @@ export type UserUpdateWithoutInitiatedDMsInput = {
   recievedDMs?: Prisma.DMUpdateManyWithoutUser2NestedInput
   sMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   rMessages?: Prisma.MessageUpdateManyWithoutRecieverNestedInput
+  rep?: Prisma.RepUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutInitiatedDMsInput = {
@@ -673,6 +699,7 @@ export type UserUncheckedUpdateWithoutInitiatedDMsInput = {
   recievedDMs?: Prisma.DMUncheckedUpdateManyWithoutUser2NestedInput
   sMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   rMessages?: Prisma.MessageUncheckedUpdateManyWithoutRecieverNestedInput
+  rep?: Prisma.RepUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutRecievedDMsInput = {
@@ -699,6 +726,7 @@ export type UserUpdateWithoutRecievedDMsInput = {
   initiatedDMs?: Prisma.DMUpdateManyWithoutUser1NestedInput
   sMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   rMessages?: Prisma.MessageUpdateManyWithoutRecieverNestedInput
+  rep?: Prisma.RepUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutRecievedDMsInput = {
@@ -715,6 +743,7 @@ export type UserUncheckedUpdateWithoutRecievedDMsInput = {
   initiatedDMs?: Prisma.DMUncheckedUpdateManyWithoutUser1NestedInput
   sMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   rMessages?: Prisma.MessageUncheckedUpdateManyWithoutRecieverNestedInput
+  rep?: Prisma.RepUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSMessagesInput = {
@@ -730,6 +759,7 @@ export type UserCreateWithoutSMessagesInput = {
   initiatedDMs?: Prisma.DMCreateNestedManyWithoutUser1Input
   recievedDMs?: Prisma.DMCreateNestedManyWithoutUser2Input
   rMessages?: Prisma.MessageCreateNestedManyWithoutRecieverInput
+  rep?: Prisma.RepCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSMessagesInput = {
@@ -746,6 +776,7 @@ export type UserUncheckedCreateWithoutSMessagesInput = {
   initiatedDMs?: Prisma.DMUncheckedCreateNestedManyWithoutUser1Input
   recievedDMs?: Prisma.DMUncheckedCreateNestedManyWithoutUser2Input
   rMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutRecieverInput
+  rep?: Prisma.RepUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSMessagesInput = {
@@ -766,6 +797,7 @@ export type UserCreateWithoutRMessagesInput = {
   initiatedDMs?: Prisma.DMCreateNestedManyWithoutUser1Input
   recievedDMs?: Prisma.DMCreateNestedManyWithoutUser2Input
   sMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  rep?: Prisma.RepCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutRMessagesInput = {
@@ -782,6 +814,7 @@ export type UserUncheckedCreateWithoutRMessagesInput = {
   initiatedDMs?: Prisma.DMUncheckedCreateNestedManyWithoutUser1Input
   recievedDMs?: Prisma.DMUncheckedCreateNestedManyWithoutUser2Input
   sMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  rep?: Prisma.RepUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutRMessagesInput = {
@@ -813,6 +846,7 @@ export type UserUpdateWithoutSMessagesInput = {
   initiatedDMs?: Prisma.DMUpdateManyWithoutUser1NestedInput
   recievedDMs?: Prisma.DMUpdateManyWithoutUser2NestedInput
   rMessages?: Prisma.MessageUpdateManyWithoutRecieverNestedInput
+  rep?: Prisma.RepUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSMessagesInput = {
@@ -829,6 +863,7 @@ export type UserUncheckedUpdateWithoutSMessagesInput = {
   initiatedDMs?: Prisma.DMUncheckedUpdateManyWithoutUser1NestedInput
   recievedDMs?: Prisma.DMUncheckedUpdateManyWithoutUser2NestedInput
   rMessages?: Prisma.MessageUncheckedUpdateManyWithoutRecieverNestedInput
+  rep?: Prisma.RepUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutRMessagesInput = {
@@ -855,6 +890,7 @@ export type UserUpdateWithoutRMessagesInput = {
   initiatedDMs?: Prisma.DMUpdateManyWithoutUser1NestedInput
   recievedDMs?: Prisma.DMUpdateManyWithoutUser2NestedInput
   sMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  rep?: Prisma.RepUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutRMessagesInput = {
@@ -871,6 +907,7 @@ export type UserUncheckedUpdateWithoutRMessagesInput = {
   initiatedDMs?: Prisma.DMUncheckedUpdateManyWithoutUser1NestedInput
   recievedDMs?: Prisma.DMUncheckedUpdateManyWithoutUser2NestedInput
   sMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  rep?: Prisma.RepUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutLogsInput = {
@@ -886,6 +923,7 @@ export type UserCreateWithoutLogsInput = {
   recievedDMs?: Prisma.DMCreateNestedManyWithoutUser2Input
   sMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   rMessages?: Prisma.MessageCreateNestedManyWithoutRecieverInput
+  rep?: Prisma.RepCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutLogsInput = {
@@ -902,6 +940,7 @@ export type UserUncheckedCreateWithoutLogsInput = {
   recievedDMs?: Prisma.DMUncheckedCreateNestedManyWithoutUser2Input
   sMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   rMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutRecieverInput
+  rep?: Prisma.RepUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutLogsInput = {
@@ -933,6 +972,7 @@ export type UserUpdateWithoutLogsInput = {
   recievedDMs?: Prisma.DMUpdateManyWithoutUser2NestedInput
   sMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   rMessages?: Prisma.MessageUpdateManyWithoutRecieverNestedInput
+  rep?: Prisma.RepUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutLogsInput = {
@@ -949,6 +989,7 @@ export type UserUncheckedUpdateWithoutLogsInput = {
   recievedDMs?: Prisma.DMUncheckedUpdateManyWithoutUser2NestedInput
   sMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   rMessages?: Prisma.MessageUncheckedUpdateManyWithoutRecieverNestedInput
+  rep?: Prisma.RepUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPostsInput = {
@@ -964,6 +1005,7 @@ export type UserCreateWithoutPostsInput = {
   recievedDMs?: Prisma.DMCreateNestedManyWithoutUser2Input
   sMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   rMessages?: Prisma.MessageCreateNestedManyWithoutRecieverInput
+  rep?: Prisma.RepCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPostsInput = {
@@ -980,6 +1022,7 @@ export type UserUncheckedCreateWithoutPostsInput = {
   recievedDMs?: Prisma.DMUncheckedCreateNestedManyWithoutUser2Input
   sMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   rMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutRecieverInput
+  rep?: Prisma.RepUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPostsInput = {
@@ -1011,6 +1054,7 @@ export type UserUpdateWithoutPostsInput = {
   recievedDMs?: Prisma.DMUpdateManyWithoutUser2NestedInput
   sMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   rMessages?: Prisma.MessageUpdateManyWithoutRecieverNestedInput
+  rep?: Prisma.RepUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPostsInput = {
@@ -1027,6 +1071,7 @@ export type UserUncheckedUpdateWithoutPostsInput = {
   recievedDMs?: Prisma.DMUncheckedUpdateManyWithoutUser2NestedInput
   sMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   rMessages?: Prisma.MessageUncheckedUpdateManyWithoutRecieverNestedInput
+  rep?: Prisma.RepUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutProductsInput = {
@@ -1042,6 +1087,7 @@ export type UserCreateWithoutProductsInput = {
   recievedDMs?: Prisma.DMCreateNestedManyWithoutUser2Input
   sMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   rMessages?: Prisma.MessageCreateNestedManyWithoutRecieverInput
+  rep?: Prisma.RepCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutProductsInput = {
@@ -1058,6 +1104,7 @@ export type UserUncheckedCreateWithoutProductsInput = {
   recievedDMs?: Prisma.DMUncheckedCreateNestedManyWithoutUser2Input
   sMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   rMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutRecieverInput
+  rep?: Prisma.RepUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutProductsInput = {
@@ -1089,6 +1136,7 @@ export type UserUpdateWithoutProductsInput = {
   recievedDMs?: Prisma.DMUpdateManyWithoutUser2NestedInput
   sMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   rMessages?: Prisma.MessageUpdateManyWithoutRecieverNestedInput
+  rep?: Prisma.RepUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutProductsInput = {
@@ -1105,6 +1153,7 @@ export type UserUncheckedUpdateWithoutProductsInput = {
   recievedDMs?: Prisma.DMUncheckedUpdateManyWithoutUser2NestedInput
   sMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   rMessages?: Prisma.MessageUncheckedUpdateManyWithoutRecieverNestedInput
+  rep?: Prisma.RepUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutServicesInput = {
@@ -1120,6 +1169,7 @@ export type UserCreateWithoutServicesInput = {
   recievedDMs?: Prisma.DMCreateNestedManyWithoutUser2Input
   sMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   rMessages?: Prisma.MessageCreateNestedManyWithoutRecieverInput
+  rep?: Prisma.RepCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutServicesInput = {
@@ -1136,6 +1186,7 @@ export type UserUncheckedCreateWithoutServicesInput = {
   recievedDMs?: Prisma.DMUncheckedCreateNestedManyWithoutUser2Input
   sMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   rMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutRecieverInput
+  rep?: Prisma.RepUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutServicesInput = {
@@ -1167,6 +1218,7 @@ export type UserUpdateWithoutServicesInput = {
   recievedDMs?: Prisma.DMUpdateManyWithoutUser2NestedInput
   sMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   rMessages?: Prisma.MessageUpdateManyWithoutRecieverNestedInput
+  rep?: Prisma.RepUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutServicesInput = {
@@ -1179,6 +1231,89 @@ export type UserUncheckedUpdateWithoutServicesInput = {
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
   logs?: Prisma.LogUncheckedUpdateManyWithoutUserNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutUserNestedInput
+  initiatedDMs?: Prisma.DMUncheckedUpdateManyWithoutUser1NestedInput
+  recievedDMs?: Prisma.DMUncheckedUpdateManyWithoutUser2NestedInput
+  sMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  rMessages?: Prisma.MessageUncheckedUpdateManyWithoutRecieverNestedInput
+  rep?: Prisma.RepUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutRepInput = {
+  googleId?: string | null
+  name?: string | null
+  email: string
+  phone?: string | null
+  role?: $Enums.Role | null
+  posts?: Prisma.PostCreateNestedManyWithoutUserInput
+  logs?: Prisma.LogCreateNestedManyWithoutUserInput
+  products?: Prisma.ProductCreateNestedManyWithoutUserInput
+  services?: Prisma.ServiceCreateNestedManyWithoutUserInput
+  initiatedDMs?: Prisma.DMCreateNestedManyWithoutUser1Input
+  recievedDMs?: Prisma.DMCreateNestedManyWithoutUser2Input
+  sMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  rMessages?: Prisma.MessageCreateNestedManyWithoutRecieverInput
+}
+
+export type UserUncheckedCreateWithoutRepInput = {
+  id?: number
+  googleId?: string | null
+  name?: string | null
+  email: string
+  phone?: string | null
+  role?: $Enums.Role | null
+  posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
+  logs?: Prisma.LogUncheckedCreateNestedManyWithoutUserInput
+  products?: Prisma.ProductUncheckedCreateNestedManyWithoutUserInput
+  services?: Prisma.ServiceUncheckedCreateNestedManyWithoutUserInput
+  initiatedDMs?: Prisma.DMUncheckedCreateNestedManyWithoutUser1Input
+  recievedDMs?: Prisma.DMUncheckedCreateNestedManyWithoutUser2Input
+  sMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  rMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutRecieverInput
+}
+
+export type UserCreateOrConnectWithoutRepInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutRepInput, Prisma.UserUncheckedCreateWithoutRepInput>
+}
+
+export type UserUpsertWithoutRepInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutRepInput, Prisma.UserUncheckedUpdateWithoutRepInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutRepInput, Prisma.UserUncheckedCreateWithoutRepInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutRepInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutRepInput, Prisma.UserUncheckedUpdateWithoutRepInput>
+}
+
+export type UserUpdateWithoutRepInput = {
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.NullableEnumRoleFieldUpdateOperationsInput | $Enums.Role | null
+  posts?: Prisma.PostUpdateManyWithoutUserNestedInput
+  logs?: Prisma.LogUpdateManyWithoutUserNestedInput
+  products?: Prisma.ProductUpdateManyWithoutUserNestedInput
+  services?: Prisma.ServiceUpdateManyWithoutUserNestedInput
+  initiatedDMs?: Prisma.DMUpdateManyWithoutUser1NestedInput
+  recievedDMs?: Prisma.DMUpdateManyWithoutUser2NestedInput
+  sMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  rMessages?: Prisma.MessageUpdateManyWithoutRecieverNestedInput
+}
+
+export type UserUncheckedUpdateWithoutRepInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.NullableEnumRoleFieldUpdateOperationsInput | $Enums.Role | null
+  posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
+  logs?: Prisma.LogUncheckedUpdateManyWithoutUserNestedInput
+  products?: Prisma.ProductUncheckedUpdateManyWithoutUserNestedInput
+  services?: Prisma.ServiceUncheckedUpdateManyWithoutUserNestedInput
   initiatedDMs?: Prisma.DMUncheckedUpdateManyWithoutUser1NestedInput
   recievedDMs?: Prisma.DMUncheckedUpdateManyWithoutUser2NestedInput
   sMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
@@ -1199,6 +1334,7 @@ export type UserCountOutputType = {
   recievedDMs: number
   sMessages: number
   rMessages: number
+  rep: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1210,6 +1346,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   recievedDMs?: boolean | UserCountOutputTypeCountRecievedDMsArgs
   sMessages?: boolean | UserCountOutputTypeCountSMessagesArgs
   rMessages?: boolean | UserCountOutputTypeCountRMessagesArgs
+  rep?: boolean | UserCountOutputTypeCountRepArgs
 }
 
 /**
@@ -1278,6 +1415,13 @@ export type UserCountOutputTypeCountRMessagesArgs<ExtArgs extends runtime.Types.
   where?: Prisma.MessageWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountRepArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.RepWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1294,6 +1438,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   recievedDMs?: boolean | Prisma.User$recievedDMsArgs<ExtArgs>
   sMessages?: boolean | Prisma.User$sMessagesArgs<ExtArgs>
   rMessages?: boolean | Prisma.User$rMessagesArgs<ExtArgs>
+  rep?: boolean | Prisma.User$repArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -1334,6 +1479,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   recievedDMs?: boolean | Prisma.User$recievedDMsArgs<ExtArgs>
   sMessages?: boolean | Prisma.User$sMessagesArgs<ExtArgs>
   rMessages?: boolean | Prisma.User$rMessagesArgs<ExtArgs>
+  rep?: boolean | Prisma.User$repArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1350,6 +1496,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     recievedDMs: Prisma.$DMPayload<ExtArgs>[]
     sMessages: Prisma.$MessagePayload<ExtArgs>[]
     rMessages: Prisma.$MessagePayload<ExtArgs>[]
+    rep: Prisma.$RepPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1760,6 +1907,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   recievedDMs<T extends Prisma.User$recievedDMsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$recievedDMsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DMPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   sMessages<T extends Prisma.User$sMessagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$sMessagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   rMessages<T extends Prisma.User$rMessagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$rMessagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  rep<T extends Prisma.User$repArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$repArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RepPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2377,6 +2525,30 @@ export type User$rMessagesArgs<ExtArgs extends runtime.Types.Extensions.Internal
   take?: number
   skip?: number
   distinct?: Prisma.MessageScalarFieldEnum | Prisma.MessageScalarFieldEnum[]
+}
+
+/**
+ * User.rep
+ */
+export type User$repArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Rep
+   */
+  select?: Prisma.RepSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Rep
+   */
+  omit?: Prisma.RepOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RepInclude<ExtArgs> | null
+  where?: Prisma.RepWhereInput
+  orderBy?: Prisma.RepOrderByWithRelationInput | Prisma.RepOrderByWithRelationInput[]
+  cursor?: Prisma.RepWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.RepScalarFieldEnum | Prisma.RepScalarFieldEnum[]
 }
 
 /**
