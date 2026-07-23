@@ -7,9 +7,6 @@ node_modules/
 # Environment Secrets
 .env
 
-# Prisma-Generated Code
-server/db/generated/
-
 # Log Files
 *.log
 

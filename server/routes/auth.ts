@@ -3,6 +3,8 @@ import { Strategy as GoogleStrategy, type Profile } from 'passport-google-oauth2
 import passport from 'passport';
 import { prisma } from '../db/index.js';
 
+const auth = Router();
+
 async function findOrCreateGoogleUser(profile: Profile) {
   const email = profile.emails?.[0]?.value;
   if (!email) {
@@ -54,19 +56,17 @@ passport.deserializeUser(async (id: number, done) => {
   }
 });
 
-const router = Router();
-
-router.get('/login', passport.authenticate('google', {
+auth.get('/login', passport.authenticate('google', {
   scope: ['profile', 'email'],
   prompt: 'select_account',
 }));
 
-router.get('/redirect/google', passport.authenticate('google', {
+auth.get('/redirect/google', passport.authenticate('google', {
   failureRedirect: '/login',
   successRedirect: '/',
 }));
 
-router.get('/check', (req, res) => {
+auth.get('/check', (req, res) => {
   if (!req.isAuthenticated()) {
     res.status(401).json({ user: null });
     return;
@@ -74,7 +74,7 @@ router.get('/check', (req, res) => {
   res.json({ user: req.user });
 });
 
-router.post('/logout', (req, res, next) => {
+auth.post('/logout', (req, res, next) => {
   req.logout((err) => {
     if (err) {
       next(err);
@@ -84,4 +84,4 @@ router.post('/logout', (req, res, next) => {
   });
 });
 
-export default router;
+export default auth;
