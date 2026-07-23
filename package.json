@@ -14,14 +14,13 @@
   "author": "Claire Happel, Garrin Costa Jr., Devin Delgado, Christian Fields",
   "type": "module",
   "scripts": {
-    "postinstall": "prisma generate",
     "dev:server": "tsx watch server/index.ts",
     "start": "tsx server/index.ts",
     "build": "webpack",
     "prepare": "husky || true",
     "lint": "eslint . --fix",
     "typecheck": "tsc --noEmit",
-    "migrate": "npx prisma migrate dev"
+    "migrate": "npx prisma migrate dev && prisma generate"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": "eslint --fix"

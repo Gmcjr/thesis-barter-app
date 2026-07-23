@@ -404,7 +404,8 @@ export const ModelName = {
   Post: 'Post',
   Product: 'Product',
   Service: 'Service',
-  Cat: 'Cat'
+  Cat: 'Cat',
+  Rep: 'Rep'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -420,7 +421,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "dM" | "message" | "log" | "post" | "product" | "service" | "cat"
+    modelProps: "user" | "dM" | "message" | "log" | "post" | "product" | "service" | "cat" | "rep"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1016,6 +1017,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Rep: {
+      payload: Prisma.$RepPayload<ExtArgs>
+      fields: Prisma.RepFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.RepFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RepPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.RepFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RepPayload>
+        }
+        findFirst: {
+          args: Prisma.RepFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RepPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.RepFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RepPayload>
+        }
+        findMany: {
+          args: Prisma.RepFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RepPayload>[]
+        }
+        create: {
+          args: Prisma.RepCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RepPayload>
+        }
+        createMany: {
+          args: Prisma.RepCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.RepCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RepPayload>[]
+        }
+        delete: {
+          args: Prisma.RepDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RepPayload>
+        }
+        update: {
+          args: Prisma.RepUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RepPayload>
+        }
+        deleteMany: {
+          args: Prisma.RepDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.RepUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.RepUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RepPayload>[]
+        }
+        upsert: {
+          args: Prisma.RepUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RepPayload>
+        }
+        aggregate: {
+          args: Prisma.RepAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateRep>
+        }
+        groupBy: {
+          args: Prisma.RepGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RepGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.RepCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RepCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1138,6 +1213,14 @@ export const CatScalarFieldEnum = {
 } as const
 
 export type CatScalarFieldEnum = (typeof CatScalarFieldEnum)[keyof typeof CatScalarFieldEnum]
+
+
+export const RepScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId'
+} as const
+
+export type RepScalarFieldEnum = (typeof RepScalarFieldEnum)[keyof typeof RepScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1419,6 +1502,7 @@ export type GlobalOmitConfig = {
   product?: Prisma.ProductOmit
   service?: Prisma.ServiceOmit
   cat?: Prisma.CatOmit
+  rep?: Prisma.RepOmit
 }
 
 /* Types for Logging */
