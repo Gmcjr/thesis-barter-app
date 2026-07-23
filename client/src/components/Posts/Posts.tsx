@@ -127,7 +127,7 @@ export default function Posts() {
 
       {/* Side Menu (drawer that pops out similar to a modal) */}
       <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer(false)}>
-        <Box sx={{ width: 300, height: '100%', bgcolor: '#ffffff' }} role="presentation">
+        <Box sx={{ width: 300, height: '100%', bgcolor: 'background.paper' }} role="presentation">
           <Box sx={{
             p: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between', bgcolor: 'primary.main', color: 'primary.contrastText',
           }}
