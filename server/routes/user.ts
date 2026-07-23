@@ -3,7 +3,7 @@ import { prisma } from '../db/index.js';
 
 const router = Router();
 
-router.post('/', async (req, res) => {
+router.post('/user', async (req, res) => {
   try {
     const { email, name } = req.body;
     const user = await prisma.user.create({
