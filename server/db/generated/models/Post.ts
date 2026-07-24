@@ -41,6 +41,7 @@ export type PostMinAggregateOutputType = {
   userId: number | null
   message: string | null
   isComplete: boolean | null
+  isRemoved: boolean | null
 }
 
 export type PostMaxAggregateOutputType = {
@@ -48,6 +49,7 @@ export type PostMaxAggregateOutputType = {
   userId: number | null
   message: string | null
   isComplete: boolean | null
+  isRemoved: boolean | null
 }
 
 export type PostCountAggregateOutputType = {
@@ -55,6 +57,7 @@ export type PostCountAggregateOutputType = {
   userId: number
   message: number
   isComplete: number
+  isRemoved: number
   _all: number
 }
 
@@ -74,6 +77,7 @@ export type PostMinAggregateInputType = {
   userId?: true
   message?: true
   isComplete?: true
+  isRemoved?: true
 }
 
 export type PostMaxAggregateInputType = {
@@ -81,6 +85,7 @@ export type PostMaxAggregateInputType = {
   userId?: true
   message?: true
   isComplete?: true
+  isRemoved?: true
 }
 
 export type PostCountAggregateInputType = {
@@ -88,6 +93,7 @@ export type PostCountAggregateInputType = {
   userId?: true
   message?: true
   isComplete?: true
+  isRemoved?: true
   _all?: true
 }
 
@@ -182,6 +188,7 @@ export type PostGroupByOutputType = {
   userId: number
   message: string
   isComplete: boolean
+  isRemoved: boolean
   _count: PostCountAggregateOutputType | null
   _avg: PostAvgAggregateOutputType | null
   _sum: PostSumAggregateOutputType | null
@@ -212,9 +219,11 @@ export type PostWhereInput = {
   userId?: Prisma.IntFilter<"Post"> | number
   message?: Prisma.StringFilter<"Post"> | string
   isComplete?: Prisma.BoolFilter<"Post"> | boolean
+  isRemoved?: Prisma.BoolFilter<"Post"> | boolean
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   products?: Prisma.ProductListRelationFilter
   services?: Prisma.ServiceListRelationFilter
+  reports?: Prisma.ReportListRelationFilter
 }
 
 export type PostOrderByWithRelationInput = {
@@ -222,9 +231,11 @@ export type PostOrderByWithRelationInput = {
   userId?: Prisma.SortOrder
   message?: Prisma.SortOrder
   isComplete?: Prisma.SortOrder
+  isRemoved?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
   products?: Prisma.ProductOrderByRelationAggregateInput
   services?: Prisma.ServiceOrderByRelationAggregateInput
+  reports?: Prisma.ReportOrderByRelationAggregateInput
 }
 
 export type PostWhereUniqueInput = Prisma.AtLeast<{
@@ -235,9 +246,11 @@ export type PostWhereUniqueInput = Prisma.AtLeast<{
   userId?: Prisma.IntFilter<"Post"> | number
   message?: Prisma.StringFilter<"Post"> | string
   isComplete?: Prisma.BoolFilter<"Post"> | boolean
+  isRemoved?: Prisma.BoolFilter<"Post"> | boolean
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   products?: Prisma.ProductListRelationFilter
   services?: Prisma.ServiceListRelationFilter
+  reports?: Prisma.ReportListRelationFilter
 }, "id">
 
 export type PostOrderByWithAggregationInput = {
@@ -245,6 +258,7 @@ export type PostOrderByWithAggregationInput = {
   userId?: Prisma.SortOrder
   message?: Prisma.SortOrder
   isComplete?: Prisma.SortOrder
+  isRemoved?: Prisma.SortOrder
   _count?: Prisma.PostCountOrderByAggregateInput
   _avg?: Prisma.PostAvgOrderByAggregateInput
   _max?: Prisma.PostMaxOrderByAggregateInput
@@ -260,14 +274,17 @@ export type PostScalarWhereWithAggregatesInput = {
   userId?: Prisma.IntWithAggregatesFilter<"Post"> | number
   message?: Prisma.StringWithAggregatesFilter<"Post"> | string
   isComplete?: Prisma.BoolWithAggregatesFilter<"Post"> | boolean
+  isRemoved?: Prisma.BoolWithAggregatesFilter<"Post"> | boolean
 }
 
 export type PostCreateInput = {
   message: string
   isComplete?: boolean
+  isRemoved?: boolean
   user: Prisma.UserCreateNestedOneWithoutPostsInput
   products?: Prisma.ProductCreateNestedManyWithoutPostInput
   services?: Prisma.ServiceCreateNestedManyWithoutPostInput
+  reports?: Prisma.ReportCreateNestedManyWithoutPostInput
 }
 
 export type PostUncheckedCreateInput = {
@@ -275,16 +292,20 @@ export type PostUncheckedCreateInput = {
   userId: number
   message: string
   isComplete?: boolean
+  isRemoved?: boolean
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutPostInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutPostInput
+  reports?: Prisma.ReportUncheckedCreateNestedManyWithoutPostInput
 }
 
 export type PostUpdateInput = {
   message?: Prisma.StringFieldUpdateOperationsInput | string
   isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   user?: Prisma.UserUpdateOneRequiredWithoutPostsNestedInput
   products?: Prisma.ProductUpdateManyWithoutPostNestedInput
   services?: Prisma.ServiceUpdateManyWithoutPostNestedInput
+  reports?: Prisma.ReportUpdateManyWithoutPostNestedInput
 }
 
 export type PostUncheckedUpdateInput = {
@@ -292,8 +313,10 @@ export type PostUncheckedUpdateInput = {
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   message?: Prisma.StringFieldUpdateOperationsInput | string
   isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   products?: Prisma.ProductUncheckedUpdateManyWithoutPostNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutPostNestedInput
+  reports?: Prisma.ReportUncheckedUpdateManyWithoutPostNestedInput
 }
 
 export type PostCreateManyInput = {
@@ -301,11 +324,13 @@ export type PostCreateManyInput = {
   userId: number
   message: string
   isComplete?: boolean
+  isRemoved?: boolean
 }
 
 export type PostUpdateManyMutationInput = {
   message?: Prisma.StringFieldUpdateOperationsInput | string
   isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type PostUncheckedUpdateManyInput = {
@@ -313,6 +338,7 @@ export type PostUncheckedUpdateManyInput = {
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   message?: Prisma.StringFieldUpdateOperationsInput | string
   isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type PostListRelationFilter = {
@@ -330,6 +356,7 @@ export type PostCountOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   message?: Prisma.SortOrder
   isComplete?: Prisma.SortOrder
+  isRemoved?: Prisma.SortOrder
 }
 
 export type PostAvgOrderByAggregateInput = {
@@ -342,6 +369,7 @@ export type PostMaxOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   message?: Prisma.SortOrder
   isComplete?: Prisma.SortOrder
+  isRemoved?: Prisma.SortOrder
 }
 
 export type PostMinOrderByAggregateInput = {
@@ -349,6 +377,7 @@ export type PostMinOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   message?: Prisma.SortOrder
   isComplete?: Prisma.SortOrder
+  isRemoved?: Prisma.SortOrder
 }
 
 export type PostSumOrderByAggregateInput = {
@@ -359,6 +388,11 @@ export type PostSumOrderByAggregateInput = {
 export type PostScalarRelationFilter = {
   is?: Prisma.PostWhereInput
   isNot?: Prisma.PostWhereInput
+}
+
+export type PostNullableScalarRelationFilter = {
+  is?: Prisma.PostWhereInput | null
+  isNot?: Prisma.PostWhereInput | null
 }
 
 export type PostCreateNestedManyWithoutUserInput = {
@@ -435,19 +469,39 @@ export type PostUpdateOneRequiredWithoutServicesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.PostUpdateToOneWithWhereWithoutServicesInput, Prisma.PostUpdateWithoutServicesInput>, Prisma.PostUncheckedUpdateWithoutServicesInput>
 }
 
+export type PostCreateNestedOneWithoutReportsInput = {
+  create?: Prisma.XOR<Prisma.PostCreateWithoutReportsInput, Prisma.PostUncheckedCreateWithoutReportsInput>
+  connectOrCreate?: Prisma.PostCreateOrConnectWithoutReportsInput
+  connect?: Prisma.PostWhereUniqueInput
+}
+
+export type PostUpdateOneWithoutReportsNestedInput = {
+  create?: Prisma.XOR<Prisma.PostCreateWithoutReportsInput, Prisma.PostUncheckedCreateWithoutReportsInput>
+  connectOrCreate?: Prisma.PostCreateOrConnectWithoutReportsInput
+  upsert?: Prisma.PostUpsertWithoutReportsInput
+  disconnect?: Prisma.PostWhereInput | boolean
+  delete?: Prisma.PostWhereInput | boolean
+  connect?: Prisma.PostWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PostUpdateToOneWithWhereWithoutReportsInput, Prisma.PostUpdateWithoutReportsInput>, Prisma.PostUncheckedUpdateWithoutReportsInput>
+}
+
 export type PostCreateWithoutUserInput = {
   message: string
   isComplete?: boolean
+  isRemoved?: boolean
   products?: Prisma.ProductCreateNestedManyWithoutPostInput
   services?: Prisma.ServiceCreateNestedManyWithoutPostInput
+  reports?: Prisma.ReportCreateNestedManyWithoutPostInput
 }
 
 export type PostUncheckedCreateWithoutUserInput = {
   id?: number
   message: string
   isComplete?: boolean
+  isRemoved?: boolean
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutPostInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutPostInput
+  reports?: Prisma.ReportUncheckedCreateNestedManyWithoutPostInput
 }
 
 export type PostCreateOrConnectWithoutUserInput = {
@@ -484,13 +538,16 @@ export type PostScalarWhereInput = {
   userId?: Prisma.IntFilter<"Post"> | number
   message?: Prisma.StringFilter<"Post"> | string
   isComplete?: Prisma.BoolFilter<"Post"> | boolean
+  isRemoved?: Prisma.BoolFilter<"Post"> | boolean
 }
 
 export type PostCreateWithoutProductsInput = {
   message: string
   isComplete?: boolean
+  isRemoved?: boolean
   user: Prisma.UserCreateNestedOneWithoutPostsInput
   services?: Prisma.ServiceCreateNestedManyWithoutPostInput
+  reports?: Prisma.ReportCreateNestedManyWithoutPostInput
 }
 
 export type PostUncheckedCreateWithoutProductsInput = {
@@ -498,7 +555,9 @@ export type PostUncheckedCreateWithoutProductsInput = {
   userId: number
   message: string
   isComplete?: boolean
+  isRemoved?: boolean
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutPostInput
+  reports?: Prisma.ReportUncheckedCreateNestedManyWithoutPostInput
 }
 
 export type PostCreateOrConnectWithoutProductsInput = {
@@ -520,8 +579,10 @@ export type PostUpdateToOneWithWhereWithoutProductsInput = {
 export type PostUpdateWithoutProductsInput = {
   message?: Prisma.StringFieldUpdateOperationsInput | string
   isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   user?: Prisma.UserUpdateOneRequiredWithoutPostsNestedInput
   services?: Prisma.ServiceUpdateManyWithoutPostNestedInput
+  reports?: Prisma.ReportUpdateManyWithoutPostNestedInput
 }
 
 export type PostUncheckedUpdateWithoutProductsInput = {
@@ -529,14 +590,18 @@ export type PostUncheckedUpdateWithoutProductsInput = {
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   message?: Prisma.StringFieldUpdateOperationsInput | string
   isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   services?: Prisma.ServiceUncheckedUpdateManyWithoutPostNestedInput
+  reports?: Prisma.ReportUncheckedUpdateManyWithoutPostNestedInput
 }
 
 export type PostCreateWithoutServicesInput = {
   message: string
   isComplete?: boolean
+  isRemoved?: boolean
   user: Prisma.UserCreateNestedOneWithoutPostsInput
   products?: Prisma.ProductCreateNestedManyWithoutPostInput
+  reports?: Prisma.ReportCreateNestedManyWithoutPostInput
 }
 
 export type PostUncheckedCreateWithoutServicesInput = {
@@ -544,7 +609,9 @@ export type PostUncheckedCreateWithoutServicesInput = {
   userId: number
   message: string
   isComplete?: boolean
+  isRemoved?: boolean
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutPostInput
+  reports?: Prisma.ReportUncheckedCreateNestedManyWithoutPostInput
 }
 
 export type PostCreateOrConnectWithoutServicesInput = {
@@ -566,8 +633,10 @@ export type PostUpdateToOneWithWhereWithoutServicesInput = {
 export type PostUpdateWithoutServicesInput = {
   message?: Prisma.StringFieldUpdateOperationsInput | string
   isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   user?: Prisma.UserUpdateOneRequiredWithoutPostsNestedInput
   products?: Prisma.ProductUpdateManyWithoutPostNestedInput
+  reports?: Prisma.ReportUpdateManyWithoutPostNestedInput
 }
 
 export type PostUncheckedUpdateWithoutServicesInput = {
@@ -575,34 +644,96 @@ export type PostUncheckedUpdateWithoutServicesInput = {
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   message?: Prisma.StringFieldUpdateOperationsInput | string
   isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   products?: Prisma.ProductUncheckedUpdateManyWithoutPostNestedInput
+  reports?: Prisma.ReportUncheckedUpdateManyWithoutPostNestedInput
+}
+
+export type PostCreateWithoutReportsInput = {
+  message: string
+  isComplete?: boolean
+  isRemoved?: boolean
+  user: Prisma.UserCreateNestedOneWithoutPostsInput
+  products?: Prisma.ProductCreateNestedManyWithoutPostInput
+  services?: Prisma.ServiceCreateNestedManyWithoutPostInput
+}
+
+export type PostUncheckedCreateWithoutReportsInput = {
+  id?: number
+  userId: number
+  message: string
+  isComplete?: boolean
+  isRemoved?: boolean
+  products?: Prisma.ProductUncheckedCreateNestedManyWithoutPostInput
+  services?: Prisma.ServiceUncheckedCreateNestedManyWithoutPostInput
+}
+
+export type PostCreateOrConnectWithoutReportsInput = {
+  where: Prisma.PostWhereUniqueInput
+  create: Prisma.XOR<Prisma.PostCreateWithoutReportsInput, Prisma.PostUncheckedCreateWithoutReportsInput>
+}
+
+export type PostUpsertWithoutReportsInput = {
+  update: Prisma.XOR<Prisma.PostUpdateWithoutReportsInput, Prisma.PostUncheckedUpdateWithoutReportsInput>
+  create: Prisma.XOR<Prisma.PostCreateWithoutReportsInput, Prisma.PostUncheckedCreateWithoutReportsInput>
+  where?: Prisma.PostWhereInput
+}
+
+export type PostUpdateToOneWithWhereWithoutReportsInput = {
+  where?: Prisma.PostWhereInput
+  data: Prisma.XOR<Prisma.PostUpdateWithoutReportsInput, Prisma.PostUncheckedUpdateWithoutReportsInput>
+}
+
+export type PostUpdateWithoutReportsInput = {
+  message?: Prisma.StringFieldUpdateOperationsInput | string
+  isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  user?: Prisma.UserUpdateOneRequiredWithoutPostsNestedInput
+  products?: Prisma.ProductUpdateManyWithoutPostNestedInput
+  services?: Prisma.ServiceUpdateManyWithoutPostNestedInput
+}
+
+export type PostUncheckedUpdateWithoutReportsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  message?: Prisma.StringFieldUpdateOperationsInput | string
+  isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  products?: Prisma.ProductUncheckedUpdateManyWithoutPostNestedInput
+  services?: Prisma.ServiceUncheckedUpdateManyWithoutPostNestedInput
 }
 
 export type PostCreateManyUserInput = {
   id?: number
   message: string
   isComplete?: boolean
+  isRemoved?: boolean
 }
 
 export type PostUpdateWithoutUserInput = {
   message?: Prisma.StringFieldUpdateOperationsInput | string
   isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   products?: Prisma.ProductUpdateManyWithoutPostNestedInput
   services?: Prisma.ServiceUpdateManyWithoutPostNestedInput
+  reports?: Prisma.ReportUpdateManyWithoutPostNestedInput
 }
 
 export type PostUncheckedUpdateWithoutUserInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   message?: Prisma.StringFieldUpdateOperationsInput | string
   isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   products?: Prisma.ProductUncheckedUpdateManyWithoutPostNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutPostNestedInput
+  reports?: Prisma.ReportUncheckedUpdateManyWithoutPostNestedInput
 }
 
 export type PostUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   message?: Prisma.StringFieldUpdateOperationsInput | string
   isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 
@@ -613,11 +744,13 @@ export type PostUncheckedUpdateManyWithoutUserInput = {
 export type PostCountOutputType = {
   products: number
   services: number
+  reports: number
 }
 
 export type PostCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   products?: boolean | PostCountOutputTypeCountProductsArgs
   services?: boolean | PostCountOutputTypeCountServicesArgs
+  reports?: boolean | PostCountOutputTypeCountReportsArgs
 }
 
 /**
@@ -644,15 +777,24 @@ export type PostCountOutputTypeCountServicesArgs<ExtArgs extends runtime.Types.E
   where?: Prisma.ServiceWhereInput
 }
 
+/**
+ * PostCountOutputType without action
+ */
+export type PostCountOutputTypeCountReportsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ReportWhereInput
+}
+
 
 export type PostSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
   message?: boolean
   isComplete?: boolean
+  isRemoved?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   products?: boolean | Prisma.Post$productsArgs<ExtArgs>
   services?: boolean | Prisma.Post$servicesArgs<ExtArgs>
+  reports?: boolean | Prisma.Post$reportsArgs<ExtArgs>
   _count?: boolean | Prisma.PostCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["post"]>
 
@@ -661,6 +803,7 @@ export type PostSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   userId?: boolean
   message?: boolean
   isComplete?: boolean
+  isRemoved?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["post"]>
 
@@ -669,6 +812,7 @@ export type PostSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   userId?: boolean
   message?: boolean
   isComplete?: boolean
+  isRemoved?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["post"]>
 
@@ -677,13 +821,15 @@ export type PostSelectScalar = {
   userId?: boolean
   message?: boolean
   isComplete?: boolean
+  isRemoved?: boolean
 }
 
-export type PostOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "message" | "isComplete", ExtArgs["result"]["post"]>
+export type PostOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "message" | "isComplete" | "isRemoved", ExtArgs["result"]["post"]>
 export type PostInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   products?: boolean | Prisma.Post$productsArgs<ExtArgs>
   services?: boolean | Prisma.Post$servicesArgs<ExtArgs>
+  reports?: boolean | Prisma.Post$reportsArgs<ExtArgs>
   _count?: boolean | Prisma.PostCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type PostIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -699,12 +845,14 @@ export type $PostPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     user: Prisma.$UserPayload<ExtArgs>
     products: Prisma.$ProductPayload<ExtArgs>[]
     services: Prisma.$ServicePayload<ExtArgs>[]
+    reports: Prisma.$ReportPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
     userId: number
     message: string
     isComplete: boolean
+    isRemoved: boolean
   }, ExtArgs["result"]["post"]>
   composites: {}
 }
@@ -1102,6 +1250,7 @@ export interface Prisma__PostClient<T, Null = never, ExtArgs extends runtime.Typ
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   products<T extends Prisma.Post$productsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Post$productsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   services<T extends Prisma.Post$servicesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Post$servicesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ServicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  reports<T extends Prisma.Post$reportsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Post$reportsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1135,6 +1284,7 @@ export interface PostFieldRefs {
   readonly userId: Prisma.FieldRef<"Post", 'Int'>
   readonly message: Prisma.FieldRef<"Post", 'String'>
   readonly isComplete: Prisma.FieldRef<"Post", 'Boolean'>
+  readonly isRemoved: Prisma.FieldRef<"Post", 'Boolean'>
 }
     
 
@@ -1581,6 +1731,30 @@ export type Post$servicesArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   take?: number
   skip?: number
   distinct?: Prisma.ServiceScalarFieldEnum | Prisma.ServiceScalarFieldEnum[]
+}
+
+/**
+ * Post.reports
+ */
+export type Post$reportsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Report
+   */
+  select?: Prisma.ReportSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Report
+   */
+  omit?: Prisma.ReportOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ReportInclude<ExtArgs> | null
+  where?: Prisma.ReportWhereInput
+  orderBy?: Prisma.ReportOrderByWithRelationInput | Prisma.ReportOrderByWithRelationInput[]
+  cursor?: Prisma.ReportWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ReportScalarFieldEnum | Prisma.ReportScalarFieldEnum[]
 }
 
 /**

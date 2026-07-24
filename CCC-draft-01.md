@@ -19,7 +19,7 @@ At Bart, we strive to create a welcoming and inclusive community. As a community
 - Shockingly graphic, grotesque, or obscene content
 - Solicitation
 
-*Why follow the rules: By committing to respectful and courteous behavior, we can create a vibrant and supportive community that fosters learning, growth, and connection for all members.*
+*By committing to respectful and courteous behavior, we can create a vibrant and supportive community that fosters learning, growth, and connection for all members.*
 
 ---
 
@@ -32,7 +32,7 @@ As a member of Bart, we ask that you understand that protecting your privacy is 
 - Use discretion when sharing personal details, such as your email address or phone number
 - Take advantage of the privacy settings available to you, and adjust them as needed to control who can see your information
 
-*Why follow the rules: By taking personal responsibility for your privacy, you can confidently participate in the community and ensure that your information is secure. While our team takes security measures to protect the community, you must also play an active role in protecting yourself.*
+*By taking personal responsibility for your privacy, you can confidently participate in the community and ensure that your information is secure. While our team takes security measures to protect the community, you must also play an active role in protecting yourself.*
 
 ---
 
@@ -47,7 +47,7 @@ To make the most of your experience in Bart, we encourage you to be intentional 
 - Leave thoughtful comments on topics that interest you
 - RSVP for and attend events that intrigue you
 
-*Why follow the rules: By being intentional about your involvement and actively contributing to the community, you can learn from others, build meaningful connections, and help others do the same.*
+*By being intentional about your involvement and actively contributing to the community, you can learn from others, build meaningful connections, and help others do the same.*
 
 ---
 
@@ -60,7 +60,7 @@ We're excited to facilitate community engagement and the benefits of barter. Thi
 - Share with care: Use real photos of the item you are offering, not stock images
 - Respect intellectual property: Only offer copyrighted or trademarked items if you have the right to trade them
 
-*Why follow the rules: By following these practices, members can trust that a listing is what it claims to be, making every trade easier for everyone involved.*
+*By following these practices, members can trust that a listing is what it claims to be, making every trade easier for everyone involved.*
 
 ---
 
@@ -75,7 +75,7 @@ Our community includes many features to help community members interact with one
 - Posting content that explicitly promotes a product or service
 - Posting the same question in multiple locations before anyone has the opportunity to reply
 
-*Why follow the rules: By using community features responsibly and avoiding spamming, we can create a positive and supportive environment where members can engage with one another meaningfully.*
+*By using community features responsibly and avoiding spamming, we can create a positive and supportive environment where members can engage with one another meaningfully.*
 
 ---
 
@@ -88,7 +88,7 @@ Private messaging can be a powerful tool for community builders to connect and c
 - Personalize your messages. Boilerplate messages can come across as impersonal and may lack the necessary details to connect with others. Be sure to include a brief explanation of why you are reaching out, and any pertinent information about their involvement
 - Have a specific reason, partnership, or opportunity in mind when contacting another member. Avoid sending general messages asking if someone is interested in collaborating
 
-*Why follow the rules: By using private messaging responsibly and with a focus on community building, we can foster connections and partnerships that help us all grow and learn.*
+*By using private messaging responsibly and with a focus on community building, we can foster connections and partnerships that help us all grow and learn.*
 
 ---
 

@@ -79,11 +79,5 @@
   },
   "overrides": {
     "inflight": "npm:inflight-lru@^1.0.0"
-  },
-  "allowScripts": {
-    "@prisma/engines@7.8.0": true,
-    "esbuild@0.28.1": true,
-    "fsevents@2.3.3": true,
-    "prisma@7.8.0": true
   }
 }
