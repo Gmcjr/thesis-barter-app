@@ -13,7 +13,6 @@ import { Link, useRouter } from '../../context/RouterContext';
 import { useAuth } from '../../context/AuthContext';
 
 const navLinks = [
-  { to: '/', label: 'Home' },
   { to: '/profile', label: 'Profile' },
 ];
 

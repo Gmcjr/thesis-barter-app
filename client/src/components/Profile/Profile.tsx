@@ -16,17 +16,17 @@ function Profile() {
           gap: 1,
         }}
       >
-        <Avatar
-          sx={{
-            bgcolor: 'primary.main',
-            width: 100,
-            height: 100,
-            fontSize: '2.4rem',
-          }}
-        >
-          D
-        </Avatar>
         <Card>
+          <Avatar
+            sx={{
+              bgcolor: 'primary.main',
+              width: 100,
+              height: 100,
+              fontSize: '2.4rem',
+            }}
+          >
+            D
+          </Avatar>
           <CardContent>
             <Typography>
               Devin Delgado
