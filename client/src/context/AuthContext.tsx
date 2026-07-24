@@ -21,10 +21,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/oauth2/check', { credentials: 'include' })
-      .then((res) => (res.ok ? res.json() : null))
-      .then((data) => setUser(data.user))
-      .finally(() => setLoading(false));
+    async function checkAuth() {
+      try {
+        const res = await fetch('/oauth2/check', { credentials: 'include' });
+        const data = res.ok ? await res.json() : { user: null };
+        setUser(data.user);
+      } catch {
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    checkAuth();
   }, []);
 
   const logout = useCallback(async () => {
