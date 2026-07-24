@@ -1,5 +1,12 @@
 import React, {
-  createContext, useContext, useState, type ComponentType, type ReactNode,
+  createContext,
+  useMemo,
+  useContext,
+  useCallback,
+  useEffect,
+  useState,
+  type ComponentType,
+  type ReactNode,
 } from 'react';
 
 interface RouterContextValue {
@@ -12,13 +19,22 @@ const RouterContext = createContext<RouterContextValue | undefined>(undefined);
 export function RouterProvider({ children }: { children: ReactNode }) {
   const [path, setPath] = useState(window.location.pathname);
 
-  const navigate = (to: string) => {
+  useEffect(() => {
+    const onPopState = () => setPath(window.location.pathname);
+    window.addEventListener('popstate', onPopState);
+    return () => window.removeEventListener('popstate', onPopState);
+  }, []);
+
+  const navigate = useCallback((to: string) => {
     if (to === window.location.pathname) return;
+    window.history.pushState({}, '', to);
     setPath(to);
-  };
+  }, []);
+
+  const value = useMemo(() => ({ path, navigate }), [path, navigate]);
 
   return (
-    <RouterContext.Provider value={{ path, navigate }}>
+    <RouterContext.Provider value={value}>
       {children}
     </RouterContext.Provider>
   );
@@ -54,7 +70,7 @@ export function Link({
       {children}
     </a>
   );
-};
+}
 
 export interface RouteDef {
   path: string;
