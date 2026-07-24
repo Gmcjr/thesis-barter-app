@@ -26,7 +26,7 @@ export function RouterProvider({ children }: { children: ReactNode }) {
 
 export function useRouter() {
   const ctx = useContext(RouterContext);
-  if (!ctx) throw new Error('Outside of router context');
+  if (!ctx) throw new Error('useRouter must be used within RouterProvider');
   return ctx;
 }
 
