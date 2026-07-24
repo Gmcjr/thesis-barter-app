@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 import React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -14,11 +15,11 @@ import { useAuth } from '../../context/AuthContext';
 const navLinks = [
   { to: '/', label: 'Home' },
   { to: '/profile', label: 'Profile' },
-]
+];
 
 function NavBar() {
   const { path } = useRouter();
-  const { user, loading, logout } = useAuth()
+  const { user, loading, logout } = useAuth();
 
   return (
     <AppBar position="fixed" elevation={1} sx={{ bgcolor: 'background.paper', color: 'text.primary' }}>
@@ -76,9 +77,10 @@ function NavBar() {
           <Box sx={{
             display: 'flex',
             alignItems: 'center',
-            gap: { xs: 0.5, sm: 1 }
-          }}>
-            {navLinks.map(({ to, label}) => {
+            gap: { xs: 0.5, sm: 1 },
+          }}
+          >
+            {navLinks.map(({ to, label }) => {
               const active = to === '/'
                 ? path === '/'
                 : path.startsWith(to);
@@ -90,8 +92,10 @@ function NavBar() {
                     size="small"
                     sx={{
                       minWidth: 'auto',
-                      px: { xs: '0.75rem',
-                        sm: '0.875rem' },
+                      px: {
+                        xs: '0.75rem',
+                        sm: '0.875rem',
+                      },
                       fontWeight: active ? 700 : 400,
                     }}
                   >
@@ -132,7 +136,7 @@ function NavBar() {
               </>
             ) : (
               <Typography variant="subtitle2" sx={{ fontWeight: 600, fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>
-                <a href="/oauth2/redirect/google">Sign in with Google</a>
+                <a href="/oauth2/login">Sign in with Google</a>
               </Typography>
             )}
           </Box>

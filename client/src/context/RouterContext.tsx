@@ -8,6 +8,7 @@ import React, {
   type ComponentType,
   type ReactNode,
 } from 'react';
+import { useAuth } from './AuthContext';
 
 interface RouterContextValue {
   path: string;
@@ -87,10 +88,22 @@ export function Router({ routes, notFound: NotFound }: {
   routes: RouteDef[];
   notFound: ComponentType;
 }) {
-  const { path } = useRouter();
+  const { path, navigate } = useRouter();
+  const { user, loading } = useAuth();
   const match = routes.find((r) => matchPath(r.path, path));
 
+  useEffect(() => {
+    if (match?.requiresAuth && !loading && !user) {
+      navigate('/');
+    }
+  }, [match, loading, user, navigate]);
+
   if (!match) return <NotFound />;
+  if (match.requiresAuth) {
+    if (loading) return null;
+    if (!user) return null;
+  }
+
   const Component = match.component;
   return <Component />;
 }

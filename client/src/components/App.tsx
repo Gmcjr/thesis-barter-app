@@ -15,8 +15,8 @@ import NotFound from './NotFound/NotFound';
 
 const routes: RouteDef[] = [
   { path: '/', component: Posts },
-  { path: '/profile', component: Profile,  },
-]
+  { path: '/profile', component: Profile, requiresAuth: true },
+];
 
 function App() {
   return (
@@ -30,7 +30,7 @@ function App() {
             sx={{
               pt: 16, pb: 8, backgroundColor: '#e1e5f8', minHeight: '100vh',
             }}
-            >
+          >
             <Container maxWidth="md">
               <Router routes={routes} notFound={NotFound} />
             </Container>
