@@ -18,27 +18,37 @@ import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import AddIcon from '@mui/icons-material/Add';
 
+import NewPost, { type PostFormData } from './NewPost';
+
+// type definitions
+type Category = {
+  id: number;
+  name: string;
+  type: 'PRODUCT' | 'SERVICE';
+};
+
 // dummy categories data
-const categories = [
-  'Books',
-  'Clothing, Shoes, Accessories',
-  'Collectibles',
-  'Electronics',
-  'Food and Perishables',
-  'Free/Giving Away',
-  'Handmade',
-  'Household',
-  'Movies, Music, Games',
-  'Refurbished',
-  'Services',
-  'Sports & Outdoors',
-  'Pet Supplies',
+const categoryList: Category[] = [
+  { id: 1, name: 'Books', type: 'PRODUCT' },
+  { id: 2, name: 'Clothing, Shoes, Accessories', type: 'PRODUCT' },
+  { id: 3, name: 'Collectibles', type: 'PRODUCT' },
+  { id: 4, name: 'Electronics', type: 'PRODUCT' },
+  { id: 5, name: 'Food and Perishables', type: 'PRODUCT' },
+  { id: 6, name: 'Free/Giving Away', type: 'PRODUCT' },
+  { id: 7, name: 'Handmade', type: 'PRODUCT' },
+  { id: 8, name: 'Household', type: 'PRODUCT' },
+  { id: 9, name: 'Movies, Music, Games', type: 'PRODUCT' },
+  { id: 10, name: 'Refurbished', type: 'PRODUCT' },
+  { id: 11, name: 'Services', type: 'SERVICE' },
+  { id: 12, name: 'Sports & Outdoors', type: 'PRODUCT' },
+  { id: 13, name: 'Pet Supplies', type: 'PRODUCT' },
 ];
 
 // dummy post data
 const dummyPosts = [
   {
     id: 1,
+    title: 'Bike Repair for Tacos',
     user: 'taconator',
     date: '01/01/2026',
     content: 'Help me fix my bike and I will make you the best tacos ever!',
@@ -46,6 +56,7 @@ const dummyPosts = [
   },
   {
     id: 2,
+    title: 'Free PS4 Game',
     user: 'Gamegod',
     date: '01/03/2026',
     content: 'Giving away a free game for ps4.',
@@ -53,6 +64,7 @@ const dummyPosts = [
   },
   {
     id: 3,
+    title: 'Piano lessons for Guitar swap',
     user: 'happytunes101',
     date: '01/04/2026',
     content: 'Looking to learn guitar, if someone wants to learn piano we can swap!',
@@ -65,9 +77,26 @@ const dummyPosts = [
 
 export default function Posts() {
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [posts, setPosts] = useState(dummyPosts);
 
   const toggleDrawer = (open: boolean) => () => {
     setDrawerOpen(open);
+  };
+
+  // handler placeholder for creating a post
+  const handleCreatePost = async (formData: PostFormData) => {
+    const newPostItem = {
+      id: Date.now(),
+      title: formData.title,
+      user: 'You (Logged In)',
+      date: new Date().toLocaleDateString(),
+      content: formData.description,
+      comments: [],
+    };
+
+    // add new post to top of state
+    setPosts([newPostItem, ...posts]);
   };
 
   return (
@@ -109,9 +138,9 @@ export default function Posts() {
         >
           All
         </Button>
-        {categories.map((category) => (
+        {categoryList.map((category) => (
           <Button
-            key={category}
+            key={category.id}
             sx={{
               color: 'inherit',
               textTransform: 'none',
@@ -121,7 +150,7 @@ export default function Posts() {
               '&:hover': { outline: '1px solid' },
             }}
           >
-            {category}
+            {category.name}
           </Button>
         ))}
       </Box>
@@ -149,11 +178,11 @@ export default function Posts() {
             Categories
           </Typography>
           <List sx={{ pt: 0 }}>
-            {categories.map((category) => (
-              <ListItem key={category} disablePadding>
+            {categoryList.map((category) => (
+              <ListItem key={category.id} disablePadding>
                 <ListItemButton onClick={toggleDrawer(false)}>
                   <ListItemText
-                    primary={category}
+                    primary={category.name}
                     slotProps={{
                       primary: {
                         sx: { fontSize: '0.9rem' },
@@ -175,6 +204,7 @@ export default function Posts() {
         <Button
           variant="contained"
           startIcon={<AddIcon />}
+          onClick={() => setModalOpen(true)} // 4. Open modal when clicked
           sx={{
             borderRadius: 8, textTransform: 'none', fontWeight: 'bold', px: 3,
           }}
@@ -188,27 +218,43 @@ export default function Posts() {
         display: 'flex', flexDirection: 'column', gap: 3, px: { xs: 2, md: 0 },
       }}
       >
-        {dummyPosts.map((post) => (
+        {posts.map((post) => (
           <Card key={post.id} variant="outlined" sx={{ borderRadius: 3, borderColor: '#e0e0e0' }}>
             <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
+
+              {/* title, date, user details and DM */}
               <Box sx={{
                 display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2, flexWrap: 'wrap', gap: 1,
               }}
               >
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                  <Avatar sx={{ bgcolor: 'primary.main', width: 36, height: 36 }}>
-                    {post.user.charAt(0)}
+                {/* title and posted date */}
+                <Box sx={{
+                  display: 'flex', alignItems: 'baseline', gap: 1.5, flexWrap: 'wrap',
+                }}
+                >
+                  <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
+                    {post.title}
+                  </Typography>
+                  <Typography variant="caption" color="text.secondary">
+                    Posted on {post.date}
+                  </Typography>
+                </Box>
+
+                {/* user avatar, name, and DM button */}
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                  <Avatar sx={{
+                    bgcolor: 'primary.main', width: 32, height: 32, fontSize: '0.9rem',
+                  }}
+                  >
+                    {post.user.charAt(0).toUpperCase()}
                   </Avatar>
-                  <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+                  <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
                     {post.user}
                   </Typography>
                   <Button size="small" variant="outlined" sx={{ borderRadius: 4, textTransform: 'none' }}>
                     Open DM
                   </Button>
                 </Box>
-                <Typography variant="caption" color="text.secondary">
-                  Posted on {post.date}
-                </Typography>
               </Box>
 
               <Typography variant="body1" sx={{ mb: 3, lineHeight: 1.6 }}>
@@ -259,6 +305,14 @@ export default function Posts() {
           </Card>
         ))}
       </Box>
+
+      {/* NewPost Modal */}
+      <NewPost
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        onSubmit={handleCreatePost}
+        categories={categoryList}
+      />
     </Box>
   );
 }
