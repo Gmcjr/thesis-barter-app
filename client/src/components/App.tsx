@@ -5,12 +5,13 @@ import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import theme from '../theme';
 import { AuthProvider } from '../context/AuthContext';
-import { RouterProvider, type RouteDef } from '../context/RouterContext';
+import { RouterProvider, Router, type RouteDef } from '../context/RouterContext';
 
 // component imports
 import NavBar from './NavBar/NavBar';
 import Posts from './Posts/Posts';
-import Profile from './Profile/Profile'
+import Profile from './Profile/Profile';
+import NotFound from './NotFound/NotFound';
 
 const routes: RouteDef[] = [
   { path: '/', component: Posts },
@@ -31,7 +32,7 @@ function App() {
             }}
             >
             <Container maxWidth="md">
-              <Posts />
+              <Router routes={routes} notFound={NotFound} />
             </Container>
           </Box>
         </RouterProvider>

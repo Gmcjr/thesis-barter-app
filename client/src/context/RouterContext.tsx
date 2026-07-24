@@ -63,7 +63,7 @@ export interface RouteDef {
 }
 
 function matchPath(pattern: string, path: string): boolean {
-  const regex = `^${pattern.replace(/:[a-zA-Z]+/g, '([^/]+)').replace(/\/$/, '')}/$`;
+  const regex = `^${pattern.replace(/:[a-zA-Z]+/g, '([^/]+)').replace(/\/$/, '')}/?$`;
   return new RegExp(regex).test(path);
 }
 
