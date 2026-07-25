@@ -35,10 +35,13 @@ passport.use(
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
       callbackURL: process.env.GOOGLE_CALLBACK_URL!,
     },
-    (accessToken, refreshToken, profile, done) => {
-      findOrCreateGoogleUser(profile)
-        .then((user) => done(null, user))
-        .catch((err: Error) => done(err));
+    async (accessToken, refreshToken, profile, done) => {
+      try {
+        const user = await findOrCreateGoogleUser(profile);
+        done(null, user);
+      } catch (err) {
+        done(err);
+      }
     },
   ),
 );
