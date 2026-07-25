@@ -79,16 +79,16 @@ model Post {
 }
 
 model Product {
-  id          Int     @id @default(autoincrement())
-  post        Post    @relation(fields: [postId], references: [id])
+  id          Int      @id @default(autoincrement())
+  post        Post     @relation(fields: [postId], references: [id])
   postId      Int
-  user        User    @relation(fields: [userId], references: [id])
+  user        User     @relation(fields: [userId], references: [id])
   userId      Int
-  cat         Cat     @relation(fields: [catId], references: [id])
+  cat         Cat      @relation(fields: [catId], references: [id])
   catId       Int
   
   name        String
-  description String
+  description String   @default('')
   condition   Cond
   location    String?
 }
@@ -100,16 +100,16 @@ enum Cond {
 }
 
 model Service {
-  id          Int    @id @default(autoincrement())
-  post        Post   @relation(fields: [postId], references: [id])
+  id          Int     @id @default(autoincrement())
+  post        Post    @relation(fields: [postId], references: [id])
   postId      Int
-  user        User   @relation(fields: [userId], references: [id])
+  user        User    @relation(fields: [userId], references: [id])
   userId      Int
-  cat         Cat    @relation(fields: [catId], references: [id])
+  cat         Cat     @relation(fields: [catId], references: [id])
   catId       Int
 
   name        String
-  description String
+  description String  @default('')
 }
 
 model Cat {
