@@ -13,6 +13,8 @@ import Chip from '@mui/material/Chip';
 import CircularProgress from '@mui/material/CircularProgress';
 import Divider from '@mui/material/Divider';
 
+import { useParams } from '../../context/RouterContext';
+
 interface ProfileUser {
   id: number;
   name: string;
@@ -103,15 +105,15 @@ export default function Profile() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const { id } = useParams();
+
   useEffect(() => {
     let cancelled = false;
 
     async function fetchProfile() {
       try {
-        const res = await axios.get('/user/me', { withCredentials: true });
-        if (res.status !== 200) {
-          throw new Error(`Failed to load profile ${res.status}`);
-        }
+        const url = id ? `/user/${id}` : '/user/me';
+        const res = await axios.get<ProfileUser>(url, { withCredentials: true });
         if (!cancelled) setProfile(res.data);
       } catch (err) {
         if (!cancelled) setError(err instanceof Error ? err.message : 'Something went wrong :/');
@@ -122,7 +124,7 @@ export default function Profile() {
 
     fetchProfile();
     return () => { cancelled = true; };
-  }, []);
+  }, [id]);
 
   if (loading) {
     return (
@@ -187,7 +189,7 @@ export default function Profile() {
               fontSize: '2rem',
             }}
             >
-              {(profile.name ?? profile.email).charAt(0).toUpperCase()}
+              {profile.name.charAt(0).toUpperCase()}
             </Avatar>
             <Button
               variant="outlined"
