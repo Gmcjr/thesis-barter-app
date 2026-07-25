@@ -20,8 +20,10 @@ export type Role = (typeof Role)[keyof typeof Role]
 
 export const Cond = {
   POOR: 'POOR',
-  FAIR: 'FAIR',
-  NEW: 'NEW'
+  AVERAGE: 'AVERAGE',
+  GOOD: 'GOOD',
+  EXCELLENT: 'EXCELLENT',
+  MINT: 'MINT'
 } as const
 
 export type Cond = (typeof Cond)[keyof typeof Cond]

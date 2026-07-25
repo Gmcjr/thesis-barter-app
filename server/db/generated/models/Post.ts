@@ -29,32 +29,63 @@ export type AggregatePost = {
 export type PostAvgAggregateOutputType = {
   id: number | null
   userId: number | null
+  radiusMiles: number | null
+  lat: number | null
+  lng: number | null
 }
 
 export type PostSumAggregateOutputType = {
   id: number | null
   userId: number | null
+  radiusMiles: number | null
+  lat: number | null
+  lng: number | null
 }
 
 export type PostMinAggregateOutputType = {
   id: number | null
   userId: number | null
+  title: string | null
   message: string | null
   isComplete: boolean | null
+  createdAt: Date | null
+  updatedAt: Date | null
+  isLocal: boolean | null
+  zipCode: string | null
+  radiusMiles: number | null
+  lat: number | null
+  lng: number | null
 }
 
 export type PostMaxAggregateOutputType = {
   id: number | null
   userId: number | null
+  title: string | null
   message: string | null
   isComplete: boolean | null
+  createdAt: Date | null
+  updatedAt: Date | null
+  isLocal: boolean | null
+  zipCode: string | null
+  radiusMiles: number | null
+  lat: number | null
+  lng: number | null
 }
 
 export type PostCountAggregateOutputType = {
   id: number
   userId: number
+  title: number
   message: number
   isComplete: number
+  createdAt: number
+  updatedAt: number
+  images: number
+  isLocal: number
+  zipCode: number
+  radiusMiles: number
+  lat: number
+  lng: number
   _all: number
 }
 
@@ -62,32 +93,63 @@ export type PostCountAggregateOutputType = {
 export type PostAvgAggregateInputType = {
   id?: true
   userId?: true
+  radiusMiles?: true
+  lat?: true
+  lng?: true
 }
 
 export type PostSumAggregateInputType = {
   id?: true
   userId?: true
+  radiusMiles?: true
+  lat?: true
+  lng?: true
 }
 
 export type PostMinAggregateInputType = {
   id?: true
   userId?: true
+  title?: true
   message?: true
   isComplete?: true
+  createdAt?: true
+  updatedAt?: true
+  isLocal?: true
+  zipCode?: true
+  radiusMiles?: true
+  lat?: true
+  lng?: true
 }
 
 export type PostMaxAggregateInputType = {
   id?: true
   userId?: true
+  title?: true
   message?: true
   isComplete?: true
+  createdAt?: true
+  updatedAt?: true
+  isLocal?: true
+  zipCode?: true
+  radiusMiles?: true
+  lat?: true
+  lng?: true
 }
 
 export type PostCountAggregateInputType = {
   id?: true
   userId?: true
+  title?: true
   message?: true
   isComplete?: true
+  createdAt?: true
+  updatedAt?: true
+  images?: true
+  isLocal?: true
+  zipCode?: true
+  radiusMiles?: true
+  lat?: true
+  lng?: true
   _all?: true
 }
 
@@ -180,8 +242,17 @@ export type PostGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
 export type PostGroupByOutputType = {
   id: number
   userId: number
+  title: string
   message: string
   isComplete: boolean
+  createdAt: Date
+  updatedAt: Date
+  images: string[]
+  isLocal: boolean
+  zipCode: string | null
+  radiusMiles: number | null
+  lat: number | null
+  lng: number | null
   _count: PostCountAggregateOutputType | null
   _avg: PostAvgAggregateOutputType | null
   _sum: PostSumAggregateOutputType | null
@@ -210,21 +281,41 @@ export type PostWhereInput = {
   NOT?: Prisma.PostWhereInput | Prisma.PostWhereInput[]
   id?: Prisma.IntFilter<"Post"> | number
   userId?: Prisma.IntFilter<"Post"> | number
+  title?: Prisma.StringFilter<"Post"> | string
   message?: Prisma.StringFilter<"Post"> | string
   isComplete?: Prisma.BoolFilter<"Post"> | boolean
+  createdAt?: Prisma.DateTimeFilter<"Post"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Post"> | Date | string
+  images?: Prisma.StringNullableListFilter<"Post">
+  isLocal?: Prisma.BoolFilter<"Post"> | boolean
+  zipCode?: Prisma.StringNullableFilter<"Post"> | string | null
+  radiusMiles?: Prisma.IntNullableFilter<"Post"> | number | null
+  lat?: Prisma.FloatNullableFilter<"Post"> | number | null
+  lng?: Prisma.FloatNullableFilter<"Post"> | number | null
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   products?: Prisma.ProductListRelationFilter
   services?: Prisma.ServiceListRelationFilter
+  comments?: Prisma.CommentListRelationFilter
 }
 
 export type PostOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  title?: Prisma.SortOrder
   message?: Prisma.SortOrder
   isComplete?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  images?: Prisma.SortOrder
+  isLocal?: Prisma.SortOrder
+  zipCode?: Prisma.SortOrderInput | Prisma.SortOrder
+  radiusMiles?: Prisma.SortOrderInput | Prisma.SortOrder
+  lat?: Prisma.SortOrderInput | Prisma.SortOrder
+  lng?: Prisma.SortOrderInput | Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
   products?: Prisma.ProductOrderByRelationAggregateInput
   services?: Prisma.ServiceOrderByRelationAggregateInput
+  comments?: Prisma.CommentOrderByRelationAggregateInput
 }
 
 export type PostWhereUniqueInput = Prisma.AtLeast<{
@@ -233,18 +324,37 @@ export type PostWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.PostWhereInput[]
   NOT?: Prisma.PostWhereInput | Prisma.PostWhereInput[]
   userId?: Prisma.IntFilter<"Post"> | number
+  title?: Prisma.StringFilter<"Post"> | string
   message?: Prisma.StringFilter<"Post"> | string
   isComplete?: Prisma.BoolFilter<"Post"> | boolean
+  createdAt?: Prisma.DateTimeFilter<"Post"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Post"> | Date | string
+  images?: Prisma.StringNullableListFilter<"Post">
+  isLocal?: Prisma.BoolFilter<"Post"> | boolean
+  zipCode?: Prisma.StringNullableFilter<"Post"> | string | null
+  radiusMiles?: Prisma.IntNullableFilter<"Post"> | number | null
+  lat?: Prisma.FloatNullableFilter<"Post"> | number | null
+  lng?: Prisma.FloatNullableFilter<"Post"> | number | null
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   products?: Prisma.ProductListRelationFilter
   services?: Prisma.ServiceListRelationFilter
+  comments?: Prisma.CommentListRelationFilter
 }, "id">
 
 export type PostOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  title?: Prisma.SortOrder
   message?: Prisma.SortOrder
   isComplete?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  images?: Prisma.SortOrder
+  isLocal?: Prisma.SortOrder
+  zipCode?: Prisma.SortOrderInput | Prisma.SortOrder
+  radiusMiles?: Prisma.SortOrderInput | Prisma.SortOrder
+  lat?: Prisma.SortOrderInput | Prisma.SortOrder
+  lng?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.PostCountOrderByAggregateInput
   _avg?: Prisma.PostAvgOrderByAggregateInput
   _max?: Prisma.PostMaxOrderByAggregateInput
@@ -258,61 +368,137 @@ export type PostScalarWhereWithAggregatesInput = {
   NOT?: Prisma.PostScalarWhereWithAggregatesInput | Prisma.PostScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"Post"> | number
   userId?: Prisma.IntWithAggregatesFilter<"Post"> | number
+  title?: Prisma.StringWithAggregatesFilter<"Post"> | string
   message?: Prisma.StringWithAggregatesFilter<"Post"> | string
   isComplete?: Prisma.BoolWithAggregatesFilter<"Post"> | boolean
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"Post"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Post"> | Date | string
+  images?: Prisma.StringNullableListFilter<"Post">
+  isLocal?: Prisma.BoolWithAggregatesFilter<"Post"> | boolean
+  zipCode?: Prisma.StringNullableWithAggregatesFilter<"Post"> | string | null
+  radiusMiles?: Prisma.IntNullableWithAggregatesFilter<"Post"> | number | null
+  lat?: Prisma.FloatNullableWithAggregatesFilter<"Post"> | number | null
+  lng?: Prisma.FloatNullableWithAggregatesFilter<"Post"> | number | null
 }
 
 export type PostCreateInput = {
+  title: string
   message: string
   isComplete?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  images?: Prisma.PostCreateimagesInput | string[]
+  isLocal?: boolean
+  zipCode?: string | null
+  radiusMiles?: number | null
+  lat?: number | null
+  lng?: number | null
   user: Prisma.UserCreateNestedOneWithoutPostsInput
   products?: Prisma.ProductCreateNestedManyWithoutPostInput
   services?: Prisma.ServiceCreateNestedManyWithoutPostInput
+  comments?: Prisma.CommentCreateNestedManyWithoutPostInput
 }
 
 export type PostUncheckedCreateInput = {
   id?: number
   userId: number
+  title: string
   message: string
   isComplete?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  images?: Prisma.PostCreateimagesInput | string[]
+  isLocal?: boolean
+  zipCode?: string | null
+  radiusMiles?: number | null
+  lat?: number | null
+  lng?: number | null
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutPostInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutPostInput
+  comments?: Prisma.CommentUncheckedCreateNestedManyWithoutPostInput
 }
 
 export type PostUpdateInput = {
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
   isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  images?: Prisma.PostUpdateimagesInput | string[]
+  isLocal?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  radiusMiles?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  lat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   user?: Prisma.UserUpdateOneRequiredWithoutPostsNestedInput
   products?: Prisma.ProductUpdateManyWithoutPostNestedInput
   services?: Prisma.ServiceUpdateManyWithoutPostNestedInput
+  comments?: Prisma.CommentUpdateManyWithoutPostNestedInput
 }
 
 export type PostUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
   isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  images?: Prisma.PostUpdateimagesInput | string[]
+  isLocal?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  radiusMiles?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  lat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   products?: Prisma.ProductUncheckedUpdateManyWithoutPostNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutPostNestedInput
+  comments?: Prisma.CommentUncheckedUpdateManyWithoutPostNestedInput
 }
 
 export type PostCreateManyInput = {
   id?: number
   userId: number
+  title: string
   message: string
   isComplete?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  images?: Prisma.PostCreateimagesInput | string[]
+  isLocal?: boolean
+  zipCode?: string | null
+  radiusMiles?: number | null
+  lat?: number | null
+  lng?: number | null
 }
 
 export type PostUpdateManyMutationInput = {
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
   isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  images?: Prisma.PostUpdateimagesInput | string[]
+  isLocal?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  radiusMiles?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  lat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
 }
 
 export type PostUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
   isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  images?: Prisma.PostUpdateimagesInput | string[]
+  isLocal?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  radiusMiles?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  lat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
 }
 
 export type PostListRelationFilter = {
@@ -325,35 +511,74 @@ export type PostOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type StringNullableListFilter<$PrismaModel = never> = {
+  equals?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel> | null
+  has?: string | Prisma.StringFieldRefInput<$PrismaModel> | null
+  hasEvery?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
+  hasSome?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
+  isEmpty?: boolean
+}
+
 export type PostCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  title?: Prisma.SortOrder
   message?: Prisma.SortOrder
   isComplete?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  images?: Prisma.SortOrder
+  isLocal?: Prisma.SortOrder
+  zipCode?: Prisma.SortOrder
+  radiusMiles?: Prisma.SortOrder
+  lat?: Prisma.SortOrder
+  lng?: Prisma.SortOrder
 }
 
 export type PostAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  radiusMiles?: Prisma.SortOrder
+  lat?: Prisma.SortOrder
+  lng?: Prisma.SortOrder
 }
 
 export type PostMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  title?: Prisma.SortOrder
   message?: Prisma.SortOrder
   isComplete?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  isLocal?: Prisma.SortOrder
+  zipCode?: Prisma.SortOrder
+  radiusMiles?: Prisma.SortOrder
+  lat?: Prisma.SortOrder
+  lng?: Prisma.SortOrder
 }
 
 export type PostMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  title?: Prisma.SortOrder
   message?: Prisma.SortOrder
   isComplete?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  isLocal?: Prisma.SortOrder
+  zipCode?: Prisma.SortOrder
+  radiusMiles?: Prisma.SortOrder
+  lat?: Prisma.SortOrder
+  lng?: Prisma.SortOrder
 }
 
 export type PostSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  radiusMiles?: Prisma.SortOrder
+  lat?: Prisma.SortOrder
+  lng?: Prisma.SortOrder
 }
 
 export type PostScalarRelationFilter = {
@@ -403,8 +628,51 @@ export type PostUncheckedUpdateManyWithoutUserNestedInput = {
   deleteMany?: Prisma.PostScalarWhereInput | Prisma.PostScalarWhereInput[]
 }
 
+export type PostCreateimagesInput = {
+  set: string[]
+}
+
 export type BoolFieldUpdateOperationsInput = {
   set?: boolean
+}
+
+export type DateTimeFieldUpdateOperationsInput = {
+  set?: Date | string
+}
+
+export type PostUpdateimagesInput = {
+  set?: string[]
+  push?: string | string[]
+}
+
+export type NullableIntFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
+export type NullableFloatFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
+export type PostCreateNestedOneWithoutCommentsInput = {
+  create?: Prisma.XOR<Prisma.PostCreateWithoutCommentsInput, Prisma.PostUncheckedCreateWithoutCommentsInput>
+  connectOrCreate?: Prisma.PostCreateOrConnectWithoutCommentsInput
+  connect?: Prisma.PostWhereUniqueInput
+}
+
+export type PostUpdateOneRequiredWithoutCommentsNestedInput = {
+  create?: Prisma.XOR<Prisma.PostCreateWithoutCommentsInput, Prisma.PostUncheckedCreateWithoutCommentsInput>
+  connectOrCreate?: Prisma.PostCreateOrConnectWithoutCommentsInput
+  upsert?: Prisma.PostUpsertWithoutCommentsInput
+  connect?: Prisma.PostWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PostUpdateToOneWithWhereWithoutCommentsInput, Prisma.PostUpdateWithoutCommentsInput>, Prisma.PostUncheckedUpdateWithoutCommentsInput>
 }
 
 export type PostCreateNestedOneWithoutProductsInput = {
@@ -436,18 +704,38 @@ export type PostUpdateOneRequiredWithoutServicesNestedInput = {
 }
 
 export type PostCreateWithoutUserInput = {
+  title: string
   message: string
   isComplete?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  images?: Prisma.PostCreateimagesInput | string[]
+  isLocal?: boolean
+  zipCode?: string | null
+  radiusMiles?: number | null
+  lat?: number | null
+  lng?: number | null
   products?: Prisma.ProductCreateNestedManyWithoutPostInput
   services?: Prisma.ServiceCreateNestedManyWithoutPostInput
+  comments?: Prisma.CommentCreateNestedManyWithoutPostInput
 }
 
 export type PostUncheckedCreateWithoutUserInput = {
   id?: number
+  title: string
   message: string
   isComplete?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  images?: Prisma.PostCreateimagesInput | string[]
+  isLocal?: boolean
+  zipCode?: string | null
+  radiusMiles?: number | null
+  lat?: number | null
+  lng?: number | null
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutPostInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutPostInput
+  comments?: Prisma.CommentUncheckedCreateNestedManyWithoutPostInput
 }
 
 export type PostCreateOrConnectWithoutUserInput = {
@@ -482,23 +770,138 @@ export type PostScalarWhereInput = {
   NOT?: Prisma.PostScalarWhereInput | Prisma.PostScalarWhereInput[]
   id?: Prisma.IntFilter<"Post"> | number
   userId?: Prisma.IntFilter<"Post"> | number
+  title?: Prisma.StringFilter<"Post"> | string
   message?: Prisma.StringFilter<"Post"> | string
   isComplete?: Prisma.BoolFilter<"Post"> | boolean
+  createdAt?: Prisma.DateTimeFilter<"Post"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Post"> | Date | string
+  images?: Prisma.StringNullableListFilter<"Post">
+  isLocal?: Prisma.BoolFilter<"Post"> | boolean
+  zipCode?: Prisma.StringNullableFilter<"Post"> | string | null
+  radiusMiles?: Prisma.IntNullableFilter<"Post"> | number | null
+  lat?: Prisma.FloatNullableFilter<"Post"> | number | null
+  lng?: Prisma.FloatNullableFilter<"Post"> | number | null
+}
+
+export type PostCreateWithoutCommentsInput = {
+  title: string
+  message: string
+  isComplete?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  images?: Prisma.PostCreateimagesInput | string[]
+  isLocal?: boolean
+  zipCode?: string | null
+  radiusMiles?: number | null
+  lat?: number | null
+  lng?: number | null
+  user: Prisma.UserCreateNestedOneWithoutPostsInput
+  products?: Prisma.ProductCreateNestedManyWithoutPostInput
+  services?: Prisma.ServiceCreateNestedManyWithoutPostInput
+}
+
+export type PostUncheckedCreateWithoutCommentsInput = {
+  id?: number
+  userId: number
+  title: string
+  message: string
+  isComplete?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  images?: Prisma.PostCreateimagesInput | string[]
+  isLocal?: boolean
+  zipCode?: string | null
+  radiusMiles?: number | null
+  lat?: number | null
+  lng?: number | null
+  products?: Prisma.ProductUncheckedCreateNestedManyWithoutPostInput
+  services?: Prisma.ServiceUncheckedCreateNestedManyWithoutPostInput
+}
+
+export type PostCreateOrConnectWithoutCommentsInput = {
+  where: Prisma.PostWhereUniqueInput
+  create: Prisma.XOR<Prisma.PostCreateWithoutCommentsInput, Prisma.PostUncheckedCreateWithoutCommentsInput>
+}
+
+export type PostUpsertWithoutCommentsInput = {
+  update: Prisma.XOR<Prisma.PostUpdateWithoutCommentsInput, Prisma.PostUncheckedUpdateWithoutCommentsInput>
+  create: Prisma.XOR<Prisma.PostCreateWithoutCommentsInput, Prisma.PostUncheckedCreateWithoutCommentsInput>
+  where?: Prisma.PostWhereInput
+}
+
+export type PostUpdateToOneWithWhereWithoutCommentsInput = {
+  where?: Prisma.PostWhereInput
+  data: Prisma.XOR<Prisma.PostUpdateWithoutCommentsInput, Prisma.PostUncheckedUpdateWithoutCommentsInput>
+}
+
+export type PostUpdateWithoutCommentsInput = {
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  message?: Prisma.StringFieldUpdateOperationsInput | string
+  isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  images?: Prisma.PostUpdateimagesInput | string[]
+  isLocal?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  radiusMiles?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  lat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  user?: Prisma.UserUpdateOneRequiredWithoutPostsNestedInput
+  products?: Prisma.ProductUpdateManyWithoutPostNestedInput
+  services?: Prisma.ServiceUpdateManyWithoutPostNestedInput
+}
+
+export type PostUncheckedUpdateWithoutCommentsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  message?: Prisma.StringFieldUpdateOperationsInput | string
+  isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  images?: Prisma.PostUpdateimagesInput | string[]
+  isLocal?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  radiusMiles?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  lat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  products?: Prisma.ProductUncheckedUpdateManyWithoutPostNestedInput
+  services?: Prisma.ServiceUncheckedUpdateManyWithoutPostNestedInput
 }
 
 export type PostCreateWithoutProductsInput = {
+  title: string
   message: string
   isComplete?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  images?: Prisma.PostCreateimagesInput | string[]
+  isLocal?: boolean
+  zipCode?: string | null
+  radiusMiles?: number | null
+  lat?: number | null
+  lng?: number | null
   user: Prisma.UserCreateNestedOneWithoutPostsInput
   services?: Prisma.ServiceCreateNestedManyWithoutPostInput
+  comments?: Prisma.CommentCreateNestedManyWithoutPostInput
 }
 
 export type PostUncheckedCreateWithoutProductsInput = {
   id?: number
   userId: number
+  title: string
   message: string
   isComplete?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  images?: Prisma.PostCreateimagesInput | string[]
+  isLocal?: boolean
+  zipCode?: string | null
+  radiusMiles?: number | null
+  lat?: number | null
+  lng?: number | null
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutPostInput
+  comments?: Prisma.CommentUncheckedCreateNestedManyWithoutPostInput
 }
 
 export type PostCreateOrConnectWithoutProductsInput = {
@@ -518,33 +921,73 @@ export type PostUpdateToOneWithWhereWithoutProductsInput = {
 }
 
 export type PostUpdateWithoutProductsInput = {
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
   isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  images?: Prisma.PostUpdateimagesInput | string[]
+  isLocal?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  radiusMiles?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  lat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   user?: Prisma.UserUpdateOneRequiredWithoutPostsNestedInput
   services?: Prisma.ServiceUpdateManyWithoutPostNestedInput
+  comments?: Prisma.CommentUpdateManyWithoutPostNestedInput
 }
 
 export type PostUncheckedUpdateWithoutProductsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
   isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  images?: Prisma.PostUpdateimagesInput | string[]
+  isLocal?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  radiusMiles?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  lat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   services?: Prisma.ServiceUncheckedUpdateManyWithoutPostNestedInput
+  comments?: Prisma.CommentUncheckedUpdateManyWithoutPostNestedInput
 }
 
 export type PostCreateWithoutServicesInput = {
+  title: string
   message: string
   isComplete?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  images?: Prisma.PostCreateimagesInput | string[]
+  isLocal?: boolean
+  zipCode?: string | null
+  radiusMiles?: number | null
+  lat?: number | null
+  lng?: number | null
   user: Prisma.UserCreateNestedOneWithoutPostsInput
   products?: Prisma.ProductCreateNestedManyWithoutPostInput
+  comments?: Prisma.CommentCreateNestedManyWithoutPostInput
 }
 
 export type PostUncheckedCreateWithoutServicesInput = {
   id?: number
   userId: number
+  title: string
   message: string
   isComplete?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  images?: Prisma.PostCreateimagesInput | string[]
+  isLocal?: boolean
+  zipCode?: string | null
+  radiusMiles?: number | null
+  lat?: number | null
+  lng?: number | null
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutPostInput
+  comments?: Prisma.CommentUncheckedCreateNestedManyWithoutPostInput
 }
 
 export type PostCreateOrConnectWithoutServicesInput = {
@@ -564,45 +1007,103 @@ export type PostUpdateToOneWithWhereWithoutServicesInput = {
 }
 
 export type PostUpdateWithoutServicesInput = {
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
   isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  images?: Prisma.PostUpdateimagesInput | string[]
+  isLocal?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  radiusMiles?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  lat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   user?: Prisma.UserUpdateOneRequiredWithoutPostsNestedInput
   products?: Prisma.ProductUpdateManyWithoutPostNestedInput
+  comments?: Prisma.CommentUpdateManyWithoutPostNestedInput
 }
 
 export type PostUncheckedUpdateWithoutServicesInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
   isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  images?: Prisma.PostUpdateimagesInput | string[]
+  isLocal?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  radiusMiles?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  lat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   products?: Prisma.ProductUncheckedUpdateManyWithoutPostNestedInput
+  comments?: Prisma.CommentUncheckedUpdateManyWithoutPostNestedInput
 }
 
 export type PostCreateManyUserInput = {
   id?: number
+  title: string
   message: string
   isComplete?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  images?: Prisma.PostCreateimagesInput | string[]
+  isLocal?: boolean
+  zipCode?: string | null
+  radiusMiles?: number | null
+  lat?: number | null
+  lng?: number | null
 }
 
 export type PostUpdateWithoutUserInput = {
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
   isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  images?: Prisma.PostUpdateimagesInput | string[]
+  isLocal?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  radiusMiles?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  lat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   products?: Prisma.ProductUpdateManyWithoutPostNestedInput
   services?: Prisma.ServiceUpdateManyWithoutPostNestedInput
+  comments?: Prisma.CommentUpdateManyWithoutPostNestedInput
 }
 
 export type PostUncheckedUpdateWithoutUserInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
   isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  images?: Prisma.PostUpdateimagesInput | string[]
+  isLocal?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  radiusMiles?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  lat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   products?: Prisma.ProductUncheckedUpdateManyWithoutPostNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutPostNestedInput
+  comments?: Prisma.CommentUncheckedUpdateManyWithoutPostNestedInput
 }
 
 export type PostUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
   isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  images?: Prisma.PostUpdateimagesInput | string[]
+  isLocal?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  radiusMiles?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  lat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
 }
 
 
@@ -613,11 +1114,13 @@ export type PostUncheckedUpdateManyWithoutUserInput = {
 export type PostCountOutputType = {
   products: number
   services: number
+  comments: number
 }
 
 export type PostCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   products?: boolean | PostCountOutputTypeCountProductsArgs
   services?: boolean | PostCountOutputTypeCountServicesArgs
+  comments?: boolean | PostCountOutputTypeCountCommentsArgs
 }
 
 /**
@@ -644,46 +1147,91 @@ export type PostCountOutputTypeCountServicesArgs<ExtArgs extends runtime.Types.E
   where?: Prisma.ServiceWhereInput
 }
 
+/**
+ * PostCountOutputType without action
+ */
+export type PostCountOutputTypeCountCommentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CommentWhereInput
+}
+
 
 export type PostSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
+  title?: boolean
   message?: boolean
   isComplete?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  images?: boolean
+  isLocal?: boolean
+  zipCode?: boolean
+  radiusMiles?: boolean
+  lat?: boolean
+  lng?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   products?: boolean | Prisma.Post$productsArgs<ExtArgs>
   services?: boolean | Prisma.Post$servicesArgs<ExtArgs>
+  comments?: boolean | Prisma.Post$commentsArgs<ExtArgs>
   _count?: boolean | Prisma.PostCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["post"]>
 
 export type PostSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
+  title?: boolean
   message?: boolean
   isComplete?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  images?: boolean
+  isLocal?: boolean
+  zipCode?: boolean
+  radiusMiles?: boolean
+  lat?: boolean
+  lng?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["post"]>
 
 export type PostSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
+  title?: boolean
   message?: boolean
   isComplete?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  images?: boolean
+  isLocal?: boolean
+  zipCode?: boolean
+  radiusMiles?: boolean
+  lat?: boolean
+  lng?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["post"]>
 
 export type PostSelectScalar = {
   id?: boolean
   userId?: boolean
+  title?: boolean
   message?: boolean
   isComplete?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  images?: boolean
+  isLocal?: boolean
+  zipCode?: boolean
+  radiusMiles?: boolean
+  lat?: boolean
+  lng?: boolean
 }
 
-export type PostOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "message" | "isComplete", ExtArgs["result"]["post"]>
+export type PostOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "title" | "message" | "isComplete" | "createdAt" | "updatedAt" | "images" | "isLocal" | "zipCode" | "radiusMiles" | "lat" | "lng", ExtArgs["result"]["post"]>
 export type PostInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   products?: boolean | Prisma.Post$productsArgs<ExtArgs>
   services?: boolean | Prisma.Post$servicesArgs<ExtArgs>
+  comments?: boolean | Prisma.Post$commentsArgs<ExtArgs>
   _count?: boolean | Prisma.PostCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type PostIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -699,12 +1247,22 @@ export type $PostPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     user: Prisma.$UserPayload<ExtArgs>
     products: Prisma.$ProductPayload<ExtArgs>[]
     services: Prisma.$ServicePayload<ExtArgs>[]
+    comments: Prisma.$CommentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
     userId: number
+    title: string
     message: string
     isComplete: boolean
+    createdAt: Date
+    updatedAt: Date
+    images: string[]
+    isLocal: boolean
+    zipCode: string | null
+    radiusMiles: number | null
+    lat: number | null
+    lng: number | null
   }, ExtArgs["result"]["post"]>
   composites: {}
 }
@@ -1102,6 +1660,7 @@ export interface Prisma__PostClient<T, Null = never, ExtArgs extends runtime.Typ
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   products<T extends Prisma.Post$productsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Post$productsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   services<T extends Prisma.Post$servicesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Post$servicesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ServicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  comments<T extends Prisma.Post$commentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Post$commentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1133,8 +1692,17 @@ export interface Prisma__PostClient<T, Null = never, ExtArgs extends runtime.Typ
 export interface PostFieldRefs {
   readonly id: Prisma.FieldRef<"Post", 'Int'>
   readonly userId: Prisma.FieldRef<"Post", 'Int'>
+  readonly title: Prisma.FieldRef<"Post", 'String'>
   readonly message: Prisma.FieldRef<"Post", 'String'>
   readonly isComplete: Prisma.FieldRef<"Post", 'Boolean'>
+  readonly createdAt: Prisma.FieldRef<"Post", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"Post", 'DateTime'>
+  readonly images: Prisma.FieldRef<"Post", 'String[]'>
+  readonly isLocal: Prisma.FieldRef<"Post", 'Boolean'>
+  readonly zipCode: Prisma.FieldRef<"Post", 'String'>
+  readonly radiusMiles: Prisma.FieldRef<"Post", 'Int'>
+  readonly lat: Prisma.FieldRef<"Post", 'Float'>
+  readonly lng: Prisma.FieldRef<"Post", 'Float'>
 }
     
 
@@ -1581,6 +2149,30 @@ export type Post$servicesArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   take?: number
   skip?: number
   distinct?: Prisma.ServiceScalarFieldEnum | Prisma.ServiceScalarFieldEnum[]
+}
+
+/**
+ * Post.comments
+ */
+export type Post$commentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Comment
+   */
+  select?: Prisma.CommentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Comment
+   */
+  omit?: Prisma.CommentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CommentInclude<ExtArgs> | null
+  where?: Prisma.CommentWhereInput
+  orderBy?: Prisma.CommentOrderByWithRelationInput | Prisma.CommentOrderByWithRelationInput[]
+  cursor?: Prisma.CommentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CommentScalarFieldEnum | Prisma.CommentScalarFieldEnum[]
 }
 
 /**

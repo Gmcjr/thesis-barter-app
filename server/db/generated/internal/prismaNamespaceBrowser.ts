@@ -56,6 +56,7 @@ export const ModelName = {
   Message: 'Message',
   Log: 'Log',
   Post: 'Post',
+  Comment: 'Comment',
   Product: 'Product',
   Service: 'Service',
   Cat: 'Cat',
@@ -84,6 +85,7 @@ export const UserScalarFieldEnum = {
   name: 'name',
   email: 'email',
   phone: 'phone',
+  zipCode: 'zipCode',
   role: 'role'
 } as const
 
@@ -121,11 +123,31 @@ export type LogScalarFieldEnum = (typeof LogScalarFieldEnum)[keyof typeof LogSca
 export const PostScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
+  title: 'title',
   message: 'message',
-  isComplete: 'isComplete'
+  isComplete: 'isComplete',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  images: 'images',
+  isLocal: 'isLocal',
+  zipCode: 'zipCode',
+  radiusMiles: 'radiusMiles',
+  lat: 'lat',
+  lng: 'lng'
 } as const
 
 export type PostScalarFieldEnum = (typeof PostScalarFieldEnum)[keyof typeof PostScalarFieldEnum]
+
+
+export const CommentScalarFieldEnum = {
+  id: 'id',
+  text: 'text',
+  createdAt: 'createdAt',
+  postId: 'postId',
+  userId: 'userId'
+} as const
+
+export type CommentScalarFieldEnum = (typeof CommentScalarFieldEnum)[keyof typeof CommentScalarFieldEnum]
 
 
 export const ProductScalarFieldEnum = {

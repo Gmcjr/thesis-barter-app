@@ -43,6 +43,11 @@ export type Log = Prisma.LogModel
  */
 export type Post = Prisma.PostModel
 /**
+ * Model Comment
+ * 
+ */
+export type Comment = Prisma.CommentModel
+/**
  * Model Product
  * 
  */
