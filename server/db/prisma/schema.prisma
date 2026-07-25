@@ -26,10 +26,12 @@ model User {
   rMessages    Message[]   @relation("rMessages")
   rep          Rep[]
 
-  name         String?
+  name         String
   email        String      @unique
   phone        String?
   role         Role?       @default(USER)
+  bio          String?
+  createdAt    DateTime    @default(now())
 }
 
 enum Role {
@@ -88,7 +90,7 @@ model Product {
   catId       Int
   
   name        String
-  description String   @default('')
+  description String?
   condition   Cond
   location    String?
 }
@@ -109,7 +111,7 @@ model Service {
   catId       Int
 
   name        String
-  description String  @default('')
+  description String?
 }
 
 model Cat {

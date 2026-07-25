@@ -203,7 +203,7 @@ export type ServiceGroupByOutputType = {
   userId: number
   catId: number
   name: string
-  description: string
+  description: string | null
   _count: ServiceCountAggregateOutputType | null
   _avg: ServiceAvgAggregateOutputType | null
   _sum: ServiceSumAggregateOutputType | null
@@ -235,7 +235,7 @@ export type ServiceWhereInput = {
   userId?: Prisma.IntFilter<"Service"> | number
   catId?: Prisma.IntFilter<"Service"> | number
   name?: Prisma.StringFilter<"Service"> | string
-  description?: Prisma.StringFilter<"Service"> | string
+  description?: Prisma.StringNullableFilter<"Service"> | string | null
   post?: Prisma.XOR<Prisma.PostScalarRelationFilter, Prisma.PostWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   cat?: Prisma.XOR<Prisma.CatScalarRelationFilter, Prisma.CatWhereInput>
@@ -247,7 +247,7 @@ export type ServiceOrderByWithRelationInput = {
   userId?: Prisma.SortOrder
   catId?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  description?: Prisma.SortOrder
+  description?: Prisma.SortOrderInput | Prisma.SortOrder
   post?: Prisma.PostOrderByWithRelationInput
   user?: Prisma.UserOrderByWithRelationInput
   cat?: Prisma.CatOrderByWithRelationInput
@@ -262,7 +262,7 @@ export type ServiceWhereUniqueInput = Prisma.AtLeast<{
   userId?: Prisma.IntFilter<"Service"> | number
   catId?: Prisma.IntFilter<"Service"> | number
   name?: Prisma.StringFilter<"Service"> | string
-  description?: Prisma.StringFilter<"Service"> | string
+  description?: Prisma.StringNullableFilter<"Service"> | string | null
   post?: Prisma.XOR<Prisma.PostScalarRelationFilter, Prisma.PostWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   cat?: Prisma.XOR<Prisma.CatScalarRelationFilter, Prisma.CatWhereInput>
@@ -274,7 +274,7 @@ export type ServiceOrderByWithAggregationInput = {
   userId?: Prisma.SortOrder
   catId?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  description?: Prisma.SortOrder
+  description?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.ServiceCountOrderByAggregateInput
   _avg?: Prisma.ServiceAvgOrderByAggregateInput
   _max?: Prisma.ServiceMaxOrderByAggregateInput
@@ -291,12 +291,12 @@ export type ServiceScalarWhereWithAggregatesInput = {
   userId?: Prisma.IntWithAggregatesFilter<"Service"> | number
   catId?: Prisma.IntWithAggregatesFilter<"Service"> | number
   name?: Prisma.StringWithAggregatesFilter<"Service"> | string
-  description?: Prisma.StringWithAggregatesFilter<"Service"> | string
+  description?: Prisma.StringNullableWithAggregatesFilter<"Service"> | string | null
 }
 
 export type ServiceCreateInput = {
   name: string
-  description: string
+  description?: string | null
   post: Prisma.PostCreateNestedOneWithoutServicesInput
   user: Prisma.UserCreateNestedOneWithoutServicesInput
   cat: Prisma.CatCreateNestedOneWithoutServicesInput
@@ -308,12 +308,12 @@ export type ServiceUncheckedCreateInput = {
   userId: number
   catId: number
   name: string
-  description: string
+  description?: string | null
 }
 
 export type ServiceUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   post?: Prisma.PostUpdateOneRequiredWithoutServicesNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutServicesNestedInput
   cat?: Prisma.CatUpdateOneRequiredWithoutServicesNestedInput
@@ -325,7 +325,7 @@ export type ServiceUncheckedUpdateInput = {
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   catId?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type ServiceCreateManyInput = {
@@ -334,12 +334,12 @@ export type ServiceCreateManyInput = {
   userId: number
   catId: number
   name: string
-  description: string
+  description?: string | null
 }
 
 export type ServiceUpdateManyMutationInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type ServiceUncheckedUpdateManyInput = {
@@ -348,7 +348,7 @@ export type ServiceUncheckedUpdateManyInput = {
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   catId?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type ServiceListRelationFilter = {
@@ -530,7 +530,7 @@ export type ServiceUncheckedUpdateManyWithoutCatNestedInput = {
 
 export type ServiceCreateWithoutUserInput = {
   name: string
-  description: string
+  description?: string | null
   post: Prisma.PostCreateNestedOneWithoutServicesInput
   cat: Prisma.CatCreateNestedOneWithoutServicesInput
 }
@@ -540,7 +540,7 @@ export type ServiceUncheckedCreateWithoutUserInput = {
   postId: number
   catId: number
   name: string
-  description: string
+  description?: string | null
 }
 
 export type ServiceCreateOrConnectWithoutUserInput = {
@@ -578,12 +578,12 @@ export type ServiceScalarWhereInput = {
   userId?: Prisma.IntFilter<"Service"> | number
   catId?: Prisma.IntFilter<"Service"> | number
   name?: Prisma.StringFilter<"Service"> | string
-  description?: Prisma.StringFilter<"Service"> | string
+  description?: Prisma.StringNullableFilter<"Service"> | string | null
 }
 
 export type ServiceCreateWithoutPostInput = {
   name: string
-  description: string
+  description?: string | null
   user: Prisma.UserCreateNestedOneWithoutServicesInput
   cat: Prisma.CatCreateNestedOneWithoutServicesInput
 }
@@ -593,7 +593,7 @@ export type ServiceUncheckedCreateWithoutPostInput = {
   userId: number
   catId: number
   name: string
-  description: string
+  description?: string | null
 }
 
 export type ServiceCreateOrConnectWithoutPostInput = {
@@ -624,7 +624,7 @@ export type ServiceUpdateManyWithWhereWithoutPostInput = {
 
 export type ServiceCreateWithoutCatInput = {
   name: string
-  description: string
+  description?: string | null
   post: Prisma.PostCreateNestedOneWithoutServicesInput
   user: Prisma.UserCreateNestedOneWithoutServicesInput
 }
@@ -634,7 +634,7 @@ export type ServiceUncheckedCreateWithoutCatInput = {
   postId: number
   userId: number
   name: string
-  description: string
+  description?: string | null
 }
 
 export type ServiceCreateOrConnectWithoutCatInput = {
@@ -668,12 +668,12 @@ export type ServiceCreateManyUserInput = {
   postId: number
   catId: number
   name: string
-  description: string
+  description?: string | null
 }
 
 export type ServiceUpdateWithoutUserInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   post?: Prisma.PostUpdateOneRequiredWithoutServicesNestedInput
   cat?: Prisma.CatUpdateOneRequiredWithoutServicesNestedInput
 }
@@ -683,7 +683,7 @@ export type ServiceUncheckedUpdateWithoutUserInput = {
   postId?: Prisma.IntFieldUpdateOperationsInput | number
   catId?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type ServiceUncheckedUpdateManyWithoutUserInput = {
@@ -691,7 +691,7 @@ export type ServiceUncheckedUpdateManyWithoutUserInput = {
   postId?: Prisma.IntFieldUpdateOperationsInput | number
   catId?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type ServiceCreateManyPostInput = {
@@ -699,12 +699,12 @@ export type ServiceCreateManyPostInput = {
   userId: number
   catId: number
   name: string
-  description: string
+  description?: string | null
 }
 
 export type ServiceUpdateWithoutPostInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   user?: Prisma.UserUpdateOneRequiredWithoutServicesNestedInput
   cat?: Prisma.CatUpdateOneRequiredWithoutServicesNestedInput
 }
@@ -714,7 +714,7 @@ export type ServiceUncheckedUpdateWithoutPostInput = {
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   catId?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type ServiceUncheckedUpdateManyWithoutPostInput = {
@@ -722,7 +722,7 @@ export type ServiceUncheckedUpdateManyWithoutPostInput = {
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   catId?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type ServiceCreateManyCatInput = {
@@ -730,12 +730,12 @@ export type ServiceCreateManyCatInput = {
   postId: number
   userId: number
   name: string
-  description: string
+  description?: string | null
 }
 
 export type ServiceUpdateWithoutCatInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   post?: Prisma.PostUpdateOneRequiredWithoutServicesNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutServicesNestedInput
 }
@@ -745,7 +745,7 @@ export type ServiceUncheckedUpdateWithoutCatInput = {
   postId?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type ServiceUncheckedUpdateManyWithoutCatInput = {
@@ -753,7 +753,7 @@ export type ServiceUncheckedUpdateManyWithoutCatInput = {
   postId?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -833,7 +833,7 @@ export type $ServicePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     userId: number
     catId: number
     name: string
-    description: string
+    description: string | null
   }, ExtArgs["result"]["service"]>
   composites: {}
 }

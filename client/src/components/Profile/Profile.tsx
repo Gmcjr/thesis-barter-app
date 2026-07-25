@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -8,112 +10,226 @@ import Avatar from '@mui/material/Avatar';
 import TextField from '@mui/material/TextField';
 import Rating from '@mui/material/Rating';
 import Chip from '@mui/material/Chip';
+import CircularProgress from '@mui/material/CircularProgress';
+import Divider from '@mui/material/Divider';
 
-const profile = {
-  name: 'Devin Delgado',
-  memberSince: '7/15/1465',
-  bio: 'I like wood. I like stone. I like bread. I love Barta',
-  tradeCount: 4,
-  rating: 4,
-};
+interface ProfileUser {
+  id: number;
+  name: string;
+  email: string;
+  bio: string | null;
+  createdAt: string;
+}
 
-const dummyTrades = [
+interface DummyComment {
+  id: number;
+  user: string;
+  text: string;
+  createdAt: string;
+}
+
+interface DummyProduct {
+  id: number;
+  name: string;
+  description: string;
+  condition: 'POOR' | 'AVERAGE' | 'GOOD' | 'EXCELLENT' | 'MINT';
+}
+
+interface DummyService {
+  id: number;
+  name: string;
+  description: string;
+}
+
+interface DummyPost {
+  id: number;
+  user: string;
+  title: string;
+  message: string;
+  isComplete: boolean;
+  createdAt: string;
+  products: DummyProduct[];
+  services: DummyService[];
+  comments: DummyComment[];
+}
+
+const dummyTrades: DummyPost[] = [
   {
     id: 3,
     user: 'Devin Delagdo',
-    date: '07/20/1999',
+    title: 'Pedicure + training sesh',
+    message: 'Looking for a workout partner. Will give u a pedicure!',
+    isComplete: true,
+    createdAt: '1999-07-20T00:00:00.000Z',
+    products: [],
     services: [
+      { id: 1, name: 'Pedicure', description: 'Full pedicure session' },
+      { id: 2, name: '8 hr rigorous military training session', description: '' },
+    ],
+    comments: [
       {
-        name: 'pedicure', description: 'pedicure',
-      },
-      {
-        name: '8 hr rigourous military training session', description: '',
+        id: 1,
+        user: 'pedro',
+        text: 'Is this still available?',
+        createdAt: '1999-07-21T00:00:00.000Z',
       },
     ],
-    isComplete: true,
   },
   {
     id: 4,
     user: 'Devin Delagdo',
-    date: '07/20/1999',
-    product: [{ name: 'cloud', description: 'cloud', condition: 'new' }],
-    services: [{ name: 'flight', description: 'fly' }],
+    title: 'Cloud',
+    message: 'Trading a cloud (with test flight)',
     isComplete: false,
+    createdAt: '1999-07-20T00:00:00.000Z',
+    products: [
+      {
+        id: 1,
+        name: 'Cloud',
+        description: 'A cloud',
+        condition: 'MINT',
+      },
+    ],
+    services: [
+      { id: 1, name: 'Test Flight', description: 'Assisstance provided for first flight only.' },
+    ],
+    comments: [],
   },
 ];
 
 export default function Profile() {
   const [activeTab, setActiveTab] = React.useState<'current' | 'history'>('current');
+  const [profile, setProfile] = useState<ProfileUser | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function fetchProfile() {
+      try {
+        const res = await axios.get('/user/me', { withCredentials: true });
+        if (res.status !== 200) {
+          throw new Error(`Failed to load profile ${res.status}`);
+        }
+        if (!cancelled) setProfile(res.data);
+      } catch (err) {
+        if (!cancelled) setError(err instanceof Error ? err.message : 'Something went wrong :/');
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+
+    fetchProfile();
+    return () => { cancelled = true; };
+  }, []);
+
+  if (loading) {
+    return (
+      <Box sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        mt: 8,
+      }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (error || !profile) {
+    return (
+      <Box sx={{
+        mt: 8,
+        textAllign: 'center',
+      }}
+      >
+        <Typography color="error">{error ?? 'Profile not found'}</Typography>
+      </Box>
+    );
+  }
+
+  const visibleTrades = dummyTrades.filter((trade) => (
+    activeTab === 'current' ? !trade.isComplete : trade.isComplete
+  ));
 
   return (
     <Box sx={{ width: '100%', mt: -4 }}>
 
       {/* Profile header: avatar, follow, bio card */}
-      <Box sx={{
-        display: 'flex',
-        gap: 3,
-        mb: 4,
-        px: { xs: 2, md: 0 },
-        flexWrap: 'wrap',
-      }}
+      <Card
+        variant="outlined"
+        sx={{
+          borderRadius: 3,
+          borderColor: '#e0e0e0',
+          mb: 4,
+          mx: { xs: 2, md: 0 },
+        }}
       >
-        <Box sx={{
+        <CardContent sx={{
+          p: { xs: 2, sm: 3 },
           display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: 1,
+          gap: 3,
+          flexWrap: 'wrap',
         }}
         >
-          <Avatar sx={{
-            width: 88,
-            height: 88,
-            bgcolor: 'primary.main',
-            fontSize: '2rem',
+          <Box sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: 1,
           }}
           >
-            {profile.name.charAt(0)}
-          </Avatar>
-          <Button
-            variant="outlined"
-            size="small"
-            sx={{ borderRadius: 4, textTransform: 'none' }}
-          >
-            Follow
-          </Button>
-        </Box>
-
-        <Card
-          variant="outlined"
-          sx={{
-            borderRadius: 3,
-            borderColor: '#e0e0e0',
-            flex: 1,
-            minWidth: 260,
-          }}
-        >
-          <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
-            <Box sx={{
-              display: 'flex',
-              alignItems: 'baseline',
-              gap: 1.5,
-              mb: 1,
-              flexWrap: 'wrap',
+            <Avatar sx={{
+              width: 88,
+              height: 88,
+              bgcolor: 'primary.main',
+              fontSize: '2rem',
             }}
             >
-              <Typography variant="h6" sx={{ fontWeight: 700 }}>
-                {profile.name}
-              </Typography>
-              <Typography variant="caption" color="text.secondary">
-                Member since:
-                {profile.memberSince}
-              </Typography>
-            </Box>
-            <Typography variant="body2" sx={{ lineHeight: 1.6 }}>
-              {profile.bio}
+              {(profile.name ?? profile.email).charAt(0).toUpperCase()}
+            </Avatar>
+            <Button
+              variant="outlined"
+              size="small"
+              sx={{ borderRadius: 4, textTransform: 'none' }}
+            >
+              Follow
+            </Button>
+          </Box>
+
+          <Box sx={{ flex: 1, minWidth: 260 }}>
+            <Typography variant="h1" sx={{ fontWeight: 300, fontSize: 30 }}>
+              {profile.name}
             </Typography>
-          </CardContent>
-        </Card>
-      </Box>
+            <Typography variant="h1" sx={{ fontWeight: 300, fontSize: 15 }}>
+              {profile.email}
+            </Typography>
+            <Typography variant="caption" color="text.secondary">
+              {`User since ${new Date(profile.createdAt).toLocaleDateString()}`}
+            </Typography>
+            <Typography variant="body2" sx={{ lineHeight: 1.6, mt: 1.5 }}>
+              {profile.bio ?? ''}
+            </Typography>
+            <Box sx={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 1.5,
+              ml: { md: 'auto' },
+            }}
+            >
+              <Chip
+                label={`${2} Trades`}
+                sx={{
+                  bgcolor: 'text.primary', color: 'background.paper', fontWeight: 600,
+                }}
+              />
+              <Rating value={4} readOnly />
+              {/* CHANGE RATING AND TRADES # */}
+            </Box>
+          </Box>
+        </CardContent>
+      </Card>
 
       {/* Trades header: activeTab toggle, DM, trade count, rating */}
       <Box sx={{
@@ -148,21 +264,6 @@ export default function Profile() {
           DM
         </Button>
 
-        <Box sx={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 1.5,
-          ml: { md: 'auto' },
-        }}
-        >
-          <Chip
-            label={`${profile.tradeCount} Trades`}
-            sx={{
-              bgcolor: 'text.primary', color: 'background.paper', fontWeight: 600,
-            }}
-          />
-          <Rating value={profile.rating} readOnly />
-        </Box>
       </Box>
 
       {/* Trades section */}
@@ -173,54 +274,103 @@ export default function Profile() {
         px: { xs: 2, md: 0 },
       }}
       >
-        {dummyTrades.map((trade) => (
+        {visibleTrades.map((trade) => (
           <Card key={trade.id} variant="outlined" sx={{ borderRadius: 3, borderColor: '#e0e0e0' }}>
             <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
               <Box sx={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                mb: 2,
-                flexWrap: 'wrap',
-                gap: 1,
+                display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2, flexWrap: 'wrap', gap: 1,
               }}
               >
-                <Box sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 2,
-                }}
-                >
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                   <Avatar sx={{ bgcolor: 'primary.main', width: 36, height: 36 }}>
                     {trade.user.charAt(0)}
                   </Avatar>
                   <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
                     {trade.user}
                   </Typography>
+                  <Button size="small" variant="outlined" sx={{ borderRadius: 4, textTransform: 'none' }}>
+                    Open DM
+                  </Button>
                 </Box>
                 <Typography variant="caption" color="text.secondary">
-                  {`Posted on ${trade.date}`}
+                  {`Posted on ${new Date(trade.createdAt).toLocaleDateString()}`}
                 </Typography>
               </Box>
-              {trade.services?.map((service) => (
-                <Typography variant="body1" sx={{ mb: 2, lineHeight: 1.6 }}>
-                  {`${service.name}\n${service.description}`}
+
+              <Typography variant="h6" sx={{ fontWeight: 700, mb: 0.5 }}>
+                {trade.title}
+              </Typography>
+              <Typography variant="body1" sx={{ mb: 3, lineHeight: 1.6 }}>
+                {trade.message}
+              </Typography>
+
+              {trade.products.length > 0 && (
+                <Box sx={{ mb: 3 }}>
+                  <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600, color: 'text.secondary' }}>
+                    Products
+                  </Typography>
+                  {trade.products.map((product) => (
+                    <Typography key={product.id} variant="body2" sx={{ lineHeight: 1.6 }}>
+                      {`${product.name} (${product.condition}) — ${product.description}`}
+                    </Typography>
+                  ))}
+                </Box>
+              )}
+
+              {trade.services.length > 0 && (
+                <Box sx={{ mb: 3 }}>
+                  <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600, color: 'text.secondary' }}>
+                    Services
+                  </Typography>
+                  {trade.services.map((service) => (
+                    <Typography key={service.id} variant="body2" sx={{ lineHeight: 1.6 }}>
+                      {`${service.name}${service.description ? ` — ${service.description}` : ''}`}
+                    </Typography>
+                  ))}
+                </Box>
+              )}
+
+              <Divider sx={{ mb: 2 }} />
+
+              <Typography variant="subtitle2" sx={{ mb: 1.5, fontWeight: 600, color: 'text.secondary' }}>
+                Comments
+              </Typography>
+
+              {trade.comments.length > 0 ? (
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                  {trade.comments.map((comment) => (
+                    <Box
+                      key={comment.id}
+                      sx={{
+                        display: 'flex', gap: 2, alignItems: 'flex-start', p: 1.5, bgcolor: '#f4f6f8', borderRadius: 2,
+                      }}
+                    >
+                      <Typography variant="body2" sx={{ flex: 1 }}>
+                        <strong>
+                          {comment.user}
+                        </strong>
+                        {`: ${comment.text}`}
+                      </Typography>
+                      <Button size="small" sx={{ textTransform: 'none', minWidth: 'auto' }}>DM</Button>
+                    </Box>
+                  ))}
+                </Box>
+              ) : (
+                <Typography variant="body2" color="text.disabled" sx={{ mb: 2, fontStyle: 'italic' }}>
+                  No comments...
                 </Typography>
-              ))}
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              )}
+
+              <Box sx={{ display: 'flex', mt: 3, gap: 1 }}>
                 <TextField
                   size="small"
                   fullWidth
-                  placeholder="Comments..."
+                  placeholder="Add a comment..."
                   variant="outlined"
                   sx={{ '& .MuiOutlinedInput-root': { borderRadius: 8 } }}
                 />
-                <Button
-                  size="small"
-                  variant="outlined"
-                  sx={{ borderRadius: 4, textTransform: 'none', whiteSpace: 'nowrap' }}
-                >
-                  Open DM
+                <Button variant="contained" disableElevation sx={{ borderRadius: 8, textTransform: 'none' }}>
+                  Send
                 </Button>
               </Box>
             </CardContent>
