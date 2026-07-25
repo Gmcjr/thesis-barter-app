@@ -18,6 +18,9 @@ import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import AddIcon from '@mui/icons-material/Add';
 
+import PostActionsMenu from './PostActionsMenu';
+import ReportDialog from './ReportDialog';
+
 // dummy categories data
 const categories = [
   'Books',
@@ -39,6 +42,7 @@ const categories = [
 const dummyPosts = [
   {
     id: 1,
+    userId: 101,
     user: 'taconator',
     date: '01/01/2026',
     content: 'Help me fix my bike and I will make you the best tacos ever!',
@@ -46,6 +50,7 @@ const dummyPosts = [
   },
   {
     id: 2,
+    userId: 102,
     user: 'Gamegod',
     date: '01/03/2026',
     content: 'Giving away a free game for ps4.',
@@ -53,6 +58,7 @@ const dummyPosts = [
   },
   {
     id: 3,
+    userId: 103,
     user: 'happytunes101',
     date: '01/04/2026',
     content: 'Looking to learn guitar, if someone wants to learn piano we can swap!',
@@ -65,6 +71,7 @@ const dummyPosts = [
 
 export default function Posts() {
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [reportDialogPostId, setReportDialogPostId] = useState<number | null>(null);
 
   const toggleDrawer = (open: boolean) => () => {
     setDrawerOpen(open);
@@ -206,9 +213,12 @@ export default function Posts() {
                     Open DM
                   </Button>
                 </Box>
-                <Typography variant="caption" color="text.secondary">
-                  Posted on {post.date}
-                </Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Typography variant="caption" color="text.secondary">
+                    Posted on {post.date}
+                  </Typography>
+                  <PostActionsMenu onReport={() => setReportDialogPostId(post.id)} />
+                </Box>
               </Box>
 
               <Typography variant="body1" sx={{ mb: 3, lineHeight: 1.6 }}>
@@ -259,6 +269,12 @@ export default function Posts() {
           </Card>
         ))}
       </Box>
+
+      <ReportDialog
+        open={reportDialogPostId !== null}
+        onClose={() => setReportDialogPostId(null)}
+        postId={reportDialogPostId ?? 0}
+      />
     </Box>
   );
 }

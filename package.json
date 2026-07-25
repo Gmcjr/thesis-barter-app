@@ -28,6 +28,7 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
+    "@google/genai": "^2.13.0",
     "@mui/icons-material": "^9.2.0",
     "@mui/material": "^9.2.0",
     "@prisma/adapter-pg": "^7.8.0",
@@ -79,11 +80,5 @@
   },
   "overrides": {
     "inflight": "npm:inflight-lru@^1.0.0"
-  },
-  "allowScripts": {
-    "@prisma/engines@7.8.0": true,
-    "esbuild@0.28.1": true,
-    "fsevents@2.3.3": true,
-    "prisma@7.8.0": true
   }
 }
