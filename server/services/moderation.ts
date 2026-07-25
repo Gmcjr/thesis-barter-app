@@ -53,7 +53,7 @@ export interface ScreeningResult {
 export async function screenContent(text: string): Promise<ScreeningResult | null> {
   try {
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
+      model: 'gemini-3.5-flash',
       contents: `Reported content:\n"""\n${text}\n"""`,
       config: {
         systemInstruction: POLICY,

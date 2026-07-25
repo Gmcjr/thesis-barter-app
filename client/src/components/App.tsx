@@ -5,6 +5,7 @@ import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import theme from '../theme';
 import { AuthProvider } from '../context/AuthContext';
+import { ToastProvider } from '../context/ToastContext';
 import { RouterProvider, Router, type RouteDef } from '../context/RouterContext';
 
 // component imports
@@ -22,21 +23,23 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <AuthProvider>
-        <RouterProvider>
-          <NavBar />
-          <Box
-            component="main"
-            sx={{
-              pt: 16, pb: 8, backgroundColor: '#e1e5f8', minHeight: '100vh',
-            }}
-          >
-            <Container maxWidth="md">
-              <Router routes={routes} notFound={NotFound} />
-            </Container>
-          </Box>
-        </RouterProvider>
-      </AuthProvider>
+      <ToastProvider>
+        <AuthProvider>
+          <RouterProvider>
+            <NavBar />
+            <Box
+              component="main"
+              sx={{
+                pt: 16, pb: 8, backgroundColor: '#e1e5f8', minHeight: '100vh',
+              }}
+            >
+              <Container maxWidth="md">
+                <Router routes={routes} notFound={NotFound} />
+              </Container>
+            </Box>
+          </RouterProvider>
+        </AuthProvider>
+      </ToastProvider>
     </ThemeProvider>
   );
 }
