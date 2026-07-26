@@ -467,9 +467,6 @@ export default function Posts() {
                     </Button>
                   </Box>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <Typography variant="caption" color="text.secondary">
-                      Posted on {post.createdAt}
-                    </Typography>
                     <PostActionsMenu onReport={() => setReportDialogPostId(post.id)} />
                   </Box>
                 </Box>
