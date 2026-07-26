@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { prisma } from '../db/index.js';
-import { screenContent } from '../services/moderation.js';
+import { screenContent, decideAutoAction } from '../services/moderation.js';
 import requireAuth from '../middleware/requireAuth.js';
 import requireModerator from '../middleware/requireModerator.js';
 import { TargetType, ReportReason, ReportStatus } from '../db/generated/enums.js';
@@ -57,16 +57,37 @@ reports.post('/', requireAuth, async (req, res) => {
     });
 
     const screening = text ? await screenContent(text) : null;
-    const scored = screening
-      ? await prisma.report.update({
-        where: { id: report.id },
-        data: {
-          aiScore: screening.score,
-          aiCategories: screening.categories,
-          aiRationale: screening.rationale,
-        },
-      })
-      : report;
+    const autoAction = screening ? decideAutoAction(screening) : null;
+
+    const reportUpdate = prisma.report.update({
+      where: { id: report.id },
+      data: {
+        aiScore: screening?.score ?? null,
+        aiCategories: screening?.categories ?? [],
+        aiRationale: screening?.rationale ?? null,
+        ...(autoAction ? {
+          status: autoAction.status,
+          resolution: autoAction.resolution,
+          resolvedAt: new Date(),
+        } : {}),
+      },
+    });
+
+    const extraUpdates = [];
+    if (autoAction?.status === ReportStatus.REMOVED && report.postId) {
+      extraUpdates.push(prisma.post.update({
+        where: { id: report.postId },
+        data: { isRemoved: true },
+      }));
+    }
+
+    if (autoAction?.status === ReportStatus.REMOVED && report.messageId) {
+      extraUpdates.push(prisma.message.update({
+        where: { id: report.messageId },
+        data: { isRemoved: true },
+      }));
+    }
+    const [scored] = await prisma.$transaction([reportUpdate, ...extraUpdates]);
 
     res.status(201).json(scored);
   } catch (err) {

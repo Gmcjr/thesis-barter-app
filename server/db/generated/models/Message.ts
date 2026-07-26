@@ -46,6 +46,7 @@ export type MessageMinAggregateOutputType = {
   senderId: number | null
   recieverId: number | null
   text: string | null
+  isRemoved: boolean | null
 }
 
 export type MessageMaxAggregateOutputType = {
@@ -54,6 +55,7 @@ export type MessageMaxAggregateOutputType = {
   senderId: number | null
   recieverId: number | null
   text: string | null
+  isRemoved: boolean | null
 }
 
 export type MessageCountAggregateOutputType = {
@@ -62,6 +64,7 @@ export type MessageCountAggregateOutputType = {
   senderId: number
   recieverId: number
   text: number
+  isRemoved: number
   _all: number
 }
 
@@ -86,6 +89,7 @@ export type MessageMinAggregateInputType = {
   senderId?: true
   recieverId?: true
   text?: true
+  isRemoved?: true
 }
 
 export type MessageMaxAggregateInputType = {
@@ -94,6 +98,7 @@ export type MessageMaxAggregateInputType = {
   senderId?: true
   recieverId?: true
   text?: true
+  isRemoved?: true
 }
 
 export type MessageCountAggregateInputType = {
@@ -102,6 +107,7 @@ export type MessageCountAggregateInputType = {
   senderId?: true
   recieverId?: true
   text?: true
+  isRemoved?: true
   _all?: true
 }
 
@@ -197,6 +203,7 @@ export type MessageGroupByOutputType = {
   senderId: number
   recieverId: number
   text: string
+  isRemoved: boolean
   _count: MessageCountAggregateOutputType | null
   _avg: MessageAvgAggregateOutputType | null
   _sum: MessageSumAggregateOutputType | null
@@ -228,6 +235,7 @@ export type MessageWhereInput = {
   senderId?: Prisma.IntFilter<"Message"> | number
   recieverId?: Prisma.IntFilter<"Message"> | number
   text?: Prisma.StringFilter<"Message"> | string
+  isRemoved?: Prisma.BoolFilter<"Message"> | boolean
   dm?: Prisma.XOR<Prisma.DMScalarRelationFilter, Prisma.DMWhereInput>
   sender?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   reciever?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -240,6 +248,7 @@ export type MessageOrderByWithRelationInput = {
   senderId?: Prisma.SortOrder
   recieverId?: Prisma.SortOrder
   text?: Prisma.SortOrder
+  isRemoved?: Prisma.SortOrder
   dm?: Prisma.DMOrderByWithRelationInput
   sender?: Prisma.UserOrderByWithRelationInput
   reciever?: Prisma.UserOrderByWithRelationInput
@@ -255,6 +264,7 @@ export type MessageWhereUniqueInput = Prisma.AtLeast<{
   senderId?: Prisma.IntFilter<"Message"> | number
   recieverId?: Prisma.IntFilter<"Message"> | number
   text?: Prisma.StringFilter<"Message"> | string
+  isRemoved?: Prisma.BoolFilter<"Message"> | boolean
   dm?: Prisma.XOR<Prisma.DMScalarRelationFilter, Prisma.DMWhereInput>
   sender?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   reciever?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -267,6 +277,7 @@ export type MessageOrderByWithAggregationInput = {
   senderId?: Prisma.SortOrder
   recieverId?: Prisma.SortOrder
   text?: Prisma.SortOrder
+  isRemoved?: Prisma.SortOrder
   _count?: Prisma.MessageCountOrderByAggregateInput
   _avg?: Prisma.MessageAvgOrderByAggregateInput
   _max?: Prisma.MessageMaxOrderByAggregateInput
@@ -283,10 +294,12 @@ export type MessageScalarWhereWithAggregatesInput = {
   senderId?: Prisma.IntWithAggregatesFilter<"Message"> | number
   recieverId?: Prisma.IntWithAggregatesFilter<"Message"> | number
   text?: Prisma.StringWithAggregatesFilter<"Message"> | string
+  isRemoved?: Prisma.BoolWithAggregatesFilter<"Message"> | boolean
 }
 
 export type MessageCreateInput = {
   text: string
+  isRemoved?: boolean
   dm: Prisma.DMCreateNestedOneWithoutMessagesInput
   sender: Prisma.UserCreateNestedOneWithoutSMessagesInput
   reciever: Prisma.UserCreateNestedOneWithoutRMessagesInput
@@ -299,11 +312,13 @@ export type MessageUncheckedCreateInput = {
   senderId: number
   recieverId: number
   text: string
+  isRemoved?: boolean
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutMessageInput
 }
 
 export type MessageUpdateInput = {
   text?: Prisma.StringFieldUpdateOperationsInput | string
+  isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   dm?: Prisma.DMUpdateOneRequiredWithoutMessagesNestedInput
   sender?: Prisma.UserUpdateOneRequiredWithoutSMessagesNestedInput
   reciever?: Prisma.UserUpdateOneRequiredWithoutRMessagesNestedInput
@@ -316,6 +331,7 @@ export type MessageUncheckedUpdateInput = {
   senderId?: Prisma.IntFieldUpdateOperationsInput | number
   recieverId?: Prisma.IntFieldUpdateOperationsInput | number
   text?: Prisma.StringFieldUpdateOperationsInput | string
+  isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   reports?: Prisma.ReportUncheckedUpdateManyWithoutMessageNestedInput
 }
 
@@ -325,10 +341,12 @@ export type MessageCreateManyInput = {
   senderId: number
   recieverId: number
   text: string
+  isRemoved?: boolean
 }
 
 export type MessageUpdateManyMutationInput = {
   text?: Prisma.StringFieldUpdateOperationsInput | string
+  isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type MessageUncheckedUpdateManyInput = {
@@ -337,6 +355,7 @@ export type MessageUncheckedUpdateManyInput = {
   senderId?: Prisma.IntFieldUpdateOperationsInput | number
   recieverId?: Prisma.IntFieldUpdateOperationsInput | number
   text?: Prisma.StringFieldUpdateOperationsInput | string
+  isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type MessageListRelationFilter = {
@@ -355,6 +374,7 @@ export type MessageCountOrderByAggregateInput = {
   senderId?: Prisma.SortOrder
   recieverId?: Prisma.SortOrder
   text?: Prisma.SortOrder
+  isRemoved?: Prisma.SortOrder
 }
 
 export type MessageAvgOrderByAggregateInput = {
@@ -370,6 +390,7 @@ export type MessageMaxOrderByAggregateInput = {
   senderId?: Prisma.SortOrder
   recieverId?: Prisma.SortOrder
   text?: Prisma.SortOrder
+  isRemoved?: Prisma.SortOrder
 }
 
 export type MessageMinOrderByAggregateInput = {
@@ -378,6 +399,7 @@ export type MessageMinOrderByAggregateInput = {
   senderId?: Prisma.SortOrder
   recieverId?: Prisma.SortOrder
   text?: Prisma.SortOrder
+  isRemoved?: Prisma.SortOrder
 }
 
 export type MessageSumOrderByAggregateInput = {
@@ -518,6 +540,10 @@ export type MessageUncheckedUpdateManyWithoutDmNestedInput = {
   deleteMany?: Prisma.MessageScalarWhereInput | Prisma.MessageScalarWhereInput[]
 }
 
+export type BoolFieldUpdateOperationsInput = {
+  set?: boolean
+}
+
 export type MessageCreateNestedOneWithoutReportsInput = {
   create?: Prisma.XOR<Prisma.MessageCreateWithoutReportsInput, Prisma.MessageUncheckedCreateWithoutReportsInput>
   connectOrCreate?: Prisma.MessageCreateOrConnectWithoutReportsInput
@@ -536,6 +562,7 @@ export type MessageUpdateOneWithoutReportsNestedInput = {
 
 export type MessageCreateWithoutSenderInput = {
   text: string
+  isRemoved?: boolean
   dm: Prisma.DMCreateNestedOneWithoutMessagesInput
   reciever: Prisma.UserCreateNestedOneWithoutRMessagesInput
   reports?: Prisma.ReportCreateNestedManyWithoutMessageInput
@@ -546,6 +573,7 @@ export type MessageUncheckedCreateWithoutSenderInput = {
   dmId: number
   recieverId: number
   text: string
+  isRemoved?: boolean
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutMessageInput
 }
 
@@ -561,6 +589,7 @@ export type MessageCreateManySenderInputEnvelope = {
 
 export type MessageCreateWithoutRecieverInput = {
   text: string
+  isRemoved?: boolean
   dm: Prisma.DMCreateNestedOneWithoutMessagesInput
   sender: Prisma.UserCreateNestedOneWithoutSMessagesInput
   reports?: Prisma.ReportCreateNestedManyWithoutMessageInput
@@ -571,6 +600,7 @@ export type MessageUncheckedCreateWithoutRecieverInput = {
   dmId: number
   senderId: number
   text: string
+  isRemoved?: boolean
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutMessageInput
 }
 
@@ -609,6 +639,7 @@ export type MessageScalarWhereInput = {
   senderId?: Prisma.IntFilter<"Message"> | number
   recieverId?: Prisma.IntFilter<"Message"> | number
   text?: Prisma.StringFilter<"Message"> | string
+  isRemoved?: Prisma.BoolFilter<"Message"> | boolean
 }
 
 export type MessageUpsertWithWhereUniqueWithoutRecieverInput = {
@@ -629,6 +660,7 @@ export type MessageUpdateManyWithWhereWithoutRecieverInput = {
 
 export type MessageCreateWithoutDmInput = {
   text: string
+  isRemoved?: boolean
   sender: Prisma.UserCreateNestedOneWithoutSMessagesInput
   reciever: Prisma.UserCreateNestedOneWithoutRMessagesInput
   reports?: Prisma.ReportCreateNestedManyWithoutMessageInput
@@ -639,6 +671,7 @@ export type MessageUncheckedCreateWithoutDmInput = {
   senderId: number
   recieverId: number
   text: string
+  isRemoved?: boolean
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutMessageInput
 }
 
@@ -670,6 +703,7 @@ export type MessageUpdateManyWithWhereWithoutDmInput = {
 
 export type MessageCreateWithoutReportsInput = {
   text: string
+  isRemoved?: boolean
   dm: Prisma.DMCreateNestedOneWithoutMessagesInput
   sender: Prisma.UserCreateNestedOneWithoutSMessagesInput
   reciever: Prisma.UserCreateNestedOneWithoutRMessagesInput
@@ -681,6 +715,7 @@ export type MessageUncheckedCreateWithoutReportsInput = {
   senderId: number
   recieverId: number
   text: string
+  isRemoved?: boolean
 }
 
 export type MessageCreateOrConnectWithoutReportsInput = {
@@ -701,6 +736,7 @@ export type MessageUpdateToOneWithWhereWithoutReportsInput = {
 
 export type MessageUpdateWithoutReportsInput = {
   text?: Prisma.StringFieldUpdateOperationsInput | string
+  isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   dm?: Prisma.DMUpdateOneRequiredWithoutMessagesNestedInput
   sender?: Prisma.UserUpdateOneRequiredWithoutSMessagesNestedInput
   reciever?: Prisma.UserUpdateOneRequiredWithoutRMessagesNestedInput
@@ -712,6 +748,7 @@ export type MessageUncheckedUpdateWithoutReportsInput = {
   senderId?: Prisma.IntFieldUpdateOperationsInput | number
   recieverId?: Prisma.IntFieldUpdateOperationsInput | number
   text?: Prisma.StringFieldUpdateOperationsInput | string
+  isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type MessageCreateManySenderInput = {
@@ -719,6 +756,7 @@ export type MessageCreateManySenderInput = {
   dmId: number
   recieverId: number
   text: string
+  isRemoved?: boolean
 }
 
 export type MessageCreateManyRecieverInput = {
@@ -726,10 +764,12 @@ export type MessageCreateManyRecieverInput = {
   dmId: number
   senderId: number
   text: string
+  isRemoved?: boolean
 }
 
 export type MessageUpdateWithoutSenderInput = {
   text?: Prisma.StringFieldUpdateOperationsInput | string
+  isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   dm?: Prisma.DMUpdateOneRequiredWithoutMessagesNestedInput
   reciever?: Prisma.UserUpdateOneRequiredWithoutRMessagesNestedInput
   reports?: Prisma.ReportUpdateManyWithoutMessageNestedInput
@@ -740,6 +780,7 @@ export type MessageUncheckedUpdateWithoutSenderInput = {
   dmId?: Prisma.IntFieldUpdateOperationsInput | number
   recieverId?: Prisma.IntFieldUpdateOperationsInput | number
   text?: Prisma.StringFieldUpdateOperationsInput | string
+  isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   reports?: Prisma.ReportUncheckedUpdateManyWithoutMessageNestedInput
 }
 
@@ -748,10 +789,12 @@ export type MessageUncheckedUpdateManyWithoutSenderInput = {
   dmId?: Prisma.IntFieldUpdateOperationsInput | number
   recieverId?: Prisma.IntFieldUpdateOperationsInput | number
   text?: Prisma.StringFieldUpdateOperationsInput | string
+  isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type MessageUpdateWithoutRecieverInput = {
   text?: Prisma.StringFieldUpdateOperationsInput | string
+  isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   dm?: Prisma.DMUpdateOneRequiredWithoutMessagesNestedInput
   sender?: Prisma.UserUpdateOneRequiredWithoutSMessagesNestedInput
   reports?: Prisma.ReportUpdateManyWithoutMessageNestedInput
@@ -762,6 +805,7 @@ export type MessageUncheckedUpdateWithoutRecieverInput = {
   dmId?: Prisma.IntFieldUpdateOperationsInput | number
   senderId?: Prisma.IntFieldUpdateOperationsInput | number
   text?: Prisma.StringFieldUpdateOperationsInput | string
+  isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   reports?: Prisma.ReportUncheckedUpdateManyWithoutMessageNestedInput
 }
 
@@ -770,6 +814,7 @@ export type MessageUncheckedUpdateManyWithoutRecieverInput = {
   dmId?: Prisma.IntFieldUpdateOperationsInput | number
   senderId?: Prisma.IntFieldUpdateOperationsInput | number
   text?: Prisma.StringFieldUpdateOperationsInput | string
+  isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type MessageCreateManyDmInput = {
@@ -777,10 +822,12 @@ export type MessageCreateManyDmInput = {
   senderId: number
   recieverId: number
   text: string
+  isRemoved?: boolean
 }
 
 export type MessageUpdateWithoutDmInput = {
   text?: Prisma.StringFieldUpdateOperationsInput | string
+  isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sender?: Prisma.UserUpdateOneRequiredWithoutSMessagesNestedInput
   reciever?: Prisma.UserUpdateOneRequiredWithoutRMessagesNestedInput
   reports?: Prisma.ReportUpdateManyWithoutMessageNestedInput
@@ -791,6 +838,7 @@ export type MessageUncheckedUpdateWithoutDmInput = {
   senderId?: Prisma.IntFieldUpdateOperationsInput | number
   recieverId?: Prisma.IntFieldUpdateOperationsInput | number
   text?: Prisma.StringFieldUpdateOperationsInput | string
+  isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   reports?: Prisma.ReportUncheckedUpdateManyWithoutMessageNestedInput
 }
 
@@ -799,6 +847,7 @@ export type MessageUncheckedUpdateManyWithoutDmInput = {
   senderId?: Prisma.IntFieldUpdateOperationsInput | number
   recieverId?: Prisma.IntFieldUpdateOperationsInput | number
   text?: Prisma.StringFieldUpdateOperationsInput | string
+  isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 
@@ -838,6 +887,7 @@ export type MessageSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   senderId?: boolean
   recieverId?: boolean
   text?: boolean
+  isRemoved?: boolean
   dm?: boolean | Prisma.DMDefaultArgs<ExtArgs>
   sender?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   reciever?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -851,6 +901,7 @@ export type MessageSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   senderId?: boolean
   recieverId?: boolean
   text?: boolean
+  isRemoved?: boolean
   dm?: boolean | Prisma.DMDefaultArgs<ExtArgs>
   sender?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   reciever?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -862,6 +913,7 @@ export type MessageSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   senderId?: boolean
   recieverId?: boolean
   text?: boolean
+  isRemoved?: boolean
   dm?: boolean | Prisma.DMDefaultArgs<ExtArgs>
   sender?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   reciever?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -873,9 +925,10 @@ export type MessageSelectScalar = {
   senderId?: boolean
   recieverId?: boolean
   text?: boolean
+  isRemoved?: boolean
 }
 
-export type MessageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "dmId" | "senderId" | "recieverId" | "text", ExtArgs["result"]["message"]>
+export type MessageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "dmId" | "senderId" | "recieverId" | "text" | "isRemoved", ExtArgs["result"]["message"]>
 export type MessageInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   dm?: boolean | Prisma.DMDefaultArgs<ExtArgs>
   sender?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -908,6 +961,7 @@ export type $MessagePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     senderId: number
     recieverId: number
     text: string
+    isRemoved: boolean
   }, ExtArgs["result"]["message"]>
   composites: {}
 }
@@ -1340,6 +1394,7 @@ export interface MessageFieldRefs {
   readonly senderId: Prisma.FieldRef<"Message", 'Int'>
   readonly recieverId: Prisma.FieldRef<"Message", 'Int'>
   readonly text: Prisma.FieldRef<"Message", 'String'>
+  readonly isRemoved: Prisma.FieldRef<"Message", 'Boolean'>
 }
     
 
