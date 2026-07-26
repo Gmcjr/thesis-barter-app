@@ -24,6 +24,7 @@ import Paper from '@mui/material/Paper';
 import Chip from '@mui/material/Chip';
 
 import NewPost, { type PostFormData } from './NewPost';
+import { formatPostDate } from '../../utils/utils';
 import ManagePosts, { type PostData, type PostUpdateData } from './ManagePosts';
 import { useAuth } from '../../context/AuthContext';
 
@@ -423,36 +424,40 @@ export default function Posts() {
           return (
             <Card key={post.id} variant="outlined" sx={{ borderRadius: 3, borderColor: '#e0e0e0' }}>
               <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
-
-                {/* title, date, user details and DM */}
                 <Box sx={{
-                  display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2, flexWrap: 'wrap', gap: 1,
+                  display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, justifyContent: { xs: 'flex-start', sm: 'space-between' }, alignItems: { xs: 'stretch', sm: 'flex-start' }, mb: 2, gap: { xs: 1, sm: 2 },
                 }}
                 >
-                  {/* title and posted date */}
-                  <Box sx={{
-                    display: 'flex', alignItems: 'baseline', gap: 1.5, flexWrap: 'wrap',
-                  }}
-                  >
-                    <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
-                      {post.title}
-                    </Typography>
+                  {/* title, date, "Trade Complete" chip */}
+                  <Box sx={{ minWidth: 0, flex: 1 }}>
+                    <Box sx={{
+                      display: 'flex', alignItems: 'baseline', flexWrap: 'wrap', gap: 1.5,
+                    }}
+                    >
+
+                      <Typography variant="h5" sx={{ fontWeight: 'bold', wordBreak: 'break-word' }}>
+                        {post.title}
+                      </Typography>
+
+                      {post.isComplete && (
+                        <Chip
+                          size="small"
+                          color="success"
+                          label="Trade Completed"
+                        />
+                      )}
+                    </Box>
 
                     <Typography variant="caption" color="text.secondary">
-                      Posted on {new Date(post.createdAt).toLocaleDateString()}
+                      {((post.updatedAt && post.updatedAt !== post.createdAt) && `Updated on ${formatPostDate(post.updatedAt)}`) || `Posted on ${formatPostDate(post.createdAt)}`}
                     </Typography>
-
-                    {post.isComplete && (
-                      <Chip
-                        size="small"
-                        color="success"
-                        label="Trade Completed"
-                      />
-                    )}
                   </Box>
 
-                  {/* user avatar, name, and DM button */}
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                  {/* user avatar, name, DM button and report modal */}
+                  <Box sx={{
+                    display: 'flex', alignItems: 'center', gap: 1, flexShrink: 0, flexWrap: 'wrap',
+                  }}
+                  >
                     <Avatar sx={{
                       bgcolor: 'primary.main', width: 32, height: 32, fontSize: '0.9rem',
                     }}
@@ -465,6 +470,7 @@ export default function Posts() {
                     <Button size="small" variant="outlined" sx={{ borderRadius: 4, textTransform: 'none' }}>
                       Open DM
                     </Button>
+                    <PostActionsMenu onReport={() => setReportDialogPostId(post.id)} />
                   </Box>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     <PostActionsMenu onReport={() => setReportDialogPostId(post.id)} />

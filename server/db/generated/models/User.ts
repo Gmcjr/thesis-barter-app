@@ -1850,6 +1850,7 @@ export type UserCreateWithoutReportsFiledInput = {
   name: string
   email: string
   phone?: string | null
+  zipCode?: string | null
   role?: $Enums.Role | null
   bio?: string | null
   createdAt?: Date | string
@@ -1874,6 +1875,7 @@ export type UserUncheckedCreateWithoutReportsFiledInput = {
   name: string
   email: string
   phone?: string | null
+  zipCode?: string | null
   role?: $Enums.Role | null
   bio?: string | null
   createdAt?: Date | string
@@ -1902,6 +1904,7 @@ export type UserCreateWithoutReportsAgainstInput = {
   name: string
   email: string
   phone?: string | null
+  zipCode?: string | null
   role?: $Enums.Role | null
   bio?: string | null
   createdAt?: Date | string
@@ -1926,6 +1929,7 @@ export type UserUncheckedCreateWithoutReportsAgainstInput = {
   name: string
   email: string
   phone?: string | null
+  zipCode?: string | null
   role?: $Enums.Role | null
   bio?: string | null
   createdAt?: Date | string
@@ -1954,6 +1958,7 @@ export type UserCreateWithoutReportsResolvedInput = {
   name: string
   email: string
   phone?: string | null
+  zipCode?: string | null
   role?: $Enums.Role | null
   bio?: string | null
   createdAt?: Date | string
@@ -1978,6 +1983,7 @@ export type UserUncheckedCreateWithoutReportsResolvedInput = {
   name: string
   email: string
   phone?: string | null
+  zipCode?: string | null
   role?: $Enums.Role | null
   bio?: string | null
   createdAt?: Date | string
@@ -2017,6 +2023,7 @@ export type UserUpdateWithoutReportsFiledInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.NullableEnumRoleFieldUpdateOperationsInput | $Enums.Role | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2041,6 +2048,7 @@ export type UserUncheckedUpdateWithoutReportsFiledInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.NullableEnumRoleFieldUpdateOperationsInput | $Enums.Role | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2075,6 +2083,7 @@ export type UserUpdateWithoutReportsAgainstInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.NullableEnumRoleFieldUpdateOperationsInput | $Enums.Role | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2099,6 +2108,7 @@ export type UserUncheckedUpdateWithoutReportsAgainstInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.NullableEnumRoleFieldUpdateOperationsInput | $Enums.Role | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2133,6 +2143,7 @@ export type UserUpdateWithoutReportsResolvedInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.NullableEnumRoleFieldUpdateOperationsInput | $Enums.Role | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2157,6 +2168,7 @@ export type UserUncheckedUpdateWithoutReportsResolvedInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.NullableEnumRoleFieldUpdateOperationsInput | $Enums.Role | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
