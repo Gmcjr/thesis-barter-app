@@ -29,16 +29,23 @@ export type AggregatePost = {
 export type PostAvgAggregateOutputType = {
   id: number | null
   userId: number | null
+  radiusMiles: number | null
+  lat: number | null
+  lng: number | null
 }
 
 export type PostSumAggregateOutputType = {
   id: number | null
   userId: number | null
+  radiusMiles: number | null
+  lat: number | null
+  lng: number | null
 }
 
 export type PostMinAggregateOutputType = {
   id: number | null
   userId: number | null
+  title: string | null
   message: string | null
   isComplete: boolean | null
   isRemoved: boolean | null
@@ -47,6 +54,7 @@ export type PostMinAggregateOutputType = {
 export type PostMaxAggregateOutputType = {
   id: number | null
   userId: number | null
+  title: string | null
   message: string | null
   isComplete: boolean | null
   isRemoved: boolean | null
@@ -55,6 +63,7 @@ export type PostMaxAggregateOutputType = {
 export type PostCountAggregateOutputType = {
   id: number
   userId: number
+  title: number
   message: number
   isComplete: number
   isRemoved: number
@@ -65,16 +74,23 @@ export type PostCountAggregateOutputType = {
 export type PostAvgAggregateInputType = {
   id?: true
   userId?: true
+  radiusMiles?: true
+  lat?: true
+  lng?: true
 }
 
 export type PostSumAggregateInputType = {
   id?: true
   userId?: true
+  radiusMiles?: true
+  lat?: true
+  lng?: true
 }
 
 export type PostMinAggregateInputType = {
   id?: true
   userId?: true
+  title?: true
   message?: true
   isComplete?: true
   isRemoved?: true
@@ -83,6 +99,7 @@ export type PostMinAggregateInputType = {
 export type PostMaxAggregateInputType = {
   id?: true
   userId?: true
+  title?: true
   message?: true
   isComplete?: true
   isRemoved?: true
@@ -91,6 +108,7 @@ export type PostMaxAggregateInputType = {
 export type PostCountAggregateInputType = {
   id?: true
   userId?: true
+  title?: true
   message?: true
   isComplete?: true
   isRemoved?: true
@@ -186,6 +204,7 @@ export type PostGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
 export type PostGroupByOutputType = {
   id: number
   userId: number
+  title: string
   message: string
   isComplete: boolean
   isRemoved: boolean
@@ -217,6 +236,7 @@ export type PostWhereInput = {
   NOT?: Prisma.PostWhereInput | Prisma.PostWhereInput[]
   id?: Prisma.IntFilter<"Post"> | number
   userId?: Prisma.IntFilter<"Post"> | number
+  title?: Prisma.StringFilter<"Post"> | string
   message?: Prisma.StringFilter<"Post"> | string
   isComplete?: Prisma.BoolFilter<"Post"> | boolean
   isRemoved?: Prisma.BoolFilter<"Post"> | boolean
@@ -229,6 +249,7 @@ export type PostWhereInput = {
 export type PostOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  title?: Prisma.SortOrder
   message?: Prisma.SortOrder
   isComplete?: Prisma.SortOrder
   isRemoved?: Prisma.SortOrder
@@ -244,6 +265,7 @@ export type PostWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.PostWhereInput[]
   NOT?: Prisma.PostWhereInput | Prisma.PostWhereInput[]
   userId?: Prisma.IntFilter<"Post"> | number
+  title?: Prisma.StringFilter<"Post"> | string
   message?: Prisma.StringFilter<"Post"> | string
   isComplete?: Prisma.BoolFilter<"Post"> | boolean
   isRemoved?: Prisma.BoolFilter<"Post"> | boolean
@@ -256,6 +278,7 @@ export type PostWhereUniqueInput = Prisma.AtLeast<{
 export type PostOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  title?: Prisma.SortOrder
   message?: Prisma.SortOrder
   isComplete?: Prisma.SortOrder
   isRemoved?: Prisma.SortOrder
@@ -272,12 +295,14 @@ export type PostScalarWhereWithAggregatesInput = {
   NOT?: Prisma.PostScalarWhereWithAggregatesInput | Prisma.PostScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"Post"> | number
   userId?: Prisma.IntWithAggregatesFilter<"Post"> | number
+  title?: Prisma.StringWithAggregatesFilter<"Post"> | string
   message?: Prisma.StringWithAggregatesFilter<"Post"> | string
   isComplete?: Prisma.BoolWithAggregatesFilter<"Post"> | boolean
   isRemoved?: Prisma.BoolWithAggregatesFilter<"Post"> | boolean
 }
 
 export type PostCreateInput = {
+  title: string
   message: string
   isComplete?: boolean
   isRemoved?: boolean
@@ -290,6 +315,7 @@ export type PostCreateInput = {
 export type PostUncheckedCreateInput = {
   id?: number
   userId: number
+  title: string
   message: string
   isComplete?: boolean
   isRemoved?: boolean
@@ -299,6 +325,7 @@ export type PostUncheckedCreateInput = {
 }
 
 export type PostUpdateInput = {
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
   isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -311,6 +338,7 @@ export type PostUpdateInput = {
 export type PostUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
   isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -322,12 +350,14 @@ export type PostUncheckedUpdateInput = {
 export type PostCreateManyInput = {
   id?: number
   userId: number
+  title: string
   message: string
   isComplete?: boolean
   isRemoved?: boolean
 }
 
 export type PostUpdateManyMutationInput = {
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
   isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -336,6 +366,7 @@ export type PostUpdateManyMutationInput = {
 export type PostUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
   isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -351,9 +382,18 @@ export type PostOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type StringNullableListFilter<$PrismaModel = never> = {
+  equals?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel> | null
+  has?: string | Prisma.StringFieldRefInput<$PrismaModel> | null
+  hasEvery?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
+  hasSome?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
+  isEmpty?: boolean
+}
+
 export type PostCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  title?: Prisma.SortOrder
   message?: Prisma.SortOrder
   isComplete?: Prisma.SortOrder
   isRemoved?: Prisma.SortOrder
@@ -362,11 +402,15 @@ export type PostCountOrderByAggregateInput = {
 export type PostAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  radiusMiles?: Prisma.SortOrder
+  lat?: Prisma.SortOrder
+  lng?: Prisma.SortOrder
 }
 
 export type PostMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  title?: Prisma.SortOrder
   message?: Prisma.SortOrder
   isComplete?: Prisma.SortOrder
   isRemoved?: Prisma.SortOrder
@@ -375,6 +419,7 @@ export type PostMaxOrderByAggregateInput = {
 export type PostMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  title?: Prisma.SortOrder
   message?: Prisma.SortOrder
   isComplete?: Prisma.SortOrder
   isRemoved?: Prisma.SortOrder
@@ -383,6 +428,9 @@ export type PostMinOrderByAggregateInput = {
 export type PostSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  radiusMiles?: Prisma.SortOrder
+  lat?: Prisma.SortOrder
+  lng?: Prisma.SortOrder
 }
 
 export type PostScalarRelationFilter = {
@@ -437,8 +485,51 @@ export type PostUncheckedUpdateManyWithoutUserNestedInput = {
   deleteMany?: Prisma.PostScalarWhereInput | Prisma.PostScalarWhereInput[]
 }
 
+export type PostCreateimagesInput = {
+  set: string[]
+}
+
 export type BoolFieldUpdateOperationsInput = {
   set?: boolean
+}
+
+export type DateTimeFieldUpdateOperationsInput = {
+  set?: Date | string
+}
+
+export type PostUpdateimagesInput = {
+  set?: string[]
+  push?: string | string[]
+}
+
+export type NullableIntFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
+export type NullableFloatFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
+export type PostCreateNestedOneWithoutCommentsInput = {
+  create?: Prisma.XOR<Prisma.PostCreateWithoutCommentsInput, Prisma.PostUncheckedCreateWithoutCommentsInput>
+  connectOrCreate?: Prisma.PostCreateOrConnectWithoutCommentsInput
+  connect?: Prisma.PostWhereUniqueInput
+}
+
+export type PostUpdateOneRequiredWithoutCommentsNestedInput = {
+  create?: Prisma.XOR<Prisma.PostCreateWithoutCommentsInput, Prisma.PostUncheckedCreateWithoutCommentsInput>
+  connectOrCreate?: Prisma.PostCreateOrConnectWithoutCommentsInput
+  upsert?: Prisma.PostUpsertWithoutCommentsInput
+  connect?: Prisma.PostWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PostUpdateToOneWithWhereWithoutCommentsInput, Prisma.PostUpdateWithoutCommentsInput>, Prisma.PostUncheckedUpdateWithoutCommentsInput>
 }
 
 export type PostCreateNestedOneWithoutProductsInput = {
@@ -486,6 +577,7 @@ export type PostUpdateOneWithoutReportsNestedInput = {
 }
 
 export type PostCreateWithoutUserInput = {
+  title: string
   message: string
   isComplete?: boolean
   isRemoved?: boolean
@@ -496,6 +588,7 @@ export type PostCreateWithoutUserInput = {
 
 export type PostUncheckedCreateWithoutUserInput = {
   id?: number
+  title: string
   message: string
   isComplete?: boolean
   isRemoved?: boolean
@@ -536,12 +629,14 @@ export type PostScalarWhereInput = {
   NOT?: Prisma.PostScalarWhereInput | Prisma.PostScalarWhereInput[]
   id?: Prisma.IntFilter<"Post"> | number
   userId?: Prisma.IntFilter<"Post"> | number
+  title?: Prisma.StringFilter<"Post"> | string
   message?: Prisma.StringFilter<"Post"> | string
   isComplete?: Prisma.BoolFilter<"Post"> | boolean
   isRemoved?: Prisma.BoolFilter<"Post"> | boolean
 }
 
 export type PostCreateWithoutProductsInput = {
+  title: string
   message: string
   isComplete?: boolean
   isRemoved?: boolean
@@ -553,6 +648,7 @@ export type PostCreateWithoutProductsInput = {
 export type PostUncheckedCreateWithoutProductsInput = {
   id?: number
   userId: number
+  title: string
   message: string
   isComplete?: boolean
   isRemoved?: boolean
@@ -577,6 +673,7 @@ export type PostUpdateToOneWithWhereWithoutProductsInput = {
 }
 
 export type PostUpdateWithoutProductsInput = {
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
   isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -588,6 +685,7 @@ export type PostUpdateWithoutProductsInput = {
 export type PostUncheckedUpdateWithoutProductsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
   isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -596,6 +694,7 @@ export type PostUncheckedUpdateWithoutProductsInput = {
 }
 
 export type PostCreateWithoutServicesInput = {
+  title: string
   message: string
   isComplete?: boolean
   isRemoved?: boolean
@@ -607,6 +706,7 @@ export type PostCreateWithoutServicesInput = {
 export type PostUncheckedCreateWithoutServicesInput = {
   id?: number
   userId: number
+  title: string
   message: string
   isComplete?: boolean
   isRemoved?: boolean
@@ -631,6 +731,7 @@ export type PostUpdateToOneWithWhereWithoutServicesInput = {
 }
 
 export type PostUpdateWithoutServicesInput = {
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
   isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -642,6 +743,7 @@ export type PostUpdateWithoutServicesInput = {
 export type PostUncheckedUpdateWithoutServicesInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
   isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -705,12 +807,14 @@ export type PostUncheckedUpdateWithoutReportsInput = {
 
 export type PostCreateManyUserInput = {
   id?: number
+  title: string
   message: string
   isComplete?: boolean
   isRemoved?: boolean
 }
 
 export type PostUpdateWithoutUserInput = {
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
   isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -721,6 +825,7 @@ export type PostUpdateWithoutUserInput = {
 
 export type PostUncheckedUpdateWithoutUserInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
   isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -731,6 +836,7 @@ export type PostUncheckedUpdateWithoutUserInput = {
 
 export type PostUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
   isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -788,6 +894,7 @@ export type PostCountOutputTypeCountReportsArgs<ExtArgs extends runtime.Types.Ex
 export type PostSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
+  title?: boolean
   message?: boolean
   isComplete?: boolean
   isRemoved?: boolean
@@ -801,6 +908,7 @@ export type PostSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
 export type PostSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
+  title?: boolean
   message?: boolean
   isComplete?: boolean
   isRemoved?: boolean
@@ -810,6 +918,7 @@ export type PostSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
 export type PostSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
+  title?: boolean
   message?: boolean
   isComplete?: boolean
   isRemoved?: boolean
@@ -819,6 +928,7 @@ export type PostSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
 export type PostSelectScalar = {
   id?: boolean
   userId?: boolean
+  title?: boolean
   message?: boolean
   isComplete?: boolean
   isRemoved?: boolean
@@ -850,6 +960,7 @@ export type $PostPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
     userId: number
+    title: string
     message: string
     isComplete: boolean
     isRemoved: boolean
@@ -1282,6 +1393,7 @@ export interface Prisma__PostClient<T, Null = never, ExtArgs extends runtime.Typ
 export interface PostFieldRefs {
   readonly id: Prisma.FieldRef<"Post", 'Int'>
   readonly userId: Prisma.FieldRef<"Post", 'Int'>
+  readonly title: Prisma.FieldRef<"Post", 'String'>
   readonly message: Prisma.FieldRef<"Post", 'String'>
   readonly isComplete: Prisma.FieldRef<"Post", 'Boolean'>
   readonly isRemoved: Prisma.FieldRef<"Post", 'Boolean'>

@@ -239,6 +239,16 @@ export interface PrismaClient<
   get post(): Prisma.PostDelegate<ExtArgs, { omit: OmitOpts }>;
 
   /**
+   * `prisma.comment`: Exposes CRUD operations for the **Comment** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Comments
+    * const comments = await prisma.comment.findMany()
+    * ```
+    */
+  get comment(): Prisma.CommentDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
    * `prisma.product`: Exposes CRUD operations for the **Product** model.
     * Example usage:
     * ```ts
