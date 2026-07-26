@@ -77,6 +77,7 @@ export interface RouteDef {
   path: string;
   component: ComponentType;
   requiresAuth?: boolean;
+  requiresRole?: 'MODERATOR' | 'ADMIN';
 }
 
 function matchPath(pattern: string, path: string): boolean {
@@ -95,8 +96,20 @@ export function Router({ routes, notFound: NotFound }: {
   useEffect(() => {
     if (match?.requiresAuth && !loading && !user) {
       navigate('/');
+    } else if (match?.requiresRole && !loading && user?.role !== match.requiresRole) {
+      navigate('/');
     }
   }, [match, loading, user, navigate]);
+
+  if (!match) return <NotFound />;
+  if (match.requiresAuth) {
+    if (loading) return null;
+    if (!user) return null;
+  }
+  if (match.requiresRole) {
+    if (loading) return null;
+    if (!user || user.role !== match.requiresRole) return null;
+  }
 
   if (!match) return <NotFound />;
   if (match.requiresAuth) {

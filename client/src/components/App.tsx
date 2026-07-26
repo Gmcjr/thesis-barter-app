@@ -12,10 +12,17 @@ import { RouterProvider, Router, type RouteDef } from '../context/RouterContext'
 import NavBar from './NavBar/NavBar';
 import Posts from './Posts/Posts';
 import Profile from './Profile/Profile';
+import ModQueue from './Moderation/ModQueue';
 import NotFound from './NotFound/NotFound';
 
 const routes: RouteDef[] = [
   { path: '/', component: Posts },
+  {
+    path: '/moderation',
+    component: ModQueue,
+    requiresAuth: true,
+    requiresRole: 'MODERATOR',
+  },
   { path: '/profile', component: Profile, requiresAuth: true },
 ];
 

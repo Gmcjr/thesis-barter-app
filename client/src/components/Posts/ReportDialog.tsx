@@ -21,10 +21,13 @@ const reasons = [
 interface ReportDialogProps {
   open: boolean;
   onClose: () => void;
-  postId: number;
+  targetType: 'POST' | 'USER' | 'MESSAGE';
+  targetId: number;
 }
 
-export default function ReportDialog({ open, onClose, postId }: ReportDialogProps) {
+export default function ReportDialog({
+  open, onClose, targetType, targetId,
+}: ReportDialogProps) {
   const { showToast } = useToast();
   const [reason, setReason] = useState('');
   const [details, setDetails] = useState('');
@@ -39,7 +42,7 @@ export default function ReportDialog({ open, onClose, postId }: ReportDialogProp
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
         body: JSON.stringify({
-          targetType: 'POST', targetId: postId, reason, details,
+          targetType, targetId, reason, details,
         }),
       });
       if (!res.ok) throw new Error('Report submission failed');
