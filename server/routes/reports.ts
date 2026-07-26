@@ -109,6 +109,7 @@ reports.get('/', requireModerator, async (req, res) => {
         reporter: { select: { id: true, name: true } },
         post: true,
         targetUser: { select: { id: true, name: true } },
+        resolver: { select: { id: true, name: true } },
         message: true,
       },
       orderBy: { createdAt: 'desc' },
