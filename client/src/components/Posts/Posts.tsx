@@ -452,10 +452,10 @@ export default function Posts() {
                   </Box>
 
                   {/* user avatar, name, and DM button */}
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     <Avatar sx={{
                       bgcolor: 'primary.main', width: 32, height: 32, fontSize: '0.9rem',
-                    }}   
+                    }}
                     >
                       {postUser.charAt(0).toUpperCase()}
                     </Avatar>
@@ -465,13 +465,8 @@ export default function Posts() {
                     <Button size="small" variant="outlined" sx={{ borderRadius: 4, textTransform: 'none' }}>
                       Open DM
                     </Button>
+                    <PostActionsMenu onReport={() => setReportDialogPostId(post.id)} />
                   </Box>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <Typography variant="caption" color="text.secondary">
-                    Posted on {post.date}
-                  </Typography>
-                  <PostActionsMenu onReport={() => setReportDialogPostId(post.id)} />
-                </Box>
                 </Box>
 
                 <Typography variant="body1" sx={{ mb: 3, lineHeight: 1.6 }}>
@@ -551,7 +546,7 @@ export default function Posts() {
         title="Completed Trades"
         readOnly
       />
-        
+
       <ReportDialog
         open={reportDialogPostId !== null}
         onClose={() => setReportDialogPostId(null)}
