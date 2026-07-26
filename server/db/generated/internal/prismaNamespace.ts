@@ -423,7 +423,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "dM" | "message" | "log" | "post" | "product" | "service" | "cat" | "rep" | "report"
+    modelProps: "user" | "dM" | "message" | "log" | "post" | "comment" | "product" | "service" | "cat" | "rep" | "report"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1327,6 +1327,14 @@ export const PostScalarFieldEnum = {
   title: 'title',
   message: 'message',
   isComplete: 'isComplete',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  images: 'images',
+  isLocal: 'isLocal',
+  zipCode: 'zipCode',
+  radiusMiles: 'radiusMiles',
+  lat: 'lat',
+  lng: 'lng',
   isRemoved: 'isRemoved'
 } as const
 
@@ -1517,6 +1525,34 @@ export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaMode
 
 
 /**
+ * Reference to a field of type 'Cond'
+ */
+export type EnumCondFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Cond'>
+    
+
+
+/**
+ * Reference to a field of type 'Cond[]'
+ */
+export type ListEnumCondFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Cond[]'>
+    
+
+
+/**
+ * Reference to a field of type 'CatType'
+ */
+export type EnumCatTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CatType'>
+    
+
+
+/**
+ * Reference to a field of type 'CatType[]'
+ */
+export type ListEnumCatTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CatType[]'>
+    
+
+
+/**
  * Reference to a field of type 'TargetType'
  */
 export type EnumTargetTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TargetType'>
@@ -1545,34 +1581,6 @@ export type ListEnumReportReasonFieldRefInput<$PrismaModel> = FieldRefInputType<
 
 
 /**
- * Reference to a field of type 'Float'
- */
-export type EnumCondFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Cond'>
-    
-
-
-/**
- * Reference to a field of type 'Cond[]'
- */
-export type ListEnumCondFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Cond[]'>
-    
-
-
-/**
- * Reference to a field of type 'CatType'
- */
-export type EnumCatTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CatType'>
-    
-
-
-/**
- * Reference to a field of type 'CatType[]'
- */
-export type ListEnumCatTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CatType[]'>
-    
-
-
-/**
  * Reference to a field of type 'ReportStatus'
  */
 export type EnumReportStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ReportStatus'>
@@ -1583,20 +1591,6 @@ export type EnumReportStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$Pri
  * Reference to a field of type 'ReportStatus[]'
  */
 export type ListEnumReportStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ReportStatus[]'>
-    
-
-
-/**
- * Reference to a field of type 'DateTime'
- */
-export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
-    
-
-
-/**
- * Reference to a field of type 'DateTime[]'
- */
-export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
     
 
 /**

@@ -127,6 +127,14 @@ export const PostScalarFieldEnum = {
   title: 'title',
   message: 'message',
   isComplete: 'isComplete',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  images: 'images',
+  isLocal: 'isLocal',
+  zipCode: 'zipCode',
+  radiusMiles: 'radiusMiles',
+  lat: 'lat',
+  lng: 'lng',
   isRemoved: 'isRemoved'
 } as const
 
