@@ -17,6 +17,7 @@ import NotFound from './NotFound/NotFound';
 const routes: RouteDef[] = [
   { path: '/', component: Posts },
   { path: '/profile', component: Profile, requiresAuth: true },
+  { path: '/profile/:id', component: Profile },
 ];
 
 function App() {

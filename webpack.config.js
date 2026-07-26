@@ -15,6 +15,7 @@ export default {
   output: {
     path: path.join(client, 'dist'),
     filename: 'bundle.js',
+    publicPath: '/',
   },
   mode: process.env.MODE,
   watch: process.env.MODE === 'development',

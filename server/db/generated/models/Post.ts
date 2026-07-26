@@ -670,10 +670,6 @@ export type BoolFieldUpdateOperationsInput = {
   set?: boolean
 }
 
-export type DateTimeFieldUpdateOperationsInput = {
-  set?: Date | string
-}
-
 export type PostUpdateimagesInput = {
   set?: string[]
   push?: string | string[]
