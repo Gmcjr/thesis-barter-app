@@ -10,14 +10,8 @@ import ReportDialog from '../Posts/ReportDialog';
 import ProfileHeader from './ProfileHeader';
 import ProfileTabs from './ProfileTabs';
 import ProfileTrades from './ProfileTrades';
-
-interface ProfileUser {
-  id: number;
-  name: string | null;
-  email: string;
-  bio: string | null;
-  createdAt: string;
-}
+import EditProfileModal from './EditProfileModal';
+import type { ProfileUser, ProfileUpdateData } from './types';
 
 export default function Profile() {
   const { id } = useParams();
@@ -29,6 +23,22 @@ export default function Profile() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [reportDialogPostId, setReportDialogPostId] = useState<number | null>(null);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+
+  const handleUpdateProfile = async (data: ProfileUpdateData) => {
+    const toNullable = (value: string) => (value.trim() ? value.trim() : null);
+
+    const res = await axios.patch<ProfileUser>('/user/me', {
+      user: {
+        name: toNullable(data.name),
+        bio: toNullable(data.bio),
+        phone: toNullable(data.phone),
+        zipCode: toNullable(data.zipCode),
+      },
+    }, { withCredentials: true });
+
+    setProfile(res.data);
+  };
 
   useEffect(() => {
     let cancelled = false;
@@ -89,7 +99,11 @@ export default function Profile() {
 
   return (
     <Box sx={{ width: '100%', mt: -4 }}>
-      <ProfileHeader profile={profile} isOwnProfile={isOwnProfile} />
+      <ProfileHeader
+        profile={profile}
+        isOwnProfile={isOwnProfile}
+        onEditClick={() => setEditModalOpen(true)}
+      />
 
       <ProfileTabs
         activeTab={activeTab}
@@ -103,6 +117,20 @@ export default function Profile() {
         isOwnProfile={isOwnProfile}
         onReport={(postId) => setReportDialogPostId(postId)}
       />
+
+      {isOwnProfile && (
+        <EditProfileModal
+          open={editModalOpen}
+          onClose={() => setEditModalOpen(false)}
+          initialData={{
+            name: profile.name ?? '',
+            bio: profile.bio ?? '',
+            phone: profile.phone ?? '',
+            zipCode: profile.zipCode ?? '',
+          }}
+          onSave={handleUpdateProfile}
+        />
+      )}
 
       <ReportDialog
         open={reportDialogPostId !== null}

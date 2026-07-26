@@ -2,13 +2,7 @@ import React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
-
-interface ProfileTabsProps {
-  activeTab: 'current' | 'history';
-  onTabChange: (tab: 'current' | 'history') => void;
-  tradeCount: number;
-  isOwnProfile: boolean;
-}
+import type { ProfileTabsProps } from './types';
 
 export default function ProfileTabs({
   activeTab, onTabChange, tradeCount, isOwnProfile,

@@ -9,14 +9,8 @@ import TextField from '@mui/material/TextField';
 import Divider from '@mui/material/Divider';
 import Chip from '@mui/material/Chip';
 
-import type { PostData } from '../Posts/ManagePosts';
 import PostActionsMenu from '../Posts/PostActionsMenu';
-
-interface ProfileTradesProps {
-  posts: PostData[];
-  isOwnProfile: boolean;
-  onReport: (postId: number) => void;
-}
+import type { ProfileTradesProps } from './types';
 
 export default function ProfileTrades({ posts, isOwnProfile, onReport }: ProfileTradesProps) {
   return (

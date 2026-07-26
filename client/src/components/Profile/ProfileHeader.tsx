@@ -5,21 +5,9 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
+import type { ProfileHeaderProps } from './types';
 
-interface ProfileUser {
-  id: number;
-  name: string | null;
-  email: string;
-  bio: string | null;
-  createdAt: string;
-}
-
-interface ProfileHeaderProps {
-  profile: ProfileUser;
-  isOwnProfile: boolean;
-}
-
-export default function ProfileHeader({ profile, isOwnProfile }: ProfileHeaderProps) {
+export default function ProfileHeader({ profile, isOwnProfile, onEditClick }: ProfileHeaderProps) {
   return (
     <Card
       variant="outlined"
@@ -51,9 +39,18 @@ export default function ProfileHeader({ profile, isOwnProfile }: ProfileHeaderPr
             fontSize: '2rem',
           }}
           >
-            {(profile.name ?? profile.email).charAt(0).toUpperCase()}
+            {profile.name.charAt(0).toUpperCase()}
           </Avatar>
-          {!isOwnProfile && (
+          {isOwnProfile ? (
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={onEditClick}
+              sx={{ borderRadius: 4, textTransform: 'none' }}
+            >
+              Edit Profile
+            </Button>
+          ) : (
             <Button
               variant="outlined"
               size="small"

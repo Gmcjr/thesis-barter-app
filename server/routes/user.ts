@@ -75,7 +75,7 @@ router.get('/:id', async (req, res) => {
     return res.status(400).json({ error: 'invalid user id' });
   }
   try {
-    const user = prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: { id },
       include: {
         posts: true,
