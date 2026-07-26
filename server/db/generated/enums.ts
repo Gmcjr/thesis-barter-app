@@ -20,8 +20,10 @@ export type Role = (typeof Role)[keyof typeof Role]
 
 export const Cond = {
   POOR: 'POOR',
-  FAIR: 'FAIR',
-  NEW: 'NEW'
+  AVERAGE: 'AVERAGE',
+  GOOD: 'GOOD',
+  EXCELLENT: 'EXCELLENT',
+  MINT: 'MINT'
 } as const
 
 export type Cond = (typeof Cond)[keyof typeof Cond]
@@ -33,3 +35,32 @@ export const CatType = {
 } as const
 
 export type CatType = (typeof CatType)[keyof typeof CatType]
+
+
+export const TargetType = {
+  POST: 'POST',
+  USER: 'USER',
+  MESSAGE: 'MESSAGE'
+} as const
+
+export type TargetType = (typeof TargetType)[keyof typeof TargetType]
+
+
+export const ReportReason = {
+  SPAM_OR_SCAM: 'SPAM_OR_SCAM',
+  INAPPROPRIATE_CONTENT: 'INAPPROPRIATE_CONTENT',
+  ITEM_MISMATCH: 'ITEM_MISMATCH',
+  HARASSMENT: 'HARASSMENT',
+  OTHER: 'OTHER'
+} as const
+
+export type ReportReason = (typeof ReportReason)[keyof typeof ReportReason]
+
+
+export const ReportStatus = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REMOVED: 'REMOVED'
+} as const
+
+export type ReportStatus = (typeof ReportStatus)[keyof typeof ReportStatus]

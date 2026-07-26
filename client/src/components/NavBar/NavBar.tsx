@@ -4,9 +4,7 @@ import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import InputBase from '@mui/material/InputBase';
 import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
 import Avatar from '@mui/material/Avatar';
 
 import { Link, useRouter } from '../../context/RouterContext';
@@ -48,21 +46,6 @@ function NavBar() {
             BARTAAAAA
           </Typography>
         </Link>
-
-        {/* Search Bar */}
-        <Paper
-          variant="outlined"
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            px: 1.5,
-            py: 0.25,
-            flex: { xs: '1 1 100%', md: '0 1 400px' },
-            order: { xs: 3, md: 2 },
-          }}
-        >
-          <InputBase placeholder="Search for listings..." sx={{ flex: 1, fontSize: '0.85rem' }} />
-        </Paper>
 
         {/* Home, Messages and Profile */}
         <Box sx={{

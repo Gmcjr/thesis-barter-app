@@ -67,6 +67,11 @@ export type Log = Prisma.LogModel
  */
 export type Post = Prisma.PostModel
 /**
+ * Model Comment
+ * 
+ */
+export type Comment = Prisma.CommentModel
+/**
  * Model Product
  * 
  */
@@ -86,3 +91,8 @@ export type Cat = Prisma.CatModel
  * 
  */
 export type Rep = Prisma.RepModel
+/**
+ * Model Report
+ * 
+ */
+export type Report = Prisma.ReportModel

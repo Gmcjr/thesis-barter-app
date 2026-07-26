@@ -50,18 +50,15 @@ router.get('/me', requireAuth, async (req, res) => {
   }
 });
 
-router.get(':id', async (req, res) => {
+router.get('/:id', async (req, res) => {
   const id = Number(req.params.id);
   if (Number.isNaN(id)) {
     return res.status(400).json({ error: 'invalid user id' });
   }
-
   try {
     const user = prisma.user.findUnique({
       where: { id },
-      select: {
-        id: true,
-        name: true,
+      include: {
         posts: true,
         rep: true,
       },

@@ -26,6 +26,8 @@ app.use(express.static(path.join(process.cwd(), 'client', 'dist')));
 app.use('/oauth2', router.auth);
 app.use('/health', router.health);
 app.use('/user', router.user);
+app.use('/posts', router.posts);
+app.use('/reports', router.reports);
 
 app.get(/.*/, (req, res) => {
   res.sendFile(path.join(process.cwd(), 'client', 'dist', 'index.html'));
