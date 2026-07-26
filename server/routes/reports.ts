@@ -148,15 +148,20 @@ reports.patch('/:id', requireModerator, async (req, res) => {
       },
     });
 
-    const [resolved] = isRemove && report.postId
-      ? await prisma.$transaction([
-        reportUpdate,
-        prisma.post.update({
-          where: { id: report.postId },
-          data: { isRemoved: true },
-        }),
-      ])
-      : await prisma.$transaction([reportUpdate]);
+    const extraUpdates = [];
+    if (report.postId) {
+      extraUpdates.push(prisma.post.update({
+        where: { id: report.postId },
+        data: { isRemoved: isRemove },
+      }));
+    }
+    if (report.messageId) {
+      extraUpdates.push(prisma.message.update({
+        where: { id: report.messageId },
+        data: { isRemoved: isRemove },
+      }));
+    }
+    const [resolved] = await prisma.$transaction([reportUpdate, ...extraUpdates]);
 
     res.json(resolved);
   } catch (err) {
