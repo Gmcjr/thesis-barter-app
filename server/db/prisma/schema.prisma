@@ -32,6 +32,10 @@ model User {
   phone        String?
   zipCode      String?
   role         Role?
+
+  reportsFiled    Report[]  @relation("reportsFiled")
+  reportsAgainst  Report[]  @relation("reportsAgainst")
+  reportsResolved Report[]  @relation("reportsResolved")
 }
 
 enum Role {
@@ -41,25 +45,27 @@ enum Role {
 }
 
 model DM {
-  id       Int        @id @default(autoincrement())
-  user1    User       @relation("initiatedDMs", fields: [user1Id], references: [id])
-  user1Id  Int
-  user2    User       @relation("recievedDMs",fields: [user2Id], references: [id])
-  user2Id  Int
+  id      Int  @id @default(autoincrement())
+  user1   User @relation("initiatedDMs", fields: [user1Id], references: [id])
+  user1Id Int
+  user2   User @relation("recievedDMs", fields: [user2Id], references: [id])
+  user2Id Int
 
   messages Message[]
 }
 
 model Message {
-  id         Int    @id @default(autoincrement())
-  dm         DM     @relation(fields: [dmId], references: [id])
+  id         Int  @id @default(autoincrement())
+  dm         DM   @relation(fields: [dmId], references: [id])
   dmId       Int
-  sender     User   @relation("sMessages", fields: [senderId], references: [id])
+  sender     User @relation("sMessages", fields: [senderId], references: [id])
   senderId   Int
-  reciever   User   @relation("rMessages", fields: [recieverId], references: [id])
+  reciever   User @relation("rMessages", fields: [recieverId], references: [id])
   recieverId Int
 
-  text     String
+  text String
+
+  reports Report[]
 }
 
 model Log {
@@ -89,6 +95,9 @@ model Post {
   radiusMiles Int?
   lat         Float?
   lng         Float?
+  
+  reports   Report[]
+  isRemoved Boolean  @default(false)
 }
 
 model Comment {
@@ -109,8 +118,8 @@ model Product {
   user        User    @relation(fields: [userId], references: [id])
   userId      Int
   cat         Cat     @relation(fields: [catId], references: [id])
-  catId       Int
-  
+  catId       Int  
+ 
   name        String
   description String
   condition   Cond
@@ -139,13 +148,13 @@ model Service {
 }
 
 model Cat {
-  id       Int       @id @default(autoincrement())
-  
+  id Int @id @default(autoincrement())
+
   products Product[]
   services Service[]
 
-  type     CatType
-  name     String    @unique
+  type CatType
+  name String  @unique
 }
 
 enum CatType {
@@ -154,8 +163,57 @@ enum CatType {
 }
 
 model Rep {
-  id     Int    @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
-  user   User   @relation(fields: [userId], references: [id])
+  user   User @relation(fields: [userId], references: [id])
   userId Int
+}
+
+model Report {
+  id         Int  @id @default(autoincrement())
+  reporter   User @relation("reportsFiled", fields: [reporterId], references: [id])
+  reporterId Int
+
+  targetType   TargetType
+  post         Post?      @relation(fields: [postId], references: [id])
+  postId       Int?
+  targetUser   User?      @relation("reportsAgainst", fields: [targetUserId], references: [id])
+  targetUserId Int?
+  message      Message?   @relation(fields: [messageId], references: [id])
+  messageId    Int?
+
+  reason  ReportReason
+  details String?
+
+  aiScore      Float?
+  aiCategories String[]
+  aiRationale  String?
+
+  status     ReportStatus @default(PENDING)
+  resolution String?
+  resolver   User?        @relation("reportsResolved", fields: [resolverId], references: [id])
+  resolverId Int?
+
+  createdAt  DateTime  @default(now())
+  resolvedAt DateTime?
+}
+
+enum TargetType {
+  POST
+  USER
+  MESSAGE
+}
+
+enum ReportReason {
+  SPAM_OR_SCAM
+  INAPPROPRIATE_CONTENT
+  ITEM_MISMATCH
+  HARASSMENT
+  OTHER
+}
+
+enum ReportStatus {
+  PENDING
+  APPROVED
+  REMOVED
 }

@@ -26,6 +26,7 @@ app.use(express.static(path.join(process.cwd(), 'client', 'dist')));
 app.use('/oauth2', router.auth);
 app.use('/health', router.health);
 app.use('/posts', router.posts);
+app.use('/reports', router.reports);
 // app.use('/profile', router.);
 
 app.get(/.*/, (req, res) => {

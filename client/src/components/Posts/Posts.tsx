@@ -27,6 +27,9 @@ import NewPost, { type PostFormData } from './NewPost';
 import ManagePosts, { type PostData, type PostUpdateData } from './ManagePosts';
 import { useAuth } from '../../context/AuthContext';
 
+import PostActionsMenu from './PostActionsMenu';
+import ReportDialog from './ReportDialog';
+
 // type definitions
 type Category = {
   id: number;
@@ -64,6 +67,7 @@ export default function Posts() {
 
   const [search, setSearch] = useState('');
   const [error, setError] = useState('');
+  const [reportDialogPostId, setReportDialogPostId] = useState<number | null>(null);
 
   const toggleDrawer = (open: boolean) => () => {
     setDrawerOpen(open);
@@ -451,7 +455,7 @@ export default function Posts() {
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                     <Avatar sx={{
                       bgcolor: 'primary.main', width: 32, height: 32, fontSize: '0.9rem',
-                    }}
+                    }}   
                     >
                       {postUser.charAt(0).toUpperCase()}
                     </Avatar>
@@ -462,6 +466,12 @@ export default function Posts() {
                       Open DM
                     </Button>
                   </Box>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Typography variant="caption" color="text.secondary">
+                    Posted on {post.date}
+                  </Typography>
+                  <PostActionsMenu onReport={() => setReportDialogPostId(post.id)} />
+                </Box>
                 </Box>
 
                 <Typography variant="body1" sx={{ mb: 3, lineHeight: 1.6 }}>
@@ -540,6 +550,12 @@ export default function Posts() {
         posts={completedPosts}
         title="Completed Trades"
         readOnly
+      />
+        
+      <ReportDialog
+        open={reportDialogPostId !== null}
+        onClose={() => setReportDialogPostId(null)}
+        postId={reportDialogPostId ?? 0}
       />
     </Box>
   );

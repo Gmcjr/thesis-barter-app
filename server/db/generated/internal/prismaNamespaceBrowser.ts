@@ -60,7 +60,8 @@ export const ModelName = {
   Product: 'Product',
   Service: 'Service',
   Cat: 'Cat',
-  Rep: 'Rep'
+  Rep: 'Rep',
+  Report: 'Report'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -126,14 +127,7 @@ export const PostScalarFieldEnum = {
   title: 'title',
   message: 'message',
   isComplete: 'isComplete',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  images: 'images',
-  isLocal: 'isLocal',
-  zipCode: 'zipCode',
-  radiusMiles: 'radiusMiles',
-  lat: 'lat',
-  lng: 'lng'
+  isRemoved: 'isRemoved'
 } as const
 
 export type PostScalarFieldEnum = (typeof PostScalarFieldEnum)[keyof typeof PostScalarFieldEnum]
@@ -191,6 +185,28 @@ export const RepScalarFieldEnum = {
 } as const
 
 export type RepScalarFieldEnum = (typeof RepScalarFieldEnum)[keyof typeof RepScalarFieldEnum]
+
+
+export const ReportScalarFieldEnum = {
+  id: 'id',
+  reporterId: 'reporterId',
+  targetType: 'targetType',
+  postId: 'postId',
+  targetUserId: 'targetUserId',
+  messageId: 'messageId',
+  reason: 'reason',
+  details: 'details',
+  aiScore: 'aiScore',
+  aiCategories: 'aiCategories',
+  aiRationale: 'aiRationale',
+  status: 'status',
+  resolution: 'resolution',
+  resolverId: 'resolverId',
+  createdAt: 'createdAt',
+  resolvedAt: 'resolvedAt'
+} as const
+
+export type ReportScalarFieldEnum = (typeof ReportScalarFieldEnum)[keyof typeof ReportScalarFieldEnum]
 
 
 export const SortOrder = {

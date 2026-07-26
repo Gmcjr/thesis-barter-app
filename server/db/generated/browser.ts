@@ -67,3 +67,8 @@ export type Cat = Prisma.CatModel
  * 
  */
 export type Rep = Prisma.RepModel
+/**
+ * Model Report
+ * 
+ */
+export type Report = Prisma.ReportModel
