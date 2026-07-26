@@ -13,26 +13,29 @@ datasource db {
 }
 
 model User {
-  id       Int     @id @default(autoincrement())
-  googleId String? @unique
+  id           Int        @id @default(autoincrement())
+  googleId     String?    @unique
 
-  posts           Post[]
-  logs            Log[]
-  products        Product[]
-  services        Service[]
-  initiatedDMs    DM[]      @relation("initiatedDMs")
-  recievedDMs     DM[]      @relation("recievedDMs")
-  sMessages       Message[] @relation("sMessages")
-  rMessages       Message[] @relation("rMessages")
-  rep             Rep[]
+  posts        Post[]
+  comments     Comment[]
+  logs         Log[]
+  products     Product[]
+  services     Service[]
+  initiatedDMs DM[]        @relation("initiatedDMs")
+  recievedDMs  DM[]        @relation("recievedDMs")
+  sMessages    Message[]   @relation("sMessages")
+  rMessages    Message[]   @relation("rMessages")
+  rep          Rep[]
+
+  name         String?
+  email        String      @unique
+  phone        String?
+  zipCode      String?
+  role         Role?
+
   reportsFiled    Report[]  @relation("reportsFiled")
   reportsAgainst  Report[]  @relation("reportsAgainst")
   reportsResolved Report[]  @relation("reportsResolved")
-
-  name  String?
-  email String  @unique
-  phone String?
-  role  Role?
 }
 
 enum Role {
@@ -73,29 +76,51 @@ model Log {
 }
 
 model Post {
-  id     Int  @id @default(autoincrement())
-  user   User @relation(fields: [userId], references: [id])
-  userId Int
+  id         Int       @id @default(autoincrement())
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     Int
 
-  products Product[]
-  services Service[]
+  products   Product[]
+  services   Service[]
+  comments   Comment[]
 
-  message    String
-  isComplete Boolean @default(false)
+  title       String
+  message     String
+  isComplete  Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  images      String[]
 
+  isLocal     Boolean   @default(false)
+  zipCode     String?
+  radiusMiles Int?
+  lat         Float?
+  lng         Float?
+  
   reports   Report[]
   isRemoved Boolean  @default(false)
 }
 
-model Product {
-  id     Int  @id @default(autoincrement())
-  post   Post @relation(fields: [postId], references: [id])
-  postId Int
-  user   User @relation(fields: [userId], references: [id])
-  userId Int
-  cat    Cat  @relation(fields: [catId], references: [id])
-  catId  Int
+model Comment {
+  id          Int      @id @default(autoincrement())
+  text        String
+  createdAt   DateTime @default(now())
 
+  post        Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId      Int
+  user        User @relation(fields: [userId], references: [id])
+  userId      Int
+}
+
+model Product {
+  id          Int     @id @default(autoincrement())
+  post        Post    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId      Int
+  user        User    @relation(fields: [userId], references: [id])
+  userId      Int
+  cat         Cat     @relation(fields: [catId], references: [id])
+  catId       Int  
+ 
   name        String
   description String
   condition   Cond
@@ -104,18 +129,20 @@ model Product {
 
 enum Cond {
   POOR
-  FAIR
-  NEW
+  AVERAGE
+  GOOD
+  EXCELLENT
+  MINT
 }
 
 model Service {
-  id     Int  @id @default(autoincrement())
-  post   Post @relation(fields: [postId], references: [id])
-  postId Int
-  user   User @relation(fields: [userId], references: [id])
-  userId Int
-  cat    Cat  @relation(fields: [catId], references: [id])
-  catId  Int
+  id          Int    @id @default(autoincrement())
+  post        Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId      Int
+  user        User   @relation(fields: [userId], references: [id])
+  userId      Int
+  cat         Cat    @relation(fields: [catId], references: [id])
+  catId       Int
 
   name        String
   description String

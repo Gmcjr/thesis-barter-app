@@ -563,14 +563,6 @@ export type ReportOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
-export type StringNullableListFilter<$PrismaModel = never> = {
-  equals?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel> | null
-  has?: string | Prisma.StringFieldRefInput<$PrismaModel> | null
-  hasEvery?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
-  hasSome?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
-  isEmpty?: boolean
-}
-
 export type ReportCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   reporterId?: Prisma.SortOrder
@@ -868,14 +860,6 @@ export type EnumReportReasonFieldUpdateOperationsInput = {
   set?: $Enums.ReportReason
 }
 
-export type NullableFloatFieldUpdateOperationsInput = {
-  set?: number | null
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type ReportUpdateaiCategoriesInput = {
   set?: string[]
   push?: string | string[]
@@ -885,20 +869,8 @@ export type EnumReportStatusFieldUpdateOperationsInput = {
   set?: $Enums.ReportStatus
 }
 
-export type DateTimeFieldUpdateOperationsInput = {
-  set?: Date | string
-}
-
 export type NullableDateTimeFieldUpdateOperationsInput = {
   set?: Date | string | null
-}
-
-export type NullableIntFieldUpdateOperationsInput = {
-  set?: number | null
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
 }
 
 export type ReportCreateWithoutReporterInput = {
