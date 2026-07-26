@@ -1304,6 +1304,9 @@ export type UserUncheckedUpdateWithoutPostsInput = {
   sMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   rMessages?: Prisma.MessageUncheckedUpdateManyWithoutRecieverNestedInput
   rep?: Prisma.RepUncheckedUpdateManyWithoutUserNestedInput
+  reportsFiled?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsAgainst?: Prisma.ReportUncheckedUpdateManyWithoutTargetUserNestedInput
+  reportsResolved?: Prisma.ReportUncheckedUpdateManyWithoutResolverNestedInput
 }
 
 export type UserCreateWithoutCommentsInput = {
@@ -1322,6 +1325,9 @@ export type UserCreateWithoutCommentsInput = {
   sMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   rMessages?: Prisma.MessageCreateNestedManyWithoutRecieverInput
   rep?: Prisma.RepCreateNestedManyWithoutUserInput
+  reportsFiled?: Prisma.ReportCreateNestedManyWithoutReporterInput
+  reportsAgainst?: Prisma.ReportCreateNestedManyWithoutTargetUserInput
+  reportsResolved?: Prisma.ReportCreateNestedManyWithoutResolverInput
 }
 
 export type UserUncheckedCreateWithoutCommentsInput = {
@@ -1341,6 +1347,9 @@ export type UserUncheckedCreateWithoutCommentsInput = {
   sMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   rMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutRecieverInput
   rep?: Prisma.RepUncheckedCreateNestedManyWithoutUserInput
+  reportsFiled?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
+  reportsAgainst?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetUserInput
+  reportsResolved?: Prisma.ReportUncheckedCreateNestedManyWithoutResolverInput
 }
 
 export type UserCreateOrConnectWithoutCommentsInput = {
@@ -1375,6 +1384,9 @@ export type UserUpdateWithoutCommentsInput = {
   sMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   rMessages?: Prisma.MessageUpdateManyWithoutRecieverNestedInput
   rep?: Prisma.RepUpdateManyWithoutUserNestedInput
+  reportsFiled?: Prisma.ReportUpdateManyWithoutReporterNestedInput
+  reportsAgainst?: Prisma.ReportUpdateManyWithoutTargetUserNestedInput
+  reportsResolved?: Prisma.ReportUpdateManyWithoutResolverNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCommentsInput = {
@@ -1710,8 +1722,10 @@ export type UserCreateWithoutReportsFiledInput = {
   name?: string | null
   email: string
   phone?: string | null
+  zipCode?: string | null
   role?: $Enums.Role | null
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
+  comments?: Prisma.CommentCreateNestedManyWithoutUserInput
   logs?: Prisma.LogCreateNestedManyWithoutUserInput
   products?: Prisma.ProductCreateNestedManyWithoutUserInput
   services?: Prisma.ServiceCreateNestedManyWithoutUserInput
@@ -1730,8 +1744,10 @@ export type UserUncheckedCreateWithoutReportsFiledInput = {
   name?: string | null
   email: string
   phone?: string | null
+  zipCode?: string | null
   role?: $Enums.Role | null
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
+  comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
   logs?: Prisma.LogUncheckedCreateNestedManyWithoutUserInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutUserInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutUserInput
@@ -1754,8 +1770,10 @@ export type UserCreateWithoutReportsAgainstInput = {
   name?: string | null
   email: string
   phone?: string | null
+  zipCode?: string | null
   role?: $Enums.Role | null
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
+  comments?: Prisma.CommentCreateNestedManyWithoutUserInput
   logs?: Prisma.LogCreateNestedManyWithoutUserInput
   products?: Prisma.ProductCreateNestedManyWithoutUserInput
   services?: Prisma.ServiceCreateNestedManyWithoutUserInput
@@ -1774,8 +1792,10 @@ export type UserUncheckedCreateWithoutReportsAgainstInput = {
   name?: string | null
   email: string
   phone?: string | null
+  zipCode?: string | null
   role?: $Enums.Role | null
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
+  comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
   logs?: Prisma.LogUncheckedCreateNestedManyWithoutUserInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutUserInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutUserInput
@@ -1798,8 +1818,10 @@ export type UserCreateWithoutReportsResolvedInput = {
   name?: string | null
   email: string
   phone?: string | null
+  zipCode?: string | null
   role?: $Enums.Role | null
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
+  comments?: Prisma.CommentCreateNestedManyWithoutUserInput
   logs?: Prisma.LogCreateNestedManyWithoutUserInput
   products?: Prisma.ProductCreateNestedManyWithoutUserInput
   services?: Prisma.ServiceCreateNestedManyWithoutUserInput
@@ -1818,8 +1840,10 @@ export type UserUncheckedCreateWithoutReportsResolvedInput = {
   name?: string | null
   email: string
   phone?: string | null
+  zipCode?: string | null
   role?: $Enums.Role | null
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
+  comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
   logs?: Prisma.LogUncheckedCreateNestedManyWithoutUserInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutUserInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutUserInput
@@ -1853,8 +1877,10 @@ export type UserUpdateWithoutReportsFiledInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.NullableEnumRoleFieldUpdateOperationsInput | $Enums.Role | null
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
+  comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
   logs?: Prisma.LogUpdateManyWithoutUserNestedInput
   products?: Prisma.ProductUpdateManyWithoutUserNestedInput
   services?: Prisma.ServiceUpdateManyWithoutUserNestedInput
@@ -1873,8 +1899,10 @@ export type UserUncheckedUpdateWithoutReportsFiledInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.NullableEnumRoleFieldUpdateOperationsInput | $Enums.Role | null
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
+  comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
   logs?: Prisma.LogUncheckedUpdateManyWithoutUserNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutUserNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutUserNestedInput
@@ -1903,8 +1931,10 @@ export type UserUpdateWithoutReportsAgainstInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.NullableEnumRoleFieldUpdateOperationsInput | $Enums.Role | null
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
+  comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
   logs?: Prisma.LogUpdateManyWithoutUserNestedInput
   products?: Prisma.ProductUpdateManyWithoutUserNestedInput
   services?: Prisma.ServiceUpdateManyWithoutUserNestedInput
@@ -1923,8 +1953,10 @@ export type UserUncheckedUpdateWithoutReportsAgainstInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.NullableEnumRoleFieldUpdateOperationsInput | $Enums.Role | null
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
+  comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
   logs?: Prisma.LogUncheckedUpdateManyWithoutUserNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutUserNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutUserNestedInput
@@ -1953,8 +1985,10 @@ export type UserUpdateWithoutReportsResolvedInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.NullableEnumRoleFieldUpdateOperationsInput | $Enums.Role | null
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
+  comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
   logs?: Prisma.LogUpdateManyWithoutUserNestedInput
   products?: Prisma.ProductUpdateManyWithoutUserNestedInput
   services?: Prisma.ServiceUpdateManyWithoutUserNestedInput
@@ -1973,8 +2007,10 @@ export type UserUncheckedUpdateWithoutReportsResolvedInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.NullableEnumRoleFieldUpdateOperationsInput | $Enums.Role | null
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
+  comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
   logs?: Prisma.LogUncheckedUpdateManyWithoutUserNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutUserNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutUserNestedInput

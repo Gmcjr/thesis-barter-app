@@ -15,6 +15,8 @@ import CardContent from '@mui/material/CardContent';
 import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
+import { formatPostDate } from '../../utils/utils';
+
 export type PostData = {
   id: number;
   userId: number;
@@ -26,6 +28,7 @@ export type PostData = {
   radiusMiles: number | null;
   isComplete: boolean;
   createdAt: string;
+  updatedAt?: string;
   user: {
     id: number;
     name: string | null;
@@ -272,7 +275,9 @@ export default function ManagePosts({
                   </Typography>
 
                   <Typography variant="caption" color="text.secondary">
-                    Created {new Date(post.createdAt).toLocaleDateString()}
+                    {post.updatedAt && post.updatedAt !== post.createdAt
+                      ? `Updated on ${formatPostDate(post.updatedAt)}`
+                      : `Posted on ${formatPostDate(post.createdAt)}`}
                   </Typography>
 
                   {!readOnly && (
