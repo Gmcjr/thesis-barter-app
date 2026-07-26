@@ -30,7 +30,7 @@ export default function Profile() {
 
     const res = await axios.patch<ProfileUser>('/user/me', {
       user: {
-        name: toNullable(data.name),
+        name: data.name.trim(),
         bio: toNullable(data.bio),
         phone: toNullable(data.phone),
         zipCode: toNullable(data.zipCode),

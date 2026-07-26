@@ -14,10 +14,14 @@ router.post('/', async (req, res) => {
       return res.status(400).json({ error: 'email REQUIRED' });
     }
 
+    if (!name || !name.trim()) {
+      return res.status(400).json({ error: 'name REQUIRED' });
+    }
+
     const user = await prisma.user.create({
       data: {
         email,
-        name,
+        name: name.trim(),
         phone,
       },
     });
@@ -55,11 +59,18 @@ router.patch('/me', requireAuth, async (req, res) => {
     name, bio, phone, zipCode,
   } = req.body.user ?? {};
 
+  if (name !== undefined && (!name || !name.trim())) {
+    return res.status(400).json({ error: 'name cannot be empty' });
+  }
+
   try {
     const user = await prisma.user.update({
       where: { id: req.user!.id },
       data: {
-        name, bio, phone, zipCode,
+        name: name !== undefined ? name.trim() : undefined,
+        bio,
+        phone,
+        zipCode,
       },
     });
     res.status(200).json(user);

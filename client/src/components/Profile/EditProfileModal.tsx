@@ -14,10 +14,11 @@ export default function EditProfileModal({
   const [formData, setFormData] = useState<ProfileUpdateData>(initialData);
   const [saving, setSaving] = useState(false);
 
-  // reset the form to current profile values every time the modal opens
   useEffect(() => {
     if (open) setFormData(initialData);
   }, [open, initialData]);
+
+  const isInvalid = !formData.name.trim();
 
   const handleClose = () => {
     if (saving) return;
@@ -71,7 +72,7 @@ export default function EditProfileModal({
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose} disabled={saving}>Cancel</Button>
-        <Button variant="contained" disabled={saving} onClick={handleSave}>
+        <Button variant="contained" disabled={saving || isInvalid} onClick={handleSave}>
           {saving ? 'Saving...' : 'Save Changes'}
         </Button>
       </DialogActions>
