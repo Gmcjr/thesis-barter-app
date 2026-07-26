@@ -1,4 +1,6 @@
+/* eslint-disable max-len */
 import React, { useState } from 'react';
+
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
@@ -42,16 +44,30 @@ interface CreatePostModalProps {
   categories: Category[];
 }
 
-const initialForm = {
+type FormState = {
+  title: string;
+  name: string;
+  offerType: CatType;
+  catId: number | '';
+  description: string;
+  condition: Cond;
+  isLocal: boolean;
+  zipCode: string;
+  radiusMiles: number;
+  images: string[];
+};
+
+const initialForm: FormState = {
   title: '',
   name: '',
-  offerType: 'PRODUCT' as CatType,
-  catId: '' as number | '',
+  offerType: 'PRODUCT',
+  catId: '',
   description: '',
-  condition: 'GOOD' as Cond,
+  condition: 'GOOD',
   isLocal: false,
   zipCode: '',
   radiusMiles: 15,
+  images: [],
 };
 
 export default function CreatePostModal({
@@ -60,11 +76,14 @@ export default function CreatePostModal({
   onSubmit,
   categories,
 }: CreatePostModalProps) {
-  const [formData, setFormData] = useState(initialForm);
+  const [formData, setFormData] = useState<FormState>(initialForm);
   const [submitting, setSubmitting] = useState(false);
 
   // change handler
-  const handleChange = (field: string, value: unknown) => {
+  const handleChange = <K extends keyof FormState>(
+    field: K,
+    value: FormState[K],
+  ) => {
     setFormData((prev) => ({
       ...prev,
       [field]: value,
@@ -72,31 +91,45 @@ export default function CreatePostModal({
     }));
   };
 
+  // close and reset the form
+  const handleClose = () => {
+    if (submitting) return;
+
+    setFormData(initialForm);
+    onClose();
+  };
+
+  // check for valid data
+  const isInvalid = (!formData.title.trim() || !formData.name.trim() || !formData.catId || !formData.description.trim() || (formData.isLocal && !formData.zipCode.trim()));
+
   // submit handler for the form
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!formData.title || !formData.catId || !formData.description) return;
+    if (isInvalid) return;
     setSubmitting(true);
+
     try {
       await onSubmit({
-        ...formData,
+        title: formData.title.trim(),
+        name: formData.name.trim(),
+        offerType: formData.offerType,
         catId: Number(formData.catId),
+        description: formData.description.trim(),
         condition: formData.offerType === 'PRODUCT' ? formData.condition : undefined,
-        zipCode: formData.isLocal ? formData.zipCode : undefined,
-        radiusMiles: formData.isLocal ? Number(formData.radiusMiles) : undefined,
-        images: [],
+        isLocal: formData.isLocal,
+        zipCode: formData.isLocal ? formData.zipCode.trim() : undefined,
+        radiusMiles: formData.isLocal ? formData.radiusMiles : undefined,
+        images: formData.images,
       });
+
       setFormData(initialForm);
       onClose();
-    } catch (err) {
-      console.error('Failed to submit post', err);
+    } catch (error) {
+      console.error('Failed to submit post:', error);
     } finally {
       setSubmitting(false);
     }
   };
-
-  // check for valid data
-  const isInvalid = !formData.title || !formData.name || !formData.catId || !formData.description;
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
@@ -129,7 +162,7 @@ export default function CreatePostModal({
             <RadioGroup
               row
               value={formData.offerType}
-              onChange={(e) => handleChange('offerType', e.target.value)}
+              onChange={(e) => handleChange('offerType', e.target.value as CatType)}
             >
               <FormControlLabel value="PRODUCT" control={<Radio />} label="Item / Product" />
               <FormControlLabel value="SERVICE" control={<Radio />} label="Service" />
@@ -226,7 +259,7 @@ export default function CreatePostModal({
         </DialogContent>
 
         <DialogActions sx={{ px: 3, py: 2 }}>
-          <Button onClick={onClose} color="inherit" disabled={submitting}>
+          <Button onClick={handleClose} color="inherit" disabled={submitting}>
             Cancel
           </Button>
           <Button
