@@ -50,6 +50,25 @@ router.get('/me', requireAuth, async (req, res) => {
   }
 });
 
+router.patch('/me', requireAuth, async (req, res) => {
+  const {
+    name, bio, phone, zipCode,
+  } = req.body.user ?? {};
+
+  try {
+    const user = await prisma.user.update({
+      where: { id: req.user!.id },
+      data: {
+        name, bio, phone, zipCode,
+      },
+    });
+    res.status(200).json(user);
+  } catch (err) {
+    console.error(err);
+    res.sendStatus(500);
+  }
+});
+
 router.get('/:id', async (req, res) => {
   const id = Number(req.params.id);
   if (Number.isNaN(id)) {
