@@ -5,14 +5,6 @@ import axios from 'axios';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Drawer from '@mui/material/Drawer';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemText from '@mui/material/ListItemText';
-import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
-import CloseIcon from '@mui/icons-material/Close';
 import AddIcon from '@mui/icons-material/Add';
 import InputBase from '@mui/material/InputBase';
 import Paper from '@mui/material/Paper';
@@ -20,38 +12,12 @@ import Paper from '@mui/material/Paper';
 import NewPost, { type PostFormData } from './NewPost';
 import ManagePosts, { type PostData, type PostUpdateData } from './ManagePosts';
 import { useAuth } from '../../context/AuthContext';
-
 import Post from './Post';
 import ReportDialog from './ReportDialog';
-
-// type definitions
-type Category = {
-  id: number;
-  name: string;
-  type: 'PRODUCT' | 'SERVICE';
-};
-
-// dummy categories data
-const categoryList: Category[] = [
-  { id: 1, name: 'Books', type: 'PRODUCT' },
-  { id: 2, name: 'Clothing, Shoes, Accessories', type: 'PRODUCT' },
-  { id: 3, name: 'Collectibles', type: 'PRODUCT' },
-  { id: 4, name: 'Electronics', type: 'PRODUCT' },
-  { id: 5, name: 'Food and Perishables', type: 'PRODUCT' },
-  { id: 6, name: 'Free/Giving Away', type: 'PRODUCT' },
-  { id: 7, name: 'Handmade', type: 'PRODUCT' },
-  { id: 8, name: 'Household', type: 'PRODUCT' },
-  { id: 9, name: 'Movies, Music, Games', type: 'PRODUCT' },
-  { id: 10, name: 'Refurbished', type: 'PRODUCT' },
-  { id: 11, name: 'Services', type: 'SERVICE' },
-  { id: 12, name: 'Sports & Outdoors', type: 'PRODUCT' },
-  { id: 13, name: 'Pet Supplies', type: 'PRODUCT' },
-];
 
 export default function Posts() {
   const { user } = useAuth();
 
-  const [drawerOpen, setDrawerOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [manageOpen, setManageOpen] = useState(false);
   const [completedOpen, setCompletedOpen] = useState(false);
@@ -62,10 +28,6 @@ export default function Posts() {
   const [search, setSearch] = useState('');
   const [error, setError] = useState('');
   const [reportDialogPostId, setReportDialogPostId] = useState<number | null>(null);
-
-  const toggleDrawer = (open: boolean) => () => {
-    setDrawerOpen(open);
-  };
 
   // get posts and optionally send the search value (this is a general search)
   const loadPosts = useCallback(async (searchValue = '') => {
@@ -123,7 +85,11 @@ export default function Posts() {
 
       await axios.post('/posts', {
         title: formData.title,
+        name: formData.name,
+        offerType: formData.offerType,
+        category: formData.category,
         message: formData.description,
+        condition: formData.condition,
         images: formData.images ?? [],
         isLocal: formData.isLocal,
         zipCode: formData.zipCode,
@@ -215,59 +181,6 @@ export default function Posts() {
 
   return (
     <Box sx={{ width: '100%', mt: -4 }}>
-      {/* Category Menu Bar (located under navbar) */}
-      <Box
-        sx={{
-          width: '100vw',
-          position: 'relative',
-          left: '50%',
-          right: '50%',
-          marginLeft: '-50vw',
-          marginRight: '-50vw',
-          bgcolor: 'primary.main',
-          color: 'primary.contrastText',
-          px: { xs: 2, md: 4 },
-          py: 0.5,
-          display: 'flex',
-          alignItems: 'center',
-          gap: 1,
-          overflowX: 'auto',
-          whiteSpace: 'nowrap',
-          mb: 3,
-          scrollbarWidth: 'none',
-          '&::-webkit-scrollbar': { display: 'none' },
-        }}
-      >
-        <Button
-          onClick={toggleDrawer(true)}
-          startIcon={<MenuIcon />}
-          sx={{
-            color: 'inherit',
-            fontWeight: 'bold',
-            textTransform: 'none',
-            minWidth: 'auto',
-            flexShrink: 0,
-            '&:hover': { outline: '1px solid' },
-          }}
-        >
-          All
-        </Button>
-        {categoryList.map((category) => (
-          <Button
-            key={category.id}
-            sx={{
-              color: 'inherit',
-              textTransform: 'none',
-              fontSize: '0.875rem',
-              whiteSpace: 'nowrap',
-              flexShrink: 0,
-              '&:hover': { outline: '1px solid' },
-            }}
-          >
-            {category.name}
-          </Button>
-        ))}
-      </Box>
 
       {/* Search Bar */}
       <Box
@@ -300,47 +213,6 @@ export default function Posts() {
           Search
         </Button>
       </Box>
-
-      {/* Side Menu (drawer that pops out similar to a modal) */}
-      <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer(false)}>
-        <Box sx={{ width: 300, height: '100%', bgcolor: 'background.paper' }} role="presentation">
-          <Box sx={{
-            p: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between', bgcolor: 'primary.main', color: 'primary.contrastText',
-          }}
-          >
-            <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-              Hello, {user?.name ?? user?.email ?? 'Guest'}
-            </Typography>
-            <IconButton onClick={toggleDrawer(false)} sx={{ color: 'inherit' }}>
-              <CloseIcon />
-            </IconButton>
-          </Box>
-          <Typography
-            variant="subtitle1"
-            sx={{
-              fontWeight: 'bold', px: 2, pt: 2, pb: 1,
-            }}
-          >
-            Categories
-          </Typography>
-          <List sx={{ pt: 0 }}>
-            {categoryList.map((category) => (
-              <ListItem key={category.id} disablePadding>
-                <ListItemButton onClick={toggleDrawer(false)}>
-                  <ListItemText
-                    primary={category.name}
-                    slotProps={{
-                      primary: {
-                        sx: { fontSize: '0.9rem' },
-                      },
-                    }}
-                  />
-                </ListItemButton>
-              </ListItem>
-            ))}
-          </List>
-        </Box>
-      </Drawer>
 
       {/* all of the Buttons underneath Search and their lovely formatting */}
       <Box
@@ -425,7 +297,6 @@ export default function Posts() {
         open={modalOpen}
         onClose={() => setModalOpen(false)}
         onSubmit={handleCreatePost}
-        categories={categoryList}
       />
 
       {/* Manage Posts Modal */}
