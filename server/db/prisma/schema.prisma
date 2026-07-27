@@ -27,11 +27,13 @@ model User {
   rMessages    Message[]   @relation("rMessages")
   rep          Rep[]
 
-  name         String?
+  name         String
   email        String      @unique
   phone        String?
+  role         Role?       @default(USER)
+  bio          String?
+  createdAt    DateTime    @default(now())
   zipCode      String?
-  role         Role?
 
   reportsFiled    Report[]  @relation("reportsFiled")
   reportsAgainst  Report[]  @relation("reportsAgainst")
@@ -113,16 +115,16 @@ model Comment {
 }
 
 model Product {
-  id          Int     @id @default(autoincrement())
-  post        Post    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  id          Int      @id @default(autoincrement())
+  post        Post     @relation(fields: [postId], references: [id])
   postId      Int
-  user        User    @relation(fields: [userId], references: [id])
+  user        User     @relation(fields: [userId], references: [id])
   userId      Int
-  cat         Cat     @relation(fields: [catId], references: [id])
-  catId       Int  
- 
+  cat         Cat      @relation(fields: [catId], references: [id])
+  catId       Int
+  
   name        String
-  description String
+  description String?
   condition   Cond
   location    String?
 }
@@ -136,16 +138,16 @@ enum Cond {
 }
 
 model Service {
-  id          Int    @id @default(autoincrement())
-  post        Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  id          Int     @id @default(autoincrement())
+  post        Post    @relation(fields: [postId], references: [id])
   postId      Int
-  user        User   @relation(fields: [userId], references: [id])
+  user        User    @relation(fields: [userId], references: [id])
   userId      Int
-  cat         Cat    @relation(fields: [catId], references: [id])
+  cat         Cat     @relation(fields: [catId], references: [id])
   catId       Int
 
   name        String
-  description String
+  description String?
 }
 
 model Cat {

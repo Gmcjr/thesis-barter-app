@@ -45,7 +45,7 @@ function NavBar() {
               flexShrink: 0,
             }}
           >
-            BarterApp
+            BARTAAAAA
           </Typography>
         </Link>
 

@@ -11,6 +11,11 @@ async function findOrCreateGoogleUser(profile: Profile) {
     throw new Error('Google account has no email');
   }
 
+  const name = profile.displayName;
+  if (!name || !name.trim()) {
+    throw new Error('Google account has no display name');
+  }
+
   const existing = await prisma.user.findFirst({
     where: { OR: [{ googleId: profile.id }, { email }] },
   });
@@ -19,12 +24,12 @@ async function findOrCreateGoogleUser(profile: Profile) {
     if (existing.googleId === profile.id) return existing;
     return prisma.user.update({
       where: { id: existing.id },
-      data: { googleId: profile.id, name: existing.name ?? profile.displayName },
+      data: { googleId: profile.id, name: existing.name ?? name },
     });
   }
 
   return prisma.user.create({
-    data: { googleId: profile.id, email, name: profile.displayName },
+    data: { googleId: profile.id, email, name },
   });
 }
 
@@ -35,10 +40,13 @@ passport.use(
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
       callbackURL: process.env.GOOGLE_CALLBACK_URL!,
     },
-    (accessToken, refreshToken, profile, done) => {
-      findOrCreateGoogleUser(profile)
-        .then((user) => done(null, user))
-        .catch((err: Error) => done(err));
+    async (accessToken, refreshToken, profile, done) => {
+      try {
+        const user = await findOrCreateGoogleUser(profile);
+        done(null, user);
+      } catch (err) {
+        done(err);
+      }
     },
   ),
 );

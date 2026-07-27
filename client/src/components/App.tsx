@@ -24,6 +24,7 @@ const routes: RouteDef[] = [
     requiresRole: 'MODERATOR',
   },
   { path: '/profile', component: Profile, requiresAuth: true },
+  { path: '/profile/:id', component: Profile },
 ];
 
 function App() {

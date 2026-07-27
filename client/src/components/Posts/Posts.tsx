@@ -472,6 +472,9 @@ export default function Posts() {
                     </Button>
                     <PostActionsMenu onReport={() => setReportDialogPostId(post.id)} />
                   </Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <PostActionsMenu onReport={() => setReportDialogPostId(post.id)} />
+                  </Box>
                 </Box>
 
                 <Typography variant="body1" sx={{ mb: 3, lineHeight: 1.6 }}>

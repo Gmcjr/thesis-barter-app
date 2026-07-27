@@ -80,9 +80,24 @@ export interface RouteDef {
   requiresRole?: 'MODERATOR' | 'ADMIN';
 }
 
-function matchPath(pattern: string, path: string): boolean {
-  const regex = `^${pattern.replace(/:[a-zA-Z]+/g, '([^/]+)').replace(/\/$/, '')}/?$`;
-  return new RegExp(regex).test(path);
+const ParamsContext = createContext<Record<string, string>>({});
+
+export function useParams() {
+  return useContext(ParamsContext);
+}
+
+function matchRoute(pattern: string, path: string): Record<string, string> | null {
+  const paramNames: string[] = [];
+  const regexStr = `^${pattern.replace(/:[a-zA-Z]+/g, (segment) => {
+    paramNames.push(segment.slice(1));
+    return '([^/]+)';
+  }).replace(/\/$/, '')}/?$`;
+  const match = path.match(new RegExp(regexStr));
+  if (!match) return null;
+
+  const params: Record<string, string> = {};
+  paramNames.forEach((name, i) => { params[name] = decodeURIComponent(match[i + 1]); });
+  return params;
 }
 
 export function Router({ routes, notFound: NotFound }: {
@@ -91,32 +106,40 @@ export function Router({ routes, notFound: NotFound }: {
 }) {
   const { path, navigate } = useRouter();
   const { user, loading } = useAuth();
-  const match = routes.find((r) => matchPath(r.path, path));
+
+  const { matchedRoute, params } = useMemo(() => {
+    const found = routes
+      .map((route) => ({ route, params: matchRoute(route.path, path) }))
+      .find((entry) => entry.params !== null);
+
+    return {
+      matchedRoute: found?.route,
+      params: found?.params ?? {},
+    };
+  }, [routes, path]);
 
   useEffect(() => {
-    if (match?.requiresAuth && !loading && !user) {
+    if (matchedRoute?.requiresAuth && !loading && !user) {
       navigate('/');
-    } else if (match?.requiresRole && !loading && user?.role !== match.requiresRole) {
+    } else if (matchedRoute?.requiresRole && !loading && user?.role !== matchedRoute.requiresRole) {
       navigate('/');
     }
-  }, [match, loading, user, navigate]);
+  }, [matchedRoute, loading, user, navigate]);
 
-  if (!match) return <NotFound />;
-  if (match.requiresAuth) {
+  if (!matchedRoute) return <NotFound />;
+  if (matchedRoute.requiresAuth) {
     if (loading) return null;
     if (!user) return null;
   }
-  if (match.requiresRole) {
+  if (matchedRoute.requiresRole) {
     if (loading) return null;
-    if (!user || user.role !== match.requiresRole) return null;
+    if (!user || user.role !== matchedRoute.requiresRole) return null;
   }
 
-  if (!match) return <NotFound />;
-  if (match.requiresAuth) {
-    if (loading) return null;
-    if (!user) return null;
-  }
-
-  const Component = match.component;
-  return <Component />;
+  const Component = matchedRoute.component;
+  return (
+    <ParamsContext.Provider value={params}>
+      <Component />
+    </ParamsContext.Provider>
+  );
 }

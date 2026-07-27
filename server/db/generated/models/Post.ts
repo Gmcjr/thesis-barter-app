@@ -666,10 +666,6 @@ export type PostCreateimagesInput = {
   set: string[]
 }
 
-export type DateTimeFieldUpdateOperationsInput = {
-  set?: Date | string
-}
-
 export type PostUpdateimagesInput = {
   set?: string[]
   push?: string | string[]

@@ -1,18 +1,104 @@
 import { Router } from 'express';
 import { prisma } from '../db/index.js';
+import requireAuth from '../middleware/requireAuth.js';
 
 const router = Router();
 
-router.post('/user', async (req, res) => {
+router.post('/', async (req, res) => {
   try {
-    const { email, name } = req.body;
+    const {
+      email, name, phone,
+    } = req.body.user ?? {};
+
+    if (!email) {
+      return res.status(400).json({ error: 'email REQUIRED' });
+    }
+
+    if (!name || !name.trim()) {
+      return res.status(400).json({ error: 'name REQUIRED' });
+    }
+
     const user = await prisma.user.create({
       data: {
         email,
-        name,
+        name: name.trim(),
+        phone,
       },
     });
     res.status(200).json(user);
+  } catch (err) {
+    console.error(err);
+    if (typeof err === 'object' && err !== null && 'code' in err && err.code === 'P2002') {
+      return res.status(409).json({ error: 'email in use already' });
+    }
+    res.sendStatus(500);
+  }
+});
+
+router.get('/me', requireAuth, async (req, res) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: req.user!.id },
+      include: {
+        posts: true,
+        rep: true,
+      },
+    });
+    if (!user) {
+      res.status(404).json({ error: 'user not found' });
+    }
+    res.status(200).json(user);
+  } catch (err) {
+    console.error(err);
+    res.sendStatus(500);
+  }
+});
+
+router.patch('/me', requireAuth, async (req, res) => {
+  const {
+    name, bio, phone, zipCode,
+  } = req.body.user ?? {};
+
+  if (name !== undefined && (!name || !name.trim())) {
+    return res.status(400).json({ error: 'name cannot be empty' });
+  }
+
+  try {
+    const user = await prisma.user.update({
+      where: { id: req.user!.id },
+      data: {
+        name: name !== undefined ? name.trim() : undefined,
+        bio,
+        phone,
+        zipCode,
+      },
+    });
+    res.status(200).json(user);
+  } catch (err) {
+    console.error(err);
+    res.sendStatus(500);
+  }
+});
+
+router.get('/:id', async (req, res) => {
+  const id = Number(req.params.id);
+  if (Number.isNaN(id)) {
+    return res.status(400).json({ error: 'invalid user id' });
+  }
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id },
+      include: {
+        posts: true,
+        rep: true,
+      },
+    });
+
+    if (!user) {
+      return res.status(404).json({ error: 'user not found' });
+    }
+
+    res.json(user);
   } catch (err) {
     console.error(err);
     res.sendStatus(500);

@@ -215,7 +215,7 @@ export type ProductGroupByOutputType = {
   userId: number
   catId: number
   name: string
-  description: string
+  description: string | null
   condition: $Enums.Cond
   location: string | null
   _count: ProductCountAggregateOutputType | null
@@ -249,7 +249,7 @@ export type ProductWhereInput = {
   userId?: Prisma.IntFilter<"Product"> | number
   catId?: Prisma.IntFilter<"Product"> | number
   name?: Prisma.StringFilter<"Product"> | string
-  description?: Prisma.StringFilter<"Product"> | string
+  description?: Prisma.StringNullableFilter<"Product"> | string | null
   condition?: Prisma.EnumCondFilter<"Product"> | $Enums.Cond
   location?: Prisma.StringNullableFilter<"Product"> | string | null
   post?: Prisma.XOR<Prisma.PostScalarRelationFilter, Prisma.PostWhereInput>
@@ -263,7 +263,7 @@ export type ProductOrderByWithRelationInput = {
   userId?: Prisma.SortOrder
   catId?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  description?: Prisma.SortOrder
+  description?: Prisma.SortOrderInput | Prisma.SortOrder
   condition?: Prisma.SortOrder
   location?: Prisma.SortOrderInput | Prisma.SortOrder
   post?: Prisma.PostOrderByWithRelationInput
@@ -280,7 +280,7 @@ export type ProductWhereUniqueInput = Prisma.AtLeast<{
   userId?: Prisma.IntFilter<"Product"> | number
   catId?: Prisma.IntFilter<"Product"> | number
   name?: Prisma.StringFilter<"Product"> | string
-  description?: Prisma.StringFilter<"Product"> | string
+  description?: Prisma.StringNullableFilter<"Product"> | string | null
   condition?: Prisma.EnumCondFilter<"Product"> | $Enums.Cond
   location?: Prisma.StringNullableFilter<"Product"> | string | null
   post?: Prisma.XOR<Prisma.PostScalarRelationFilter, Prisma.PostWhereInput>
@@ -294,7 +294,7 @@ export type ProductOrderByWithAggregationInput = {
   userId?: Prisma.SortOrder
   catId?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  description?: Prisma.SortOrder
+  description?: Prisma.SortOrderInput | Prisma.SortOrder
   condition?: Prisma.SortOrder
   location?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.ProductCountOrderByAggregateInput
@@ -313,14 +313,14 @@ export type ProductScalarWhereWithAggregatesInput = {
   userId?: Prisma.IntWithAggregatesFilter<"Product"> | number
   catId?: Prisma.IntWithAggregatesFilter<"Product"> | number
   name?: Prisma.StringWithAggregatesFilter<"Product"> | string
-  description?: Prisma.StringWithAggregatesFilter<"Product"> | string
+  description?: Prisma.StringNullableWithAggregatesFilter<"Product"> | string | null
   condition?: Prisma.EnumCondWithAggregatesFilter<"Product"> | $Enums.Cond
   location?: Prisma.StringNullableWithAggregatesFilter<"Product"> | string | null
 }
 
 export type ProductCreateInput = {
   name: string
-  description: string
+  description?: string | null
   condition: $Enums.Cond
   location?: string | null
   post: Prisma.PostCreateNestedOneWithoutProductsInput
@@ -334,14 +334,14 @@ export type ProductUncheckedCreateInput = {
   userId: number
   catId: number
   name: string
-  description: string
+  description?: string | null
   condition: $Enums.Cond
   location?: string | null
 }
 
 export type ProductUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   condition?: Prisma.EnumCondFieldUpdateOperationsInput | $Enums.Cond
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   post?: Prisma.PostUpdateOneRequiredWithoutProductsNestedInput
@@ -355,7 +355,7 @@ export type ProductUncheckedUpdateInput = {
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   catId?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   condition?: Prisma.EnumCondFieldUpdateOperationsInput | $Enums.Cond
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
@@ -366,14 +366,14 @@ export type ProductCreateManyInput = {
   userId: number
   catId: number
   name: string
-  description: string
+  description?: string | null
   condition: $Enums.Cond
   location?: string | null
 }
 
 export type ProductUpdateManyMutationInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   condition?: Prisma.EnumCondFieldUpdateOperationsInput | $Enums.Cond
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
@@ -384,7 +384,7 @@ export type ProductUncheckedUpdateManyInput = {
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   catId?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   condition?: Prisma.EnumCondFieldUpdateOperationsInput | $Enums.Cond
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
@@ -578,7 +578,7 @@ export type ProductUncheckedUpdateManyWithoutCatNestedInput = {
 
 export type ProductCreateWithoutUserInput = {
   name: string
-  description: string
+  description?: string | null
   condition: $Enums.Cond
   location?: string | null
   post: Prisma.PostCreateNestedOneWithoutProductsInput
@@ -590,7 +590,7 @@ export type ProductUncheckedCreateWithoutUserInput = {
   postId: number
   catId: number
   name: string
-  description: string
+  description?: string | null
   condition: $Enums.Cond
   location?: string | null
 }
@@ -630,14 +630,14 @@ export type ProductScalarWhereInput = {
   userId?: Prisma.IntFilter<"Product"> | number
   catId?: Prisma.IntFilter<"Product"> | number
   name?: Prisma.StringFilter<"Product"> | string
-  description?: Prisma.StringFilter<"Product"> | string
+  description?: Prisma.StringNullableFilter<"Product"> | string | null
   condition?: Prisma.EnumCondFilter<"Product"> | $Enums.Cond
   location?: Prisma.StringNullableFilter<"Product"> | string | null
 }
 
 export type ProductCreateWithoutPostInput = {
   name: string
-  description: string
+  description?: string | null
   condition: $Enums.Cond
   location?: string | null
   user: Prisma.UserCreateNestedOneWithoutProductsInput
@@ -649,7 +649,7 @@ export type ProductUncheckedCreateWithoutPostInput = {
   userId: number
   catId: number
   name: string
-  description: string
+  description?: string | null
   condition: $Enums.Cond
   location?: string | null
 }
@@ -682,7 +682,7 @@ export type ProductUpdateManyWithWhereWithoutPostInput = {
 
 export type ProductCreateWithoutCatInput = {
   name: string
-  description: string
+  description?: string | null
   condition: $Enums.Cond
   location?: string | null
   post: Prisma.PostCreateNestedOneWithoutProductsInput
@@ -694,7 +694,7 @@ export type ProductUncheckedCreateWithoutCatInput = {
   postId: number
   userId: number
   name: string
-  description: string
+  description?: string | null
   condition: $Enums.Cond
   location?: string | null
 }
@@ -730,14 +730,14 @@ export type ProductCreateManyUserInput = {
   postId: number
   catId: number
   name: string
-  description: string
+  description?: string | null
   condition: $Enums.Cond
   location?: string | null
 }
 
 export type ProductUpdateWithoutUserInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   condition?: Prisma.EnumCondFieldUpdateOperationsInput | $Enums.Cond
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   post?: Prisma.PostUpdateOneRequiredWithoutProductsNestedInput
@@ -749,7 +749,7 @@ export type ProductUncheckedUpdateWithoutUserInput = {
   postId?: Prisma.IntFieldUpdateOperationsInput | number
   catId?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   condition?: Prisma.EnumCondFieldUpdateOperationsInput | $Enums.Cond
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
@@ -759,7 +759,7 @@ export type ProductUncheckedUpdateManyWithoutUserInput = {
   postId?: Prisma.IntFieldUpdateOperationsInput | number
   catId?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   condition?: Prisma.EnumCondFieldUpdateOperationsInput | $Enums.Cond
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
@@ -769,14 +769,14 @@ export type ProductCreateManyPostInput = {
   userId: number
   catId: number
   name: string
-  description: string
+  description?: string | null
   condition: $Enums.Cond
   location?: string | null
 }
 
 export type ProductUpdateWithoutPostInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   condition?: Prisma.EnumCondFieldUpdateOperationsInput | $Enums.Cond
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   user?: Prisma.UserUpdateOneRequiredWithoutProductsNestedInput
@@ -788,7 +788,7 @@ export type ProductUncheckedUpdateWithoutPostInput = {
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   catId?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   condition?: Prisma.EnumCondFieldUpdateOperationsInput | $Enums.Cond
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
@@ -798,7 +798,7 @@ export type ProductUncheckedUpdateManyWithoutPostInput = {
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   catId?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   condition?: Prisma.EnumCondFieldUpdateOperationsInput | $Enums.Cond
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
@@ -808,14 +808,14 @@ export type ProductCreateManyCatInput = {
   postId: number
   userId: number
   name: string
-  description: string
+  description?: string | null
   condition: $Enums.Cond
   location?: string | null
 }
 
 export type ProductUpdateWithoutCatInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   condition?: Prisma.EnumCondFieldUpdateOperationsInput | $Enums.Cond
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   post?: Prisma.PostUpdateOneRequiredWithoutProductsNestedInput
@@ -827,7 +827,7 @@ export type ProductUncheckedUpdateWithoutCatInput = {
   postId?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   condition?: Prisma.EnumCondFieldUpdateOperationsInput | $Enums.Cond
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
@@ -837,7 +837,7 @@ export type ProductUncheckedUpdateManyWithoutCatInput = {
   postId?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   condition?: Prisma.EnumCondFieldUpdateOperationsInput | $Enums.Cond
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
@@ -927,7 +927,7 @@ export type $ProductPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     userId: number
     catId: number
     name: string
-    description: string
+    description: string | null
     condition: $Enums.Cond
     location: string | null
   }, ExtArgs["result"]["product"]>
