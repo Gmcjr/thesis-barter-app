@@ -6,14 +6,13 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
-import InputBase from '@mui/material/InputBase';
-import Paper from '@mui/material/Paper';
 
 import NewPost, { type PostFormData } from './NewPost';
 import ManagePosts, { type PostData, type PostUpdateData } from './ManagePosts';
 import { useAuth } from '../../context/AuthContext';
 import Post from './Post';
 import ReportDialog from './ReportDialog';
+import SearchPosts from './SearchPosts';
 
 export default function Posts() {
   const { user } = useAuth();
@@ -183,36 +182,11 @@ export default function Posts() {
     <Box sx={{ width: '100%', mt: -4 }}>
 
       {/* Search Bar */}
-      <Box
-        component="form"
+      <SearchPosts
+        search={search}
+        onSearchChange={setSearch}
         onSubmit={handleSearch}
-        sx={{
-          display: 'flex', gap: 1, mb: 3, px: { xs: 2, md: 0 },
-        }}
-      >
-        <Paper
-          variant="outlined"
-          sx={{
-            display: 'flex', alignItems: 'center', px: 1.5, py: 0.25, flex: 1,
-          }}
-        >
-          <InputBase
-            value={search}
-            onChange={(event) => setSearch(event.target.value)}
-            placeholder="Search for listings..."
-            sx={{ flex: 1, fontSize: '0.85rem' }}
-          />
-        </Paper>
-
-        {/* Search Button (next to the Search Bar) */}
-        <Button
-          type="submit"
-          variant="contained"
-          sx={{ textTransform: 'none', fontWeight: 'bold' }}
-        >
-          Search
-        </Button>
-      </Box>
+      />
 
       {/* all of the Buttons underneath Search and their lovely formatting */}
       <Box
