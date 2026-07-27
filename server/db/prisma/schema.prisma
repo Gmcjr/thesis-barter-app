@@ -67,7 +67,8 @@ model Message {
 
   text String
 
-  reports Report[]
+  reports   Report[]
+  isRemoved Boolean  @default(false)
 }
 
 model Log {

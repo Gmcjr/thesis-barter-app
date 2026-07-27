@@ -558,7 +558,8 @@ export default function Posts() {
       <ReportDialog
         open={reportDialogPostId !== null}
         onClose={() => setReportDialogPostId(null)}
-        postId={reportDialogPostId ?? 0}
+        targetType="POST"
+        targetId={reportDialogPostId ?? 0}
       />
     </Box>
   );

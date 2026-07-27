@@ -666,10 +666,6 @@ export type PostCreateimagesInput = {
   set: string[]
 }
 
-export type BoolFieldUpdateOperationsInput = {
-  set?: boolean
-}
-
 export type PostUpdateimagesInput = {
   set?: string[]
   push?: string | string[]

@@ -1,4 +1,5 @@
 import { GoogleGenAI, Type } from '@google/genai';
+import { ReportStatus } from '../db/generated/enums';
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
@@ -66,4 +67,26 @@ export async function screenContent(text: string): Promise<ScreeningResult | nul
     console.error('Gemini screening failed:', err);
     return null;
   }
+}
+
+export const AUTO_REMOVE_THRESHOLD = 0.85;
+export const AUTO_DISMISS_CATEGORIES = 0.15;
+const ZERO_TOLERANCE_CATEGORIES = ['ILLEGAL'];
+
+export interface AutoAction {
+  status: typeof ReportStatus.APPROVED | typeof ReportStatus.REMOVED;
+  resolution: string;
+}
+
+export function decideAutoAction(screening: ScreeningResult): AutoAction | null {
+  if (screening.categories.some((c) => ZERO_TOLERANCE_CATEGORIES.includes(c))) {
+    return { status: ReportStatus.REMOVED, resolution: `Auto-removed: zero-tolerance category (${screening.categories.join(',')})` };
+  }
+  if (screening.score >= AUTO_REMOVE_THRESHOLD) {
+    return { status: ReportStatus.REMOVED, resolution: `Auto-removed: high-confidence violation (score ${screening.score.toFixed(2)})` };
+  }
+  if (screening.score <= AUTO_DISMISS_CATEGORIES) {
+    return { status: ReportStatus.APPROVED, resolution: `Auto-dismissed: low-confidence (score ${screening.score.toFixed(2)})` };
+  }
+  return null; // Ambiguous/middle-confidence band, leave as 'PENDING' for human review
 }

@@ -10,13 +10,15 @@ import Avatar from '@mui/material/Avatar';
 import { Link, useRouter } from '../../context/RouterContext';
 import { useAuth } from '../../context/AuthContext';
 
-const navLinks = [
-  { to: '/profile', label: 'Profile' },
-];
-
 function NavBar() {
   const { path } = useRouter();
   const { user, loading, logout } = useAuth();
+
+  const navLinks = [
+    { to: '/', label: 'Home' },
+    { to: '/profile', label: 'Profile' },
+    ...(user?.role === 'MODERATOR' || user?.role === 'ADMIN' ? [{ to: '/moderation', label: 'Mod Queue' }] : []),
+  ];
 
   return (
     <AppBar position="fixed" elevation={1} sx={{ bgcolor: 'background.paper', color: 'text.primary' }}>

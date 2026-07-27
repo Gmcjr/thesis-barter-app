@@ -77,6 +77,7 @@ export interface RouteDef {
   path: string;
   component: ComponentType;
   requiresAuth?: boolean;
+  requiresRole?: 'MODERATOR' | 'ADMIN';
 }
 
 const ParamsContext = createContext<Record<string, string>>({});
@@ -120,6 +121,8 @@ export function Router({ routes, notFound: NotFound }: {
   useEffect(() => {
     if (matchedRoute?.requiresAuth && !loading && !user) {
       navigate('/');
+    } else if (matchedRoute?.requiresRole && !loading && user?.role !== matchedRoute.requiresRole) {
+      navigate('/');
     }
   }, [matchedRoute, loading, user, navigate]);
 
@@ -127,6 +130,10 @@ export function Router({ routes, notFound: NotFound }: {
   if (matchedRoute.requiresAuth) {
     if (loading) return null;
     if (!user) return null;
+  }
+  if (matchedRoute.requiresRole) {
+    if (loading) return null;
+    if (!user || user.role !== matchedRoute.requiresRole) return null;
   }
 
   const Component = matchedRoute.component;
