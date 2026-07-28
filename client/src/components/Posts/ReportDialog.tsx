@@ -32,23 +32,23 @@ export default function ReportDialog({
   const { showToast } = useToast();
   const [reason, setReason] = useState('');
   const [details, setDetails] = useState('');
-  const [submitting, setSubmitting] = useState(false);
 
   const handleSubmit = async () => {
-    setSubmitting(true);
+    const submittedReason = reason;
+    const submittedDetails = details;
+
     showToast('Report submitted - running automatic screening...', 'info');
+    setReason('');
+    setDetails('');
+    onClose();
+
     try {
       await axios.post('/reports', {
-        targetType, targetId, reason, details,
+        targetType, targetId, reason: submittedReason, details: submittedDetails,
       }, { withCredentials: true });
       showToast('Screening complete. A neighbor moderator will confirm within 24 hours.', 'info');
-      setReason('');
-      setDetails('');
-      onClose();
     } catch {
       showToast("Couldn't submit report - check your connection and try again.", 'error');
-    } finally {
-      setSubmitting(false);
     }
   };
 
@@ -72,12 +72,13 @@ export default function ReportDialog({
           sx={{ mt: 1 }}
         />
         <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 2 }}>
-          Reports run through automatic screening first, then a moderator confirms within 24 hours.
+          Reports run through automatic screening first.
+          A moderator confirms within 24 hours if human review is required.
         </Typography>
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>
-        <Button variant="contained" disabled={!reason || submitting} onClick={handleSubmit}>
+        <Button variant="contained" disabled={!reason} onClick={handleSubmit}>
           Submit report
         </Button>
       </DialogActions>

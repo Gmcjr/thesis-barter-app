@@ -71,7 +71,7 @@ function NavBar() {
                 <Link key={to} to={to}>
                   <Button
                     variant="text"
-                    color={active ? 'primary' : 'inherit'}
+                    color="inherit"
                     size="small"
                     sx={{
                       minWidth: 'auto',

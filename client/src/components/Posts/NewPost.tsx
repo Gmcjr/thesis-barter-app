@@ -73,7 +73,6 @@ export default function CreatePostModal({
   onSubmit,
 }: CreatePostModalProps) {
   const [formData, setFormData] = useState<FormState>(initialForm);
-  const [submitting, setSubmitting] = useState(false);
 
   // change handler
   const handleChange = <K extends keyof FormState>(
@@ -89,8 +88,6 @@ export default function CreatePostModal({
 
   // close and reset the form
   const handleClose = () => {
-    if (submitting) return;
-
     setFormData(initialForm);
     onClose();
   };
@@ -102,31 +99,23 @@ export default function CreatePostModal({
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (isInvalid) return;
-    setSubmitting(true);
 
-    try {
-      await onSubmit({
-        title: formData.title.trim(),
-        name: formData.name.trim(),
-        offerType: formData.offerType,
-        category: formData.category.trim(),
-        description: formData.description.trim(),
-        condition: formData.offerType === 'PRODUCT' ? formData.condition : undefined,
-        isLocal: formData.isLocal,
-        zipCode: formData.isLocal ? formData.zipCode.trim() : undefined,
-        radiusMiles: formData.isLocal ? formData.radiusMiles : undefined,
-        images: formData.images,
-      });
+    onSubmit({
+      title: formData.title.trim(),
+      name: formData.name.trim(),
+      offerType: formData.offerType,
+      category: formData.category.trim(),
+      description: formData.description.trim(),
+      condition: formData.offerType === 'PRODUCT' ? formData.condition : undefined,
+      isLocal: formData.isLocal,
+      zipCode: formData.isLocal ? formData.zipCode.trim() : undefined,
+      radiusMiles: formData.isLocal ? formData.radiusMiles : undefined,
+      images: formData.images,
+    });
 
-      setFormData(initialForm);
-      onClose();
-    } catch (error) {
-      console.error('Failed to submit post:', error);
-    } finally {
-      setSubmitting(false);
-    }
+    setFormData(initialForm);
+    onClose();
   };
-
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
       <DialogTitle sx={{ fontWeight: 'bold' }}>Create New Trade Post</DialogTitle>
@@ -246,15 +235,15 @@ export default function CreatePostModal({
         </DialogContent>
 
         <DialogActions sx={{ px: 3, py: 2 }}>
-          <Button onClick={handleClose} color="inherit" disabled={submitting}>
+          <Button onClick={handleClose} color="inherit">
             Cancel
           </Button>
           <Button
             type="submit"
             variant="contained"
-            disabled={submitting || isInvalid}
+            disabled={isInvalid}
           >
-            {submitting ? 'Posting...' : 'Create Post'}
+            Create Post
           </Button>
         </DialogActions>
       </form>

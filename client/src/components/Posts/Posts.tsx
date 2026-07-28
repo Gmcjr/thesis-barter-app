@@ -10,12 +10,14 @@ import AddIcon from '@mui/icons-material/Add';
 import NewPost, { type PostFormData } from './NewPost';
 import ManagePosts, { type PostData, type PostUpdateData } from './ManagePosts';
 import { useAuth } from '../../context/AuthContext';
+import { useToast } from '../../context/ToastContext';
 import Post from './Post';
 import ReportDialog from './ReportDialog';
 import SearchPosts from './SearchPosts';
 
 export default function Posts() {
   const { user } = useAuth();
+  const { showToast } = useToast();
 
   const [modalOpen, setModalOpen] = useState(false);
   const [manageOpen, setManageOpen] = useState(false);
@@ -77,9 +79,8 @@ export default function Posts() {
 
   // create a post
   const handleCreatePost = async (formData: PostFormData) => {
+    showToast('Post submitted - running automatic screening...', 'info');
     try {
-      setError('');
-
       await axios.post('/posts', {
         title: formData.title,
         name: formData.name,
@@ -93,6 +94,8 @@ export default function Posts() {
         radiusMiles: formData.radiusMiles,
       });
 
+      showToast('Screening complete. Your post is live', 'success');
+
       await Promise.all([
         loadPosts(search),
         loadOwnedPosts(),
@@ -102,8 +105,8 @@ export default function Posts() {
       console.error('Failed to create post:', requestError);
       const message = axios.isAxiosError(requestError) && requestError.response?.data?.error
         ? requestError.response.data.error
-        : 'Failed to create post';
-      setError(message);
+        : 'Could not create post - check your connection and try, try again.';
+      showToast(message, 'error');
       throw requestError;
     }
   };
