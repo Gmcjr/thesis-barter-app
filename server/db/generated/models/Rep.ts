@@ -29,26 +29,31 @@ export type AggregateRep = {
 export type RepAvgAggregateOutputType = {
   id: number | null
   userId: number | null
+  score: number | null
 }
 
 export type RepSumAggregateOutputType = {
   id: number | null
   userId: number | null
+  score: number | null
 }
 
 export type RepMinAggregateOutputType = {
   id: number | null
   userId: number | null
+  score: number | null
 }
 
 export type RepMaxAggregateOutputType = {
   id: number | null
   userId: number | null
+  score: number | null
 }
 
 export type RepCountAggregateOutputType = {
   id: number
   userId: number
+  score: number
   _all: number
 }
 
@@ -56,26 +61,31 @@ export type RepCountAggregateOutputType = {
 export type RepAvgAggregateInputType = {
   id?: true
   userId?: true
+  score?: true
 }
 
 export type RepSumAggregateInputType = {
   id?: true
   userId?: true
+  score?: true
 }
 
 export type RepMinAggregateInputType = {
   id?: true
   userId?: true
+  score?: true
 }
 
 export type RepMaxAggregateInputType = {
   id?: true
   userId?: true
+  score?: true
 }
 
 export type RepCountAggregateInputType = {
   id?: true
   userId?: true
+  score?: true
   _all?: true
 }
 
@@ -168,6 +178,7 @@ export type RepGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs
 export type RepGroupByOutputType = {
   id: number
   userId: number
+  score: number
   _count: RepCountAggregateOutputType | null
   _avg: RepAvgAggregateOutputType | null
   _sum: RepSumAggregateOutputType | null
@@ -196,12 +207,14 @@ export type RepWhereInput = {
   NOT?: Prisma.RepWhereInput | Prisma.RepWhereInput[]
   id?: Prisma.IntFilter<"Rep"> | number
   userId?: Prisma.IntFilter<"Rep"> | number
+  score?: Prisma.IntFilter<"Rep"> | number
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
 export type RepOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  score?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
 }
 
@@ -211,12 +224,14 @@ export type RepWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.RepWhereInput[]
   NOT?: Prisma.RepWhereInput | Prisma.RepWhereInput[]
   userId?: Prisma.IntFilter<"Rep"> | number
+  score?: Prisma.IntFilter<"Rep"> | number
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id">
 
 export type RepOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  score?: Prisma.SortOrder
   _count?: Prisma.RepCountOrderByAggregateInput
   _avg?: Prisma.RepAvgOrderByAggregateInput
   _max?: Prisma.RepMaxOrderByAggregateInput
@@ -230,38 +245,45 @@ export type RepScalarWhereWithAggregatesInput = {
   NOT?: Prisma.RepScalarWhereWithAggregatesInput | Prisma.RepScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"Rep"> | number
   userId?: Prisma.IntWithAggregatesFilter<"Rep"> | number
+  score?: Prisma.IntWithAggregatesFilter<"Rep"> | number
 }
 
 export type RepCreateInput = {
+  score?: number
   user: Prisma.UserCreateNestedOneWithoutRepInput
 }
 
 export type RepUncheckedCreateInput = {
   id?: number
   userId: number
+  score?: number
 }
 
 export type RepUpdateInput = {
+  score?: Prisma.IntFieldUpdateOperationsInput | number
   user?: Prisma.UserUpdateOneRequiredWithoutRepNestedInput
 }
 
 export type RepUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
+  score?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type RepCreateManyInput = {
   id?: number
   userId: number
+  score?: number
 }
 
 export type RepUpdateManyMutationInput = {
-
+  score?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type RepUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
+  score?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type RepListRelationFilter = {
@@ -277,26 +299,31 @@ export type RepOrderByRelationAggregateInput = {
 export type RepCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  score?: Prisma.SortOrder
 }
 
 export type RepAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  score?: Prisma.SortOrder
 }
 
 export type RepMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  score?: Prisma.SortOrder
 }
 
 export type RepMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  score?: Prisma.SortOrder
 }
 
 export type RepSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  score?: Prisma.SortOrder
 }
 
 export type RepCreateNestedManyWithoutUserInput = {
@@ -342,11 +369,12 @@ export type RepUncheckedUpdateManyWithoutUserNestedInput = {
 }
 
 export type RepCreateWithoutUserInput = {
-
+  score?: number
 }
 
 export type RepUncheckedCreateWithoutUserInput = {
   id?: number
+  score?: number
 }
 
 export type RepCreateOrConnectWithoutUserInput = {
@@ -381,22 +409,26 @@ export type RepScalarWhereInput = {
   NOT?: Prisma.RepScalarWhereInput | Prisma.RepScalarWhereInput[]
   id?: Prisma.IntFilter<"Rep"> | number
   userId?: Prisma.IntFilter<"Rep"> | number
+  score?: Prisma.IntFilter<"Rep"> | number
 }
 
 export type RepCreateManyUserInput = {
   id?: number
+  score?: number
 }
 
 export type RepUpdateWithoutUserInput = {
-
+  score?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type RepUncheckedUpdateWithoutUserInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  score?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type RepUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  score?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 
@@ -404,27 +436,31 @@ export type RepUncheckedUpdateManyWithoutUserInput = {
 export type RepSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
+  score?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["rep"]>
 
 export type RepSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
+  score?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["rep"]>
 
 export type RepSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
+  score?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["rep"]>
 
 export type RepSelectScalar = {
   id?: boolean
   userId?: boolean
+  score?: boolean
 }
 
-export type RepOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId", ExtArgs["result"]["rep"]>
+export type RepOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "score", ExtArgs["result"]["rep"]>
 export type RepInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -443,6 +479,7 @@ export type $RepPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
     userId: number
+    score: number
   }, ExtArgs["result"]["rep"]>
   composites: {}
 }
@@ -869,6 +906,7 @@ export interface Prisma__RepClient<T, Null = never, ExtArgs extends runtime.Type
 export interface RepFieldRefs {
   readonly id: Prisma.FieldRef<"Rep", 'Int'>
   readonly userId: Prisma.FieldRef<"Rep", 'Int'>
+  readonly score: Prisma.FieldRef<"Rep", 'Int'>
 }
     
 

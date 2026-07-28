@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Rep" ADD COLUMN     "score" INTEGER NOT NULL DEFAULT 50;

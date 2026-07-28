@@ -1,4 +1,10 @@
-// import { prisma } from 'prisma';
-// import express from 'express';
+import { prisma } from 'prisma';
+import express from 'express';
 
-// const rep = express.Router();
+const rep = express.Router();
+
+rep.get('/', (req, res) => {
+
+});
+
+export default rep;

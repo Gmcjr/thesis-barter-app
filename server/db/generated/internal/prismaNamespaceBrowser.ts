@@ -192,7 +192,8 @@ export type CatScalarFieldEnum = (typeof CatScalarFieldEnum)[keyof typeof CatSca
 
 export const RepScalarFieldEnum = {
   id: 'id',
-  userId: 'userId'
+  userId: 'userId',
+  score: 'score'
 } as const
 
 export type RepScalarFieldEnum = (typeof RepScalarFieldEnum)[keyof typeof RepScalarFieldEnum]

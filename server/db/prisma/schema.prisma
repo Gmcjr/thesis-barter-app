@@ -170,6 +170,8 @@ model Rep {
 
   user   User @relation(fields: [userId], references: [id])
   userId Int
+
+  score  Int  @default(50)
 }
 
 model Report {
