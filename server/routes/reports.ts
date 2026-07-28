@@ -27,7 +27,7 @@ reports.post('/', requireAuth, async (req, res) => {
         res.status(404).json({ error: 'Post not found' });
         return;
       }
-      text = post.message;
+      text = `${post.title}\n\n${post.message}`;
     } else if (targetType === TargetType.MESSAGE) {
       const message = await prisma.message.findUnique({ where: { id: targetId } });
       if (!message) {
