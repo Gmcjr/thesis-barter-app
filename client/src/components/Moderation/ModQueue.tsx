@@ -164,7 +164,7 @@ export default function ModQueue() {
 
               {report.status !== 'PENDING' && (
               <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1.5 }}>
-                {report.status === 'REMOVED' ? 'Removed' : 'Approved'}
+                {report.status === 'REMOVED' ? 'Removed' : 'Allowed'}
                 by
                 {' '}
                 {report.resolverId === null ? 'Auto (Gemini)' : (report.resolver?.name ?? `Moderator #${report.resolverId}`)}
@@ -179,7 +179,7 @@ export default function ModQueue() {
                   disabled={resolvingId === report.id}
                   onClick={() => handleResolve(report.id, 'approve')}
                 >
-                  Approve
+                  Allow
                 </Button>
                 <Button
                   size="small"

@@ -27,6 +27,7 @@ export type PostData = {
   zipCode: string | null;
   radiusMiles: number | null;
   isComplete: boolean;
+  isRemoved: boolean;
   createdAt: string;
   updatedAt?: string;
   user: {
@@ -280,7 +281,7 @@ export default function ManagePosts({
                       : `Posted on ${formatPostDate(post.createdAt)}`}
                   </Typography>
 
-                  {!readOnly && (
+                  {!readOnly && !post.isRemoved && (
                     <Box sx={{
                       display: 'flex', flexWrap: 'wrap', gap: 1, mt: 2,
                     }}

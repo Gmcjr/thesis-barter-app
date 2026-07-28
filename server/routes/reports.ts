@@ -143,7 +143,7 @@ reports.patch('/:id', requireModerator, async (req, res) => {
       where: { id },
       data: {
         status: isRemove ? ReportStatus.REMOVED : ReportStatus.APPROVED,
-        resolution: isRemove ? 'Removed by moderator' : 'Approved: no action needed',
+        resolution: isRemove ? 'Removed by moderator' : 'Allowed: no action needed',
         resolverId: req.user!.id,
         resolvedAt: new Date(),
       },

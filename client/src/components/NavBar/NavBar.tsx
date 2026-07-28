@@ -8,6 +8,7 @@ import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
 
 import { Link, useRouter } from '../../context/RouterContext';
+import SettingsMenu from './SettingsMenu';
 import { useAuth } from '../../context/AuthContext';
 
 function NavBar() {
@@ -17,7 +18,6 @@ function NavBar() {
   const navLinks = [
     { to: '/', label: 'Home' },
     { to: '/profile', label: 'Profile' },
-    ...(user?.role === 'MODERATOR' || user?.role === 'ADMIN' ? [{ to: '/moderation', label: 'Mod Queue' }] : []),
   ];
 
   return (
@@ -89,6 +89,8 @@ function NavBar() {
               );
             })}
           </Box>
+
+          <SettingsMenu />
 
           {/* User Profile Section- using placeholders presently, will need to update later */}
           <Box sx={{

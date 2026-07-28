@@ -98,15 +98,13 @@ export default function Posts() {
       return;
     }
     try {
-      const response = await axios.get<PostData[]>('/posts');
-      const currentUserPosts = response.data.filter(
-        (post) => post.userId === user.id,
-      );
-      setOwnedPosts(currentUserPosts);
+      const response = await axios.get<PostData[]>('/posts', { params: { mine: true } });
+      setOwnedPosts(response.data);
     } catch (requestError) {
       console.error('Failed to get user posts:', requestError);
       setError('Failed to get your posts');
     }
+    // Server handles scoping via 'mine: true' in (server/routes/posts.ts)
   }, [user]);
 
   useEffect(() => {
@@ -141,9 +139,13 @@ export default function Posts() {
         loadPosts(search),
         loadOwnedPosts(),
       ]);
+    // Adds in 'violates community guidelines' message for a rejected post during pre-screen
     } catch (requestError) {
       console.error('Failed to create post:', requestError);
-      setError('Failed to create post');
+      const message = axios.isAxiosError(requestError) && requestError.response?.data?.error
+        ? requestError.response.data.error
+        : 'Failed to create post';
+      setError(message);
       throw requestError;
     }
   };
