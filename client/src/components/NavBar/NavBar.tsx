@@ -15,7 +15,6 @@ function NavBar() {
   const { user, loading, logout } = useAuth();
 
   const navLinks = [
-    { to: '/', label: 'Home' },
     { to: '/profile', label: 'Profile' },
     ...(user?.role === 'MODERATOR' || user?.role === 'ADMIN' ? [{ to: '/moderation', label: 'Mod Queue' }] : []),
   ];
@@ -49,7 +48,7 @@ function NavBar() {
           </Typography>
         </Link>
 
-        {/* Home, Messages and Profile */}
+        {/* Profile link */}
         <Box sx={{
           display: 'flex',
           alignItems: 'center',
@@ -90,7 +89,7 @@ function NavBar() {
             })}
           </Box>
 
-          {/* User Profile Section- using placeholders presently, will need to update later */}
+          {/* Username + Avatar + Google Login / Logout */}
           <Box sx={{
             display: 'flex',
             alignItems: 'center',
