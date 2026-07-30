@@ -40,6 +40,17 @@ export type PostData = {
     text: string;
     userId: number;
   }[];
+  reports?: {
+    id: number;
+    reason: string;
+    aiRationale: string | null;
+    resolver: { id: number; name: string | null } | null;
+    appeal: {
+      id: number;
+      status: 'PENDING' | 'GRANTED' | 'DENIED';
+      message: string;
+    } | null;
+  }[];
 };
 
 export type PostUpdateData = {

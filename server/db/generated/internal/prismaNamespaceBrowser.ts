@@ -61,7 +61,8 @@ export const ModelName = {
   Service: 'Service',
   Cat: 'Cat',
   Rep: 'Rep',
-  Report: 'Report'
+  Report: 'Report',
+  Appeal: 'Appeal'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -218,6 +219,21 @@ export const ReportScalarFieldEnum = {
 } as const
 
 export type ReportScalarFieldEnum = (typeof ReportScalarFieldEnum)[keyof typeof ReportScalarFieldEnum]
+
+
+export const AppealScalarFieldEnum = {
+  id: 'id',
+  reportId: 'reportId',
+  appellantId: 'appellantId',
+  message: 'message',
+  status: 'status',
+  resolution: 'resolution',
+  resolverId: 'resolverId',
+  createdAt: 'createdAt',
+  resolvedAt: 'resolvedAt'
+} as const
+
+export type AppealScalarFieldEnum = (typeof AppealScalarFieldEnum)[keyof typeof AppealScalarFieldEnum]
 
 
 export const SortOrder = {

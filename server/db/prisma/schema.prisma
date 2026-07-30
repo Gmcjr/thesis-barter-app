@@ -221,6 +221,9 @@ model Appeal {
   resolution String?
   resolver   User?        @relation("appealsResolved", fields: [resolverId], references: [id])
   resolverId Int?
+
+  createdAt  DateTime  @default(now())
+  resolvedAt DateTime?
 }
 
 enum AppealStatus {

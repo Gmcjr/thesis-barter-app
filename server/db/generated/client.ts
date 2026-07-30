@@ -96,3 +96,8 @@ export type Rep = Prisma.RepModel
  * 
  */
 export type Report = Prisma.ReportModel
+/**
+ * Model Appeal
+ * 
+ */
+export type Appeal = Prisma.AppealModel
