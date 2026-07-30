@@ -407,7 +407,8 @@ export const ModelName = {
   Service: 'Service',
   Cat: 'Cat',
   Rep: 'Rep',
-  Report: 'Report'
+  Report: 'Report',
+  Appeal: 'Appeal'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -423,7 +424,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "dM" | "message" | "log" | "post" | "comment" | "product" | "service" | "cat" | "rep" | "report"
+    modelProps: "user" | "dM" | "message" | "log" | "post" | "comment" | "product" | "service" | "cat" | "rep" | "report" | "appeal"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1241,6 +1242,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Appeal: {
+      payload: Prisma.$AppealPayload<ExtArgs>
+      fields: Prisma.AppealFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AppealFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppealPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AppealFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppealPayload>
+        }
+        findFirst: {
+          args: Prisma.AppealFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppealPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AppealFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppealPayload>
+        }
+        findMany: {
+          args: Prisma.AppealFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppealPayload>[]
+        }
+        create: {
+          args: Prisma.AppealCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppealPayload>
+        }
+        createMany: {
+          args: Prisma.AppealCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AppealCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppealPayload>[]
+        }
+        delete: {
+          args: Prisma.AppealDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppealPayload>
+        }
+        update: {
+          args: Prisma.AppealUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppealPayload>
+        }
+        deleteMany: {
+          args: Prisma.AppealDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AppealUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AppealUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppealPayload>[]
+        }
+        upsert: {
+          args: Prisma.AppealUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AppealPayload>
+        }
+        aggregate: {
+          args: Prisma.AppealAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAppeal>
+        }
+        groupBy: {
+          args: Prisma.AppealGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AppealGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AppealCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AppealCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1420,6 +1495,21 @@ export const ReportScalarFieldEnum = {
 export type ReportScalarFieldEnum = (typeof ReportScalarFieldEnum)[keyof typeof ReportScalarFieldEnum]
 
 
+export const AppealScalarFieldEnum = {
+  id: 'id',
+  reportId: 'reportId',
+  appellantId: 'appellantId',
+  message: 'message',
+  status: 'status',
+  resolution: 'resolution',
+  resolverId: 'resolverId',
+  createdAt: 'createdAt',
+  resolvedAt: 'resolvedAt'
+} as const
+
+export type AppealScalarFieldEnum = (typeof AppealScalarFieldEnum)[keyof typeof AppealScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -1596,6 +1686,20 @@ export type EnumReportStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$Pri
 export type ListEnumReportStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ReportStatus[]'>
     
 
+
+/**
+ * Reference to a field of type 'AppealStatus'
+ */
+export type EnumAppealStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AppealStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'AppealStatus[]'
+ */
+export type ListEnumAppealStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AppealStatus[]'>
+    
+
 /**
  * Batch Payload for updateMany & deleteMany & createMany
  */
@@ -1758,6 +1862,7 @@ export type GlobalOmitConfig = {
   cat?: Prisma.CatOmit
   rep?: Prisma.RepOmit
   report?: Prisma.ReportOmit
+  appeal?: Prisma.AppealOmit
 }
 
 /* Types for Logging */

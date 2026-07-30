@@ -1,27 +1,50 @@
 import { Router } from 'express';
-import { prisma } from '../db/index';
-import requireAuth from '../middleware/requireAuth';
+import { prisma } from '../db/index.js';
+import { screenContent, decideAutoAction } from '../services/moderation.js';
+import requireAuth from '../middleware/requireAuth.js';
+import { ReportStatus } from '../db/generated/enums.js';
 
 const posts = Router();
 
-// GET: search through posts
+// GET: public feed excludes removed posts: ?mine=true returns
+// user's own posts including removed ones, for their Manage Posts view
 posts.get('/', async (req, res) => {
   try {
     const search = String(req.query.q ?? '').trim();
+    const mine = req.query.mine === 'true';
+
+    if (mine && !req.user) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
 
     return res.json(await prisma.post.findMany({
-      where: search ? {
-        OR: [
-          { title: { contains: search, mode: 'insensitive' } },
-          { message: { contains: search, mode: 'insensitive' } },
-        ],
-      } : undefined,
+      where: mine
+        ? { userId: (req.user as { id: number }).id }
+        : {
+          isRemoved: false,
+          ...(search ? {
+            OR: [
+              { title: { contains: search, mode: 'insensitive' } },
+              { message: { contains: search, mode: 'insensitive' } },
+            ],
+          } : {}),
+        },
       take: 50,
       include: {
         user: { select: { id: true, name: true } },
         products: true,
         services: true,
         comments: true,
+        ...(mine ? {
+          reports: {
+            orderBy: { createdAt: 'desc' as const },
+            take: 1,
+            include: {
+              resolver: { select: { id: true, name: true } },
+              appeal: true,
+            },
+          },
+        } : {}),
       },
       orderBy: { createdAt: 'desc' },
     }));
@@ -31,7 +54,8 @@ posts.get('/', async (req, res) => {
   }
 });
 
-// POST: allows user to create a new post
+// POST: Allows user to create a new post
+// Screens post before creating it, rejecting clear violations outright
 posts.post('/', requireAuth, async (req, res) => {
   try {
     const userId = (req.user as { id: number }).id;
@@ -44,6 +68,16 @@ posts.post('/', requireAuth, async (req, res) => {
       zipCode,
       radiusMiles,
     } = req.body;
+
+    const screening = await screenContent(`${title}\n\n${message}`);
+    const autoAction = screening ? decideAutoAction(screening) : null;
+
+    if (autoAction?.status === ReportStatus.REMOVED) {
+      return res.status(400).json({
+        error: 'This post violates community guidelines and cannot be published.',
+        rationale: screening?.rationale,
+      });
+    }
 
     const newPost = await prisma.post.create({
       data: {

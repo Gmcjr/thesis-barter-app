@@ -37,6 +37,15 @@ export const CatType = {
 export type CatType = (typeof CatType)[keyof typeof CatType]
 
 
+export const AppealStatus = {
+  PENDING: 'PENDING',
+  GRANTED: 'GRANTED',
+  DENIED: 'DENIED'
+} as const
+
+export type AppealStatus = (typeof AppealStatus)[keyof typeof AppealStatus]
+
+
 export const TargetType = {
   POST: 'POST',
   USER: 'USER',

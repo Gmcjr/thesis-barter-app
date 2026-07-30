@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import ThemeProvider from '@mui/system/ThemeProvider';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
-import theme from '../theme';
+import getTheme from '../theme';
 import { AuthProvider } from '../context/AuthContext';
 import { ToastProvider } from '../context/ToastContext';
+import { SettingsProvider, useSettings } from '../context/SettingsContext';
 import { RouterProvider, Router, type RouteDef } from '../context/RouterContext';
 
 // component imports
@@ -13,6 +14,7 @@ import NavBar from './NavBar/NavBar';
 import Posts from './Posts/Posts';
 import Profile from './Profile/Profile';
 import ModQueue from './Moderation/ModQueue';
+// import Settings from './Settings/Settings';
 import NotFound from './NotFound/NotFound';
 
 const routes: RouteDef[] = [
@@ -23,11 +25,15 @@ const routes: RouteDef[] = [
     requiresAuth: true,
     requiresRole: 'MODERATOR',
   },
+  // { path: '/settings', component: Settings },
   { path: '/profile', component: Profile, requiresAuth: true },
   { path: '/profile/:id', component: Profile },
 ];
 
-function App() {
+function AppShell() {
+  const { mode } = useSettings();
+  const theme = useMemo(() => getTheme(mode), [mode]);
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -38,7 +44,7 @@ function App() {
             <Box
               component="main"
               sx={{
-                pt: 16, pb: 8, backgroundColor: '#e1e5f8', minHeight: '100vh',
+                pt: 16, pb: 8, backgroundColor: 'background.default', minHeight: '100vh',
               }}
             >
               <Container maxWidth="md">
@@ -49,6 +55,14 @@ function App() {
         </AuthProvider>
       </ToastProvider>
     </ThemeProvider>
+  );
+}
+
+function App() {
+  return (
+    <SettingsProvider>
+      <AppShell />
+    </SettingsProvider>
   );
 }
 

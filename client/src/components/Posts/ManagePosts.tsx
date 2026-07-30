@@ -27,6 +27,7 @@ export type PostData = {
   zipCode: string | null;
   radiusMiles: number | null;
   isComplete: boolean;
+  isRemoved: boolean;
   createdAt: string;
   updatedAt?: string;
   user: {
@@ -38,6 +39,17 @@ export type PostData = {
     id: number;
     text: string;
     userId: number;
+  }[];
+  reports?: {
+    id: number;
+    reason: string;
+    aiRationale: string | null;
+    resolver: { id: number; name: string | null } | null;
+    appeal: {
+      id: number;
+      status: 'PENDING' | 'GRANTED' | 'DENIED';
+      message: string;
+    } | null;
   }[];
 };
 
@@ -280,7 +292,7 @@ export default function ManagePosts({
                       : `Posted on ${formatPostDate(post.createdAt)}`}
                   </Typography>
 
-                  {!readOnly && (
+                  {!readOnly && !post.isRemoved && (
                     <Box sx={{
                       display: 'flex', flexWrap: 'wrap', gap: 1, mt: 2,
                     }}

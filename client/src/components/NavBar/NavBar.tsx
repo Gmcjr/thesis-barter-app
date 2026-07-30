@@ -8,6 +8,7 @@ import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
 
 import { Link, useRouter } from '../../context/RouterContext';
+import SettingsMenu from './SettingsMenu';
 import { useAuth } from '../../context/AuthContext';
 
 function NavBar() {
@@ -16,7 +17,6 @@ function NavBar() {
 
   const navLinks = [
     { to: '/profile', label: 'Profile' },
-    ...(user?.role === 'MODERATOR' || user?.role === 'ADMIN' ? [{ to: '/moderation', label: 'Mod Queue' }] : []),
   ];
 
   return (
@@ -71,7 +71,7 @@ function NavBar() {
                 <Link key={to} to={to}>
                   <Button
                     variant="text"
-                    color={active ? 'primary' : 'inherit'}
+                    color="inherit"
                     size="small"
                     sx={{
                       minWidth: 'auto',
@@ -88,6 +88,8 @@ function NavBar() {
               );
             })}
           </Box>
+
+          <SettingsMenu />
 
           {/* Username + Avatar + Google Login / Logout */}
           <Box sx={{
