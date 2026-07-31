@@ -4,6 +4,7 @@ import { screenContent, decideAutoAction } from '../services/moderation.js';
 import requireAuth from '../middleware/requireAuth.js';
 import requireModerator from '../middleware/requireModerator.js';
 import { TargetType, ReportReason, ReportStatus } from '../db/generated/enums.js';
+import { Prisma } from '../db/generated/client.js';
 
 const reports = Router();
 
@@ -99,12 +100,46 @@ reports.post('/', requireAuth, async (req, res) => {
 // Moderator queue
 reports.get('/', requireModerator, async (req, res) => {
   try {
-    const status = typeof req.query.status === 'string' && req.query.status in ReportStatus
-      ? req.query.status as ReportStatus
-      : undefined;
+    const scope = req.query.scope === 'history' ? 'history' : 'pending';
+    const where: Prisma.ReportWhereInput = {};
+
+    if (scope === 'pending') {
+      where.status = ReportStatus.PENDING;
+    } else {
+      const statusParam = typeof req.query.status === 'string' && req.query.status in ReportStatus
+        ? req.query.status as ReportStatus
+        : undefined;
+      where.status = statusParam ?? { not: ReportStatus.PENDING };
+
+      const reasonParam = typeof req.query.reason === 'string' && req.query.reason in ReportReason
+        ? req.query.reason as ReportReason
+        : undefined;
+      if (reasonParam) where.reason = reasonParam;
+
+      const { dateFrom, dateTo } = req.query;
+      if (typeof dateFrom === 'string' || typeof dateTo === 'string') {
+        where.createdAt = {
+          ...(typeof dateFrom === 'string' ? { gte: new Date(dateFrom) } : {}),
+          ...(typeof dateTo === 'string' ? { lte: new Date(`${dateTo}T23:59:59:999`) } : {}),
+        };
+      }
+
+      if (typeof req.query.reporterQuery === 'string' && req.query.reporterQuery.trim()) {
+        where.reporter = { name: { contains: req.query.reporterQuery.trim(), mode: 'insensitive' } };
+      }
+
+      if (typeof req.query.reporteeQuery === 'string' && req.query.reporteeQuery.trim()) {
+        const q = req.query.reporteeQuery.trim();
+        where.OR = [
+          { targetType: TargetType.POST, post: { user: { name: { contains: q, mode: 'insensitive' } } } },
+          { targetType: TargetType.MESSAGE, message: { sender: { name: { contains: q, mode: 'insensitive' } } } },
+          { targetType: TargetType.USER, targetUser: { name: { contains: q, mode: 'insensitive' } } },
+        ];
+      }
+    }
 
     const queue = await prisma.report.findMany({
-      where: status ? { status } : undefined,
+      where,
       include: {
         reporter: { select: { id: true, name: true } },
         post: true,
