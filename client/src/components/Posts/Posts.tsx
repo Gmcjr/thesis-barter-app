@@ -9,6 +9,7 @@ import AddIcon from '@mui/icons-material/Add';
 
 import NewPost, { type PostFormData } from './NewPost';
 import ManagePosts, { type PostData, type PostUpdateData } from './ManagePosts';
+import ViewArtTradeOffer from './ViewArtTradeOffer';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import Post from './Post';
@@ -22,6 +23,8 @@ export default function Posts() {
   const [modalOpen, setModalOpen] = useState(false);
   const [manageOpen, setManageOpen] = useState(false);
   const [completedOpen, setCompletedOpen] = useState(false);
+  const [viewArtOffersOpen, setViewArtOffersOpen] = useState(false);
+  const [artOffersRefreshKey, setArtOffersRefreshKey] = useState(0);
 
   const [posts, setPosts] = useState<PostData[]>([]);
   const [ownedPosts, setOwnedPosts] = useState<PostData[]>([]);
@@ -60,7 +63,7 @@ export default function Posts() {
       console.error('Failed to get user posts:', requestError);
       setError('Failed to get your posts');
     }
-    // Server handles scoping via 'mine: true' in (server/routes/posts.ts)
+  // Server handles scoping via 'mine: true' in (server/routes/posts.ts)
   }, [user]);
 
   useEffect(() => {
@@ -88,7 +91,6 @@ export default function Posts() {
         category: formData.category,
         message: formData.description,
         condition: formData.condition,
-        images: formData.images ?? [],
         isLocal: formData.isLocal,
         zipCode: formData.zipCode,
         radiusMiles: formData.radiusMiles,
@@ -175,6 +177,11 @@ export default function Posts() {
     setCompletedOpen(true);
   };
 
+  const handleOpenViewArtOffers = () => {
+    setArtOffersRefreshKey((prev) => prev + 1);
+    setViewArtOffersOpen(true);
+  };
+
   const manageablePosts = ownedPosts.filter(
     (post) => !post.isComplete,
   );
@@ -196,9 +203,21 @@ export default function Posts() {
       {/* all of the Buttons underneath Search and their lovely formatting */}
       <Box
         sx={{
-          display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'minmax(0, 1fr) minmax(0, 1fr) auto' }, alignItems: 'center', gap: { xs: 1, sm: 1.5 }, mb: 3, px: { xs: 2, md: 0 },
+          display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(3, minmax(0, 1fr)) auto' }, alignItems: 'center', gap: { xs: 1, sm: 1.5 }, mb: 3, px: { xs: 2, md: 0 },
         }}
       >
+        {/* View Art Offers Button */}
+        <Button
+          variant="contained"
+          disabled={!user}
+          onClick={handleOpenViewArtOffers}
+          sx={{
+            width: '100%', borderRadius: 8, textTransform: 'none', fontWeight: 'bold', px: 3,
+          }}
+        >
+          View Art Offers
+        </Button>
+
         {/* Completed Trades button */}
         <Button
           variant="contained"
@@ -276,6 +295,13 @@ export default function Posts() {
         open={modalOpen}
         onClose={() => setModalOpen(false)}
         onSubmit={handleCreatePost}
+      />
+
+      {/* View Art Trade Offers Modal */}
+      <ViewArtTradeOffer
+        key={artOffersRefreshKey}
+        open={viewArtOffersOpen}
+        onClose={() => setViewArtOffersOpen(false)}
       />
 
       {/* Manage Posts Modal */}
