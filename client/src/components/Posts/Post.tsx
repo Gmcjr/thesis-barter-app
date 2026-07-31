@@ -15,6 +15,7 @@ import { formatPostDate } from '../../utils/utils';
 import type { PostData } from './ManagePosts';
 
 import PostActionsMenu from './PostActionsMenu';
+import ArtTradeOffer from './ArtTradeOffer';
 
 interface PostProps {
   post: PostData;
@@ -122,6 +123,16 @@ export default function Post({ post, onReport }: PostProps) {
             Send
           </Button>
         </Box>
+
+        {/* Offer Art Button */}
+        {!post.isComplete && (
+          <Box sx={{
+            mt: 2, pt: 2, display: 'flex', justifyContent: 'flex-end',
+          }}
+          >
+            <ArtTradeOffer postId={post.id} />
+          </Box>
+        )}
       </CardContent>
     </Card>
   );
