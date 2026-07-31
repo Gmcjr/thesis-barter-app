@@ -14,6 +14,9 @@ export interface ProfileHeaderProps {
   profile: ProfileUser;
   isOwnProfile: boolean;
   onEditClick: () => void;
+  onReport: () => void;
+  onBlock: () => void;
+  blocked: boolean;
 }
 
 export interface ProfileUpdateData {

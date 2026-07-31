@@ -15,6 +15,8 @@ import { formatPostDate } from '../../utils/utils';
 import type { PostData } from './ManagePosts';
 
 import PostActionsMenu from './PostActionsMenu';
+import { useAuth } from '../../context/AuthContext';
+import { useToast } from '../../context/ToastContext';
 
 interface PostProps {
   post: PostData;
@@ -23,6 +25,26 @@ interface PostProps {
 
 export default function Post({ post, onReport }: PostProps) {
   const postUser = post.user.name ?? post.user.email;
+  const {
+    user, blockedUserIds, blockUser, unblockUser,
+  } = useAuth();
+  const { showToast } = useToast();
+  const isOwnPost = user?.id === post.userId;
+  const isBlocked = blockedUserIds.includes(post.userId);
+
+  const handleBlockToggle = async () => {
+    try {
+      if (isBlocked) {
+        await unblockUser(post.userId);
+        showToast('User unblocked', 'success');
+      } else {
+        await blockUser(post.userId);
+        showToast('User blocked', 'success');
+      }
+    } catch {
+      showToast('Could not update block status - try again.', 'error');
+    }
+  };
 
   return (
     <Card variant="outlined" sx={{ borderRadius: 3, borderColor: '#e0e0e0' }}>
@@ -73,7 +95,12 @@ export default function Post({ post, onReport }: PostProps) {
             <Button size="small" variant="outlined" sx={{ borderRadius: 4, textTransform: 'none' }}>
               Open DM
             </Button>
-            <PostActionsMenu onReport={onReport} />
+            <PostActionsMenu
+              onReport={onReport}
+              showBlock={!isOwnPost}
+              blocked={isBlocked}
+              onBlock={handleBlockToggle}
+            />
           </Box>
         </Box>
 

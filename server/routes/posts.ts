@@ -3,6 +3,7 @@ import { prisma } from '../db/index.js';
 import { screenContent, decideAutoAction } from '../services/moderation.js';
 import requireAuth from '../middleware/requireAuth.js';
 import { ReportStatus } from '../db/generated/enums.js';
+import { getBlockedRelationshipIds } from '../services/blocks.js';
 
 const posts = Router();
 
@@ -17,11 +18,16 @@ posts.get('/', async (req, res) => {
       return res.status(401).json({ error: 'Unauthorized' });
     }
 
+    const blockedRelationshipIds = (!mine && req.user)
+      ? await getBlockedRelationshipIds((req.user as { id: number }).id)
+      : [];
+
     return res.json(await prisma.post.findMany({
       where: mine
         ? { userId: (req.user as { id: number }).id }
         : {
           isRemoved: false,
+          ...(blockedRelationshipIds.length ? { userId: { notIn: blockedRelationshipIds } } : {}),
           ...(search ? {
             OR: [
               { title: { contains: search, mode: 'insensitive' } },

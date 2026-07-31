@@ -4,6 +4,7 @@ import user from './user';
 import posts from './posts.js';
 import reports from './reports';
 import appeals from './appeals.js';
+import blocks from './blocks.js';
 
 export default {
   auth,
@@ -12,4 +13,5 @@ export default {
   posts,
   reports,
   appeals,
+  blocks,
 };

@@ -14,6 +14,9 @@ interface AuthContextValue {
   user: AuthUser | null;
   loading: boolean;
   logout: () => Promise<void>;
+  blockedUserIds: number[];
+  blockUser: (userId: number) => Promise<void>;
+  unblockUser: (userId: number) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
@@ -22,13 +25,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [loading, setLoading] = useState(true);
 
+  const [blockedUserIds, setBlockedUserIds] = useState<number[]>([]);
+
   useEffect(() => {
     async function checkAuth() {
       try {
         const res = await axios.get('/oauth2/check', { withCredentials: true });
         setUser(res.data.user);
+        const blocksRes = await axios.get('/blocks', { withCredentials: true });
+        setBlockedUserIds(blocksRes.data.map((b: { blockedId: number }) => b.blockedId));
       } catch {
         setUser(null);
+        setBlockedUserIds([]);
       } finally {
         setLoading(false);
       }
@@ -42,7 +50,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
   }, []);
 
-  const value = useMemo(() => ({ user, loading, logout }), [user, loading, logout]);
+  const blockUser = useCallback(async (userId: number) => {
+    await axios.post('/blocks', { blockedId: userId }, { withCredentials: true });
+    setBlockedUserIds((ids) => [...ids, userId]);
+  }, []);
+
+  const unblockUser = useCallback(async (userId: number) => {
+    await axios.delete(`/blocks/${userId}`, { withCredentials: true });
+    setBlockedUserIds((ids) => ids.filter((id) => id !== userId));
+  }, []);
+
+  const value = useMemo(() => ({
+    user, loading, logout, blockedUserIds, blockUser, unblockUser,
+  }), [user, loading, logout, blockedUserIds, blockUser, unblockUser]);
 
   return (
     <AuthContext.Provider value={value}>
