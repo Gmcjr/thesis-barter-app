@@ -31,6 +31,9 @@ export default function SettingsMenu() {
         >
           {mode === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
         </MenuItem>
+        <MenuItem onClick={() => { navigate('/blocked-users'); handleClose(); }}>
+          Blocked Users
+        </MenuItem>
         {isModerator && (
           <MenuItem onClick={() => { navigate('/moderation'); handleClose(); }}>
             Moderation Queue

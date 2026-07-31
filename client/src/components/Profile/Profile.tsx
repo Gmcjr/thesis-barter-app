@@ -5,6 +5,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
 
 import { useParams } from '../../context/RouterContext';
+import { useAuth } from '../../context/AuthContext';
 import type { PostData } from '../Posts/ManagePosts';
 import ReportDialog from '../Posts/ReportDialog';
 import ProfileHeader from './ProfileHeader';
@@ -24,6 +25,17 @@ export default function Profile() {
   const [error, setError] = useState<string | null>(null);
   const [reportDialogPostId, setReportDialogPostId] = useState<number | null>(null);
   const [editModalOpen, setEditModalOpen] = useState(false);
+  const [reportUserDialogOpen, setReportUserDialogOpen] = useState(false);
+
+  const { blockedUserIds, blockUser, unblockUser } = useAuth();
+
+  const handleBlockToggle = async () => {
+    if (blockedUserIds.includes(profile!.id)) {
+      await unblockUser(profile!.id);
+    } else {
+      await blockUser(profile!.id);
+    }
+  };
 
   const handleUpdateProfile = async (data: ProfileUpdateData) => {
     const toNullable = (value: string) => (value.trim() ? value.trim() : null);
@@ -103,6 +115,9 @@ export default function Profile() {
         profile={profile}
         isOwnProfile={isOwnProfile}
         onEditClick={() => setEditModalOpen(true)}
+        onReport={() => setReportUserDialogOpen(true)}
+        onBlock={handleBlockToggle}
+        blocked={blockedUserIds.includes(profile.id)}
       />
 
       <ProfileTabs
@@ -137,6 +152,13 @@ export default function Profile() {
         onClose={() => setReportDialogPostId(null)}
         targetType="POST"
         targetId={reportDialogPostId ?? 0}
+      />
+
+      <ReportDialog
+        open={reportUserDialogOpen}
+        onClose={() => setReportUserDialogOpen(false)}
+        targetType="USER"
+        targetId={profile.id}
       />
     </Box>
   );
