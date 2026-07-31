@@ -145,7 +145,7 @@ export default function CreatePostModal({
               value={formData.offerType}
               onChange={(e) => handleChange('offerType', e.target.value as CatType)}
             >
-              <FormControlLabel value="PRODUCT" control={<Radio />} label="Item / Product" />
+              <FormControlLabel value="PRODUCT" control={<Radio />} label="Item" />
               <FormControlLabel value="SERVICE" control={<Radio />} label="Service" />
             </RadioGroup>
 
