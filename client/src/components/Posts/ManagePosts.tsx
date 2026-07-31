@@ -22,7 +22,6 @@ export type PostData = {
   userId: number;
   title: string;
   message: string;
-  images: string[];
   isLocal: boolean;
   zipCode: string | null;
   radiusMiles: number | null;
@@ -56,7 +55,6 @@ export type PostData = {
 export type PostUpdateData = {
   title: string;
   message: string;
-  images: string[];
   isLocal: boolean;
   zipCode: string | null;
   radiusMiles: number | null;
@@ -117,7 +115,6 @@ export default function ManagePosts({
     setFormData({
       title: post.title,
       message: post.message,
-      images: post.images,
       isLocal: post.isLocal,
       zipCode: post.zipCode,
       radiusMiles: post.radiusMiles,
