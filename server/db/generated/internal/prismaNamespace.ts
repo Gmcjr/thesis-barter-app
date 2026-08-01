@@ -2210,6 +2210,7 @@ export const MessageScalarFieldEnum = {
   senderId: 'senderId',
   recieverId: 'recieverId',
   text: 'text',
+  createdAt: 'createdAt',
   isRemoved: 'isRemoved'
 } as const
 

@@ -66,6 +66,8 @@ model DM {
   user2Id Int
 
   messages Message[]
+
+  @@unique([user1Id, user2Id])
 }
 
 model Message {
@@ -77,11 +79,14 @@ model Message {
   reciever   User @relation("rMessages", fields: [recieverId], references: [id])
   recieverId Int
 
-  text String
+  text      String
+  createdAt DateTime @default(now())
 
   reports      Report[]
   isRemoved    Boolean        @default(false)
   messageMedia MessageMedia[]
+
+  @@index([dmId, createdAt])
 }
 
 model Log {
