@@ -18,6 +18,8 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import WhyRemovedMenu from './WhyRemovedMenu';
 import { formatPostDate } from '../../utils/utils';
 
+export type PostStatus = 'OPEN' | 'ACCEPTED' | 'IN_PROGRESS' | 'WAITING_FOR_OTHER_USER' | 'COMPLETED' | 'CANCELLED';
+
 export type PostData = {
   id: number;
   userId: number;
@@ -26,7 +28,7 @@ export type PostData = {
   isLocal: boolean;
   zipCode: string | null;
   radiusMiles: number | null;
-  isComplete: boolean;
+  status: PostStatus;
   isRemoved: boolean;
   createdAt: string;
   updatedAt?: string;
@@ -40,6 +42,14 @@ export type PostData = {
     text: string;
     userId: number;
   }[];
+  trade: {
+    id: number;
+    status: PostStatus;
+    ownerId: number;
+    requesterId: number;
+    ownerCompl: boolean;
+    reqCompl: boolean;
+  } | null;
   reports?: {
     id: number;
     reason: string;
@@ -69,7 +79,7 @@ interface ManagePostsProps {
   readOnly?: boolean;
   onUpdate?: (postId: number, postData: PostUpdateData) => Promise<void>;
   onDelete?: (postId: number) => Promise<void>;
-  onComplete?: (postId: number) => Promise<void>;
+  onComplete?: (tradeId: number) => Promise<void>;
 }
 
 export default function ManagePosts({
@@ -86,7 +96,7 @@ export default function ManagePosts({
   const [formData, setFormData] = useState<PostUpdateData | null>(null);
   const [saving, setSaving] = useState(false);
   const [deletingPostId, setDeletingPostId] = useState<number | null>(null);
-  const [completingPostId, setCompletingPostId] = useState<number | null>(null);
+  const [completingTradeId, setCompletingTradeId] = useState<number | null>(null);
 
   useEffect(() => {
     if (!open) {
@@ -94,12 +104,12 @@ export default function ManagePosts({
       setFormData(null);
       setSaving(false);
       setDeletingPostId(null);
-      setCompletingPostId(null);
+      setCompletingTradeId(null);
     }
   }, [open]);
 
   const actionInProgress = (
-    saving || deletingPostId !== null || completingPostId !== null
+    saving || deletingPostId !== null || completingTradeId !== null
   );
 
   const handleClose = () => {
@@ -163,17 +173,17 @@ export default function ManagePosts({
     }
   };
 
-  const handleComplete = async (postId: number) => {
+  const handleComplete = async (tradeId: number) => {
     if (!onComplete) return;
 
-    setCompletingPostId(postId);
+    setCompletingTradeId(tradeId);
 
     try {
-      await onComplete(postId);
+      await onComplete(tradeId);
     } catch (error) {
       console.error('Failed to complete trade:', error);
     } finally {
-      setCompletingPostId(null);
+      setCompletingTradeId(null);
     }
   };
 
@@ -314,15 +324,17 @@ export default function ManagePosts({
                         {deletingPostId === post.id ? 'Deleting...' : 'Delete'}
                       </Button>
 
-                      <Button
-                        size="small"
-                        variant="contained"
-                        color="success"
-                        disabled={actionInProgress}
-                        onClick={() => handleComplete(post.id)}
-                      >
-                        {completingPostId === post.id ? 'Completing...' : 'Trade Complete'}
-                      </Button>
+                      {post.trade && (post.trade.status === 'IN_PROGRESS' || post.trade.status === 'WAITING_FOR_OTHER_USER') && (
+                        <Button
+                          size="small"
+                          variant="contained"
+                          color="success"
+                          disabled={actionInProgress}
+                          onClick={() => handleComplete(post.trade!.id)}
+                        >
+                          {completingTradeId === post.trade!.id ? 'Completing...' : 'Trade Complete'}
+                        </Button>
+                      )}
                     </Box>
                   )}
 

@@ -65,7 +65,7 @@ export default function Post({ post, onReport }: PostProps) {
                 {post.title}
               </Typography>
 
-              {post.isComplete && (
+              {post.status === 'COMPLETED' && (
                 <Chip
                   size="small"
                   color="success"
@@ -152,7 +152,7 @@ export default function Post({ post, onReport }: PostProps) {
         </Box>
 
         {/* Offer Art Button */}
-        {!post.isComplete && (
+        {post.status === 'OPEN' && (
           <Box sx={{
             mt: 2, pt: 2, display: 'flex', justifyContent: 'flex-end',
           }}

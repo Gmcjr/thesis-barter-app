@@ -106,7 +106,7 @@ export default function Profile() {
   }
 
   const visiblePosts = posts.filter((post) => (
-    activeTab === 'current' ? !post.isComplete : post.isComplete
+    activeTab === 'current' ? post.status !== 'COMPLETED' : post.status === 'COMPLETED'
   ));
 
   return (

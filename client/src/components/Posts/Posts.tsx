@@ -151,11 +151,11 @@ export default function Posts() {
   };
 
   // mark a trade as complete
-  const handleCompleteTrade = async (postId: number) => {
+  const handleCompleteTrade = async (tradeId: number) => {
     try {
       setError('');
 
-      await axios.patch(`/posts/${postId}/complete`);
+      await axios.patch(`/trades/${tradeId}/complete`);
 
       await Promise.all([
         loadPosts(search),
@@ -183,11 +183,11 @@ export default function Posts() {
   };
 
   const manageablePosts = ownedPosts.filter(
-    (post) => !post.isComplete,
+    (post) => post.status !== 'COMPLETED',
   );
 
   const completedPosts = ownedPosts.filter(
-    (post) => post.isComplete,
+    (post) => post.status === 'COMPLETED',
   );
 
   return (

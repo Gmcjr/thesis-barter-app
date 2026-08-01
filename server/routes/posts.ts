@@ -41,6 +41,16 @@ posts.get('/', async (req, res) => {
         products: true,
         services: true,
         comments: true,
+        trade: {
+          select: {
+            id: true,
+            status: true,
+            ownerId: true,
+            requesterId: true,
+            ownerCompl: true,
+            reqCompl: true,
+          },
+        },
         ...(mine ? {
           reports: {
             orderBy: { createdAt: 'desc' as const },

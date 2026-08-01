@@ -61,7 +61,7 @@ export default function ProfileTrades({ posts, isOwnProfile, onReport }: Profile
                     {` ${new Date(post.createdAt).toLocaleDateString()}`}
                   </Typography>
 
-                  {post.isComplete && (
+                  {post.status === 'COMPLETED' && (
                     <Chip size="small" color="success" label="Trade Completed" />
                   )}
                 </Box>
