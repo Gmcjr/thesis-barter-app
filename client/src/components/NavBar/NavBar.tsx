@@ -44,7 +44,7 @@ function NavBar() {
               flexShrink: 0,
             }}
           >
-            BARTAAAAA
+            BARTA
           </Typography>
         </Link>
 
