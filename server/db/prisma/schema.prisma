@@ -17,6 +17,8 @@ model User {
   googleId     String?    @unique
 
   posts        Post[]
+  reqTrades    Trade[]     @relation("reqTrades")
+  ownedTrades  Trade[]     @relation("ownedTrades")
   comments     Comment[]
   logs         Log[]
   products     Product[]
@@ -25,7 +27,8 @@ model User {
   recievedDMs  DM[]        @relation("recievedDMs")
   sMessages    Message[]   @relation("sMessages")
   rMessages    Message[]   @relation("rMessages")
-  rep          Rep[]
+  sReviews     Review[]    @relation("sReviews")
+  rReviews     Review[]    @relation("rReviews")
 
   name         String
   email        String      @unique
@@ -85,13 +88,14 @@ model Post {
   products   Product[]
   services   Service[]
   comments   Comment[]
+  trade      Trade?
 
   title       String
   message     String
-  isComplete  Boolean   @default(false)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   images      String[]
+  status      Status    @default(OPEN)
 
   isLocal     Boolean   @default(false)
   zipCode     String?
@@ -101,6 +105,31 @@ model Post {
   
   reports   Report[]
   isRemoved Boolean  @default(false)
+}
+
+enum Status {
+  OPEN
+  ACCEPTED
+  IN_PROGRESS
+  WAITING_FOR_OTHER_USER
+  COMPLETED
+  CANCELLED
+}
+
+model Trade {
+  id          Int        @id @default(autoincrement())
+  post        Post       @relation(fields: [postId], references: [id])
+  postId      Int        @unique
+  owner       User       @relation("ownedTrades", fields: [ownerId], references: [id])
+  ownerId     Int
+  requester   User       @relation("reqTrades", fields: [requesterId], references: [id])
+  requesterId Int
+
+  ownerCompl  Boolean    @default(false)
+  reqCompl    Boolean    @default(false)
+  status      Status     @default(IN_PROGRESS)
+  reviews     Review[]
+  createdAt   DateTime   @default(now())
 }
 
 model Comment {
@@ -116,7 +145,7 @@ model Comment {
 
 model Product {
   id          Int      @id @default(autoincrement())
-  post        Post     @relation(fields: [postId], references: [id])
+  post        Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId      Int
   user        User     @relation(fields: [userId], references: [id])
   userId      Int
@@ -139,7 +168,7 @@ enum Cond {
 
 model Service {
   id          Int     @id @default(autoincrement())
-  post        Post    @relation(fields: [postId], references: [id])
+  post        Post    @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId      Int
   user        User    @relation(fields: [userId], references: [id])
   userId      Int
@@ -165,13 +194,20 @@ enum CatType {
   PRODUCT
 }
 
-model Rep {
-  id Int @id @default(autoincrement())
+model Review {
+  id         Int       @id @default(autoincrement())
+  trade      Trade     @relation(fields: [tradeId], references: [id])
+  tradeId    Int
+  reviewer   User      @relation("sReviews", fields: [reviewerId], references: [id])
+  reviewerId Int
+  reviewee   User      @relation("rReviews", fields: [revieweeId], references: [id])
+  revieweeId Int
 
-  user   User @relation(fields: [userId], references: [id])
-  userId Int
+  rating     Int
+  comment    String?
+  createdAt  DateTime   @default(now())
 
-  score  Int  @default(50)
+  @@unique([tradeId, reviewerId])
 }
 
 model Report {

@@ -10,12 +10,15 @@ posts.get('/', async (req, res) => {
     const search = String(req.query.q ?? '').trim();
 
     return res.json(await prisma.post.findMany({
-      where: search ? {
-        OR: [
-          { title: { contains: search, mode: 'insensitive' } },
-          { message: { contains: search, mode: 'insensitive' } },
-        ],
-      } : undefined,
+      where: {
+        isRemoved: false,
+        ...(search ? {
+          OR: [
+            { title: { contains: search, mode: 'insensitive' } },
+            { message: { contains: search, mode: 'insensitive' } },
+          ],
+        } : {}),
+      },
       take: 50,
       include: {
         user: { select: { id: true, name: true } },
@@ -71,18 +74,28 @@ posts.patch('/:id', requireAuth, async (req, res) => {
       title, message, isLocal = false, zipCode, radiusMiles,
     } = req.body;
 
+    if (isLocal && (zipCode === undefined || zipCode === null || zipCode === '')) {
+      return res.status(400).json({ error: 'zipCode is required when isLocal is true.' });
+    }
+
+    const parsedRadius = isLocal ? Number(radiusMiles) : null;
+
+    if (isLocal && !Number.isFinite(parsedRadius)) {
+      return res.status(400).json({ error: 'radiusMiles must be a number when isLocal is true.' });
+    }
+
     const { count } = await prisma.post.updateMany({
       where: {
         id: Number(req.params.id),
         userId: (req.user as { id: number }).id,
-        isComplete: false,
+        status: 'OPEN',
       },
       data: {
         title,
         message,
         isLocal,
         zipCode: isLocal ? String(zipCode) : null,
-        radiusMiles: isLocal ? Number(radiusMiles) : null,
+        radiusMiles: parsedRadius,
       },
     });
 
@@ -104,7 +117,7 @@ posts.delete('/:id', requireAuth, async (req, res) => {
       where: {
         id: Number(req.params.id),
         userId: (req.user as { id: number }).id,
-        isComplete: false,
+        status: 'OPEN',
       },
     });
 
@@ -116,33 +129,6 @@ posts.delete('/:id', requireAuth, async (req, res) => {
   } catch (error) {
     console.error('Failed to DELETE post:', error);
     return res.status(500).json({ error: 'Unable to delete post.' });
-  }
-});
-
-// PATCH: allows a user to mark a trade as complete
-posts.patch('/:id/complete', requireAuth, async (req, res) => {
-  try {
-    const postId = Number(req.params.id);
-
-    const { count } = await prisma.post.updateMany({
-      where: {
-        id: postId,
-        userId: (req.user as { id: number }).id,
-        isComplete: false,
-      },
-      data: {
-        isComplete: true,
-      },
-    });
-
-    if (!count) {
-      return res.status(404).json({ error: 'Post not found to PATCH as complete.' });
-    }
-
-    return res.json({ success: true, id: postId, isComplete: true });
-  } catch (error) {
-    console.error('Failed to complete trade:', error);
-    return res.status(500).json({ error: 'Unable to complete trade.' });
   }
 });
 

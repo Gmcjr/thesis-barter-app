@@ -3,7 +3,7 @@ import health from './health';
 import user from './user';
 import posts from './posts.js';
 import reports from './reports';
-import rep from './rep';
+import review from './reviews';
 
 export default {
   auth,
@@ -11,4 +11,5 @@ export default {
   user,
   posts,
   reports,
+  review,
 };

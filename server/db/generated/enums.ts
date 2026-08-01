@@ -18,6 +18,18 @@ export const Role = {
 export type Role = (typeof Role)[keyof typeof Role]
 
 
+export const Status = {
+  OPEN: 'OPEN',
+  ACCEPTED: 'ACCEPTED',
+  IN_PROGRESS: 'IN_PROGRESS',
+  WAITING_FOR_OTHER_USER: 'WAITING_FOR_OTHER_USER',
+  COMPLETED: 'COMPLETED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type Status = (typeof Status)[keyof typeof Status]
+
+
 export const Cond = {
   POOR: 'POOR',
   AVERAGE: 'AVERAGE',

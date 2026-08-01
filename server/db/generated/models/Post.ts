@@ -47,9 +47,9 @@ export type PostMinAggregateOutputType = {
   userId: number | null
   title: string | null
   message: string | null
-  isComplete: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
+  status: $Enums.Status | null
   isLocal: boolean | null
   zipCode: string | null
   radiusMiles: number | null
@@ -63,9 +63,9 @@ export type PostMaxAggregateOutputType = {
   userId: number | null
   title: string | null
   message: string | null
-  isComplete: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
+  status: $Enums.Status | null
   isLocal: boolean | null
   zipCode: string | null
   radiusMiles: number | null
@@ -79,10 +79,10 @@ export type PostCountAggregateOutputType = {
   userId: number
   title: number
   message: number
-  isComplete: number
   createdAt: number
   updatedAt: number
   images: number
+  status: number
   isLocal: number
   zipCode: number
   radiusMiles: number
@@ -114,9 +114,9 @@ export type PostMinAggregateInputType = {
   userId?: true
   title?: true
   message?: true
-  isComplete?: true
   createdAt?: true
   updatedAt?: true
+  status?: true
   isLocal?: true
   zipCode?: true
   radiusMiles?: true
@@ -130,9 +130,9 @@ export type PostMaxAggregateInputType = {
   userId?: true
   title?: true
   message?: true
-  isComplete?: true
   createdAt?: true
   updatedAt?: true
+  status?: true
   isLocal?: true
   zipCode?: true
   radiusMiles?: true
@@ -146,10 +146,10 @@ export type PostCountAggregateInputType = {
   userId?: true
   title?: true
   message?: true
-  isComplete?: true
   createdAt?: true
   updatedAt?: true
   images?: true
+  status?: true
   isLocal?: true
   zipCode?: true
   radiusMiles?: true
@@ -250,10 +250,10 @@ export type PostGroupByOutputType = {
   userId: number
   title: string
   message: string
-  isComplete: boolean
   createdAt: Date
   updatedAt: Date
   images: string[]
+  status: $Enums.Status
   isLocal: boolean
   zipCode: string | null
   radiusMiles: number | null
@@ -290,10 +290,10 @@ export type PostWhereInput = {
   userId?: Prisma.IntFilter<"Post"> | number
   title?: Prisma.StringFilter<"Post"> | string
   message?: Prisma.StringFilter<"Post"> | string
-  isComplete?: Prisma.BoolFilter<"Post"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Post"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Post"> | Date | string
   images?: Prisma.StringNullableListFilter<"Post">
+  status?: Prisma.EnumStatusFilter<"Post"> | $Enums.Status
   isLocal?: Prisma.BoolFilter<"Post"> | boolean
   zipCode?: Prisma.StringNullableFilter<"Post"> | string | null
   radiusMiles?: Prisma.IntNullableFilter<"Post"> | number | null
@@ -304,6 +304,7 @@ export type PostWhereInput = {
   products?: Prisma.ProductListRelationFilter
   services?: Prisma.ServiceListRelationFilter
   comments?: Prisma.CommentListRelationFilter
+  trade?: Prisma.XOR<Prisma.TradeNullableScalarRelationFilter, Prisma.TradeWhereInput> | null
   reports?: Prisma.ReportListRelationFilter
 }
 
@@ -312,10 +313,10 @@ export type PostOrderByWithRelationInput = {
   userId?: Prisma.SortOrder
   title?: Prisma.SortOrder
   message?: Prisma.SortOrder
-  isComplete?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   images?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   isLocal?: Prisma.SortOrder
   zipCode?: Prisma.SortOrderInput | Prisma.SortOrder
   radiusMiles?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -326,6 +327,7 @@ export type PostOrderByWithRelationInput = {
   products?: Prisma.ProductOrderByRelationAggregateInput
   services?: Prisma.ServiceOrderByRelationAggregateInput
   comments?: Prisma.CommentOrderByRelationAggregateInput
+  trade?: Prisma.TradeOrderByWithRelationInput
   reports?: Prisma.ReportOrderByRelationAggregateInput
 }
 
@@ -337,10 +339,10 @@ export type PostWhereUniqueInput = Prisma.AtLeast<{
   userId?: Prisma.IntFilter<"Post"> | number
   title?: Prisma.StringFilter<"Post"> | string
   message?: Prisma.StringFilter<"Post"> | string
-  isComplete?: Prisma.BoolFilter<"Post"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Post"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Post"> | Date | string
   images?: Prisma.StringNullableListFilter<"Post">
+  status?: Prisma.EnumStatusFilter<"Post"> | $Enums.Status
   isLocal?: Prisma.BoolFilter<"Post"> | boolean
   zipCode?: Prisma.StringNullableFilter<"Post"> | string | null
   radiusMiles?: Prisma.IntNullableFilter<"Post"> | number | null
@@ -351,6 +353,7 @@ export type PostWhereUniqueInput = Prisma.AtLeast<{
   products?: Prisma.ProductListRelationFilter
   services?: Prisma.ServiceListRelationFilter
   comments?: Prisma.CommentListRelationFilter
+  trade?: Prisma.XOR<Prisma.TradeNullableScalarRelationFilter, Prisma.TradeWhereInput> | null
   reports?: Prisma.ReportListRelationFilter
 }, "id">
 
@@ -359,10 +362,10 @@ export type PostOrderByWithAggregationInput = {
   userId?: Prisma.SortOrder
   title?: Prisma.SortOrder
   message?: Prisma.SortOrder
-  isComplete?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   images?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   isLocal?: Prisma.SortOrder
   zipCode?: Prisma.SortOrderInput | Prisma.SortOrder
   radiusMiles?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -384,10 +387,10 @@ export type PostScalarWhereWithAggregatesInput = {
   userId?: Prisma.IntWithAggregatesFilter<"Post"> | number
   title?: Prisma.StringWithAggregatesFilter<"Post"> | string
   message?: Prisma.StringWithAggregatesFilter<"Post"> | string
-  isComplete?: Prisma.BoolWithAggregatesFilter<"Post"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Post"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Post"> | Date | string
   images?: Prisma.StringNullableListFilter<"Post">
+  status?: Prisma.EnumStatusWithAggregatesFilter<"Post"> | $Enums.Status
   isLocal?: Prisma.BoolWithAggregatesFilter<"Post"> | boolean
   zipCode?: Prisma.StringNullableWithAggregatesFilter<"Post"> | string | null
   radiusMiles?: Prisma.IntNullableWithAggregatesFilter<"Post"> | number | null
@@ -399,10 +402,10 @@ export type PostScalarWhereWithAggregatesInput = {
 export type PostCreateInput = {
   title: string
   message: string
-  isComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   images?: Prisma.PostCreateimagesInput | string[]
+  status?: $Enums.Status
   isLocal?: boolean
   zipCode?: string | null
   radiusMiles?: number | null
@@ -413,6 +416,7 @@ export type PostCreateInput = {
   products?: Prisma.ProductCreateNestedManyWithoutPostInput
   services?: Prisma.ServiceCreateNestedManyWithoutPostInput
   comments?: Prisma.CommentCreateNestedManyWithoutPostInput
+  trade?: Prisma.TradeCreateNestedOneWithoutPostInput
   reports?: Prisma.ReportCreateNestedManyWithoutPostInput
 }
 
@@ -421,10 +425,10 @@ export type PostUncheckedCreateInput = {
   userId: number
   title: string
   message: string
-  isComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   images?: Prisma.PostCreateimagesInput | string[]
+  status?: $Enums.Status
   isLocal?: boolean
   zipCode?: string | null
   radiusMiles?: number | null
@@ -434,16 +438,17 @@ export type PostUncheckedCreateInput = {
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutPostInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutPostInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutPostInput
+  trade?: Prisma.TradeUncheckedCreateNestedOneWithoutPostInput
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutPostInput
 }
 
 export type PostUpdateInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
-  isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   images?: Prisma.PostUpdateimagesInput | string[]
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   isLocal?: Prisma.BoolFieldUpdateOperationsInput | boolean
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   radiusMiles?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -454,6 +459,7 @@ export type PostUpdateInput = {
   products?: Prisma.ProductUpdateManyWithoutPostNestedInput
   services?: Prisma.ServiceUpdateManyWithoutPostNestedInput
   comments?: Prisma.CommentUpdateManyWithoutPostNestedInput
+  trade?: Prisma.TradeUpdateOneWithoutPostNestedInput
   reports?: Prisma.ReportUpdateManyWithoutPostNestedInput
 }
 
@@ -462,10 +468,10 @@ export type PostUncheckedUpdateInput = {
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
-  isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   images?: Prisma.PostUpdateimagesInput | string[]
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   isLocal?: Prisma.BoolFieldUpdateOperationsInput | boolean
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   radiusMiles?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -475,6 +481,7 @@ export type PostUncheckedUpdateInput = {
   products?: Prisma.ProductUncheckedUpdateManyWithoutPostNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutPostNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutPostNestedInput
+  trade?: Prisma.TradeUncheckedUpdateOneWithoutPostNestedInput
   reports?: Prisma.ReportUncheckedUpdateManyWithoutPostNestedInput
 }
 
@@ -483,10 +490,10 @@ export type PostCreateManyInput = {
   userId: number
   title: string
   message: string
-  isComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   images?: Prisma.PostCreateimagesInput | string[]
+  status?: $Enums.Status
   isLocal?: boolean
   zipCode?: string | null
   radiusMiles?: number | null
@@ -498,10 +505,10 @@ export type PostCreateManyInput = {
 export type PostUpdateManyMutationInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
-  isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   images?: Prisma.PostUpdateimagesInput | string[]
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   isLocal?: Prisma.BoolFieldUpdateOperationsInput | boolean
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   radiusMiles?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -515,10 +522,10 @@ export type PostUncheckedUpdateManyInput = {
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
-  isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   images?: Prisma.PostUpdateimagesInput | string[]
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   isLocal?: Prisma.BoolFieldUpdateOperationsInput | boolean
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   radiusMiles?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -550,10 +557,10 @@ export type PostCountOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   title?: Prisma.SortOrder
   message?: Prisma.SortOrder
-  isComplete?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   images?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   isLocal?: Prisma.SortOrder
   zipCode?: Prisma.SortOrder
   radiusMiles?: Prisma.SortOrder
@@ -575,9 +582,9 @@ export type PostMaxOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   title?: Prisma.SortOrder
   message?: Prisma.SortOrder
-  isComplete?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   isLocal?: Prisma.SortOrder
   zipCode?: Prisma.SortOrder
   radiusMiles?: Prisma.SortOrder
@@ -591,9 +598,9 @@ export type PostMinOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   title?: Prisma.SortOrder
   message?: Prisma.SortOrder
-  isComplete?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   isLocal?: Prisma.SortOrder
   zipCode?: Prisma.SortOrder
   radiusMiles?: Prisma.SortOrder
@@ -671,6 +678,10 @@ export type PostUpdateimagesInput = {
   push?: string | string[]
 }
 
+export type EnumStatusFieldUpdateOperationsInput = {
+  set?: $Enums.Status
+}
+
 export type NullableIntFieldUpdateOperationsInput = {
   set?: number | null
   increment?: number
@@ -685,6 +696,20 @@ export type NullableFloatFieldUpdateOperationsInput = {
   decrement?: number
   multiply?: number
   divide?: number
+}
+
+export type PostCreateNestedOneWithoutTradeInput = {
+  create?: Prisma.XOR<Prisma.PostCreateWithoutTradeInput, Prisma.PostUncheckedCreateWithoutTradeInput>
+  connectOrCreate?: Prisma.PostCreateOrConnectWithoutTradeInput
+  connect?: Prisma.PostWhereUniqueInput
+}
+
+export type PostUpdateOneRequiredWithoutTradeNestedInput = {
+  create?: Prisma.XOR<Prisma.PostCreateWithoutTradeInput, Prisma.PostUncheckedCreateWithoutTradeInput>
+  connectOrCreate?: Prisma.PostCreateOrConnectWithoutTradeInput
+  upsert?: Prisma.PostUpsertWithoutTradeInput
+  connect?: Prisma.PostWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PostUpdateToOneWithWhereWithoutTradeInput, Prisma.PostUpdateWithoutTradeInput>, Prisma.PostUncheckedUpdateWithoutTradeInput>
 }
 
 export type PostCreateNestedOneWithoutCommentsInput = {
@@ -748,10 +773,10 @@ export type PostUpdateOneWithoutReportsNestedInput = {
 export type PostCreateWithoutUserInput = {
   title: string
   message: string
-  isComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   images?: Prisma.PostCreateimagesInput | string[]
+  status?: $Enums.Status
   isLocal?: boolean
   zipCode?: string | null
   radiusMiles?: number | null
@@ -761,6 +786,7 @@ export type PostCreateWithoutUserInput = {
   products?: Prisma.ProductCreateNestedManyWithoutPostInput
   services?: Prisma.ServiceCreateNestedManyWithoutPostInput
   comments?: Prisma.CommentCreateNestedManyWithoutPostInput
+  trade?: Prisma.TradeCreateNestedOneWithoutPostInput
   reports?: Prisma.ReportCreateNestedManyWithoutPostInput
 }
 
@@ -768,10 +794,10 @@ export type PostUncheckedCreateWithoutUserInput = {
   id?: number
   title: string
   message: string
-  isComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   images?: Prisma.PostCreateimagesInput | string[]
+  status?: $Enums.Status
   isLocal?: boolean
   zipCode?: string | null
   radiusMiles?: number | null
@@ -781,6 +807,7 @@ export type PostUncheckedCreateWithoutUserInput = {
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutPostInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutPostInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutPostInput
+  trade?: Prisma.TradeUncheckedCreateNestedOneWithoutPostInput
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutPostInput
 }
 
@@ -818,10 +845,10 @@ export type PostScalarWhereInput = {
   userId?: Prisma.IntFilter<"Post"> | number
   title?: Prisma.StringFilter<"Post"> | string
   message?: Prisma.StringFilter<"Post"> | string
-  isComplete?: Prisma.BoolFilter<"Post"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Post"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Post"> | Date | string
   images?: Prisma.StringNullableListFilter<"Post">
+  status?: Prisma.EnumStatusFilter<"Post"> | $Enums.Status
   isLocal?: Prisma.BoolFilter<"Post"> | boolean
   zipCode?: Prisma.StringNullableFilter<"Post"> | string | null
   radiusMiles?: Prisma.IntNullableFilter<"Post"> | number | null
@@ -830,13 +857,13 @@ export type PostScalarWhereInput = {
   isRemoved?: Prisma.BoolFilter<"Post"> | boolean
 }
 
-export type PostCreateWithoutCommentsInput = {
+export type PostCreateWithoutTradeInput = {
   title: string
   message: string
-  isComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   images?: Prisma.PostCreateimagesInput | string[]
+  status?: $Enums.Status
   isLocal?: boolean
   zipCode?: string | null
   radiusMiles?: number | null
@@ -846,18 +873,19 @@ export type PostCreateWithoutCommentsInput = {
   user: Prisma.UserCreateNestedOneWithoutPostsInput
   products?: Prisma.ProductCreateNestedManyWithoutPostInput
   services?: Prisma.ServiceCreateNestedManyWithoutPostInput
+  comments?: Prisma.CommentCreateNestedManyWithoutPostInput
   reports?: Prisma.ReportCreateNestedManyWithoutPostInput
 }
 
-export type PostUncheckedCreateWithoutCommentsInput = {
+export type PostUncheckedCreateWithoutTradeInput = {
   id?: number
   userId: number
   title: string
   message: string
-  isComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   images?: Prisma.PostCreateimagesInput | string[]
+  status?: $Enums.Status
   isLocal?: boolean
   zipCode?: string | null
   radiusMiles?: number | null
@@ -866,6 +894,105 @@ export type PostUncheckedCreateWithoutCommentsInput = {
   isRemoved?: boolean
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutPostInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutPostInput
+  comments?: Prisma.CommentUncheckedCreateNestedManyWithoutPostInput
+  reports?: Prisma.ReportUncheckedCreateNestedManyWithoutPostInput
+}
+
+export type PostCreateOrConnectWithoutTradeInput = {
+  where: Prisma.PostWhereUniqueInput
+  create: Prisma.XOR<Prisma.PostCreateWithoutTradeInput, Prisma.PostUncheckedCreateWithoutTradeInput>
+}
+
+export type PostUpsertWithoutTradeInput = {
+  update: Prisma.XOR<Prisma.PostUpdateWithoutTradeInput, Prisma.PostUncheckedUpdateWithoutTradeInput>
+  create: Prisma.XOR<Prisma.PostCreateWithoutTradeInput, Prisma.PostUncheckedCreateWithoutTradeInput>
+  where?: Prisma.PostWhereInput
+}
+
+export type PostUpdateToOneWithWhereWithoutTradeInput = {
+  where?: Prisma.PostWhereInput
+  data: Prisma.XOR<Prisma.PostUpdateWithoutTradeInput, Prisma.PostUncheckedUpdateWithoutTradeInput>
+}
+
+export type PostUpdateWithoutTradeInput = {
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  message?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  images?: Prisma.PostUpdateimagesInput | string[]
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
+  isLocal?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  radiusMiles?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  lat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  user?: Prisma.UserUpdateOneRequiredWithoutPostsNestedInput
+  products?: Prisma.ProductUpdateManyWithoutPostNestedInput
+  services?: Prisma.ServiceUpdateManyWithoutPostNestedInput
+  comments?: Prisma.CommentUpdateManyWithoutPostNestedInput
+  reports?: Prisma.ReportUpdateManyWithoutPostNestedInput
+}
+
+export type PostUncheckedUpdateWithoutTradeInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  message?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  images?: Prisma.PostUpdateimagesInput | string[]
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
+  isLocal?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  radiusMiles?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  lat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  products?: Prisma.ProductUncheckedUpdateManyWithoutPostNestedInput
+  services?: Prisma.ServiceUncheckedUpdateManyWithoutPostNestedInput
+  comments?: Prisma.CommentUncheckedUpdateManyWithoutPostNestedInput
+  reports?: Prisma.ReportUncheckedUpdateManyWithoutPostNestedInput
+}
+
+export type PostCreateWithoutCommentsInput = {
+  title: string
+  message: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  images?: Prisma.PostCreateimagesInput | string[]
+  status?: $Enums.Status
+  isLocal?: boolean
+  zipCode?: string | null
+  radiusMiles?: number | null
+  lat?: number | null
+  lng?: number | null
+  isRemoved?: boolean
+  user: Prisma.UserCreateNestedOneWithoutPostsInput
+  products?: Prisma.ProductCreateNestedManyWithoutPostInput
+  services?: Prisma.ServiceCreateNestedManyWithoutPostInput
+  trade?: Prisma.TradeCreateNestedOneWithoutPostInput
+  reports?: Prisma.ReportCreateNestedManyWithoutPostInput
+}
+
+export type PostUncheckedCreateWithoutCommentsInput = {
+  id?: number
+  userId: number
+  title: string
+  message: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  images?: Prisma.PostCreateimagesInput | string[]
+  status?: $Enums.Status
+  isLocal?: boolean
+  zipCode?: string | null
+  radiusMiles?: number | null
+  lat?: number | null
+  lng?: number | null
+  isRemoved?: boolean
+  products?: Prisma.ProductUncheckedCreateNestedManyWithoutPostInput
+  services?: Prisma.ServiceUncheckedCreateNestedManyWithoutPostInput
+  trade?: Prisma.TradeUncheckedCreateNestedOneWithoutPostInput
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutPostInput
 }
 
@@ -888,10 +1015,10 @@ export type PostUpdateToOneWithWhereWithoutCommentsInput = {
 export type PostUpdateWithoutCommentsInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
-  isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   images?: Prisma.PostUpdateimagesInput | string[]
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   isLocal?: Prisma.BoolFieldUpdateOperationsInput | boolean
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   radiusMiles?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -901,6 +1028,7 @@ export type PostUpdateWithoutCommentsInput = {
   user?: Prisma.UserUpdateOneRequiredWithoutPostsNestedInput
   products?: Prisma.ProductUpdateManyWithoutPostNestedInput
   services?: Prisma.ServiceUpdateManyWithoutPostNestedInput
+  trade?: Prisma.TradeUpdateOneWithoutPostNestedInput
   reports?: Prisma.ReportUpdateManyWithoutPostNestedInput
 }
 
@@ -909,10 +1037,10 @@ export type PostUncheckedUpdateWithoutCommentsInput = {
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
-  isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   images?: Prisma.PostUpdateimagesInput | string[]
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   isLocal?: Prisma.BoolFieldUpdateOperationsInput | boolean
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   radiusMiles?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -921,16 +1049,17 @@ export type PostUncheckedUpdateWithoutCommentsInput = {
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   products?: Prisma.ProductUncheckedUpdateManyWithoutPostNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutPostNestedInput
+  trade?: Prisma.TradeUncheckedUpdateOneWithoutPostNestedInput
   reports?: Prisma.ReportUncheckedUpdateManyWithoutPostNestedInput
 }
 
 export type PostCreateWithoutProductsInput = {
   title: string
   message: string
-  isComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   images?: Prisma.PostCreateimagesInput | string[]
+  status?: $Enums.Status
   isLocal?: boolean
   zipCode?: string | null
   radiusMiles?: number | null
@@ -940,6 +1069,7 @@ export type PostCreateWithoutProductsInput = {
   user: Prisma.UserCreateNestedOneWithoutPostsInput
   services?: Prisma.ServiceCreateNestedManyWithoutPostInput
   comments?: Prisma.CommentCreateNestedManyWithoutPostInput
+  trade?: Prisma.TradeCreateNestedOneWithoutPostInput
   reports?: Prisma.ReportCreateNestedManyWithoutPostInput
 }
 
@@ -948,10 +1078,10 @@ export type PostUncheckedCreateWithoutProductsInput = {
   userId: number
   title: string
   message: string
-  isComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   images?: Prisma.PostCreateimagesInput | string[]
+  status?: $Enums.Status
   isLocal?: boolean
   zipCode?: string | null
   radiusMiles?: number | null
@@ -960,6 +1090,7 @@ export type PostUncheckedCreateWithoutProductsInput = {
   isRemoved?: boolean
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutPostInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutPostInput
+  trade?: Prisma.TradeUncheckedCreateNestedOneWithoutPostInput
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutPostInput
 }
 
@@ -982,10 +1113,10 @@ export type PostUpdateToOneWithWhereWithoutProductsInput = {
 export type PostUpdateWithoutProductsInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
-  isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   images?: Prisma.PostUpdateimagesInput | string[]
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   isLocal?: Prisma.BoolFieldUpdateOperationsInput | boolean
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   radiusMiles?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -995,6 +1126,7 @@ export type PostUpdateWithoutProductsInput = {
   user?: Prisma.UserUpdateOneRequiredWithoutPostsNestedInput
   services?: Prisma.ServiceUpdateManyWithoutPostNestedInput
   comments?: Prisma.CommentUpdateManyWithoutPostNestedInput
+  trade?: Prisma.TradeUpdateOneWithoutPostNestedInput
   reports?: Prisma.ReportUpdateManyWithoutPostNestedInput
 }
 
@@ -1003,10 +1135,10 @@ export type PostUncheckedUpdateWithoutProductsInput = {
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
-  isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   images?: Prisma.PostUpdateimagesInput | string[]
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   isLocal?: Prisma.BoolFieldUpdateOperationsInput | boolean
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   radiusMiles?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1015,16 +1147,17 @@ export type PostUncheckedUpdateWithoutProductsInput = {
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   services?: Prisma.ServiceUncheckedUpdateManyWithoutPostNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutPostNestedInput
+  trade?: Prisma.TradeUncheckedUpdateOneWithoutPostNestedInput
   reports?: Prisma.ReportUncheckedUpdateManyWithoutPostNestedInput
 }
 
 export type PostCreateWithoutServicesInput = {
   title: string
   message: string
-  isComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   images?: Prisma.PostCreateimagesInput | string[]
+  status?: $Enums.Status
   isLocal?: boolean
   zipCode?: string | null
   radiusMiles?: number | null
@@ -1034,6 +1167,7 @@ export type PostCreateWithoutServicesInput = {
   user: Prisma.UserCreateNestedOneWithoutPostsInput
   products?: Prisma.ProductCreateNestedManyWithoutPostInput
   comments?: Prisma.CommentCreateNestedManyWithoutPostInput
+  trade?: Prisma.TradeCreateNestedOneWithoutPostInput
   reports?: Prisma.ReportCreateNestedManyWithoutPostInput
 }
 
@@ -1042,10 +1176,10 @@ export type PostUncheckedCreateWithoutServicesInput = {
   userId: number
   title: string
   message: string
-  isComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   images?: Prisma.PostCreateimagesInput | string[]
+  status?: $Enums.Status
   isLocal?: boolean
   zipCode?: string | null
   radiusMiles?: number | null
@@ -1054,6 +1188,7 @@ export type PostUncheckedCreateWithoutServicesInput = {
   isRemoved?: boolean
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutPostInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutPostInput
+  trade?: Prisma.TradeUncheckedCreateNestedOneWithoutPostInput
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutPostInput
 }
 
@@ -1076,10 +1211,10 @@ export type PostUpdateToOneWithWhereWithoutServicesInput = {
 export type PostUpdateWithoutServicesInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
-  isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   images?: Prisma.PostUpdateimagesInput | string[]
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   isLocal?: Prisma.BoolFieldUpdateOperationsInput | boolean
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   radiusMiles?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1089,6 +1224,7 @@ export type PostUpdateWithoutServicesInput = {
   user?: Prisma.UserUpdateOneRequiredWithoutPostsNestedInput
   products?: Prisma.ProductUpdateManyWithoutPostNestedInput
   comments?: Prisma.CommentUpdateManyWithoutPostNestedInput
+  trade?: Prisma.TradeUpdateOneWithoutPostNestedInput
   reports?: Prisma.ReportUpdateManyWithoutPostNestedInput
 }
 
@@ -1097,10 +1233,10 @@ export type PostUncheckedUpdateWithoutServicesInput = {
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
-  isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   images?: Prisma.PostUpdateimagesInput | string[]
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   isLocal?: Prisma.BoolFieldUpdateOperationsInput | boolean
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   radiusMiles?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1109,16 +1245,17 @@ export type PostUncheckedUpdateWithoutServicesInput = {
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   products?: Prisma.ProductUncheckedUpdateManyWithoutPostNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutPostNestedInput
+  trade?: Prisma.TradeUncheckedUpdateOneWithoutPostNestedInput
   reports?: Prisma.ReportUncheckedUpdateManyWithoutPostNestedInput
 }
 
 export type PostCreateWithoutReportsInput = {
   title: string
   message: string
-  isComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   images?: Prisma.PostCreateimagesInput | string[]
+  status?: $Enums.Status
   isLocal?: boolean
   zipCode?: string | null
   radiusMiles?: number | null
@@ -1129,6 +1266,7 @@ export type PostCreateWithoutReportsInput = {
   products?: Prisma.ProductCreateNestedManyWithoutPostInput
   services?: Prisma.ServiceCreateNestedManyWithoutPostInput
   comments?: Prisma.CommentCreateNestedManyWithoutPostInput
+  trade?: Prisma.TradeCreateNestedOneWithoutPostInput
 }
 
 export type PostUncheckedCreateWithoutReportsInput = {
@@ -1136,10 +1274,10 @@ export type PostUncheckedCreateWithoutReportsInput = {
   userId: number
   title: string
   message: string
-  isComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   images?: Prisma.PostCreateimagesInput | string[]
+  status?: $Enums.Status
   isLocal?: boolean
   zipCode?: string | null
   radiusMiles?: number | null
@@ -1149,6 +1287,7 @@ export type PostUncheckedCreateWithoutReportsInput = {
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutPostInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutPostInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutPostInput
+  trade?: Prisma.TradeUncheckedCreateNestedOneWithoutPostInput
 }
 
 export type PostCreateOrConnectWithoutReportsInput = {
@@ -1170,10 +1309,10 @@ export type PostUpdateToOneWithWhereWithoutReportsInput = {
 export type PostUpdateWithoutReportsInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
-  isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   images?: Prisma.PostUpdateimagesInput | string[]
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   isLocal?: Prisma.BoolFieldUpdateOperationsInput | boolean
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   radiusMiles?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1184,6 +1323,7 @@ export type PostUpdateWithoutReportsInput = {
   products?: Prisma.ProductUpdateManyWithoutPostNestedInput
   services?: Prisma.ServiceUpdateManyWithoutPostNestedInput
   comments?: Prisma.CommentUpdateManyWithoutPostNestedInput
+  trade?: Prisma.TradeUpdateOneWithoutPostNestedInput
 }
 
 export type PostUncheckedUpdateWithoutReportsInput = {
@@ -1191,10 +1331,10 @@ export type PostUncheckedUpdateWithoutReportsInput = {
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
-  isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   images?: Prisma.PostUpdateimagesInput | string[]
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   isLocal?: Prisma.BoolFieldUpdateOperationsInput | boolean
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   radiusMiles?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1204,16 +1344,17 @@ export type PostUncheckedUpdateWithoutReportsInput = {
   products?: Prisma.ProductUncheckedUpdateManyWithoutPostNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutPostNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutPostNestedInput
+  trade?: Prisma.TradeUncheckedUpdateOneWithoutPostNestedInput
 }
 
 export type PostCreateManyUserInput = {
   id?: number
   title: string
   message: string
-  isComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   images?: Prisma.PostCreateimagesInput | string[]
+  status?: $Enums.Status
   isLocal?: boolean
   zipCode?: string | null
   radiusMiles?: number | null
@@ -1225,10 +1366,10 @@ export type PostCreateManyUserInput = {
 export type PostUpdateWithoutUserInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
-  isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   images?: Prisma.PostUpdateimagesInput | string[]
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   isLocal?: Prisma.BoolFieldUpdateOperationsInput | boolean
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   radiusMiles?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1238,6 +1379,7 @@ export type PostUpdateWithoutUserInput = {
   products?: Prisma.ProductUpdateManyWithoutPostNestedInput
   services?: Prisma.ServiceUpdateManyWithoutPostNestedInput
   comments?: Prisma.CommentUpdateManyWithoutPostNestedInput
+  trade?: Prisma.TradeUpdateOneWithoutPostNestedInput
   reports?: Prisma.ReportUpdateManyWithoutPostNestedInput
 }
 
@@ -1245,10 +1387,10 @@ export type PostUncheckedUpdateWithoutUserInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
-  isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   images?: Prisma.PostUpdateimagesInput | string[]
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   isLocal?: Prisma.BoolFieldUpdateOperationsInput | boolean
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   radiusMiles?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1258,6 +1400,7 @@ export type PostUncheckedUpdateWithoutUserInput = {
   products?: Prisma.ProductUncheckedUpdateManyWithoutPostNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutPostNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutPostNestedInput
+  trade?: Prisma.TradeUncheckedUpdateOneWithoutPostNestedInput
   reports?: Prisma.ReportUncheckedUpdateManyWithoutPostNestedInput
 }
 
@@ -1265,10 +1408,10 @@ export type PostUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
-  isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   images?: Prisma.PostUpdateimagesInput | string[]
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   isLocal?: Prisma.BoolFieldUpdateOperationsInput | boolean
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   radiusMiles?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1340,10 +1483,10 @@ export type PostSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   userId?: boolean
   title?: boolean
   message?: boolean
-  isComplete?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   images?: boolean
+  status?: boolean
   isLocal?: boolean
   zipCode?: boolean
   radiusMiles?: boolean
@@ -1354,6 +1497,7 @@ export type PostSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   products?: boolean | Prisma.Post$productsArgs<ExtArgs>
   services?: boolean | Prisma.Post$servicesArgs<ExtArgs>
   comments?: boolean | Prisma.Post$commentsArgs<ExtArgs>
+  trade?: boolean | Prisma.Post$tradeArgs<ExtArgs>
   reports?: boolean | Prisma.Post$reportsArgs<ExtArgs>
   _count?: boolean | Prisma.PostCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["post"]>
@@ -1363,10 +1507,10 @@ export type PostSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   userId?: boolean
   title?: boolean
   message?: boolean
-  isComplete?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   images?: boolean
+  status?: boolean
   isLocal?: boolean
   zipCode?: boolean
   radiusMiles?: boolean
@@ -1381,10 +1525,10 @@ export type PostSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   userId?: boolean
   title?: boolean
   message?: boolean
-  isComplete?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   images?: boolean
+  status?: boolean
   isLocal?: boolean
   zipCode?: boolean
   radiusMiles?: boolean
@@ -1399,10 +1543,10 @@ export type PostSelectScalar = {
   userId?: boolean
   title?: boolean
   message?: boolean
-  isComplete?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   images?: boolean
+  status?: boolean
   isLocal?: boolean
   zipCode?: boolean
   radiusMiles?: boolean
@@ -1411,12 +1555,13 @@ export type PostSelectScalar = {
   isRemoved?: boolean
 }
 
-export type PostOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "title" | "message" | "isComplete" | "createdAt" | "updatedAt" | "images" | "isLocal" | "zipCode" | "radiusMiles" | "lat" | "lng" | "isRemoved", ExtArgs["result"]["post"]>
+export type PostOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "title" | "message" | "createdAt" | "updatedAt" | "images" | "status" | "isLocal" | "zipCode" | "radiusMiles" | "lat" | "lng" | "isRemoved", ExtArgs["result"]["post"]>
 export type PostInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   products?: boolean | Prisma.Post$productsArgs<ExtArgs>
   services?: boolean | Prisma.Post$servicesArgs<ExtArgs>
   comments?: boolean | Prisma.Post$commentsArgs<ExtArgs>
+  trade?: boolean | Prisma.Post$tradeArgs<ExtArgs>
   reports?: boolean | Prisma.Post$reportsArgs<ExtArgs>
   _count?: boolean | Prisma.PostCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -1434,6 +1579,7 @@ export type $PostPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     products: Prisma.$ProductPayload<ExtArgs>[]
     services: Prisma.$ServicePayload<ExtArgs>[]
     comments: Prisma.$CommentPayload<ExtArgs>[]
+    trade: Prisma.$TradePayload<ExtArgs> | null
     reports: Prisma.$ReportPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -1441,10 +1587,10 @@ export type $PostPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     userId: number
     title: string
     message: string
-    isComplete: boolean
     createdAt: Date
     updatedAt: Date
     images: string[]
+    status: $Enums.Status
     isLocal: boolean
     zipCode: string | null
     radiusMiles: number | null
@@ -1849,6 +1995,7 @@ export interface Prisma__PostClient<T, Null = never, ExtArgs extends runtime.Typ
   products<T extends Prisma.Post$productsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Post$productsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   services<T extends Prisma.Post$servicesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Post$servicesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ServicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   comments<T extends Prisma.Post$commentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Post$commentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  trade<T extends Prisma.Post$tradeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Post$tradeArgs<ExtArgs>>): Prisma.Prisma__TradeClient<runtime.Types.Result.GetResult<Prisma.$TradePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   reports<T extends Prisma.Post$reportsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Post$reportsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1883,10 +2030,10 @@ export interface PostFieldRefs {
   readonly userId: Prisma.FieldRef<"Post", 'Int'>
   readonly title: Prisma.FieldRef<"Post", 'String'>
   readonly message: Prisma.FieldRef<"Post", 'String'>
-  readonly isComplete: Prisma.FieldRef<"Post", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Post", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Post", 'DateTime'>
   readonly images: Prisma.FieldRef<"Post", 'String[]'>
+  readonly status: Prisma.FieldRef<"Post", 'Status'>
   readonly isLocal: Prisma.FieldRef<"Post", 'Boolean'>
   readonly zipCode: Prisma.FieldRef<"Post", 'String'>
   readonly radiusMiles: Prisma.FieldRef<"Post", 'Int'>
@@ -2363,6 +2510,25 @@ export type Post$commentsArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   take?: number
   skip?: number
   distinct?: Prisma.CommentScalarFieldEnum | Prisma.CommentScalarFieldEnum[]
+}
+
+/**
+ * Post.trade
+ */
+export type Post$tradeArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Trade
+   */
+  select?: Prisma.TradeSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Trade
+   */
+  omit?: Prisma.TradeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TradeInclude<ExtArgs> | null
+  where?: Prisma.TradeWhereInput
 }
 
 /**

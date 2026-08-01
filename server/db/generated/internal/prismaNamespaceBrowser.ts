@@ -56,11 +56,12 @@ export const ModelName = {
   Message: 'Message',
   Log: 'Log',
   Post: 'Post',
+  Trade: 'Trade',
   Comment: 'Comment',
   Product: 'Product',
   Service: 'Service',
   Cat: 'Cat',
-  Rep: 'Rep',
+  Review: 'Review',
   Report: 'Report'
 } as const
 
@@ -129,10 +130,10 @@ export const PostScalarFieldEnum = {
   userId: 'userId',
   title: 'title',
   message: 'message',
-  isComplete: 'isComplete',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   images: 'images',
+  status: 'status',
   isLocal: 'isLocal',
   zipCode: 'zipCode',
   radiusMiles: 'radiusMiles',
@@ -142,6 +143,20 @@ export const PostScalarFieldEnum = {
 } as const
 
 export type PostScalarFieldEnum = (typeof PostScalarFieldEnum)[keyof typeof PostScalarFieldEnum]
+
+
+export const TradeScalarFieldEnum = {
+  id: 'id',
+  postId: 'postId',
+  ownerId: 'ownerId',
+  requesterId: 'requesterId',
+  ownerCompl: 'ownerCompl',
+  reqCompl: 'reqCompl',
+  status: 'status',
+  createdAt: 'createdAt'
+} as const
+
+export type TradeScalarFieldEnum = (typeof TradeScalarFieldEnum)[keyof typeof TradeScalarFieldEnum]
 
 
 export const CommentScalarFieldEnum = {
@@ -190,13 +205,17 @@ export const CatScalarFieldEnum = {
 export type CatScalarFieldEnum = (typeof CatScalarFieldEnum)[keyof typeof CatScalarFieldEnum]
 
 
-export const RepScalarFieldEnum = {
+export const ReviewScalarFieldEnum = {
   id: 'id',
-  userId: 'userId',
-  score: 'score'
+  tradeId: 'tradeId',
+  reviewerId: 'reviewerId',
+  revieweeId: 'revieweeId',
+  rating: 'rating',
+  comment: 'comment',
+  createdAt: 'createdAt'
 } as const
 
-export type RepScalarFieldEnum = (typeof RepScalarFieldEnum)[keyof typeof RepScalarFieldEnum]
+export type ReviewScalarFieldEnum = (typeof ReviewScalarFieldEnum)[keyof typeof ReviewScalarFieldEnum]
 
 
 export const ReportScalarFieldEnum = {
