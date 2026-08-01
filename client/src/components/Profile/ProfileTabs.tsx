@@ -5,7 +5,7 @@ import Chip from '@mui/material/Chip';
 import type { ProfileTabsProps } from './types';
 
 export default function ProfileTabs({
-  activeTab, onTabChange, tradeCount, isOwnProfile,
+  activeTab, onTabChange, tradeCount, isOwnProfile, onDM,
 }: ProfileTabsProps) {
   return (
     <Box sx={{
@@ -37,6 +37,7 @@ export default function ProfileTabs({
       {!isOwnProfile && (
         <Button
           variant="outlined"
+          onClick={onDM}
           sx={{ borderRadius: 8, textTransform: 'none' }}
         >
           DM

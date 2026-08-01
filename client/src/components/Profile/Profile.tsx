@@ -4,7 +4,8 @@ import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
 
-import { useParams } from '../../context/RouterContext';
+import { useRouter, useParams } from '../../context/RouterContext';
+import { useToast } from '../../context/ToastContext';
 import { useAuth } from '../../context/AuthContext';
 import type { PostData } from '../Posts/ManagePosts';
 import ReportDialog from '../Posts/ReportDialog';
@@ -28,6 +29,8 @@ export default function Profile() {
   const [reportUserDialogOpen, setReportUserDialogOpen] = useState(false);
 
   const { blockedUserIds, blockUser, unblockUser } = useAuth();
+  const { navigate } = useRouter();
+  const { showToast } = useToast();
 
   const handleBlockToggle = async () => {
     if (blockedUserIds.includes(profile!.id)) {
@@ -50,6 +53,18 @@ export default function Profile() {
     }, { withCredentials: true });
 
     setProfile(res.data);
+  };
+
+  const handleOpenDM = async () => {
+    try {
+      const res = await axios.post<{ id: number }>('/dms', { userId: profile!.id }, { withCredentials: true });
+      navigate(`/messages/${res.data.id}`);
+    } catch (err) {
+      const message = axios.isAxiosError(err) && err.response?.data?.error
+        ? err.response.data.error
+        : 'Could not start conversation.';
+      showToast(message, 'error');
+    }
   };
 
   useEffect(() => {
@@ -125,6 +140,7 @@ export default function Profile() {
         onTabChange={setActiveTab}
         tradeCount={posts.length}
         isOwnProfile={isOwnProfile}
+        onDM={handleOpenDM}
       />
 
       <ProfileTrades
