@@ -14,7 +14,7 @@ import NavBar from './NavBar/NavBar';
 import Posts from './Posts/Posts';
 import Profile from './Profile/Profile';
 import ModQueue from './Moderation/ModQueue';
-// import Settings from './Settings/Settings';
+import BlockedUsers from './BlockedUsers/BlockedUsers';
 import NotFound from './NotFound/NotFound';
 
 const routes: RouteDef[] = [
@@ -25,7 +25,7 @@ const routes: RouteDef[] = [
     requiresAuth: true,
     requiresRole: 'MODERATOR',
   },
-  // { path: '/settings', component: Settings },
+  { path: '/blocked-users', component: BlockedUsers, requiresAuth: true },
   { path: '/profile', component: Profile, requiresAuth: true },
   { path: '/profile/:id', component: Profile },
 ];

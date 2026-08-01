@@ -15,6 +15,7 @@ import CardContent from '@mui/material/CardContent';
 import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
+import WhyRemovedMenu from './WhyRemovedMenu';
 import { formatPostDate } from '../../utils/utils';
 
 export type PostData = {
@@ -283,7 +284,7 @@ export default function ManagePosts({
                     {post.message}
                   </Typography>
 
-                  <Typography variant="caption" color="text.secondary">
+                  <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
                     {post.updatedAt && post.updatedAt !== post.createdAt
                       ? `Updated on ${formatPostDate(post.updatedAt)}`
                       : `Posted on ${formatPostDate(post.createdAt)}`}
@@ -324,6 +325,11 @@ export default function ManagePosts({
                       </Button>
                     </Box>
                   )}
+
+                  {post.isRemoved && post.reports && post.reports.length > 0 && (
+                    <WhyRemovedMenu report={post.reports[0]} />
+                  )}
+
                 </CardContent>
               </Card>
             ))}
