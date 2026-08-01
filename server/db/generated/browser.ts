@@ -53,6 +53,11 @@ export type Trade = Prisma.TradeModel
  */
 export type TradeOffer = Prisma.TradeOfferModel
 /**
+ * Model TradeRequest
+ * 
+ */
+export type TradeRequest = Prisma.TradeRequestModel
+/**
  * Model Comment
  * 
  */

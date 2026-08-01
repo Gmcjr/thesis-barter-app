@@ -316,6 +316,7 @@ export type PostWhereInput = {
   tradeOffers?: Prisma.TradeOfferListRelationFilter
   postMedia?: Prisma.PostMediaListRelationFilter
   reports?: Prisma.ReportListRelationFilter
+  tradeRequests?: Prisma.TradeRequestListRelationFilter
 }
 
 export type PostOrderByWithRelationInput = {
@@ -342,6 +343,7 @@ export type PostOrderByWithRelationInput = {
   tradeOffers?: Prisma.TradeOfferOrderByRelationAggregateInput
   postMedia?: Prisma.PostMediaOrderByRelationAggregateInput
   reports?: Prisma.ReportOrderByRelationAggregateInput
+  tradeRequests?: Prisma.TradeRequestOrderByRelationAggregateInput
 }
 
 export type PostWhereUniqueInput = Prisma.AtLeast<{
@@ -371,6 +373,7 @@ export type PostWhereUniqueInput = Prisma.AtLeast<{
   tradeOffers?: Prisma.TradeOfferListRelationFilter
   postMedia?: Prisma.PostMediaListRelationFilter
   reports?: Prisma.ReportListRelationFilter
+  tradeRequests?: Prisma.TradeRequestListRelationFilter
 }, "id">
 
 export type PostOrderByWithAggregationInput = {
@@ -439,6 +442,7 @@ export type PostCreateInput = {
   tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutPostInput
   postMedia?: Prisma.PostMediaCreateNestedManyWithoutPostInput
   reports?: Prisma.ReportCreateNestedManyWithoutPostInput
+  tradeRequests?: Prisma.TradeRequestCreateNestedManyWithoutPostInput
 }
 
 export type PostUncheckedCreateInput = {
@@ -464,6 +468,7 @@ export type PostUncheckedCreateInput = {
   tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutPostInput
   postMedia?: Prisma.PostMediaUncheckedCreateNestedManyWithoutPostInput
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutPostInput
+  tradeRequests?: Prisma.TradeRequestUncheckedCreateNestedManyWithoutPostInput
 }
 
 export type PostUpdateInput = {
@@ -488,6 +493,7 @@ export type PostUpdateInput = {
   tradeOffers?: Prisma.TradeOfferUpdateManyWithoutPostNestedInput
   postMedia?: Prisma.PostMediaUpdateManyWithoutPostNestedInput
   reports?: Prisma.ReportUpdateManyWithoutPostNestedInput
+  tradeRequests?: Prisma.TradeRequestUpdateManyWithoutPostNestedInput
 }
 
 export type PostUncheckedUpdateInput = {
@@ -513,6 +519,7 @@ export type PostUncheckedUpdateInput = {
   tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutPostNestedInput
   postMedia?: Prisma.PostMediaUncheckedUpdateManyWithoutPostNestedInput
   reports?: Prisma.ReportUncheckedUpdateManyWithoutPostNestedInput
+  tradeRequests?: Prisma.TradeRequestUncheckedUpdateManyWithoutPostNestedInput
 }
 
 export type PostCreateManyInput = {
@@ -762,6 +769,20 @@ export type PostUpdateOneRequiredWithoutTradeOffersNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.PostUpdateToOneWithWhereWithoutTradeOffersInput, Prisma.PostUpdateWithoutTradeOffersInput>, Prisma.PostUncheckedUpdateWithoutTradeOffersInput>
 }
 
+export type PostCreateNestedOneWithoutTradeRequestsInput = {
+  create?: Prisma.XOR<Prisma.PostCreateWithoutTradeRequestsInput, Prisma.PostUncheckedCreateWithoutTradeRequestsInput>
+  connectOrCreate?: Prisma.PostCreateOrConnectWithoutTradeRequestsInput
+  connect?: Prisma.PostWhereUniqueInput
+}
+
+export type PostUpdateOneRequiredWithoutTradeRequestsNestedInput = {
+  create?: Prisma.XOR<Prisma.PostCreateWithoutTradeRequestsInput, Prisma.PostUncheckedCreateWithoutTradeRequestsInput>
+  connectOrCreate?: Prisma.PostCreateOrConnectWithoutTradeRequestsInput
+  upsert?: Prisma.PostUpsertWithoutTradeRequestsInput
+  connect?: Prisma.PostWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PostUpdateToOneWithWhereWithoutTradeRequestsInput, Prisma.PostUpdateWithoutTradeRequestsInput>, Prisma.PostUncheckedUpdateWithoutTradeRequestsInput>
+}
+
 export type PostCreateNestedOneWithoutCommentsInput = {
   create?: Prisma.XOR<Prisma.PostCreateWithoutCommentsInput, Prisma.PostUncheckedCreateWithoutCommentsInput>
   connectOrCreate?: Prisma.PostCreateOrConnectWithoutCommentsInput
@@ -855,6 +876,7 @@ export type PostCreateWithoutUserInput = {
   tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutPostInput
   postMedia?: Prisma.PostMediaCreateNestedManyWithoutPostInput
   reports?: Prisma.ReportCreateNestedManyWithoutPostInput
+  tradeRequests?: Prisma.TradeRequestCreateNestedManyWithoutPostInput
 }
 
 export type PostUncheckedCreateWithoutUserInput = {
@@ -879,6 +901,7 @@ export type PostUncheckedCreateWithoutUserInput = {
   tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutPostInput
   postMedia?: Prisma.PostMediaUncheckedCreateNestedManyWithoutPostInput
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutPostInput
+  tradeRequests?: Prisma.TradeRequestUncheckedCreateNestedManyWithoutPostInput
 }
 
 export type PostCreateOrConnectWithoutUserInput = {
@@ -949,6 +972,7 @@ export type PostCreateWithoutTradeInput = {
   tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutPostInput
   postMedia?: Prisma.PostMediaCreateNestedManyWithoutPostInput
   reports?: Prisma.ReportCreateNestedManyWithoutPostInput
+  tradeRequests?: Prisma.TradeRequestCreateNestedManyWithoutPostInput
 }
 
 export type PostUncheckedCreateWithoutTradeInput = {
@@ -973,6 +997,7 @@ export type PostUncheckedCreateWithoutTradeInput = {
   tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutPostInput
   postMedia?: Prisma.PostMediaUncheckedCreateNestedManyWithoutPostInput
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutPostInput
+  tradeRequests?: Prisma.TradeRequestUncheckedCreateNestedManyWithoutPostInput
 }
 
 export type PostCreateOrConnectWithoutTradeInput = {
@@ -1012,6 +1037,7 @@ export type PostUpdateWithoutTradeInput = {
   tradeOffers?: Prisma.TradeOfferUpdateManyWithoutPostNestedInput
   postMedia?: Prisma.PostMediaUpdateManyWithoutPostNestedInput
   reports?: Prisma.ReportUpdateManyWithoutPostNestedInput
+  tradeRequests?: Prisma.TradeRequestUpdateManyWithoutPostNestedInput
 }
 
 export type PostUncheckedUpdateWithoutTradeInput = {
@@ -1036,6 +1062,7 @@ export type PostUncheckedUpdateWithoutTradeInput = {
   tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutPostNestedInput
   postMedia?: Prisma.PostMediaUncheckedUpdateManyWithoutPostNestedInput
   reports?: Prisma.ReportUncheckedUpdateManyWithoutPostNestedInput
+  tradeRequests?: Prisma.TradeRequestUncheckedUpdateManyWithoutPostNestedInput
 }
 
 export type PostCreateWithoutTradeOffersInput = {
@@ -1059,6 +1086,7 @@ export type PostCreateWithoutTradeOffersInput = {
   trade?: Prisma.TradeCreateNestedOneWithoutPostInput
   postMedia?: Prisma.PostMediaCreateNestedManyWithoutPostInput
   reports?: Prisma.ReportCreateNestedManyWithoutPostInput
+  tradeRequests?: Prisma.TradeRequestCreateNestedManyWithoutPostInput
 }
 
 export type PostUncheckedCreateWithoutTradeOffersInput = {
@@ -1083,6 +1111,7 @@ export type PostUncheckedCreateWithoutTradeOffersInput = {
   trade?: Prisma.TradeUncheckedCreateNestedOneWithoutPostInput
   postMedia?: Prisma.PostMediaUncheckedCreateNestedManyWithoutPostInput
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutPostInput
+  tradeRequests?: Prisma.TradeRequestUncheckedCreateNestedManyWithoutPostInput
 }
 
 export type PostCreateOrConnectWithoutTradeOffersInput = {
@@ -1122,6 +1151,7 @@ export type PostUpdateWithoutTradeOffersInput = {
   trade?: Prisma.TradeUpdateOneWithoutPostNestedInput
   postMedia?: Prisma.PostMediaUpdateManyWithoutPostNestedInput
   reports?: Prisma.ReportUpdateManyWithoutPostNestedInput
+  tradeRequests?: Prisma.TradeRequestUpdateManyWithoutPostNestedInput
 }
 
 export type PostUncheckedUpdateWithoutTradeOffersInput = {
@@ -1144,6 +1174,121 @@ export type PostUncheckedUpdateWithoutTradeOffersInput = {
   services?: Prisma.ServiceUncheckedUpdateManyWithoutPostNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutPostNestedInput
   trade?: Prisma.TradeUncheckedUpdateOneWithoutPostNestedInput
+  postMedia?: Prisma.PostMediaUncheckedUpdateManyWithoutPostNestedInput
+  reports?: Prisma.ReportUncheckedUpdateManyWithoutPostNestedInput
+  tradeRequests?: Prisma.TradeRequestUncheckedUpdateManyWithoutPostNestedInput
+}
+
+export type PostCreateWithoutTradeRequestsInput = {
+  images?: Prisma.PostCreateimagesInput | string[]
+  status?: $Enums.Status
+  title: string
+  message: string
+  isComplete?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  isLocal?: boolean
+  zipCode?: string | null
+  radiusMiles?: number | null
+  lat?: number | null
+  lng?: number | null
+  isRemoved?: boolean
+  user: Prisma.UserCreateNestedOneWithoutPostsInput
+  products?: Prisma.ProductCreateNestedManyWithoutPostInput
+  services?: Prisma.ServiceCreateNestedManyWithoutPostInput
+  comments?: Prisma.CommentCreateNestedManyWithoutPostInput
+  trade?: Prisma.TradeCreateNestedOneWithoutPostInput
+  tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutPostInput
+  postMedia?: Prisma.PostMediaCreateNestedManyWithoutPostInput
+  reports?: Prisma.ReportCreateNestedManyWithoutPostInput
+}
+
+export type PostUncheckedCreateWithoutTradeRequestsInput = {
+  id?: number
+  userId: number
+  images?: Prisma.PostCreateimagesInput | string[]
+  status?: $Enums.Status
+  title: string
+  message: string
+  isComplete?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  isLocal?: boolean
+  zipCode?: string | null
+  radiusMiles?: number | null
+  lat?: number | null
+  lng?: number | null
+  isRemoved?: boolean
+  products?: Prisma.ProductUncheckedCreateNestedManyWithoutPostInput
+  services?: Prisma.ServiceUncheckedCreateNestedManyWithoutPostInput
+  comments?: Prisma.CommentUncheckedCreateNestedManyWithoutPostInput
+  trade?: Prisma.TradeUncheckedCreateNestedOneWithoutPostInput
+  tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutPostInput
+  postMedia?: Prisma.PostMediaUncheckedCreateNestedManyWithoutPostInput
+  reports?: Prisma.ReportUncheckedCreateNestedManyWithoutPostInput
+}
+
+export type PostCreateOrConnectWithoutTradeRequestsInput = {
+  where: Prisma.PostWhereUniqueInput
+  create: Prisma.XOR<Prisma.PostCreateWithoutTradeRequestsInput, Prisma.PostUncheckedCreateWithoutTradeRequestsInput>
+}
+
+export type PostUpsertWithoutTradeRequestsInput = {
+  update: Prisma.XOR<Prisma.PostUpdateWithoutTradeRequestsInput, Prisma.PostUncheckedUpdateWithoutTradeRequestsInput>
+  create: Prisma.XOR<Prisma.PostCreateWithoutTradeRequestsInput, Prisma.PostUncheckedCreateWithoutTradeRequestsInput>
+  where?: Prisma.PostWhereInput
+}
+
+export type PostUpdateToOneWithWhereWithoutTradeRequestsInput = {
+  where?: Prisma.PostWhereInput
+  data: Prisma.XOR<Prisma.PostUpdateWithoutTradeRequestsInput, Prisma.PostUncheckedUpdateWithoutTradeRequestsInput>
+}
+
+export type PostUpdateWithoutTradeRequestsInput = {
+  images?: Prisma.PostUpdateimagesInput | string[]
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  message?: Prisma.StringFieldUpdateOperationsInput | string
+  isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isLocal?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  radiusMiles?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  lat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  user?: Prisma.UserUpdateOneRequiredWithoutPostsNestedInput
+  products?: Prisma.ProductUpdateManyWithoutPostNestedInput
+  services?: Prisma.ServiceUpdateManyWithoutPostNestedInput
+  comments?: Prisma.CommentUpdateManyWithoutPostNestedInput
+  trade?: Prisma.TradeUpdateOneWithoutPostNestedInput
+  tradeOffers?: Prisma.TradeOfferUpdateManyWithoutPostNestedInput
+  postMedia?: Prisma.PostMediaUpdateManyWithoutPostNestedInput
+  reports?: Prisma.ReportUpdateManyWithoutPostNestedInput
+}
+
+export type PostUncheckedUpdateWithoutTradeRequestsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  images?: Prisma.PostUpdateimagesInput | string[]
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  message?: Prisma.StringFieldUpdateOperationsInput | string
+  isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isLocal?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  radiusMiles?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  lat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  products?: Prisma.ProductUncheckedUpdateManyWithoutPostNestedInput
+  services?: Prisma.ServiceUncheckedUpdateManyWithoutPostNestedInput
+  comments?: Prisma.CommentUncheckedUpdateManyWithoutPostNestedInput
+  trade?: Prisma.TradeUncheckedUpdateOneWithoutPostNestedInput
+  tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutPostNestedInput
   postMedia?: Prisma.PostMediaUncheckedUpdateManyWithoutPostNestedInput
   reports?: Prisma.ReportUncheckedUpdateManyWithoutPostNestedInput
 }
@@ -1169,6 +1314,7 @@ export type PostCreateWithoutCommentsInput = {
   tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutPostInput
   postMedia?: Prisma.PostMediaCreateNestedManyWithoutPostInput
   reports?: Prisma.ReportCreateNestedManyWithoutPostInput
+  tradeRequests?: Prisma.TradeRequestCreateNestedManyWithoutPostInput
 }
 
 export type PostUncheckedCreateWithoutCommentsInput = {
@@ -1193,6 +1339,7 @@ export type PostUncheckedCreateWithoutCommentsInput = {
   tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutPostInput
   postMedia?: Prisma.PostMediaUncheckedCreateNestedManyWithoutPostInput
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutPostInput
+  tradeRequests?: Prisma.TradeRequestUncheckedCreateNestedManyWithoutPostInput
 }
 
 export type PostCreateOrConnectWithoutCommentsInput = {
@@ -1232,6 +1379,7 @@ export type PostUpdateWithoutCommentsInput = {
   tradeOffers?: Prisma.TradeOfferUpdateManyWithoutPostNestedInput
   postMedia?: Prisma.PostMediaUpdateManyWithoutPostNestedInput
   reports?: Prisma.ReportUpdateManyWithoutPostNestedInput
+  tradeRequests?: Prisma.TradeRequestUpdateManyWithoutPostNestedInput
 }
 
 export type PostUncheckedUpdateWithoutCommentsInput = {
@@ -1256,6 +1404,7 @@ export type PostUncheckedUpdateWithoutCommentsInput = {
   tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutPostNestedInput
   postMedia?: Prisma.PostMediaUncheckedUpdateManyWithoutPostNestedInput
   reports?: Prisma.ReportUncheckedUpdateManyWithoutPostNestedInput
+  tradeRequests?: Prisma.TradeRequestUncheckedUpdateManyWithoutPostNestedInput
 }
 
 export type PostCreateWithoutProductsInput = {
@@ -1279,6 +1428,7 @@ export type PostCreateWithoutProductsInput = {
   tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutPostInput
   postMedia?: Prisma.PostMediaCreateNestedManyWithoutPostInput
   reports?: Prisma.ReportCreateNestedManyWithoutPostInput
+  tradeRequests?: Prisma.TradeRequestCreateNestedManyWithoutPostInput
 }
 
 export type PostUncheckedCreateWithoutProductsInput = {
@@ -1303,6 +1453,7 @@ export type PostUncheckedCreateWithoutProductsInput = {
   tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutPostInput
   postMedia?: Prisma.PostMediaUncheckedCreateNestedManyWithoutPostInput
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutPostInput
+  tradeRequests?: Prisma.TradeRequestUncheckedCreateNestedManyWithoutPostInput
 }
 
 export type PostCreateOrConnectWithoutProductsInput = {
@@ -1342,6 +1493,7 @@ export type PostUpdateWithoutProductsInput = {
   tradeOffers?: Prisma.TradeOfferUpdateManyWithoutPostNestedInput
   postMedia?: Prisma.PostMediaUpdateManyWithoutPostNestedInput
   reports?: Prisma.ReportUpdateManyWithoutPostNestedInput
+  tradeRequests?: Prisma.TradeRequestUpdateManyWithoutPostNestedInput
 }
 
 export type PostUncheckedUpdateWithoutProductsInput = {
@@ -1366,6 +1518,7 @@ export type PostUncheckedUpdateWithoutProductsInput = {
   tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutPostNestedInput
   postMedia?: Prisma.PostMediaUncheckedUpdateManyWithoutPostNestedInput
   reports?: Prisma.ReportUncheckedUpdateManyWithoutPostNestedInput
+  tradeRequests?: Prisma.TradeRequestUncheckedUpdateManyWithoutPostNestedInput
 }
 
 export type PostCreateWithoutServicesInput = {
@@ -1389,6 +1542,7 @@ export type PostCreateWithoutServicesInput = {
   tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutPostInput
   postMedia?: Prisma.PostMediaCreateNestedManyWithoutPostInput
   reports?: Prisma.ReportCreateNestedManyWithoutPostInput
+  tradeRequests?: Prisma.TradeRequestCreateNestedManyWithoutPostInput
 }
 
 export type PostUncheckedCreateWithoutServicesInput = {
@@ -1413,6 +1567,7 @@ export type PostUncheckedCreateWithoutServicesInput = {
   tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutPostInput
   postMedia?: Prisma.PostMediaUncheckedCreateNestedManyWithoutPostInput
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutPostInput
+  tradeRequests?: Prisma.TradeRequestUncheckedCreateNestedManyWithoutPostInput
 }
 
 export type PostCreateOrConnectWithoutServicesInput = {
@@ -1452,6 +1607,7 @@ export type PostUpdateWithoutServicesInput = {
   tradeOffers?: Prisma.TradeOfferUpdateManyWithoutPostNestedInput
   postMedia?: Prisma.PostMediaUpdateManyWithoutPostNestedInput
   reports?: Prisma.ReportUpdateManyWithoutPostNestedInput
+  tradeRequests?: Prisma.TradeRequestUpdateManyWithoutPostNestedInput
 }
 
 export type PostUncheckedUpdateWithoutServicesInput = {
@@ -1476,6 +1632,7 @@ export type PostUncheckedUpdateWithoutServicesInput = {
   tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutPostNestedInput
   postMedia?: Prisma.PostMediaUncheckedUpdateManyWithoutPostNestedInput
   reports?: Prisma.ReportUncheckedUpdateManyWithoutPostNestedInput
+  tradeRequests?: Prisma.TradeRequestUncheckedUpdateManyWithoutPostNestedInput
 }
 
 export type PostCreateWithoutReportsInput = {
@@ -1499,6 +1656,7 @@ export type PostCreateWithoutReportsInput = {
   trade?: Prisma.TradeCreateNestedOneWithoutPostInput
   tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutPostInput
   postMedia?: Prisma.PostMediaCreateNestedManyWithoutPostInput
+  tradeRequests?: Prisma.TradeRequestCreateNestedManyWithoutPostInput
 }
 
 export type PostUncheckedCreateWithoutReportsInput = {
@@ -1523,6 +1681,7 @@ export type PostUncheckedCreateWithoutReportsInput = {
   trade?: Prisma.TradeUncheckedCreateNestedOneWithoutPostInput
   tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutPostInput
   postMedia?: Prisma.PostMediaUncheckedCreateNestedManyWithoutPostInput
+  tradeRequests?: Prisma.TradeRequestUncheckedCreateNestedManyWithoutPostInput
 }
 
 export type PostCreateOrConnectWithoutReportsInput = {
@@ -1562,6 +1721,7 @@ export type PostUpdateWithoutReportsInput = {
   trade?: Prisma.TradeUpdateOneWithoutPostNestedInput
   tradeOffers?: Prisma.TradeOfferUpdateManyWithoutPostNestedInput
   postMedia?: Prisma.PostMediaUpdateManyWithoutPostNestedInput
+  tradeRequests?: Prisma.TradeRequestUpdateManyWithoutPostNestedInput
 }
 
 export type PostUncheckedUpdateWithoutReportsInput = {
@@ -1586,6 +1746,7 @@ export type PostUncheckedUpdateWithoutReportsInput = {
   trade?: Prisma.TradeUncheckedUpdateOneWithoutPostNestedInput
   tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutPostNestedInput
   postMedia?: Prisma.PostMediaUncheckedUpdateManyWithoutPostNestedInput
+  tradeRequests?: Prisma.TradeRequestUncheckedUpdateManyWithoutPostNestedInput
 }
 
 export type PostCreateWithoutPostMediaInput = {
@@ -1609,6 +1770,7 @@ export type PostCreateWithoutPostMediaInput = {
   trade?: Prisma.TradeCreateNestedOneWithoutPostInput
   tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutPostInput
   reports?: Prisma.ReportCreateNestedManyWithoutPostInput
+  tradeRequests?: Prisma.TradeRequestCreateNestedManyWithoutPostInput
 }
 
 export type PostUncheckedCreateWithoutPostMediaInput = {
@@ -1633,6 +1795,7 @@ export type PostUncheckedCreateWithoutPostMediaInput = {
   trade?: Prisma.TradeUncheckedCreateNestedOneWithoutPostInput
   tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutPostInput
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutPostInput
+  tradeRequests?: Prisma.TradeRequestUncheckedCreateNestedManyWithoutPostInput
 }
 
 export type PostCreateOrConnectWithoutPostMediaInput = {
@@ -1672,6 +1835,7 @@ export type PostUpdateWithoutPostMediaInput = {
   trade?: Prisma.TradeUpdateOneWithoutPostNestedInput
   tradeOffers?: Prisma.TradeOfferUpdateManyWithoutPostNestedInput
   reports?: Prisma.ReportUpdateManyWithoutPostNestedInput
+  tradeRequests?: Prisma.TradeRequestUpdateManyWithoutPostNestedInput
 }
 
 export type PostUncheckedUpdateWithoutPostMediaInput = {
@@ -1696,6 +1860,7 @@ export type PostUncheckedUpdateWithoutPostMediaInput = {
   trade?: Prisma.TradeUncheckedUpdateOneWithoutPostNestedInput
   tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutPostNestedInput
   reports?: Prisma.ReportUncheckedUpdateManyWithoutPostNestedInput
+  tradeRequests?: Prisma.TradeRequestUncheckedUpdateManyWithoutPostNestedInput
 }
 
 export type PostCreateManyUserInput = {
@@ -1736,6 +1901,7 @@ export type PostUpdateWithoutUserInput = {
   tradeOffers?: Prisma.TradeOfferUpdateManyWithoutPostNestedInput
   postMedia?: Prisma.PostMediaUpdateManyWithoutPostNestedInput
   reports?: Prisma.ReportUpdateManyWithoutPostNestedInput
+  tradeRequests?: Prisma.TradeRequestUpdateManyWithoutPostNestedInput
 }
 
 export type PostUncheckedUpdateWithoutUserInput = {
@@ -1760,6 +1926,7 @@ export type PostUncheckedUpdateWithoutUserInput = {
   tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutPostNestedInput
   postMedia?: Prisma.PostMediaUncheckedUpdateManyWithoutPostNestedInput
   reports?: Prisma.ReportUncheckedUpdateManyWithoutPostNestedInput
+  tradeRequests?: Prisma.TradeRequestUncheckedUpdateManyWithoutPostNestedInput
 }
 
 export type PostUncheckedUpdateManyWithoutUserInput = {
@@ -1791,6 +1958,7 @@ export type PostCountOutputType = {
   tradeOffers: number
   postMedia: number
   reports: number
+  tradeRequests: number
 }
 
 export type PostCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1800,6 +1968,7 @@ export type PostCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   tradeOffers?: boolean | PostCountOutputTypeCountTradeOffersArgs
   postMedia?: boolean | PostCountOutputTypeCountPostMediaArgs
   reports?: boolean | PostCountOutputTypeCountReportsArgs
+  tradeRequests?: boolean | PostCountOutputTypeCountTradeRequestsArgs
 }
 
 /**
@@ -1854,6 +2023,13 @@ export type PostCountOutputTypeCountReportsArgs<ExtArgs extends runtime.Types.Ex
   where?: Prisma.ReportWhereInput
 }
 
+/**
+ * PostCountOutputType without action
+ */
+export type PostCountOutputTypeCountTradeRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TradeRequestWhereInput
+}
+
 
 export type PostSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1879,6 +2055,7 @@ export type PostSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   tradeOffers?: boolean | Prisma.Post$tradeOffersArgs<ExtArgs>
   postMedia?: boolean | Prisma.Post$postMediaArgs<ExtArgs>
   reports?: boolean | Prisma.Post$reportsArgs<ExtArgs>
+  tradeRequests?: boolean | Prisma.Post$tradeRequestsArgs<ExtArgs>
   _count?: boolean | Prisma.PostCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["post"]>
 
@@ -1948,6 +2125,7 @@ export type PostInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   tradeOffers?: boolean | Prisma.Post$tradeOffersArgs<ExtArgs>
   postMedia?: boolean | Prisma.Post$postMediaArgs<ExtArgs>
   reports?: boolean | Prisma.Post$reportsArgs<ExtArgs>
+  tradeRequests?: boolean | Prisma.Post$tradeRequestsArgs<ExtArgs>
   _count?: boolean | Prisma.PostCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type PostIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1968,6 +2146,7 @@ export type $PostPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     tradeOffers: Prisma.$TradeOfferPayload<ExtArgs>[]
     postMedia: Prisma.$PostMediaPayload<ExtArgs>[]
     reports: Prisma.$ReportPayload<ExtArgs>[]
+    tradeRequests: Prisma.$TradeRequestPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -2387,6 +2566,7 @@ export interface Prisma__PostClient<T, Null = never, ExtArgs extends runtime.Typ
   tradeOffers<T extends Prisma.Post$tradeOffersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Post$tradeOffersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TradeOfferPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   postMedia<T extends Prisma.Post$postMediaArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Post$postMediaArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PostMediaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   reports<T extends Prisma.Post$reportsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Post$reportsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  tradeRequests<T extends Prisma.Post$tradeRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Post$tradeRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TradeRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2992,6 +3172,30 @@ export type Post$reportsArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
   take?: number
   skip?: number
   distinct?: Prisma.ReportScalarFieldEnum | Prisma.ReportScalarFieldEnum[]
+}
+
+/**
+ * Post.tradeRequests
+ */
+export type Post$tradeRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TradeRequest
+   */
+  select?: Prisma.TradeRequestSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TradeRequest
+   */
+  omit?: Prisma.TradeRequestOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TradeRequestInclude<ExtArgs> | null
+  where?: Prisma.TradeRequestWhereInput
+  orderBy?: Prisma.TradeRequestOrderByWithRelationInput | Prisma.TradeRequestOrderByWithRelationInput[]
+  cursor?: Prisma.TradeRequestWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TradeRequestScalarFieldEnum | Prisma.TradeRequestScalarFieldEnum[]
 }
 
 /**

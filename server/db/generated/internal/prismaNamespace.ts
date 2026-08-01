@@ -404,6 +404,7 @@ export const ModelName = {
   Post: 'Post',
   Trade: 'Trade',
   TradeOffer: 'TradeOffer',
+  TradeRequest: 'TradeRequest',
   Comment: 'Comment',
   Product: 'Product',
   Service: 'Service',
@@ -435,7 +436,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "dM" | "message" | "log" | "post" | "trade" | "tradeOffer" | "comment" | "product" | "service" | "cat" | "review" | "block" | "report" | "appeal" | "media" | "postMedia" | "tradeOfferMedia" | "productMedia" | "serviceMedia" | "commentMedia" | "messageMedia" | "userMedia"
+    modelProps: "user" | "dM" | "message" | "log" | "post" | "trade" | "tradeOffer" | "tradeRequest" | "comment" | "product" | "service" | "cat" | "review" | "block" | "report" | "appeal" | "media" | "postMedia" | "tradeOfferMedia" | "productMedia" | "serviceMedia" | "commentMedia" | "messageMedia" | "userMedia"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -954,6 +955,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.TradeOfferCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.TradeOfferCountAggregateOutputType> | number
+        }
+      }
+    }
+    TradeRequest: {
+      payload: Prisma.$TradeRequestPayload<ExtArgs>
+      fields: Prisma.TradeRequestFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TradeRequestFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TradeRequestPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TradeRequestFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TradeRequestPayload>
+        }
+        findFirst: {
+          args: Prisma.TradeRequestFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TradeRequestPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TradeRequestFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TradeRequestPayload>
+        }
+        findMany: {
+          args: Prisma.TradeRequestFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TradeRequestPayload>[]
+        }
+        create: {
+          args: Prisma.TradeRequestCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TradeRequestPayload>
+        }
+        createMany: {
+          args: Prisma.TradeRequestCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.TradeRequestCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TradeRequestPayload>[]
+        }
+        delete: {
+          args: Prisma.TradeRequestDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TradeRequestPayload>
+        }
+        update: {
+          args: Prisma.TradeRequestUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TradeRequestPayload>
+        }
+        deleteMany: {
+          args: Prisma.TradeRequestDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TradeRequestUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.TradeRequestUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TradeRequestPayload>[]
+        }
+        upsert: {
+          args: Prisma.TradeRequestUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TradeRequestPayload>
+        }
+        aggregate: {
+          args: Prisma.TradeRequestAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTradeRequest>
+        }
+        groupBy: {
+          args: Prisma.TradeRequestGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TradeRequestGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TradeRequestCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TradeRequestCountAggregateOutputType> | number
         }
       }
     }
@@ -2273,6 +2348,18 @@ export const TradeOfferScalarFieldEnum = {
 export type TradeOfferScalarFieldEnum = (typeof TradeOfferScalarFieldEnum)[keyof typeof TradeOfferScalarFieldEnum]
 
 
+export const TradeRequestScalarFieldEnum = {
+  id: 'id',
+  postId: 'postId',
+  requesterId: 'requesterId',
+  message: 'message',
+  status: 'status',
+  createdAt: 'createdAt'
+} as const
+
+export type TradeRequestScalarFieldEnum = (typeof TradeRequestScalarFieldEnum)[keyof typeof TradeRequestScalarFieldEnum]
+
+
 export const CommentScalarFieldEnum = {
   id: 'id',
   text: 'text',
@@ -2591,6 +2678,20 @@ export type ListEnumTradeOfferStatusFieldRefInput<$PrismaModel> = FieldRefInputT
 
 
 /**
+ * Reference to a field of type 'TradeRequestStatus'
+ */
+export type EnumTradeRequestStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TradeRequestStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'TradeRequestStatus[]'
+ */
+export type ListEnumTradeRequestStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TradeRequestStatus[]'>
+    
+
+
+/**
  * Reference to a field of type 'Cond'
  */
 export type EnumCondFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Cond'>
@@ -2845,6 +2946,7 @@ export type GlobalOmitConfig = {
   post?: Prisma.PostOmit
   trade?: Prisma.TradeOmit
   tradeOffer?: Prisma.TradeOfferOmit
+  tradeRequest?: Prisma.TradeRequestOmit
   comment?: Prisma.CommentOmit
   product?: Prisma.ProductOmit
   service?: Prisma.ServiceOmit

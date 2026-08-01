@@ -58,6 +58,7 @@ export const ModelName = {
   Post: 'Post',
   Trade: 'Trade',
   TradeOffer: 'TradeOffer',
+  TradeRequest: 'TradeRequest',
   Comment: 'Comment',
   Product: 'Product',
   Service: 'Service',
@@ -183,6 +184,18 @@ export const TradeOfferScalarFieldEnum = {
 } as const
 
 export type TradeOfferScalarFieldEnum = (typeof TradeOfferScalarFieldEnum)[keyof typeof TradeOfferScalarFieldEnum]
+
+
+export const TradeRequestScalarFieldEnum = {
+  id: 'id',
+  postId: 'postId',
+  requesterId: 'requesterId',
+  message: 'message',
+  status: 'status',
+  createdAt: 'createdAt'
+} as const
+
+export type TradeRequestScalarFieldEnum = (typeof TradeRequestScalarFieldEnum)[keyof typeof TradeRequestScalarFieldEnum]
 
 
 export const CommentScalarFieldEnum = {

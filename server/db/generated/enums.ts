@@ -40,6 +40,16 @@ export const TradeOfferStatus = {
 export type TradeOfferStatus = (typeof TradeOfferStatus)[keyof typeof TradeOfferStatus]
 
 
+export const TradeRequestStatus = {
+  PENDING: 'PENDING',
+  ACCEPTED: 'ACCEPTED',
+  REJECTED: 'REJECTED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type TradeRequestStatus = (typeof TradeRequestStatus)[keyof typeof TradeRequestStatus]
+
+
 export const Cond = {
   POOR: 'POOR',
   AVERAGE: 'AVERAGE',
