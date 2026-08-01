@@ -239,6 +239,7 @@ export type ServiceWhereInput = {
   post?: Prisma.XOR<Prisma.PostScalarRelationFilter, Prisma.PostWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   cat?: Prisma.XOR<Prisma.CatScalarRelationFilter, Prisma.CatWhereInput>
+  serviceMedia?: Prisma.ServiceMediaListRelationFilter
 }
 
 export type ServiceOrderByWithRelationInput = {
@@ -251,6 +252,7 @@ export type ServiceOrderByWithRelationInput = {
   post?: Prisma.PostOrderByWithRelationInput
   user?: Prisma.UserOrderByWithRelationInput
   cat?: Prisma.CatOrderByWithRelationInput
+  serviceMedia?: Prisma.ServiceMediaOrderByRelationAggregateInput
 }
 
 export type ServiceWhereUniqueInput = Prisma.AtLeast<{
@@ -266,6 +268,7 @@ export type ServiceWhereUniqueInput = Prisma.AtLeast<{
   post?: Prisma.XOR<Prisma.PostScalarRelationFilter, Prisma.PostWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   cat?: Prisma.XOR<Prisma.CatScalarRelationFilter, Prisma.CatWhereInput>
+  serviceMedia?: Prisma.ServiceMediaListRelationFilter
 }, "id">
 
 export type ServiceOrderByWithAggregationInput = {
@@ -300,6 +303,7 @@ export type ServiceCreateInput = {
   post: Prisma.PostCreateNestedOneWithoutServicesInput
   user: Prisma.UserCreateNestedOneWithoutServicesInput
   cat: Prisma.CatCreateNestedOneWithoutServicesInput
+  serviceMedia?: Prisma.ServiceMediaCreateNestedManyWithoutServiceInput
 }
 
 export type ServiceUncheckedCreateInput = {
@@ -309,6 +313,7 @@ export type ServiceUncheckedCreateInput = {
   catId: number
   name: string
   description?: string | null
+  serviceMedia?: Prisma.ServiceMediaUncheckedCreateNestedManyWithoutServiceInput
 }
 
 export type ServiceUpdateInput = {
@@ -317,6 +322,7 @@ export type ServiceUpdateInput = {
   post?: Prisma.PostUpdateOneRequiredWithoutServicesNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutServicesNestedInput
   cat?: Prisma.CatUpdateOneRequiredWithoutServicesNestedInput
+  serviceMedia?: Prisma.ServiceMediaUpdateManyWithoutServiceNestedInput
 }
 
 export type ServiceUncheckedUpdateInput = {
@@ -326,6 +332,7 @@ export type ServiceUncheckedUpdateInput = {
   catId?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  serviceMedia?: Prisma.ServiceMediaUncheckedUpdateManyWithoutServiceNestedInput
 }
 
 export type ServiceCreateManyInput = {
@@ -400,6 +407,11 @@ export type ServiceSumOrderByAggregateInput = {
   postId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   catId?: Prisma.SortOrder
+}
+
+export type ServiceScalarRelationFilter = {
+  is?: Prisma.ServiceWhereInput
+  isNot?: Prisma.ServiceWhereInput
 }
 
 export type ServiceCreateNestedManyWithoutUserInput = {
@@ -528,11 +540,26 @@ export type ServiceUncheckedUpdateManyWithoutCatNestedInput = {
   deleteMany?: Prisma.ServiceScalarWhereInput | Prisma.ServiceScalarWhereInput[]
 }
 
+export type ServiceCreateNestedOneWithoutServiceMediaInput = {
+  create?: Prisma.XOR<Prisma.ServiceCreateWithoutServiceMediaInput, Prisma.ServiceUncheckedCreateWithoutServiceMediaInput>
+  connectOrCreate?: Prisma.ServiceCreateOrConnectWithoutServiceMediaInput
+  connect?: Prisma.ServiceWhereUniqueInput
+}
+
+export type ServiceUpdateOneRequiredWithoutServiceMediaNestedInput = {
+  create?: Prisma.XOR<Prisma.ServiceCreateWithoutServiceMediaInput, Prisma.ServiceUncheckedCreateWithoutServiceMediaInput>
+  connectOrCreate?: Prisma.ServiceCreateOrConnectWithoutServiceMediaInput
+  upsert?: Prisma.ServiceUpsertWithoutServiceMediaInput
+  connect?: Prisma.ServiceWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ServiceUpdateToOneWithWhereWithoutServiceMediaInput, Prisma.ServiceUpdateWithoutServiceMediaInput>, Prisma.ServiceUncheckedUpdateWithoutServiceMediaInput>
+}
+
 export type ServiceCreateWithoutUserInput = {
   name: string
   description?: string | null
   post: Prisma.PostCreateNestedOneWithoutServicesInput
   cat: Prisma.CatCreateNestedOneWithoutServicesInput
+  serviceMedia?: Prisma.ServiceMediaCreateNestedManyWithoutServiceInput
 }
 
 export type ServiceUncheckedCreateWithoutUserInput = {
@@ -541,6 +568,7 @@ export type ServiceUncheckedCreateWithoutUserInput = {
   catId: number
   name: string
   description?: string | null
+  serviceMedia?: Prisma.ServiceMediaUncheckedCreateNestedManyWithoutServiceInput
 }
 
 export type ServiceCreateOrConnectWithoutUserInput = {
@@ -586,6 +614,7 @@ export type ServiceCreateWithoutPostInput = {
   description?: string | null
   user: Prisma.UserCreateNestedOneWithoutServicesInput
   cat: Prisma.CatCreateNestedOneWithoutServicesInput
+  serviceMedia?: Prisma.ServiceMediaCreateNestedManyWithoutServiceInput
 }
 
 export type ServiceUncheckedCreateWithoutPostInput = {
@@ -594,6 +623,7 @@ export type ServiceUncheckedCreateWithoutPostInput = {
   catId: number
   name: string
   description?: string | null
+  serviceMedia?: Prisma.ServiceMediaUncheckedCreateNestedManyWithoutServiceInput
 }
 
 export type ServiceCreateOrConnectWithoutPostInput = {
@@ -627,6 +657,7 @@ export type ServiceCreateWithoutCatInput = {
   description?: string | null
   post: Prisma.PostCreateNestedOneWithoutServicesInput
   user: Prisma.UserCreateNestedOneWithoutServicesInput
+  serviceMedia?: Prisma.ServiceMediaCreateNestedManyWithoutServiceInput
 }
 
 export type ServiceUncheckedCreateWithoutCatInput = {
@@ -635,6 +666,7 @@ export type ServiceUncheckedCreateWithoutCatInput = {
   userId: number
   name: string
   description?: string | null
+  serviceMedia?: Prisma.ServiceMediaUncheckedCreateNestedManyWithoutServiceInput
 }
 
 export type ServiceCreateOrConnectWithoutCatInput = {
@@ -663,6 +695,56 @@ export type ServiceUpdateManyWithWhereWithoutCatInput = {
   data: Prisma.XOR<Prisma.ServiceUpdateManyMutationInput, Prisma.ServiceUncheckedUpdateManyWithoutCatInput>
 }
 
+export type ServiceCreateWithoutServiceMediaInput = {
+  name: string
+  description?: string | null
+  post: Prisma.PostCreateNestedOneWithoutServicesInput
+  user: Prisma.UserCreateNestedOneWithoutServicesInput
+  cat: Prisma.CatCreateNestedOneWithoutServicesInput
+}
+
+export type ServiceUncheckedCreateWithoutServiceMediaInput = {
+  id?: number
+  postId: number
+  userId: number
+  catId: number
+  name: string
+  description?: string | null
+}
+
+export type ServiceCreateOrConnectWithoutServiceMediaInput = {
+  where: Prisma.ServiceWhereUniqueInput
+  create: Prisma.XOR<Prisma.ServiceCreateWithoutServiceMediaInput, Prisma.ServiceUncheckedCreateWithoutServiceMediaInput>
+}
+
+export type ServiceUpsertWithoutServiceMediaInput = {
+  update: Prisma.XOR<Prisma.ServiceUpdateWithoutServiceMediaInput, Prisma.ServiceUncheckedUpdateWithoutServiceMediaInput>
+  create: Prisma.XOR<Prisma.ServiceCreateWithoutServiceMediaInput, Prisma.ServiceUncheckedCreateWithoutServiceMediaInput>
+  where?: Prisma.ServiceWhereInput
+}
+
+export type ServiceUpdateToOneWithWhereWithoutServiceMediaInput = {
+  where?: Prisma.ServiceWhereInput
+  data: Prisma.XOR<Prisma.ServiceUpdateWithoutServiceMediaInput, Prisma.ServiceUncheckedUpdateWithoutServiceMediaInput>
+}
+
+export type ServiceUpdateWithoutServiceMediaInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  post?: Prisma.PostUpdateOneRequiredWithoutServicesNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutServicesNestedInput
+  cat?: Prisma.CatUpdateOneRequiredWithoutServicesNestedInput
+}
+
+export type ServiceUncheckedUpdateWithoutServiceMediaInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  postId?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  catId?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
 export type ServiceCreateManyUserInput = {
   id?: number
   postId: number
@@ -676,6 +758,7 @@ export type ServiceUpdateWithoutUserInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   post?: Prisma.PostUpdateOneRequiredWithoutServicesNestedInput
   cat?: Prisma.CatUpdateOneRequiredWithoutServicesNestedInput
+  serviceMedia?: Prisma.ServiceMediaUpdateManyWithoutServiceNestedInput
 }
 
 export type ServiceUncheckedUpdateWithoutUserInput = {
@@ -684,6 +767,7 @@ export type ServiceUncheckedUpdateWithoutUserInput = {
   catId?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  serviceMedia?: Prisma.ServiceMediaUncheckedUpdateManyWithoutServiceNestedInput
 }
 
 export type ServiceUncheckedUpdateManyWithoutUserInput = {
@@ -707,6 +791,7 @@ export type ServiceUpdateWithoutPostInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   user?: Prisma.UserUpdateOneRequiredWithoutServicesNestedInput
   cat?: Prisma.CatUpdateOneRequiredWithoutServicesNestedInput
+  serviceMedia?: Prisma.ServiceMediaUpdateManyWithoutServiceNestedInput
 }
 
 export type ServiceUncheckedUpdateWithoutPostInput = {
@@ -715,6 +800,7 @@ export type ServiceUncheckedUpdateWithoutPostInput = {
   catId?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  serviceMedia?: Prisma.ServiceMediaUncheckedUpdateManyWithoutServiceNestedInput
 }
 
 export type ServiceUncheckedUpdateManyWithoutPostInput = {
@@ -738,6 +824,7 @@ export type ServiceUpdateWithoutCatInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   post?: Prisma.PostUpdateOneRequiredWithoutServicesNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutServicesNestedInput
+  serviceMedia?: Prisma.ServiceMediaUpdateManyWithoutServiceNestedInput
 }
 
 export type ServiceUncheckedUpdateWithoutCatInput = {
@@ -746,6 +833,7 @@ export type ServiceUncheckedUpdateWithoutCatInput = {
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  serviceMedia?: Prisma.ServiceMediaUncheckedUpdateManyWithoutServiceNestedInput
 }
 
 export type ServiceUncheckedUpdateManyWithoutCatInput = {
@@ -756,6 +844,35 @@ export type ServiceUncheckedUpdateManyWithoutCatInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
+
+/**
+ * Count Type ServiceCountOutputType
+ */
+
+export type ServiceCountOutputType = {
+  serviceMedia: number
+}
+
+export type ServiceCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  serviceMedia?: boolean | ServiceCountOutputTypeCountServiceMediaArgs
+}
+
+/**
+ * ServiceCountOutputType without action
+ */
+export type ServiceCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ServiceCountOutputType
+   */
+  select?: Prisma.ServiceCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * ServiceCountOutputType without action
+ */
+export type ServiceCountOutputTypeCountServiceMediaArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ServiceMediaWhereInput
+}
 
 
 export type ServiceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -768,6 +885,8 @@ export type ServiceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   post?: boolean | Prisma.PostDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   cat?: boolean | Prisma.CatDefaultArgs<ExtArgs>
+  serviceMedia?: boolean | Prisma.Service$serviceMediaArgs<ExtArgs>
+  _count?: boolean | Prisma.ServiceCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["service"]>
 
 export type ServiceSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -808,6 +927,8 @@ export type ServiceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   post?: boolean | Prisma.PostDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   cat?: boolean | Prisma.CatDefaultArgs<ExtArgs>
+  serviceMedia?: boolean | Prisma.Service$serviceMediaArgs<ExtArgs>
+  _count?: boolean | Prisma.ServiceCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ServiceIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   post?: boolean | Prisma.PostDefaultArgs<ExtArgs>
@@ -826,6 +947,7 @@ export type $ServicePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     post: Prisma.$PostPayload<ExtArgs>
     user: Prisma.$UserPayload<ExtArgs>
     cat: Prisma.$CatPayload<ExtArgs>
+    serviceMedia: Prisma.$ServiceMediaPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1231,6 +1353,7 @@ export interface Prisma__ServiceClient<T, Null = never, ExtArgs extends runtime.
   post<T extends Prisma.PostDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PostDefaultArgs<ExtArgs>>): Prisma.Prisma__PostClient<runtime.Types.Result.GetResult<Prisma.$PostPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   cat<T extends Prisma.CatDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CatDefaultArgs<ExtArgs>>): Prisma.Prisma__CatClient<runtime.Types.Result.GetResult<Prisma.$CatPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  serviceMedia<T extends Prisma.Service$serviceMediaArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Service$serviceMediaArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ServiceMediaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1664,6 +1787,30 @@ export type ServiceDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * Limit how many Services to delete.
    */
   limit?: number
+}
+
+/**
+ * Service.serviceMedia
+ */
+export type Service$serviceMediaArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ServiceMedia
+   */
+  select?: Prisma.ServiceMediaSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ServiceMedia
+   */
+  omit?: Prisma.ServiceMediaOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ServiceMediaInclude<ExtArgs> | null
+  where?: Prisma.ServiceMediaWhereInput
+  orderBy?: Prisma.ServiceMediaOrderByWithRelationInput | Prisma.ServiceMediaOrderByWithRelationInput[]
+  cursor?: Prisma.ServiceMediaWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ServiceMediaScalarFieldEnum | Prisma.ServiceMediaScalarFieldEnum[]
 }
 
 /**

@@ -18,6 +18,16 @@ export const Role = {
 export type Role = (typeof Role)[keyof typeof Role]
 
 
+export const TradeOfferStatus = {
+  PENDING: 'PENDING',
+  ACCEPTED: 'ACCEPTED',
+  COMPLETED: 'COMPLETED',
+  REJECTED: 'REJECTED'
+} as const
+
+export type TradeOfferStatus = (typeof TradeOfferStatus)[keyof typeof TradeOfferStatus]
+
+
 export const Cond = {
   POOR: 'POOR',
   AVERAGE: 'AVERAGE',
@@ -73,3 +83,11 @@ export const ReportStatus = {
 } as const
 
 export type ReportStatus = (typeof ReportStatus)[keyof typeof ReportStatus]
+
+
+export const MediaVariant = {
+  PREVIEW: 'PREVIEW',
+  FULL: 'FULL'
+} as const
+
+export type MediaVariant = (typeof MediaVariant)[keyof typeof MediaVariant]

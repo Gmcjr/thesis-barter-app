@@ -226,6 +226,7 @@ export type CommentWhereInput = {
   userId?: Prisma.IntFilter<"Comment"> | number
   post?: Prisma.XOR<Prisma.PostScalarRelationFilter, Prisma.PostWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  commentMedia?: Prisma.CommentMediaListRelationFilter
 }
 
 export type CommentOrderByWithRelationInput = {
@@ -236,6 +237,7 @@ export type CommentOrderByWithRelationInput = {
   userId?: Prisma.SortOrder
   post?: Prisma.PostOrderByWithRelationInput
   user?: Prisma.UserOrderByWithRelationInput
+  commentMedia?: Prisma.CommentMediaOrderByRelationAggregateInput
 }
 
 export type CommentWhereUniqueInput = Prisma.AtLeast<{
@@ -249,6 +251,7 @@ export type CommentWhereUniqueInput = Prisma.AtLeast<{
   userId?: Prisma.IntFilter<"Comment"> | number
   post?: Prisma.XOR<Prisma.PostScalarRelationFilter, Prisma.PostWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  commentMedia?: Prisma.CommentMediaListRelationFilter
 }, "id">
 
 export type CommentOrderByWithAggregationInput = {
@@ -280,6 +283,7 @@ export type CommentCreateInput = {
   createdAt?: Date | string
   post: Prisma.PostCreateNestedOneWithoutCommentsInput
   user: Prisma.UserCreateNestedOneWithoutCommentsInput
+  commentMedia?: Prisma.CommentMediaCreateNestedManyWithoutCommentInput
 }
 
 export type CommentUncheckedCreateInput = {
@@ -288,6 +292,7 @@ export type CommentUncheckedCreateInput = {
   createdAt?: Date | string
   postId: number
   userId: number
+  commentMedia?: Prisma.CommentMediaUncheckedCreateNestedManyWithoutCommentInput
 }
 
 export type CommentUpdateInput = {
@@ -295,6 +300,7 @@ export type CommentUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   post?: Prisma.PostUpdateOneRequiredWithoutCommentsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutCommentsNestedInput
+  commentMedia?: Prisma.CommentMediaUpdateManyWithoutCommentNestedInput
 }
 
 export type CommentUncheckedUpdateInput = {
@@ -303,6 +309,7 @@ export type CommentUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   postId?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
+  commentMedia?: Prisma.CommentMediaUncheckedUpdateManyWithoutCommentNestedInput
 }
 
 export type CommentCreateManyInput = {
@@ -370,6 +377,11 @@ export type CommentSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
   postId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+}
+
+export type CommentScalarRelationFilter = {
+  is?: Prisma.CommentWhereInput
+  isNot?: Prisma.CommentWhereInput
 }
 
 export type CommentCreateNestedManyWithoutUserInput = {
@@ -456,10 +468,25 @@ export type CommentUncheckedUpdateManyWithoutPostNestedInput = {
   deleteMany?: Prisma.CommentScalarWhereInput | Prisma.CommentScalarWhereInput[]
 }
 
+export type CommentCreateNestedOneWithoutCommentMediaInput = {
+  create?: Prisma.XOR<Prisma.CommentCreateWithoutCommentMediaInput, Prisma.CommentUncheckedCreateWithoutCommentMediaInput>
+  connectOrCreate?: Prisma.CommentCreateOrConnectWithoutCommentMediaInput
+  connect?: Prisma.CommentWhereUniqueInput
+}
+
+export type CommentUpdateOneRequiredWithoutCommentMediaNestedInput = {
+  create?: Prisma.XOR<Prisma.CommentCreateWithoutCommentMediaInput, Prisma.CommentUncheckedCreateWithoutCommentMediaInput>
+  connectOrCreate?: Prisma.CommentCreateOrConnectWithoutCommentMediaInput
+  upsert?: Prisma.CommentUpsertWithoutCommentMediaInput
+  connect?: Prisma.CommentWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CommentUpdateToOneWithWhereWithoutCommentMediaInput, Prisma.CommentUpdateWithoutCommentMediaInput>, Prisma.CommentUncheckedUpdateWithoutCommentMediaInput>
+}
+
 export type CommentCreateWithoutUserInput = {
   text: string
   createdAt?: Date | string
   post: Prisma.PostCreateNestedOneWithoutCommentsInput
+  commentMedia?: Prisma.CommentMediaCreateNestedManyWithoutCommentInput
 }
 
 export type CommentUncheckedCreateWithoutUserInput = {
@@ -467,6 +494,7 @@ export type CommentUncheckedCreateWithoutUserInput = {
   text: string
   createdAt?: Date | string
   postId: number
+  commentMedia?: Prisma.CommentMediaUncheckedCreateNestedManyWithoutCommentInput
 }
 
 export type CommentCreateOrConnectWithoutUserInput = {
@@ -510,6 +538,7 @@ export type CommentCreateWithoutPostInput = {
   text: string
   createdAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutCommentsInput
+  commentMedia?: Prisma.CommentMediaCreateNestedManyWithoutCommentInput
 }
 
 export type CommentUncheckedCreateWithoutPostInput = {
@@ -517,6 +546,7 @@ export type CommentUncheckedCreateWithoutPostInput = {
   text: string
   createdAt?: Date | string
   userId: number
+  commentMedia?: Prisma.CommentMediaUncheckedCreateNestedManyWithoutCommentInput
 }
 
 export type CommentCreateOrConnectWithoutPostInput = {
@@ -545,6 +575,52 @@ export type CommentUpdateManyWithWhereWithoutPostInput = {
   data: Prisma.XOR<Prisma.CommentUpdateManyMutationInput, Prisma.CommentUncheckedUpdateManyWithoutPostInput>
 }
 
+export type CommentCreateWithoutCommentMediaInput = {
+  text: string
+  createdAt?: Date | string
+  post: Prisma.PostCreateNestedOneWithoutCommentsInput
+  user: Prisma.UserCreateNestedOneWithoutCommentsInput
+}
+
+export type CommentUncheckedCreateWithoutCommentMediaInput = {
+  id?: number
+  text: string
+  createdAt?: Date | string
+  postId: number
+  userId: number
+}
+
+export type CommentCreateOrConnectWithoutCommentMediaInput = {
+  where: Prisma.CommentWhereUniqueInput
+  create: Prisma.XOR<Prisma.CommentCreateWithoutCommentMediaInput, Prisma.CommentUncheckedCreateWithoutCommentMediaInput>
+}
+
+export type CommentUpsertWithoutCommentMediaInput = {
+  update: Prisma.XOR<Prisma.CommentUpdateWithoutCommentMediaInput, Prisma.CommentUncheckedUpdateWithoutCommentMediaInput>
+  create: Prisma.XOR<Prisma.CommentCreateWithoutCommentMediaInput, Prisma.CommentUncheckedCreateWithoutCommentMediaInput>
+  where?: Prisma.CommentWhereInput
+}
+
+export type CommentUpdateToOneWithWhereWithoutCommentMediaInput = {
+  where?: Prisma.CommentWhereInput
+  data: Prisma.XOR<Prisma.CommentUpdateWithoutCommentMediaInput, Prisma.CommentUncheckedUpdateWithoutCommentMediaInput>
+}
+
+export type CommentUpdateWithoutCommentMediaInput = {
+  text?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  post?: Prisma.PostUpdateOneRequiredWithoutCommentsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutCommentsNestedInput
+}
+
+export type CommentUncheckedUpdateWithoutCommentMediaInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  text?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  postId?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.IntFieldUpdateOperationsInput | number
+}
+
 export type CommentCreateManyUserInput = {
   id?: number
   text: string
@@ -556,6 +632,7 @@ export type CommentUpdateWithoutUserInput = {
   text?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   post?: Prisma.PostUpdateOneRequiredWithoutCommentsNestedInput
+  commentMedia?: Prisma.CommentMediaUpdateManyWithoutCommentNestedInput
 }
 
 export type CommentUncheckedUpdateWithoutUserInput = {
@@ -563,6 +640,7 @@ export type CommentUncheckedUpdateWithoutUserInput = {
   text?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   postId?: Prisma.IntFieldUpdateOperationsInput | number
+  commentMedia?: Prisma.CommentMediaUncheckedUpdateManyWithoutCommentNestedInput
 }
 
 export type CommentUncheckedUpdateManyWithoutUserInput = {
@@ -583,6 +661,7 @@ export type CommentUpdateWithoutPostInput = {
   text?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutCommentsNestedInput
+  commentMedia?: Prisma.CommentMediaUpdateManyWithoutCommentNestedInput
 }
 
 export type CommentUncheckedUpdateWithoutPostInput = {
@@ -590,6 +669,7 @@ export type CommentUncheckedUpdateWithoutPostInput = {
   text?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   userId?: Prisma.IntFieldUpdateOperationsInput | number
+  commentMedia?: Prisma.CommentMediaUncheckedUpdateManyWithoutCommentNestedInput
 }
 
 export type CommentUncheckedUpdateManyWithoutPostInput = {
@@ -600,6 +680,35 @@ export type CommentUncheckedUpdateManyWithoutPostInput = {
 }
 
 
+/**
+ * Count Type CommentCountOutputType
+ */
+
+export type CommentCountOutputType = {
+  commentMedia: number
+}
+
+export type CommentCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  commentMedia?: boolean | CommentCountOutputTypeCountCommentMediaArgs
+}
+
+/**
+ * CommentCountOutputType without action
+ */
+export type CommentCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CommentCountOutputType
+   */
+  select?: Prisma.CommentCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * CommentCountOutputType without action
+ */
+export type CommentCountOutputTypeCountCommentMediaArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CommentMediaWhereInput
+}
+
 
 export type CommentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -609,6 +718,8 @@ export type CommentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   userId?: boolean
   post?: boolean | Prisma.PostDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  commentMedia?: boolean | Prisma.Comment$commentMediaArgs<ExtArgs>
+  _count?: boolean | Prisma.CommentCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["comment"]>
 
 export type CommentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -643,6 +754,8 @@ export type CommentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
 export type CommentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   post?: boolean | Prisma.PostDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  commentMedia?: boolean | Prisma.Comment$commentMediaArgs<ExtArgs>
+  _count?: boolean | Prisma.CommentCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type CommentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   post?: boolean | Prisma.PostDefaultArgs<ExtArgs>
@@ -658,6 +771,7 @@ export type $CommentPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
   objects: {
     post: Prisma.$PostPayload<ExtArgs>
     user: Prisma.$UserPayload<ExtArgs>
+    commentMedia: Prisma.$CommentMediaPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1061,6 +1175,7 @@ export interface Prisma__CommentClient<T, Null = never, ExtArgs extends runtime.
   readonly [Symbol.toStringTag]: "PrismaPromise"
   post<T extends Prisma.PostDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PostDefaultArgs<ExtArgs>>): Prisma.Prisma__PostClient<runtime.Types.Result.GetResult<Prisma.$PostPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  commentMedia<T extends Prisma.Comment$commentMediaArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Comment$commentMediaArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CommentMediaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1493,6 +1608,30 @@ export type CommentDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * Limit how many Comments to delete.
    */
   limit?: number
+}
+
+/**
+ * Comment.commentMedia
+ */
+export type Comment$commentMediaArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CommentMedia
+   */
+  select?: Prisma.CommentMediaSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CommentMedia
+   */
+  omit?: Prisma.CommentMediaOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CommentMediaInclude<ExtArgs> | null
+  where?: Prisma.CommentMediaWhereInput
+  orderBy?: Prisma.CommentMediaOrderByWithRelationInput | Prisma.CommentMediaOrderByWithRelationInput[]
+  cursor?: Prisma.CommentMediaWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CommentMediaScalarFieldEnum | Prisma.CommentMediaScalarFieldEnum[]
 }
 
 /**
