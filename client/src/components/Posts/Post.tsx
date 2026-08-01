@@ -20,9 +20,10 @@ import ArtTradeOffer from './ArtTradeOffer';
 interface PostProps {
   post: PostData;
   onReport: () => void;
+  onOfferSubmitted?: () => void;
 }
 
-export default function Post({ post, onReport }: PostProps) {
+export default function Post({ post, onReport, onOfferSubmitted }: PostProps) {
   const postUser = post.user.name ?? post.user.email;
 
   return (
@@ -78,6 +79,18 @@ export default function Post({ post, onReport }: PostProps) {
           </Box>
         </Box>
 
+        {post.previewUrl && (
+          <Box sx={{ mb: 2 }}>
+            <img
+              src={post.previewUrl}
+              alt="Art Preview"
+              style={{
+                maxWidth: '100%', borderRadius: 8, maxHeight: '350px', objectFit: 'contain',
+              }}
+            />
+          </Box>
+        )}
+
         <Typography variant="body1" sx={{ mb: 3, lineHeight: 1.6 }}>
           {post.message}
         </Typography>
@@ -130,7 +143,7 @@ export default function Post({ post, onReport }: PostProps) {
             mt: 2, pt: 2, display: 'flex', justifyContent: 'flex-end',
           }}
           >
-            <ArtTradeOffer postId={post.id} />
+            <ArtTradeOffer postId={post.id} onSuccess={onOfferSubmitted} />
           </Box>
         )}
       </CardContent>
