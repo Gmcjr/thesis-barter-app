@@ -1,0 +1,2 @@
+-- AlterEnum
+ALTER TYPE "CatType" ADD VALUE 'DIGITAL';
