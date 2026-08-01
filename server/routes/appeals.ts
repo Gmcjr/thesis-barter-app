@@ -6,6 +6,7 @@ import requireModerator from '../middleware/requireModerator';
 import { ReportStatus, AppealStatus, ReportReason } from '../db/generated/enums';
 
 const appeals = Router();
+const QUEUE_PAGE_SIZE = 50;
 
 // File an appeal (owner of the removed content)
 appeals.post('/', requireAuth, async (req, res) => {
@@ -88,7 +89,7 @@ appeals.get('/', requireModerator, async (req, res) => {
       const { dateFrom, dateTo } = req.query;
       if (typeof dateFrom === 'string' || typeof dateTo === 'string') {
         where.createdAt = {
-          ...(typeof dateFrom === 'string' ? { gte: new Date(dateFrom) } : {}),
+          ...(typeof dateFrom === 'string' ? { gte: new Date(`${dateFrom}T00:00:00.000`) } : {}),
           ...(typeof dateTo === 'string' ? { lte: new Date(`${dateTo}T23:59:59.999`) } : {}),
         };
       }
@@ -100,6 +101,7 @@ appeals.get('/', requireModerator, async (req, res) => {
 
     const queue = await prisma.appeal.findMany({
       where,
+      take: QUEUE_PAGE_SIZE,
       include: {
         appellant: { select: { id: true, name: true } },
         resolver: { select: { id: true, name: true } },
@@ -138,6 +140,9 @@ appeals.patch('/:id', requireModerator, async (req, res) => {
     });
     if (!appeal) {
       res.status(404).json({ error: 'Appeal not found' });
+      return;
+    } if (appeal.status !== AppealStatus.PENDING) {
+      res.status(409).json({ error: 'This appeal has already been resolved' });
       return;
     }
 

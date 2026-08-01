@@ -221,6 +221,8 @@ model Report {
   resolvedAt DateTime?
 
   appeal Appeal?
+
+  @@index([status, createdAt])
 }
 
 model Appeal {
@@ -241,6 +243,8 @@ model Appeal {
 
   createdAt  DateTime  @default(now())
   resolvedAt DateTime?
+
+  @@index([status, createdAt])
 }
 
 enum AppealStatus {
