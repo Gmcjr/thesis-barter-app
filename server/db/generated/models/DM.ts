@@ -224,6 +224,7 @@ export type DMOrderByWithRelationInput = {
 
 export type DMWhereUniqueInput = Prisma.AtLeast<{
   id?: number
+  user1Id_user2Id?: Prisma.DMUser1IdUser2IdCompoundUniqueInput
   AND?: Prisma.DMWhereInput | Prisma.DMWhereInput[]
   OR?: Prisma.DMWhereInput[]
   NOT?: Prisma.DMWhereInput | Prisma.DMWhereInput[]
@@ -232,7 +233,7 @@ export type DMWhereUniqueInput = Prisma.AtLeast<{
   user1?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   user2?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   messages?: Prisma.MessageListRelationFilter
-}, "id">
+}, "id" | "user1Id_user2Id">
 
 export type DMOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -304,6 +305,11 @@ export type DMListRelationFilter = {
 
 export type DMOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type DMUser1IdUser2IdCompoundUniqueInput = {
+  user1Id: number
+  user2Id: number
 }
 
 export type DMCountOrderByAggregateInput = {

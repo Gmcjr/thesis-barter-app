@@ -10,6 +10,7 @@ import artTradeOffers from './artTradeOffers';
 import blocks from './blocks.js';
 import trades from './trades.js';
 import tradeRequests from './tradeRequests.js';
+import dms from './dms';
 
 export default {
   auth,
@@ -24,4 +25,5 @@ export default {
   blocks,
   trades,
   tradeRequests,
+  dms,
 };
