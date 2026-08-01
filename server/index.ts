@@ -3,7 +3,9 @@ import path from 'path';
 import dotenv from 'dotenv';
 import passport from 'passport';
 import session from 'express-session';
+import http from 'http';
 import router from './routes/router.js';
+import { initSocket } from './middleware/socket.js';
 
 dotenv.config({ path: path.join('config', '.env') });
 
@@ -12,11 +14,13 @@ const port = process.env.PORT || 3000;
 
 app.use(express.json());
 
-app.use(session({
+const sessionMiddleware = session({
   secret: process.env.SESSION_SECRET!,
   resave: false,
   saveUninitialized: false,
-}));
+});
+
+app.use(sessionMiddleware);
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -37,5 +41,8 @@ app.use('/blocks', router.blocks);
 app.get(/.*/, (req, res) => {
   res.sendFile(path.join(process.cwd(), 'client', 'dist', 'index.html'));
 });
+
+const httpServer = http.createServer(app);
+initSocket(httpServer, sessionMiddleware);
 
 app.listen(port, () => console.info(`Listening on http://localhost:${port}`));

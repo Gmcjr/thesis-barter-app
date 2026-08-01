@@ -8,6 +8,7 @@ import appeals from './appeals';
 import media from './media';
 import artTradeOffers from './artTradeOffers';
 import blocks from './blocks.js';
+import dms from './dms';
 
 export default {
   auth,
@@ -20,4 +21,5 @@ export default {
   media,
   artTradeOffers,
   blocks,
+  dms,
 };
