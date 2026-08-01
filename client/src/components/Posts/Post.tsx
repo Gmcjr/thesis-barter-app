@@ -1,5 +1,6 @@
 /* eslint-disable react/jsx-one-expression-per-line */
 import React from 'react';
+import axios from 'axios';
 
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -18,6 +19,7 @@ import PostActionsMenu from './PostActionsMenu';
 import ArtTradeOffer from './ArtTradeOffer';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
+import { useRouter } from '../../context/RouterContext';
 
 interface PostProps {
   post: PostData;
@@ -30,6 +32,7 @@ export default function Post({ post, onReport }: PostProps) {
     user, blockedUserIds, blockUser, unblockUser,
   } = useAuth();
   const { showToast } = useToast();
+  const { navigate } = useRouter();
   const isOwnPost = user?.id === post.userId;
   const isBlocked = blockedUserIds.includes(post.userId);
 
@@ -44,6 +47,22 @@ export default function Post({ post, onReport }: PostProps) {
       }
     } catch {
       showToast('Could not update block status - try again.', 'error');
+    }
+  };
+
+  const handleOpenDM = async () => {
+    try {
+      const res = await axios.post<{ id: number }>(
+        '/dms',
+        { userId: post.user.id },
+        { withCredentials: true },
+      );
+      navigate(`/messages/${res.data.id}`);
+    } catch (err) {
+      const message = axios.isAxiosError(err) && err.response?.data?.error
+        ? err.response.data.error
+        : 'Could not start conversation.';
+      showToast(message, 'error');
     }
   };
 
@@ -84,18 +103,33 @@ export default function Post({ post, onReport }: PostProps) {
             display: 'flex', alignItems: 'center', gap: 1, flexShrink: 0, flexWrap: 'wrap',
           }}
           >
-            <Avatar sx={{
-              bgcolor: 'primary.main', width: 32, height: 32, fontSize: '0.9rem',
-            }}
+            <Box
+              onClick={() => navigate(`/profile/${post.user.id}`)}
+              role="button"
+              tabIndex={0}
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 1,
+                cursor: 'pointer',
+                '&:hover .post-username': { textDecoration: 'underline' },
+              }}
             >
-              {postUser.charAt(0).toUpperCase()}
-            </Avatar>
-            <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
-              {postUser}
-            </Typography>
-            <Button size="small" variant="outlined" sx={{ borderRadius: 4, textTransform: 'none' }}>
-              Open DM
-            </Button>
+              <Avatar sx={{
+                bgcolor: 'primary.main', width: 32, height: 32, fontSize: '0.9rem',
+              }}
+              >
+                {postUser.charAt(0).toUpperCase()}
+              </Avatar>
+              <Typography variant="subtitle2" className="post-username" sx={{ fontWeight: 600 }}>
+                {postUser}
+              </Typography>
+            </Box>
+            {!isOwnPost && (
+              <Button size="small" variant="outlined" onClick={handleOpenDM} sx={{ borderRadius: 4, textTransform: 'none' }}>
+                Open DM
+              </Button>
+            )}
             <PostActionsMenu
               onReport={onReport}
               showBlock={!isOwnPost}

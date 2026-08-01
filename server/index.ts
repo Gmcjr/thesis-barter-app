@@ -37,6 +37,7 @@ app.use('/appeals', router.appeals);
 app.use('/media', router.media);
 app.use('/artTradeOffers', router.artTradeOffers);
 app.use('/blocks', router.blocks);
+app.use('/dms', router.dms);
 
 app.get(/.*/, (req, res) => {
   res.sendFile(path.join(process.cwd(), 'client', 'dist', 'index.html'));

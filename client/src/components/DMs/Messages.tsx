@@ -189,8 +189,8 @@ export default function Messages() {
                     key={message.id}
                     sx={{
                       alignSelf: isMine ? 'flex-end' : 'flex-start',
-                      bgcolor: isMine ? 'primary.main' : 'grey.100',
-                      color: isMine ? 'primary.contrastText' : 'text.primary',
+                      bgcolor: isMine ? 'primary.main' : 'black',
+                      color: 'primary.contrastText',
                       borderRadius: 3,
                       px: 1.5,
                       py: 0.75,
