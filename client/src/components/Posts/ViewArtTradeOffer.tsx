@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable react/jsx-one-expression-per-line */
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
@@ -9,6 +10,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import CircularProgress from '@mui/material/CircularProgress';
+import Alert from '@mui/material/Alert';
 
 interface TradeOffer {
   id: number;
@@ -25,15 +27,25 @@ interface ViewArtTradeOfferProps {
   open: boolean;
   onClose: () => void;
   postId?: number | null;
+  onAccept?: () => void;
 }
 
-export const ViewArtTradeOffer: React.FC<ViewArtTradeOfferProps> = ({ open, onClose, postId }) => {
+export const ViewArtTradeOffer: React.FC<ViewArtTradeOfferProps> = ({
+  open, onClose, postId, onAccept,
+}) => {
   const [offers, setOffers] = useState<TradeOffer[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [acceptingId, setAcceptingId] = useState<number | null>(null);
+  const [isPostCompleted, setIsPostCompleted] = useState(false);
 
   useEffect(() => {
-    if (!open) return;
+    if (!open) {
+      setOffers([]);
+      setError('');
+      setIsPostCompleted(false);
+      return;
+    }
 
     const fetchOffers = async () => {
       setLoading(true);
@@ -44,15 +56,20 @@ export const ViewArtTradeOffer: React.FC<ViewArtTradeOfferProps> = ({ open, onCl
         const res = await axios.get(url, { withCredentials: true });
 
         const rawData = res.data;
-        let normalizedOffers = [];
+        let normalizedOffers: TradeOffer[] = [];
 
         if (Array.isArray(rawData)) {
           normalizedOffers = rawData;
-        } else if (Array.isArray(rawData?.offers)) {
-          normalizedOffers = rawData.offers;
+        } else if (rawData && typeof rawData === 'object') {
+          if (Array.isArray(rawData.offers)) {
+            normalizedOffers = rawData.offers;
+          }
+          if (rawData.isCompleted) {
+            setIsPostCompleted(true);
+          }
         }
-
-        setOffers(normalizedOffers);
+        const pendingOnly = normalizedOffers.filter((o) => o.status === 'PENDING');
+        setOffers(pendingOnly);
       } catch (err) {
         console.error('Failed to load trade offers:', err);
         setError('Failed to load trade offers.');
@@ -64,6 +81,29 @@ export const ViewArtTradeOffer: React.FC<ViewArtTradeOfferProps> = ({ open, onCl
 
     fetchOffers();
   }, [open, postId]);
+
+  const handleAccept = async (offerId: number) => {
+    try {
+      setError('');
+      setAcceptingId(offerId);
+
+      await axios.patch(`/artTradeOffers/${offerId}/accept`, {}, { withCredentials: true });
+
+      setOffers([]);
+      setIsPostCompleted(true);
+
+      if (onAccept) {
+        onAccept();
+      } else {
+        onClose();
+      }
+    } catch (err) {
+      console.error('Failed to accept offer:', err);
+      setError('Failed to process trade acceptance.');
+    } finally {
+      setAcceptingId(null);
+    }
+  };
 
   return (
     <Modal open={open} onClose={onClose}>
@@ -82,10 +122,14 @@ export const ViewArtTradeOffer: React.FC<ViewArtTradeOfferProps> = ({ open, onCl
           </Box>
         )}
 
-        {error && <Typography color="error">{error}</Typography>}
+        {error && <Alert severity="error">{error}</Alert>}
 
-        {!loading && !error && offers.length === 0 && (
-          <Typography color="text.secondary">No art trade offers found.</Typography>
+        {!loading && !error && isPostCompleted && offers.length === 0 && (
+          <Alert severity="info">This trade has already been completed.</Alert>
+        )}
+
+        {!loading && !error && !isPostCompleted && offers.length === 0 && (
+          <Typography color="text.secondary">No pending art trade offers found.</Typography>
         )}
 
         {!loading
@@ -119,11 +163,22 @@ export const ViewArtTradeOffer: React.FC<ViewArtTradeOfferProps> = ({ open, onCl
                 <Typography variant="subtitle2" sx={{ my: 1 }}>
                   Offer Message: {offer.message || 'No details provided.'}
                 </Typography>
+
+                <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
+                  <Button
+                    variant="contained"
+                    color="success"
+                    onClick={() => handleAccept(offer.id)}
+                    disabled={acceptingId !== null}
+                  >
+                    {acceptingId === offer.id ? 'Accepting...' : 'Accept Trade'}
+                  </Button>
+                </Box>
               </CardContent>
             </Card>
           ))}
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
-          <Button onClick={onClose} variant="contained">
+          <Button onClick={onClose} variant="contained" disabled={acceptingId !== null}>
             Close
           </Button>
         </Box>
