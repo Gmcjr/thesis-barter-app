@@ -6,7 +6,8 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import Chip from '@mui/material/Chip';
-import { type ReportRow, targetSnippet } from './format';
+import { targetSnippet } from './format';
+import type { ReportRow } from './types';
 
   interface Props {
     report: ReportRow;

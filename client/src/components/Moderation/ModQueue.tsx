@@ -8,49 +8,11 @@ import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import Chip from '@mui/material/Chip';
 import { useToast } from '../../context/ToastContext';
+import { targetSnippet, appealTargetSnippet } from './format';
+import type { ReportRow, AppealRow } from './types';
 
 type Status = 'PENDING' | 'APPROVED' | 'REMOVED' | 'ALL';
 type View = 'reports' | 'appeals';
-
-interface ReportRow {
-  id: number;
-  targetType: 'POST' | 'USER' | 'MESSAGE';
-  reason: string;
-  details: string | null;
-  aiScore: number | null;
-  aiCategories: string[];
-  aiRationale: string | null;
-  status: 'PENDING' | 'APPROVED' | 'REMOVED';
-  resolution: string | null;
-  resolverId: number | null;
-  createdAt: string;
-  reporter: { id: number; name: string | null };
-  post: { id: number; message: string; isRemoved: boolean } | null;
-  targetUser: { id: number; name: string | null } | null;
-  message: { id: number; text: string; isRemoved: boolean } | null;
-  resolver: { id: number; name: string | null } | null;
-}
-
-// Returned by GET /appeals - report is nested since an appeal
-//  always belongs to exactly one report
-interface AppealRow {
-  id: number;
-  message: string;
-  status: 'PENDING' | 'GRANTED' | 'DENIED';
-  resolution: string | null;
-  resolverId: number | null;
-  createdAt: string;
-  appellant: { id: number; name: string | null };
-  resolver: { id: number; name: string | null } | null;
-  report: {
-    id: number;
-    reason: string;
-    aiRationale: string | null;
-    post: { id: number; message: string } | null;
-    message: { id: number; text: string } | null;
-    targetUser: { id: number; name: string | null } | null;
-  };
-}
 
 const tabs: Status[] = ['PENDING', 'APPROVED', 'REMOVED', 'ALL'];
 
@@ -115,18 +77,6 @@ export default function ModQueue() {
     }
   };
 
-  const targetSnippet = (report: ReportRow) => {
-    if (report.targetType === 'POST') return report.post?.message ?? '(post not found)';
-    if (report.targetType === 'MESSAGE') return report.message?.text ?? '(message not found)';
-    return `User: ${report.targetUser?.name ?? 'user not found)'}`;
-  };
-
-  const appealTargetSnippet = (appeal: AppealRow) => {
-    if (appeal.report.post) return appeal.report.post.message;
-    if (appeal.report.message) return appeal.report.message.text;
-    return `User: ${appeal.report.targetUser?.name ?? '(user not found)'}`;
-  };
-
   return (
     <Box>
       <Typography variant="h5" sx={{ fontWeight: 700, mb: 2 }}>
@@ -178,7 +128,7 @@ export default function ModQueue() {
 
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             {reports.map((report) => (
-              <Card key={report.id} variant="outlined" sx={{ borderRadius: 3 }}>
+              <Card key={report.id} variant="outlined" sx={{ borderRadius: 0.5 }}>
                 <CardContent>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                     <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
@@ -254,7 +204,8 @@ export default function ModQueue() {
                   <Box sx={{ display: 'flex', gap: 1 }}>
                     <Button
                       size="small"
-                      variant="outlined"
+                      variant="contained"
+                      color="success"
                       disabled={resolvingId === report.id}
                       onClick={() => handleResolve(report.id, 'approve')}
                     >
@@ -285,7 +236,7 @@ export default function ModQueue() {
 
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             {appeals.map((appeal) => (
-              <Card key={appeal.id} variant="outlined" sx={{ borderRadius: 3 }}>
+              <Card key={appeal.id} variant="outlined" sx={{ borderRadius: 0.5 }}>
                 <CardContent>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                     <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
@@ -342,7 +293,7 @@ export default function ModQueue() {
                     </Button>
                     <Button
                       size="small"
-                      variant="outlined"
+                      variant="contained"
                       color="error"
                       disabled={resolvingId === appeal.id}
                       onClick={() => handleResolveAppeal(appeal.id, 'deny')}
