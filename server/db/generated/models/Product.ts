@@ -255,6 +255,7 @@ export type ProductWhereInput = {
   post?: Prisma.XOR<Prisma.PostScalarRelationFilter, Prisma.PostWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   cat?: Prisma.XOR<Prisma.CatScalarRelationFilter, Prisma.CatWhereInput>
+  productMedia?: Prisma.ProductMediaListRelationFilter
 }
 
 export type ProductOrderByWithRelationInput = {
@@ -269,6 +270,7 @@ export type ProductOrderByWithRelationInput = {
   post?: Prisma.PostOrderByWithRelationInput
   user?: Prisma.UserOrderByWithRelationInput
   cat?: Prisma.CatOrderByWithRelationInput
+  productMedia?: Prisma.ProductMediaOrderByRelationAggregateInput
 }
 
 export type ProductWhereUniqueInput = Prisma.AtLeast<{
@@ -286,6 +288,7 @@ export type ProductWhereUniqueInput = Prisma.AtLeast<{
   post?: Prisma.XOR<Prisma.PostScalarRelationFilter, Prisma.PostWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   cat?: Prisma.XOR<Prisma.CatScalarRelationFilter, Prisma.CatWhereInput>
+  productMedia?: Prisma.ProductMediaListRelationFilter
 }, "id">
 
 export type ProductOrderByWithAggregationInput = {
@@ -326,6 +329,7 @@ export type ProductCreateInput = {
   post: Prisma.PostCreateNestedOneWithoutProductsInput
   user: Prisma.UserCreateNestedOneWithoutProductsInput
   cat: Prisma.CatCreateNestedOneWithoutProductsInput
+  productMedia?: Prisma.ProductMediaCreateNestedManyWithoutProductInput
 }
 
 export type ProductUncheckedCreateInput = {
@@ -337,6 +341,7 @@ export type ProductUncheckedCreateInput = {
   description?: string | null
   condition: $Enums.Cond
   location?: string | null
+  productMedia?: Prisma.ProductMediaUncheckedCreateNestedManyWithoutProductInput
 }
 
 export type ProductUpdateInput = {
@@ -347,6 +352,7 @@ export type ProductUpdateInput = {
   post?: Prisma.PostUpdateOneRequiredWithoutProductsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutProductsNestedInput
   cat?: Prisma.CatUpdateOneRequiredWithoutProductsNestedInput
+  productMedia?: Prisma.ProductMediaUpdateManyWithoutProductNestedInput
 }
 
 export type ProductUncheckedUpdateInput = {
@@ -358,6 +364,7 @@ export type ProductUncheckedUpdateInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   condition?: Prisma.EnumCondFieldUpdateOperationsInput | $Enums.Cond
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  productMedia?: Prisma.ProductMediaUncheckedUpdateManyWithoutProductNestedInput
 }
 
 export type ProductCreateManyInput = {
@@ -444,6 +451,11 @@ export type ProductSumOrderByAggregateInput = {
   postId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   catId?: Prisma.SortOrder
+}
+
+export type ProductScalarRelationFilter = {
+  is?: Prisma.ProductWhereInput
+  isNot?: Prisma.ProductWhereInput
 }
 
 export type ProductCreateNestedManyWithoutUserInput = {
@@ -576,6 +588,20 @@ export type ProductUncheckedUpdateManyWithoutCatNestedInput = {
   deleteMany?: Prisma.ProductScalarWhereInput | Prisma.ProductScalarWhereInput[]
 }
 
+export type ProductCreateNestedOneWithoutProductMediaInput = {
+  create?: Prisma.XOR<Prisma.ProductCreateWithoutProductMediaInput, Prisma.ProductUncheckedCreateWithoutProductMediaInput>
+  connectOrCreate?: Prisma.ProductCreateOrConnectWithoutProductMediaInput
+  connect?: Prisma.ProductWhereUniqueInput
+}
+
+export type ProductUpdateOneRequiredWithoutProductMediaNestedInput = {
+  create?: Prisma.XOR<Prisma.ProductCreateWithoutProductMediaInput, Prisma.ProductUncheckedCreateWithoutProductMediaInput>
+  connectOrCreate?: Prisma.ProductCreateOrConnectWithoutProductMediaInput
+  upsert?: Prisma.ProductUpsertWithoutProductMediaInput
+  connect?: Prisma.ProductWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProductUpdateToOneWithWhereWithoutProductMediaInput, Prisma.ProductUpdateWithoutProductMediaInput>, Prisma.ProductUncheckedUpdateWithoutProductMediaInput>
+}
+
 export type ProductCreateWithoutUserInput = {
   name: string
   description?: string | null
@@ -583,6 +609,7 @@ export type ProductCreateWithoutUserInput = {
   location?: string | null
   post: Prisma.PostCreateNestedOneWithoutProductsInput
   cat: Prisma.CatCreateNestedOneWithoutProductsInput
+  productMedia?: Prisma.ProductMediaCreateNestedManyWithoutProductInput
 }
 
 export type ProductUncheckedCreateWithoutUserInput = {
@@ -593,6 +620,7 @@ export type ProductUncheckedCreateWithoutUserInput = {
   description?: string | null
   condition: $Enums.Cond
   location?: string | null
+  productMedia?: Prisma.ProductMediaUncheckedCreateNestedManyWithoutProductInput
 }
 
 export type ProductCreateOrConnectWithoutUserInput = {
@@ -642,6 +670,7 @@ export type ProductCreateWithoutPostInput = {
   location?: string | null
   user: Prisma.UserCreateNestedOneWithoutProductsInput
   cat: Prisma.CatCreateNestedOneWithoutProductsInput
+  productMedia?: Prisma.ProductMediaCreateNestedManyWithoutProductInput
 }
 
 export type ProductUncheckedCreateWithoutPostInput = {
@@ -652,6 +681,7 @@ export type ProductUncheckedCreateWithoutPostInput = {
   description?: string | null
   condition: $Enums.Cond
   location?: string | null
+  productMedia?: Prisma.ProductMediaUncheckedCreateNestedManyWithoutProductInput
 }
 
 export type ProductCreateOrConnectWithoutPostInput = {
@@ -687,6 +717,7 @@ export type ProductCreateWithoutCatInput = {
   location?: string | null
   post: Prisma.PostCreateNestedOneWithoutProductsInput
   user: Prisma.UserCreateNestedOneWithoutProductsInput
+  productMedia?: Prisma.ProductMediaCreateNestedManyWithoutProductInput
 }
 
 export type ProductUncheckedCreateWithoutCatInput = {
@@ -697,6 +728,7 @@ export type ProductUncheckedCreateWithoutCatInput = {
   description?: string | null
   condition: $Enums.Cond
   location?: string | null
+  productMedia?: Prisma.ProductMediaUncheckedCreateNestedManyWithoutProductInput
 }
 
 export type ProductCreateOrConnectWithoutCatInput = {
@@ -725,6 +757,64 @@ export type ProductUpdateManyWithWhereWithoutCatInput = {
   data: Prisma.XOR<Prisma.ProductUpdateManyMutationInput, Prisma.ProductUncheckedUpdateManyWithoutCatInput>
 }
 
+export type ProductCreateWithoutProductMediaInput = {
+  name: string
+  description?: string | null
+  condition: $Enums.Cond
+  location?: string | null
+  post: Prisma.PostCreateNestedOneWithoutProductsInput
+  user: Prisma.UserCreateNestedOneWithoutProductsInput
+  cat: Prisma.CatCreateNestedOneWithoutProductsInput
+}
+
+export type ProductUncheckedCreateWithoutProductMediaInput = {
+  id?: number
+  postId: number
+  userId: number
+  catId: number
+  name: string
+  description?: string | null
+  condition: $Enums.Cond
+  location?: string | null
+}
+
+export type ProductCreateOrConnectWithoutProductMediaInput = {
+  where: Prisma.ProductWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProductCreateWithoutProductMediaInput, Prisma.ProductUncheckedCreateWithoutProductMediaInput>
+}
+
+export type ProductUpsertWithoutProductMediaInput = {
+  update: Prisma.XOR<Prisma.ProductUpdateWithoutProductMediaInput, Prisma.ProductUncheckedUpdateWithoutProductMediaInput>
+  create: Prisma.XOR<Prisma.ProductCreateWithoutProductMediaInput, Prisma.ProductUncheckedCreateWithoutProductMediaInput>
+  where?: Prisma.ProductWhereInput
+}
+
+export type ProductUpdateToOneWithWhereWithoutProductMediaInput = {
+  where?: Prisma.ProductWhereInput
+  data: Prisma.XOR<Prisma.ProductUpdateWithoutProductMediaInput, Prisma.ProductUncheckedUpdateWithoutProductMediaInput>
+}
+
+export type ProductUpdateWithoutProductMediaInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  condition?: Prisma.EnumCondFieldUpdateOperationsInput | $Enums.Cond
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  post?: Prisma.PostUpdateOneRequiredWithoutProductsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutProductsNestedInput
+  cat?: Prisma.CatUpdateOneRequiredWithoutProductsNestedInput
+}
+
+export type ProductUncheckedUpdateWithoutProductMediaInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  postId?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  catId?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  condition?: Prisma.EnumCondFieldUpdateOperationsInput | $Enums.Cond
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
 export type ProductCreateManyUserInput = {
   id?: number
   postId: number
@@ -742,6 +832,7 @@ export type ProductUpdateWithoutUserInput = {
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   post?: Prisma.PostUpdateOneRequiredWithoutProductsNestedInput
   cat?: Prisma.CatUpdateOneRequiredWithoutProductsNestedInput
+  productMedia?: Prisma.ProductMediaUpdateManyWithoutProductNestedInput
 }
 
 export type ProductUncheckedUpdateWithoutUserInput = {
@@ -752,6 +843,7 @@ export type ProductUncheckedUpdateWithoutUserInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   condition?: Prisma.EnumCondFieldUpdateOperationsInput | $Enums.Cond
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  productMedia?: Prisma.ProductMediaUncheckedUpdateManyWithoutProductNestedInput
 }
 
 export type ProductUncheckedUpdateManyWithoutUserInput = {
@@ -781,6 +873,7 @@ export type ProductUpdateWithoutPostInput = {
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   user?: Prisma.UserUpdateOneRequiredWithoutProductsNestedInput
   cat?: Prisma.CatUpdateOneRequiredWithoutProductsNestedInput
+  productMedia?: Prisma.ProductMediaUpdateManyWithoutProductNestedInput
 }
 
 export type ProductUncheckedUpdateWithoutPostInput = {
@@ -791,6 +884,7 @@ export type ProductUncheckedUpdateWithoutPostInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   condition?: Prisma.EnumCondFieldUpdateOperationsInput | $Enums.Cond
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  productMedia?: Prisma.ProductMediaUncheckedUpdateManyWithoutProductNestedInput
 }
 
 export type ProductUncheckedUpdateManyWithoutPostInput = {
@@ -820,6 +914,7 @@ export type ProductUpdateWithoutCatInput = {
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   post?: Prisma.PostUpdateOneRequiredWithoutProductsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutProductsNestedInput
+  productMedia?: Prisma.ProductMediaUpdateManyWithoutProductNestedInput
 }
 
 export type ProductUncheckedUpdateWithoutCatInput = {
@@ -830,6 +925,7 @@ export type ProductUncheckedUpdateWithoutCatInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   condition?: Prisma.EnumCondFieldUpdateOperationsInput | $Enums.Cond
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  productMedia?: Prisma.ProductMediaUncheckedUpdateManyWithoutProductNestedInput
 }
 
 export type ProductUncheckedUpdateManyWithoutCatInput = {
@@ -842,6 +938,35 @@ export type ProductUncheckedUpdateManyWithoutCatInput = {
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
+
+/**
+ * Count Type ProductCountOutputType
+ */
+
+export type ProductCountOutputType = {
+  productMedia: number
+}
+
+export type ProductCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  productMedia?: boolean | ProductCountOutputTypeCountProductMediaArgs
+}
+
+/**
+ * ProductCountOutputType without action
+ */
+export type ProductCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ProductCountOutputType
+   */
+  select?: Prisma.ProductCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * ProductCountOutputType without action
+ */
+export type ProductCountOutputTypeCountProductMediaArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ProductMediaWhereInput
+}
 
 
 export type ProductSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -856,6 +981,8 @@ export type ProductSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   post?: boolean | Prisma.PostDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   cat?: boolean | Prisma.CatDefaultArgs<ExtArgs>
+  productMedia?: boolean | Prisma.Product$productMediaArgs<ExtArgs>
+  _count?: boolean | Prisma.ProductCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["product"]>
 
 export type ProductSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -902,6 +1029,8 @@ export type ProductInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   post?: boolean | Prisma.PostDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   cat?: boolean | Prisma.CatDefaultArgs<ExtArgs>
+  productMedia?: boolean | Prisma.Product$productMediaArgs<ExtArgs>
+  _count?: boolean | Prisma.ProductCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ProductIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   post?: boolean | Prisma.PostDefaultArgs<ExtArgs>
@@ -920,6 +1049,7 @@ export type $ProductPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     post: Prisma.$PostPayload<ExtArgs>
     user: Prisma.$UserPayload<ExtArgs>
     cat: Prisma.$CatPayload<ExtArgs>
+    productMedia: Prisma.$ProductMediaPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1327,6 +1457,7 @@ export interface Prisma__ProductClient<T, Null = never, ExtArgs extends runtime.
   post<T extends Prisma.PostDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PostDefaultArgs<ExtArgs>>): Prisma.Prisma__PostClient<runtime.Types.Result.GetResult<Prisma.$PostPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   cat<T extends Prisma.CatDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CatDefaultArgs<ExtArgs>>): Prisma.Prisma__CatClient<runtime.Types.Result.GetResult<Prisma.$CatPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  productMedia<T extends Prisma.Product$productMediaArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Product$productMediaArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProductMediaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1762,6 +1893,30 @@ export type ProductDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * Limit how many Products to delete.
    */
   limit?: number
+}
+
+/**
+ * Product.productMedia
+ */
+export type Product$productMediaArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ProductMedia
+   */
+  select?: Prisma.ProductMediaSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ProductMedia
+   */
+  omit?: Prisma.ProductMediaOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProductMediaInclude<ExtArgs> | null
+  where?: Prisma.ProductMediaWhereInput
+  orderBy?: Prisma.ProductMediaOrderByWithRelationInput | Prisma.ProductMediaOrderByWithRelationInput[]
+  cursor?: Prisma.ProductMediaWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ProductMediaScalarFieldEnum | Prisma.ProductMediaScalarFieldEnum[]
 }
 
 /**

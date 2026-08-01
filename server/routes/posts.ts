@@ -69,7 +69,6 @@ posts.post('/', requireAuth, async (req, res) => {
     const {
       title,
       message,
-      images = [],
       isLocal = false,
       zipCode,
       radiusMiles,
@@ -90,7 +89,6 @@ posts.post('/', requireAuth, async (req, res) => {
         userId,
         title,
         message,
-        images,
         isLocal,
         zipCode: isLocal ? zipCode : null,
         radiusMiles: isLocal ? radiusMiles : null,

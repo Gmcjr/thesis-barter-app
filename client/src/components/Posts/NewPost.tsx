@@ -32,7 +32,6 @@ export interface PostFormData {
   isLocal: boolean;
   zipCode?: string;
   radiusMiles?: number;
-  images?: string[];
 }
 
 interface CreatePostModalProps {
@@ -51,7 +50,6 @@ type FormState = {
   isLocal: boolean;
   zipCode: string;
   radiusMiles: number;
-  images: string[];
 };
 
 const initialForm: FormState = {
@@ -64,7 +62,6 @@ const initialForm: FormState = {
   isLocal: false,
   zipCode: '',
   radiusMiles: 15,
-  images: [],
 };
 
 export default function CreatePostModal({
@@ -110,7 +107,6 @@ export default function CreatePostModal({
       isLocal: formData.isLocal,
       zipCode: formData.isLocal ? formData.zipCode.trim() : undefined,
       radiusMiles: formData.isLocal ? formData.radiusMiles : undefined,
-      images: formData.images,
     });
 
     setFormData(initialForm);
@@ -149,7 +145,7 @@ export default function CreatePostModal({
               value={formData.offerType}
               onChange={(e) => handleChange('offerType', e.target.value as CatType)}
             >
-              <FormControlLabel value="PRODUCT" control={<Radio />} label="Item / Product" />
+              <FormControlLabel value="PRODUCT" control={<Radio />} label="Item" />
               <FormControlLabel value="SERVICE" control={<Radio />} label="Service" />
             </RadioGroup>
 
