@@ -72,6 +72,11 @@ export type Post = Prisma.PostModel
  */
 export type Trade = Prisma.TradeModel
 /**
+ * Model TradeOffer
+ * 
+ */
+export type TradeOffer = Prisma.TradeOfferModel
+/**
  * Model Comment
  * 
  */
@@ -97,7 +102,57 @@ export type Cat = Prisma.CatModel
  */
 export type Review = Prisma.ReviewModel
 /**
+ * Model Block
+ * 
+ */
+export type Block = Prisma.BlockModel
+/**
  * Model Report
  * 
  */
 export type Report = Prisma.ReportModel
+/**
+ * Model Appeal
+ * 
+ */
+export type Appeal = Prisma.AppealModel
+/**
+ * Model Media
+ * 
+ */
+export type Media = Prisma.MediaModel
+/**
+ * Model PostMedia
+ * 
+ */
+export type PostMedia = Prisma.PostMediaModel
+/**
+ * Model TradeOfferMedia
+ * 
+ */
+export type TradeOfferMedia = Prisma.TradeOfferMediaModel
+/**
+ * Model ProductMedia
+ * 
+ */
+export type ProductMedia = Prisma.ProductMediaModel
+/**
+ * Model ServiceMedia
+ * 
+ */
+export type ServiceMedia = Prisma.ServiceMediaModel
+/**
+ * Model CommentMedia
+ * 
+ */
+export type CommentMedia = Prisma.CommentMediaModel
+/**
+ * Model MessageMedia
+ * 
+ */
+export type MessageMedia = Prisma.MessageMediaModel
+/**
+ * Model UserMedia
+ * 
+ */
+export type UserMedia = Prisma.UserMediaModel

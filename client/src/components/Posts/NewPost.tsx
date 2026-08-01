@@ -19,65 +19,57 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Collapse from '@mui/material/Collapse';
 
-import type { Cat, CatType, Cond } from '../../../../server/db/generated/browser';
-
-type Category = Pick<Cat, 'id' | 'name' | 'type'>;
+import type { CatType, Cond } from '../../../../server/db/generated/browser';
 
 // type definitions
 export interface PostFormData {
   title: string;
   name: string;
   offerType: CatType;
-  catId: number;
+  category: string;
   description: string;
   condition?: Cond;
   isLocal: boolean;
   zipCode?: string;
   radiusMiles?: number;
-  images?: string[];
 }
 
 interface CreatePostModalProps {
   open: boolean;
   onClose: () => void;
   onSubmit: (formData: PostFormData) => Promise<void>;
-  categories: Category[];
 }
 
 type FormState = {
   title: string;
   name: string;
   offerType: CatType;
-  catId: number | '';
+  category: string;
   description: string;
   condition: Cond;
   isLocal: boolean;
   zipCode: string;
   radiusMiles: number;
-  images: string[];
 };
 
 const initialForm: FormState = {
   title: '',
   name: '',
   offerType: 'PRODUCT',
-  catId: '',
+  category: '',
   description: '',
   condition: 'GOOD',
   isLocal: false,
   zipCode: '',
   radiusMiles: 15,
-  images: [],
 };
 
 export default function CreatePostModal({
   open,
   onClose,
   onSubmit,
-  categories,
 }: CreatePostModalProps) {
   const [formData, setFormData] = useState<FormState>(initialForm);
-  const [submitting, setSubmitting] = useState(false);
 
   // change handler
   const handleChange = <K extends keyof FormState>(
@@ -87,50 +79,39 @@ export default function CreatePostModal({
     setFormData((prev) => ({
       ...prev,
       [field]: value,
-      ...(field === 'offerType' ? { catId: '' } : {}),
+      ...(field === 'offerType' ? { category: '' } : {}),
     }));
   };
 
   // close and reset the form
   const handleClose = () => {
-    if (submitting) return;
-
     setFormData(initialForm);
     onClose();
   };
 
   // check for valid data
-  const isInvalid = (!formData.title.trim() || !formData.name.trim() || !formData.catId || !formData.description.trim() || (formData.isLocal && !formData.zipCode.trim()));
+  const isInvalid = (!formData.title.trim() || !formData.name.trim() || !formData.category.trim() || !formData.description.trim() || (formData.isLocal && !formData.zipCode.trim()));
 
   // submit handler for the form
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (isInvalid) return;
-    setSubmitting(true);
 
-    try {
-      await onSubmit({
-        title: formData.title.trim(),
-        name: formData.name.trim(),
-        offerType: formData.offerType,
-        catId: Number(formData.catId),
-        description: formData.description.trim(),
-        condition: formData.offerType === 'PRODUCT' ? formData.condition : undefined,
-        isLocal: formData.isLocal,
-        zipCode: formData.isLocal ? formData.zipCode.trim() : undefined,
-        radiusMiles: formData.isLocal ? formData.radiusMiles : undefined,
-        images: formData.images,
-      });
+    onSubmit({
+      title: formData.title.trim(),
+      name: formData.name.trim(),
+      offerType: formData.offerType,
+      category: formData.category.trim(),
+      description: formData.description.trim(),
+      condition: formData.offerType === 'PRODUCT' ? formData.condition : undefined,
+      isLocal: formData.isLocal,
+      zipCode: formData.isLocal ? formData.zipCode.trim() : undefined,
+      radiusMiles: formData.isLocal ? formData.radiusMiles : undefined,
+    });
 
-      setFormData(initialForm);
-      onClose();
-    } catch (error) {
-      console.error('Failed to submit post:', error);
-    } finally {
-      setSubmitting(false);
-    }
+    setFormData(initialForm);
+    onClose();
   };
-
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
       <DialogTitle sx={{ fontWeight: 'bold' }}>Create New Trade Post</DialogTitle>
@@ -164,27 +145,18 @@ export default function CreatePostModal({
               value={formData.offerType}
               onChange={(e) => handleChange('offerType', e.target.value as CatType)}
             >
-              <FormControlLabel value="PRODUCT" control={<Radio />} label="Item / Product" />
+              <FormControlLabel value="PRODUCT" control={<Radio />} label="Item" />
               <FormControlLabel value="SERVICE" control={<Radio />} label="Service" />
             </RadioGroup>
 
-            {/* Category Dropdown */}
-            <FormControl fullWidth required>
-              <InputLabel>Category</InputLabel>
-              <Select
-                value={formData.catId}
-                label="Category"
-                onChange={(e) => handleChange('catId', Number(e.target.value))}
-              >
-                {categories
-                  .filter((c) => c.type === formData.offerType)
-                  .map((cat) => (
-                    <MenuItem key={cat.id} value={cat.id}>
-                      {cat.name}
-                    </MenuItem>
-                  ))}
-              </Select>
-            </FormControl>
+            {/* Category */}
+            <TextField
+              label="Category"
+              fullWidth
+              required
+              value={formData.category}
+              onChange={(e) => handleChange('category', e.target.value)}
+            />
 
             {/* Description */}
             <TextField
@@ -259,15 +231,15 @@ export default function CreatePostModal({
         </DialogContent>
 
         <DialogActions sx={{ px: 3, py: 2 }}>
-          <Button onClick={handleClose} color="inherit" disabled={submitting}>
+          <Button onClick={handleClose} color="inherit">
             Cancel
           </Button>
           <Button
             type="submit"
             variant="contained"
-            disabled={submitting || isInvalid}
+            disabled={isInvalid}
           >
-            {submitting ? 'Posting...' : 'Create Post'}
+            Create Post
           </Button>
         </DialogActions>
       </form>

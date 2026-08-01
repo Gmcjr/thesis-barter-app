@@ -13,8 +13,8 @@ datasource db {
 }
 
 model User {
-  id           Int        @id @default(autoincrement())
-  googleId     String?    @unique
+  id       Int     @id @default(autoincrement())
+  googleId String? @unique
 
   posts        Post[]
   reqTrades    Trade[]     @relation("reqTrades")
@@ -29,18 +29,27 @@ model User {
   rMessages    Message[]   @relation("rMessages")
   sReviews     Review[]    @relation("sReviews")
   rReviews     Review[]    @relation("rReviews")
+  tradeOffers  TradeOffer[]
+  media        Media[]       
+  userMedia    UserMedia[]   
 
-  name         String
-  email        String      @unique
-  phone        String?
-  role         Role?       @default(USER)
-  bio          String?
-  createdAt    DateTime    @default(now())
-  zipCode      String?
+  name      String
+  email     String   @unique
+  phone     String?
+  role      Role?    @default(USER)
+  bio       String?
+  createdAt DateTime @default(now())
+  zipCode   String?
 
-  reportsFiled    Report[]  @relation("reportsFiled")
-  reportsAgainst  Report[]  @relation("reportsAgainst")
-  reportsResolved Report[]  @relation("reportsResolved")
+  reportsFiled    Report[] @relation("reportsFiled")
+  reportsAgainst  Report[] @relation("reportsAgainst")
+  reportsResolved Report[] @relation("reportsResolved")
+
+  appealsFiled    Appeal[] @relation("appealsFiled")
+  appealsResolved Appeal[] @relation("appealsResolved")
+
+  blocksInitiated Block[] @relation("blocksInitiated")
+  blocksReceived  Block[] @relation("blocksReceived")
 }
 
 enum Role {
@@ -70,8 +79,9 @@ model Message {
 
   text String
 
-  reports   Report[]
-  isRemoved Boolean  @default(false)
+  reports      Report[]
+  isRemoved    Boolean        @default(false)
+  messageMedia MessageMedia[]
 }
 
 model Log {
@@ -81,28 +91,32 @@ model Log {
 }
 
 model Post {
-  id         Int       @id @default(autoincrement())
-  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId     Int
+  id     Int  @id @default(autoincrement())
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int
 
   products   Product[]
   services   Service[]
   comments   Comment[]
   trade      Trade?
 
-  title       String
-  message     String
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
   images      String[]
   status      Status    @default(OPEN)
+  tradeOffers TradeOffer[]
+  postMedia   PostMedia[]
 
-  isLocal     Boolean   @default(false)
+  title      String
+  message    String
+  isComplete Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  isLocal     Boolean @default(false)
   zipCode     String?
   radiusMiles Int?
   lat         Float?
   lng         Float?
-  
+
   reports   Report[]
   isRemoved Boolean  @default(false)
 }
@@ -132,30 +146,57 @@ model Trade {
   createdAt   DateTime   @default(now())
 }
 
-model Comment {
-  id          Int      @id @default(autoincrement())
-  text        String
-  createdAt   DateTime @default(now())
+model TradeOffer {
+  id        Int    @id @default(autoincrement())
+  post      Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId    Int
+  offerer   User   @relation(fields: [offererId], references: [id], onDelete: Cascade)
+  offererId Int
+  message   String?
 
-  post        Post @relation(fields: [postId], references: [id], onDelete: Cascade)
-  postId      Int
-  user        User @relation(fields: [userId], references: [id])
-  userId      Int
+  tradeOfferMedia TradeOfferMedia[] 
+
+  ownerApproved   Boolean          @default(false)
+  offererApproved Boolean          @default(false)
+  status          TradeOfferStatus @default(PENDING)
+
+  createdAt DateTime @default(now())
+}
+
+enum TradeOfferStatus {
+  PENDING
+  ACCEPTED
+  COMPLETED
+  REJECTED
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  text      String
+  createdAt DateTime @default(now())
+
+  post         Post           @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId       Int
+  user         User           @relation(fields: [userId], references: [id])
+  userId       Int
+  commentMedia CommentMedia[]
 }
 
 model Product {
-  id          Int      @id @default(autoincrement())
-  post        Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  id          Int     @id @default(autoincrement())
+  post        Post    @relation(fields: [postId], references: [id])
   postId      Int
-  user        User     @relation(fields: [userId], references: [id])
+  user        User    @relation(fields: [userId], references: [id])
   userId      Int
-  cat         Cat      @relation(fields: [catId], references: [id])
+  cat         Cat     @relation(fields: [catId], references: [id])
   catId       Int
-  
+
   name        String
   description String?
   condition   Cond
   location    String?
+
+  productMedia ProductMedia[]
 }
 
 enum Cond {
@@ -177,6 +218,8 @@ model Service {
 
   name        String
   description String?
+
+  serviceMedia ServiceMedia[]
 }
 
 model Cat {
@@ -210,17 +253,31 @@ model Review {
   @@unique([tradeId, reviewerId])
 }
 
+model Block {
+  id Int @id @default(autoincrement())
+
+  blocker   User @relation("blocksInitiated", fields: [blockerId], references: [id], onDelete: Cascade)
+  blockerId Int
+  blocked   User @relation("blocksReceived", fields: [blockedId], references: [id], onDelete: Cascade)
+  blockedId Int
+
+  createdAt DateTime @default(now())
+
+  @@unique([blockerId, blockedId])
+  @@index([blockedId])
+}
+
 model Report {
   id         Int  @id @default(autoincrement())
   reporter   User @relation("reportsFiled", fields: [reporterId], references: [id])
   reporterId Int
 
   targetType   TargetType
-  post         Post?      @relation(fields: [postId], references: [id])
+  post         Post?    @relation(fields: [postId], references: [id])
   postId       Int?
-  targetUser   User?      @relation("reportsAgainst", fields: [targetUserId], references: [id])
+  targetUser   User?    @relation("reportsAgainst", fields: [targetUserId], references: [id])
   targetUserId Int?
-  message      Message?   @relation(fields: [messageId], references: [id])
+  message      Message? @relation(fields: [messageId], references: [id])
   messageId    Int?
 
   reason  ReportReason
@@ -237,6 +294,34 @@ model Report {
 
   createdAt  DateTime  @default(now())
   resolvedAt DateTime?
+
+  appeal Appeal?
+}
+
+model Appeal {
+  id Int @id @default(autoincrement())
+
+  report   Report @relation(fields: [reportId], references: [id])
+  reportId Int    @unique
+
+  appellant   User @relation("appealsFiled", fields: [appellantId], references: [id])
+  appellantId Int
+
+  message String
+
+  status     AppealStatus @default(PENDING)
+  resolution String?
+  resolver   User?        @relation("appealsResolved", fields: [resolverId], references: [id])
+  resolverId Int?
+
+  createdAt  DateTime  @default(now())
+  resolvedAt DateTime?
+}
+
+enum AppealStatus {
+  PENDING
+  GRANTED
+  DENIED
 }
 
 enum TargetType {
@@ -257,4 +342,100 @@ enum ReportStatus {
   PENDING
   APPROVED
   REMOVED
+}
+
+enum MediaVariant {
+  PREVIEW
+  FULL
+}
+
+model Media {
+  id     Int    @id @default(autoincrement())
+  s3Key  String @unique 
+
+  uploader   User @relation(fields: [uploaderId], references: [id], onDelete: Cascade)
+  uploaderId Int
+
+  variant   MediaVariant? 
+  createdAt DateTime       @default(now())
+
+  postMedia       PostMedia[]
+  tradeOfferMedia TradeOfferMedia[]
+  productMedia    ProductMedia[]
+  serviceMedia    ServiceMedia[]
+  commentMedia    CommentMedia[]
+  messageMedia    MessageMedia[]
+  userMedia       UserMedia[]
+}
+
+model PostMedia {
+  id        Int   @id @default(autoincrement())
+  media     Media @relation(fields: [mediaId], references: [id], onDelete: Cascade)
+  mediaId   Int
+  post      Post  @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId    Int
+  sortOrder Int   @default(0)
+
+  @@unique([mediaId, postId])
+}
+
+model TradeOfferMedia {
+  id           Int        @id @default(autoincrement())
+  media        Media      @relation(fields: [mediaId], references: [id], onDelete: Cascade)
+  mediaId      Int
+  tradeOffer   TradeOffer @relation(fields: [tradeOfferId], references: [id], onDelete: Cascade)
+  tradeOfferId Int
+  sortOrder    Int        @default(0)
+
+  @@unique([mediaId, tradeOfferId])
+}
+
+model ProductMedia {
+  id        Int     @id @default(autoincrement())
+  media     Media   @relation(fields: [mediaId], references: [id], onDelete: Cascade)
+  mediaId   Int
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId Int
+
+  @@unique([mediaId, productId])
+}
+
+model ServiceMedia {
+  id        Int     @id @default(autoincrement())
+  media     Media   @relation(fields: [mediaId], references: [id], onDelete: Cascade)
+  mediaId   Int
+  service   Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  serviceId Int
+
+  @@unique([mediaId, serviceId])
+}
+
+model CommentMedia {
+  id        Int     @id @default(autoincrement())
+  media     Media   @relation(fields: [mediaId], references: [id], onDelete: Cascade)
+  mediaId   Int
+  comment   Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  commentId Int
+
+  @@unique([mediaId, commentId])
+}
+
+model MessageMedia {
+  id        Int     @id @default(autoincrement())
+  media     Media   @relation(fields: [mediaId], references: [id], onDelete: Cascade)
+  mediaId   Int
+  message   Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  messageId Int
+
+  @@unique([mediaId, messageId])
+}
+
+model UserMedia {
+  id      Int   @id @default(autoincrement())
+  media   Media @relation(fields: [mediaId], references: [id], onDelete: Cascade)
+  mediaId Int
+  user    User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId  Int
+
+  @@unique([mediaId, userId])
 }

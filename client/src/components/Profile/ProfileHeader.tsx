@@ -6,8 +6,11 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
 import type { ProfileHeaderProps } from './types';
+import ProfileActionsMenu from './ProfileActionsMenu';
 
-export default function ProfileHeader({ profile, isOwnProfile, onEditClick }: ProfileHeaderProps) {
+export default function ProfileHeader({
+  profile, isOwnProfile, onEditClick, onReport, onBlock, blocked,
+}: ProfileHeaderProps) {
   return (
     <Card
       variant="outlined"
@@ -16,8 +19,14 @@ export default function ProfileHeader({ profile, isOwnProfile, onEditClick }: Pr
         borderColor: '#e0e0e0',
         mb: 4,
         mx: { xs: 2, md: 0 },
+        position: 'relative',
       }}
     >
+      {!isOwnProfile && (
+        <Box sx={{ position: 'absolute', top: 8, right: 8 }}>
+          <ProfileActionsMenu onReport={onReport} onBlock={onBlock} blocked={blocked} />
+        </Box>
+      )}
       <CardContent sx={{
         p: { xs: 2, sm: 3 },
         display: 'flex',

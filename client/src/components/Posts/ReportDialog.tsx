@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
@@ -11,12 +12,20 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { useToast } from '../../context/ToastContext';
 
-const reasons = [
+const baseReasons = [
   { value: 'SPAM_OR_SCAM', label: 'Spam or scam' },
   { value: 'INAPPROPRIATE_CONTENT', label: 'Inappropriate content' },
-  { value: 'ITEM_MISMATCH', label: "Item doesn't match description" },
+  { value: 'HARASSMENT', label: 'Harassment' },
   { value: 'OTHER', label: 'Other' },
 ];
+
+const reasonsFor = (targetType: 'POST' | 'USER' | 'MESSAGE') => (
+  targetType === 'USER' ? baseReasons : [
+    ...baseReasons.slice(0, 2),
+    { value: 'ITEM_MISMATCH', label: "Item doesn't match description" },
+    ...baseReasons.slice(2),
+  ]
+);
 
 interface ReportDialogProps {
   open: boolean;
@@ -31,35 +40,30 @@ export default function ReportDialog({
   const { showToast } = useToast();
   const [reason, setReason] = useState('');
   const [details, setDetails] = useState('');
-  const [submitting, setSubmitting] = useState(false);
+  const reasons = reasonsFor(targetType);
 
   const handleSubmit = async () => {
-    setSubmitting(true);
+    const submittedReason = reason;
+    const submittedDetails = details;
+
     showToast('Report submitted - running automatic screening...', 'info');
+    setReason('');
+    setDetails('');
+    onClose();
+
     try {
-      const res = await fetch('/reports', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({
-          targetType, targetId, reason, details,
-        }),
-      });
-      if (!res.ok) throw new Error('Report submission failed');
+      await axios.post('/reports', {
+        targetType, targetId, reason: submittedReason, details: submittedDetails,
+      }, { withCredentials: true });
       showToast('Screening complete. A neighbor moderator will confirm within 24 hours.', 'info');
-      setReason('');
-      setDetails('');
-      onClose();
     } catch {
       showToast("Couldn't submit report - check your connection and try again.", 'error');
-    } finally {
-      setSubmitting(false);
     }
   };
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="xs">
-      <DialogTitle>Report this post</DialogTitle>
+      <DialogTitle>{`Report this ${targetType === 'USER' ? 'user' : 'post'}`}</DialogTitle>
       <DialogContent>
         <RadioGroup value={reason} onChange={(e) => setReason(e.target.value)}>
           {reasons.map((r) => (
@@ -77,12 +81,13 @@ export default function ReportDialog({
           sx={{ mt: 1 }}
         />
         <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 2 }}>
-          Reports run through automatic screening first, then a moderator confirms within 24 hours.
+          Reports run through automatic screening first.
+          A moderator confirms within 24 hours if human review is required.
         </Typography>
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>
-        <Button variant="contained" disabled={!reason || submitting} onClick={handleSubmit}>
+        <Button variant="contained" disabled={!reason} onClick={handleSubmit}>
           Submit report
         </Button>
       </DialogActions>

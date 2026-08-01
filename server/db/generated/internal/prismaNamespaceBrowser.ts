@@ -57,12 +57,23 @@ export const ModelName = {
   Log: 'Log',
   Post: 'Post',
   Trade: 'Trade',
+  TradeOffer: 'TradeOffer',
   Comment: 'Comment',
   Product: 'Product',
   Service: 'Service',
   Cat: 'Cat',
   Review: 'Review',
-  Report: 'Report'
+  Block: 'Block',
+  Report: 'Report',
+  Appeal: 'Appeal',
+  Media: 'Media',
+  PostMedia: 'PostMedia',
+  TradeOfferMedia: 'TradeOfferMedia',
+  ProductMedia: 'ProductMedia',
+  ServiceMedia: 'ServiceMedia',
+  CommentMedia: 'CommentMedia',
+  MessageMedia: 'MessageMedia',
+  UserMedia: 'UserMedia'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -128,12 +139,13 @@ export type LogScalarFieldEnum = (typeof LogScalarFieldEnum)[keyof typeof LogSca
 export const PostScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
-  title: 'title',
-  message: 'message',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
   images: 'images',
   status: 'status',
+  title: 'title',
+  message: 'message',
+  isComplete: 'isComplete',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
   isLocal: 'isLocal',
   zipCode: 'zipCode',
   radiusMiles: 'radiusMiles',
@@ -157,6 +169,20 @@ export const TradeScalarFieldEnum = {
 } as const
 
 export type TradeScalarFieldEnum = (typeof TradeScalarFieldEnum)[keyof typeof TradeScalarFieldEnum]
+
+
+export const TradeOfferScalarFieldEnum = {
+  id: 'id',
+  postId: 'postId',
+  offererId: 'offererId',
+  message: 'message',
+  ownerApproved: 'ownerApproved',
+  offererApproved: 'offererApproved',
+  status: 'status',
+  createdAt: 'createdAt'
+} as const
+
+export type TradeOfferScalarFieldEnum = (typeof TradeOfferScalarFieldEnum)[keyof typeof TradeOfferScalarFieldEnum]
 
 
 export const CommentScalarFieldEnum = {
@@ -218,6 +244,16 @@ export const ReviewScalarFieldEnum = {
 export type ReviewScalarFieldEnum = (typeof ReviewScalarFieldEnum)[keyof typeof ReviewScalarFieldEnum]
 
 
+export const BlockScalarFieldEnum = {
+  id: 'id',
+  blockerId: 'blockerId',
+  blockedId: 'blockedId',
+  createdAt: 'createdAt'
+} as const
+
+export type BlockScalarFieldEnum = (typeof BlockScalarFieldEnum)[keyof typeof BlockScalarFieldEnum]
+
+
 export const ReportScalarFieldEnum = {
   id: 'id',
   reporterId: 'reporterId',
@@ -238,6 +274,97 @@ export const ReportScalarFieldEnum = {
 } as const
 
 export type ReportScalarFieldEnum = (typeof ReportScalarFieldEnum)[keyof typeof ReportScalarFieldEnum]
+
+
+export const AppealScalarFieldEnum = {
+  id: 'id',
+  reportId: 'reportId',
+  appellantId: 'appellantId',
+  message: 'message',
+  status: 'status',
+  resolution: 'resolution',
+  resolverId: 'resolverId',
+  createdAt: 'createdAt',
+  resolvedAt: 'resolvedAt'
+} as const
+
+export type AppealScalarFieldEnum = (typeof AppealScalarFieldEnum)[keyof typeof AppealScalarFieldEnum]
+
+
+export const MediaScalarFieldEnum = {
+  id: 'id',
+  s3Key: 's3Key',
+  uploaderId: 'uploaderId',
+  variant: 'variant',
+  createdAt: 'createdAt'
+} as const
+
+export type MediaScalarFieldEnum = (typeof MediaScalarFieldEnum)[keyof typeof MediaScalarFieldEnum]
+
+
+export const PostMediaScalarFieldEnum = {
+  id: 'id',
+  mediaId: 'mediaId',
+  postId: 'postId',
+  sortOrder: 'sortOrder'
+} as const
+
+export type PostMediaScalarFieldEnum = (typeof PostMediaScalarFieldEnum)[keyof typeof PostMediaScalarFieldEnum]
+
+
+export const TradeOfferMediaScalarFieldEnum = {
+  id: 'id',
+  mediaId: 'mediaId',
+  tradeOfferId: 'tradeOfferId',
+  sortOrder: 'sortOrder'
+} as const
+
+export type TradeOfferMediaScalarFieldEnum = (typeof TradeOfferMediaScalarFieldEnum)[keyof typeof TradeOfferMediaScalarFieldEnum]
+
+
+export const ProductMediaScalarFieldEnum = {
+  id: 'id',
+  mediaId: 'mediaId',
+  productId: 'productId'
+} as const
+
+export type ProductMediaScalarFieldEnum = (typeof ProductMediaScalarFieldEnum)[keyof typeof ProductMediaScalarFieldEnum]
+
+
+export const ServiceMediaScalarFieldEnum = {
+  id: 'id',
+  mediaId: 'mediaId',
+  serviceId: 'serviceId'
+} as const
+
+export type ServiceMediaScalarFieldEnum = (typeof ServiceMediaScalarFieldEnum)[keyof typeof ServiceMediaScalarFieldEnum]
+
+
+export const CommentMediaScalarFieldEnum = {
+  id: 'id',
+  mediaId: 'mediaId',
+  commentId: 'commentId'
+} as const
+
+export type CommentMediaScalarFieldEnum = (typeof CommentMediaScalarFieldEnum)[keyof typeof CommentMediaScalarFieldEnum]
+
+
+export const MessageMediaScalarFieldEnum = {
+  id: 'id',
+  mediaId: 'mediaId',
+  messageId: 'messageId'
+} as const
+
+export type MessageMediaScalarFieldEnum = (typeof MessageMediaScalarFieldEnum)[keyof typeof MessageMediaScalarFieldEnum]
+
+
+export const UserMediaScalarFieldEnum = {
+  id: 'id',
+  mediaId: 'mediaId',
+  userId: 'userId'
+} as const
+
+export type UserMediaScalarFieldEnum = (typeof UserMediaScalarFieldEnum)[keyof typeof UserMediaScalarFieldEnum]
 
 
 export const SortOrder = {

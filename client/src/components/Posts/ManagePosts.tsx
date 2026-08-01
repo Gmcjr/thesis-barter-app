@@ -15,6 +15,7 @@ import CardContent from '@mui/material/CardContent';
 import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
+import WhyRemovedMenu from './WhyRemovedMenu';
 import { formatPostDate } from '../../utils/utils';
 
 export type PostData = {
@@ -22,11 +23,11 @@ export type PostData = {
   userId: number;
   title: string;
   message: string;
-  images: string[];
   isLocal: boolean;
   zipCode: string | null;
   radiusMiles: number | null;
   isComplete: boolean;
+  isRemoved: boolean;
   createdAt: string;
   updatedAt?: string;
   user: {
@@ -39,12 +40,22 @@ export type PostData = {
     text: string;
     userId: number;
   }[];
+  reports?: {
+    id: number;
+    reason: string;
+    aiRationale: string | null;
+    resolver: { id: number; name: string | null } | null;
+    appeal: {
+      id: number;
+      status: 'PENDING' | 'GRANTED' | 'DENIED';
+      message: string;
+    } | null;
+  }[];
 };
 
 export type PostUpdateData = {
   title: string;
   message: string;
-  images: string[];
   isLocal: boolean;
   zipCode: string | null;
   radiusMiles: number | null;
@@ -105,7 +116,6 @@ export default function ManagePosts({
     setFormData({
       title: post.title,
       message: post.message,
-      images: post.images,
       isLocal: post.isLocal,
       zipCode: post.zipCode,
       radiusMiles: post.radiusMiles,
@@ -274,13 +284,13 @@ export default function ManagePosts({
                     {post.message}
                   </Typography>
 
-                  <Typography variant="caption" color="text.secondary">
+                  <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
                     {post.updatedAt && post.updatedAt !== post.createdAt
                       ? `Updated on ${formatPostDate(post.updatedAt)}`
                       : `Posted on ${formatPostDate(post.createdAt)}`}
                   </Typography>
 
-                  {!readOnly && (
+                  {!readOnly && !post.isRemoved && (
                     <Box sx={{
                       display: 'flex', flexWrap: 'wrap', gap: 1, mt: 2,
                     }}
@@ -315,6 +325,11 @@ export default function ManagePosts({
                       </Button>
                     </Box>
                   )}
+
+                  {post.isRemoved && post.reports && post.reports.length > 0 && (
+                    <WhyRemovedMenu report={post.reports[0]} />
+                  )}
+
                 </CardContent>
               </Card>
             ))}

@@ -329,6 +329,7 @@ export type ReportWhereInput = {
   targetUser?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   message?: Prisma.XOR<Prisma.MessageNullableScalarRelationFilter, Prisma.MessageWhereInput> | null
   resolver?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  appeal?: Prisma.XOR<Prisma.AppealNullableScalarRelationFilter, Prisma.AppealWhereInput> | null
 }
 
 export type ReportOrderByWithRelationInput = {
@@ -353,6 +354,7 @@ export type ReportOrderByWithRelationInput = {
   targetUser?: Prisma.UserOrderByWithRelationInput
   message?: Prisma.MessageOrderByWithRelationInput
   resolver?: Prisma.UserOrderByWithRelationInput
+  appeal?: Prisma.AppealOrderByWithRelationInput
 }
 
 export type ReportWhereUniqueInput = Prisma.AtLeast<{
@@ -380,6 +382,7 @@ export type ReportWhereUniqueInput = Prisma.AtLeast<{
   targetUser?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   message?: Prisma.XOR<Prisma.MessageNullableScalarRelationFilter, Prisma.MessageWhereInput> | null
   resolver?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  appeal?: Prisma.XOR<Prisma.AppealNullableScalarRelationFilter, Prisma.AppealWhereInput> | null
 }, "id">
 
 export type ReportOrderByWithAggregationInput = {
@@ -444,6 +447,7 @@ export type ReportCreateInput = {
   targetUser?: Prisma.UserCreateNestedOneWithoutReportsAgainstInput
   message?: Prisma.MessageCreateNestedOneWithoutReportsInput
   resolver?: Prisma.UserCreateNestedOneWithoutReportsResolvedInput
+  appeal?: Prisma.AppealCreateNestedOneWithoutReportInput
 }
 
 export type ReportUncheckedCreateInput = {
@@ -463,6 +467,7 @@ export type ReportUncheckedCreateInput = {
   resolverId?: number | null
   createdAt?: Date | string
   resolvedAt?: Date | string | null
+  appeal?: Prisma.AppealUncheckedCreateNestedOneWithoutReportInput
 }
 
 export type ReportUpdateInput = {
@@ -481,6 +486,7 @@ export type ReportUpdateInput = {
   targetUser?: Prisma.UserUpdateOneWithoutReportsAgainstNestedInput
   message?: Prisma.MessageUpdateOneWithoutReportsNestedInput
   resolver?: Prisma.UserUpdateOneWithoutReportsResolvedNestedInput
+  appeal?: Prisma.AppealUpdateOneWithoutReportNestedInput
 }
 
 export type ReportUncheckedUpdateInput = {
@@ -500,6 +506,7 @@ export type ReportUncheckedUpdateInput = {
   resolverId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  appeal?: Prisma.AppealUncheckedUpdateOneWithoutReportNestedInput
 }
 
 export type ReportCreateManyInput = {
@@ -636,6 +643,11 @@ export type ReportSumOrderByAggregateInput = {
   messageId?: Prisma.SortOrder
   aiScore?: Prisma.SortOrder
   resolverId?: Prisma.SortOrder
+}
+
+export type ReportScalarRelationFilter = {
+  is?: Prisma.ReportWhereInput
+  isNot?: Prisma.ReportWhereInput
 }
 
 export type ReportCreateNestedManyWithoutReporterInput = {
@@ -873,6 +885,20 @@ export type NullableDateTimeFieldUpdateOperationsInput = {
   set?: Date | string | null
 }
 
+export type ReportCreateNestedOneWithoutAppealInput = {
+  create?: Prisma.XOR<Prisma.ReportCreateWithoutAppealInput, Prisma.ReportUncheckedCreateWithoutAppealInput>
+  connectOrCreate?: Prisma.ReportCreateOrConnectWithoutAppealInput
+  connect?: Prisma.ReportWhereUniqueInput
+}
+
+export type ReportUpdateOneRequiredWithoutAppealNestedInput = {
+  create?: Prisma.XOR<Prisma.ReportCreateWithoutAppealInput, Prisma.ReportUncheckedCreateWithoutAppealInput>
+  connectOrCreate?: Prisma.ReportCreateOrConnectWithoutAppealInput
+  upsert?: Prisma.ReportUpsertWithoutAppealInput
+  connect?: Prisma.ReportWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ReportUpdateToOneWithWhereWithoutAppealInput, Prisma.ReportUpdateWithoutAppealInput>, Prisma.ReportUncheckedUpdateWithoutAppealInput>
+}
+
 export type ReportCreateWithoutReporterInput = {
   targetType: $Enums.TargetType
   reason: $Enums.ReportReason
@@ -888,6 +914,7 @@ export type ReportCreateWithoutReporterInput = {
   targetUser?: Prisma.UserCreateNestedOneWithoutReportsAgainstInput
   message?: Prisma.MessageCreateNestedOneWithoutReportsInput
   resolver?: Prisma.UserCreateNestedOneWithoutReportsResolvedInput
+  appeal?: Prisma.AppealCreateNestedOneWithoutReportInput
 }
 
 export type ReportUncheckedCreateWithoutReporterInput = {
@@ -906,6 +933,7 @@ export type ReportUncheckedCreateWithoutReporterInput = {
   resolverId?: number | null
   createdAt?: Date | string
   resolvedAt?: Date | string | null
+  appeal?: Prisma.AppealUncheckedCreateNestedOneWithoutReportInput
 }
 
 export type ReportCreateOrConnectWithoutReporterInput = {
@@ -933,6 +961,7 @@ export type ReportCreateWithoutTargetUserInput = {
   post?: Prisma.PostCreateNestedOneWithoutReportsInput
   message?: Prisma.MessageCreateNestedOneWithoutReportsInput
   resolver?: Prisma.UserCreateNestedOneWithoutReportsResolvedInput
+  appeal?: Prisma.AppealCreateNestedOneWithoutReportInput
 }
 
 export type ReportUncheckedCreateWithoutTargetUserInput = {
@@ -951,6 +980,7 @@ export type ReportUncheckedCreateWithoutTargetUserInput = {
   resolverId?: number | null
   createdAt?: Date | string
   resolvedAt?: Date | string | null
+  appeal?: Prisma.AppealUncheckedCreateNestedOneWithoutReportInput
 }
 
 export type ReportCreateOrConnectWithoutTargetUserInput = {
@@ -978,6 +1008,7 @@ export type ReportCreateWithoutResolverInput = {
   post?: Prisma.PostCreateNestedOneWithoutReportsInput
   targetUser?: Prisma.UserCreateNestedOneWithoutReportsAgainstInput
   message?: Prisma.MessageCreateNestedOneWithoutReportsInput
+  appeal?: Prisma.AppealCreateNestedOneWithoutReportInput
 }
 
 export type ReportUncheckedCreateWithoutResolverInput = {
@@ -996,6 +1027,7 @@ export type ReportUncheckedCreateWithoutResolverInput = {
   resolution?: string | null
   createdAt?: Date | string
   resolvedAt?: Date | string | null
+  appeal?: Prisma.AppealUncheckedCreateNestedOneWithoutReportInput
 }
 
 export type ReportCreateOrConnectWithoutResolverInput = {
@@ -1093,6 +1125,7 @@ export type ReportCreateWithoutMessageInput = {
   post?: Prisma.PostCreateNestedOneWithoutReportsInput
   targetUser?: Prisma.UserCreateNestedOneWithoutReportsAgainstInput
   resolver?: Prisma.UserCreateNestedOneWithoutReportsResolvedInput
+  appeal?: Prisma.AppealCreateNestedOneWithoutReportInput
 }
 
 export type ReportUncheckedCreateWithoutMessageInput = {
@@ -1111,6 +1144,7 @@ export type ReportUncheckedCreateWithoutMessageInput = {
   resolverId?: number | null
   createdAt?: Date | string
   resolvedAt?: Date | string | null
+  appeal?: Prisma.AppealUncheckedCreateNestedOneWithoutReportInput
 }
 
 export type ReportCreateOrConnectWithoutMessageInput = {
@@ -1154,6 +1188,7 @@ export type ReportCreateWithoutPostInput = {
   targetUser?: Prisma.UserCreateNestedOneWithoutReportsAgainstInput
   message?: Prisma.MessageCreateNestedOneWithoutReportsInput
   resolver?: Prisma.UserCreateNestedOneWithoutReportsResolvedInput
+  appeal?: Prisma.AppealCreateNestedOneWithoutReportInput
 }
 
 export type ReportUncheckedCreateWithoutPostInput = {
@@ -1172,6 +1207,7 @@ export type ReportUncheckedCreateWithoutPostInput = {
   resolverId?: number | null
   createdAt?: Date | string
   resolvedAt?: Date | string | null
+  appeal?: Prisma.AppealUncheckedCreateNestedOneWithoutReportInput
 }
 
 export type ReportCreateOrConnectWithoutPostInput = {
@@ -1198,6 +1234,96 @@ export type ReportUpdateWithWhereUniqueWithoutPostInput = {
 export type ReportUpdateManyWithWhereWithoutPostInput = {
   where: Prisma.ReportScalarWhereInput
   data: Prisma.XOR<Prisma.ReportUpdateManyMutationInput, Prisma.ReportUncheckedUpdateManyWithoutPostInput>
+}
+
+export type ReportCreateWithoutAppealInput = {
+  targetType: $Enums.TargetType
+  reason: $Enums.ReportReason
+  details?: string | null
+  aiScore?: number | null
+  aiCategories?: Prisma.ReportCreateaiCategoriesInput | string[]
+  aiRationale?: string | null
+  status?: $Enums.ReportStatus
+  resolution?: string | null
+  createdAt?: Date | string
+  resolvedAt?: Date | string | null
+  reporter: Prisma.UserCreateNestedOneWithoutReportsFiledInput
+  post?: Prisma.PostCreateNestedOneWithoutReportsInput
+  targetUser?: Prisma.UserCreateNestedOneWithoutReportsAgainstInput
+  message?: Prisma.MessageCreateNestedOneWithoutReportsInput
+  resolver?: Prisma.UserCreateNestedOneWithoutReportsResolvedInput
+}
+
+export type ReportUncheckedCreateWithoutAppealInput = {
+  id?: number
+  reporterId: number
+  targetType: $Enums.TargetType
+  postId?: number | null
+  targetUserId?: number | null
+  messageId?: number | null
+  reason: $Enums.ReportReason
+  details?: string | null
+  aiScore?: number | null
+  aiCategories?: Prisma.ReportCreateaiCategoriesInput | string[]
+  aiRationale?: string | null
+  status?: $Enums.ReportStatus
+  resolution?: string | null
+  resolverId?: number | null
+  createdAt?: Date | string
+  resolvedAt?: Date | string | null
+}
+
+export type ReportCreateOrConnectWithoutAppealInput = {
+  where: Prisma.ReportWhereUniqueInput
+  create: Prisma.XOR<Prisma.ReportCreateWithoutAppealInput, Prisma.ReportUncheckedCreateWithoutAppealInput>
+}
+
+export type ReportUpsertWithoutAppealInput = {
+  update: Prisma.XOR<Prisma.ReportUpdateWithoutAppealInput, Prisma.ReportUncheckedUpdateWithoutAppealInput>
+  create: Prisma.XOR<Prisma.ReportCreateWithoutAppealInput, Prisma.ReportUncheckedCreateWithoutAppealInput>
+  where?: Prisma.ReportWhereInput
+}
+
+export type ReportUpdateToOneWithWhereWithoutAppealInput = {
+  where?: Prisma.ReportWhereInput
+  data: Prisma.XOR<Prisma.ReportUpdateWithoutAppealInput, Prisma.ReportUncheckedUpdateWithoutAppealInput>
+}
+
+export type ReportUpdateWithoutAppealInput = {
+  targetType?: Prisma.EnumTargetTypeFieldUpdateOperationsInput | $Enums.TargetType
+  reason?: Prisma.EnumReportReasonFieldUpdateOperationsInput | $Enums.ReportReason
+  details?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aiScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  aiCategories?: Prisma.ReportUpdateaiCategoriesInput | string[]
+  aiRationale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumReportStatusFieldUpdateOperationsInput | $Enums.ReportStatus
+  resolution?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reporter?: Prisma.UserUpdateOneRequiredWithoutReportsFiledNestedInput
+  post?: Prisma.PostUpdateOneWithoutReportsNestedInput
+  targetUser?: Prisma.UserUpdateOneWithoutReportsAgainstNestedInput
+  message?: Prisma.MessageUpdateOneWithoutReportsNestedInput
+  resolver?: Prisma.UserUpdateOneWithoutReportsResolvedNestedInput
+}
+
+export type ReportUncheckedUpdateWithoutAppealInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  reporterId?: Prisma.IntFieldUpdateOperationsInput | number
+  targetType?: Prisma.EnumTargetTypeFieldUpdateOperationsInput | $Enums.TargetType
+  postId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  targetUserId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  messageId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  reason?: Prisma.EnumReportReasonFieldUpdateOperationsInput | $Enums.ReportReason
+  details?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aiScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  aiCategories?: Prisma.ReportUpdateaiCategoriesInput | string[]
+  aiRationale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumReportStatusFieldUpdateOperationsInput | $Enums.ReportStatus
+  resolution?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resolverId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type ReportCreateManyReporterInput = {
@@ -1269,6 +1395,7 @@ export type ReportUpdateWithoutReporterInput = {
   targetUser?: Prisma.UserUpdateOneWithoutReportsAgainstNestedInput
   message?: Prisma.MessageUpdateOneWithoutReportsNestedInput
   resolver?: Prisma.UserUpdateOneWithoutReportsResolvedNestedInput
+  appeal?: Prisma.AppealUpdateOneWithoutReportNestedInput
 }
 
 export type ReportUncheckedUpdateWithoutReporterInput = {
@@ -1287,6 +1414,7 @@ export type ReportUncheckedUpdateWithoutReporterInput = {
   resolverId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  appeal?: Prisma.AppealUncheckedUpdateOneWithoutReportNestedInput
 }
 
 export type ReportUncheckedUpdateManyWithoutReporterInput = {
@@ -1322,6 +1450,7 @@ export type ReportUpdateWithoutTargetUserInput = {
   post?: Prisma.PostUpdateOneWithoutReportsNestedInput
   message?: Prisma.MessageUpdateOneWithoutReportsNestedInput
   resolver?: Prisma.UserUpdateOneWithoutReportsResolvedNestedInput
+  appeal?: Prisma.AppealUpdateOneWithoutReportNestedInput
 }
 
 export type ReportUncheckedUpdateWithoutTargetUserInput = {
@@ -1340,6 +1469,7 @@ export type ReportUncheckedUpdateWithoutTargetUserInput = {
   resolverId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  appeal?: Prisma.AppealUncheckedUpdateOneWithoutReportNestedInput
 }
 
 export type ReportUncheckedUpdateManyWithoutTargetUserInput = {
@@ -1375,6 +1505,7 @@ export type ReportUpdateWithoutResolverInput = {
   post?: Prisma.PostUpdateOneWithoutReportsNestedInput
   targetUser?: Prisma.UserUpdateOneWithoutReportsAgainstNestedInput
   message?: Prisma.MessageUpdateOneWithoutReportsNestedInput
+  appeal?: Prisma.AppealUpdateOneWithoutReportNestedInput
 }
 
 export type ReportUncheckedUpdateWithoutResolverInput = {
@@ -1393,6 +1524,7 @@ export type ReportUncheckedUpdateWithoutResolverInput = {
   resolution?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  appeal?: Prisma.AppealUncheckedUpdateOneWithoutReportNestedInput
 }
 
 export type ReportUncheckedUpdateManyWithoutResolverInput = {
@@ -1446,6 +1578,7 @@ export type ReportUpdateWithoutMessageInput = {
   post?: Prisma.PostUpdateOneWithoutReportsNestedInput
   targetUser?: Prisma.UserUpdateOneWithoutReportsAgainstNestedInput
   resolver?: Prisma.UserUpdateOneWithoutReportsResolvedNestedInput
+  appeal?: Prisma.AppealUpdateOneWithoutReportNestedInput
 }
 
 export type ReportUncheckedUpdateWithoutMessageInput = {
@@ -1464,6 +1597,7 @@ export type ReportUncheckedUpdateWithoutMessageInput = {
   resolverId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  appeal?: Prisma.AppealUncheckedUpdateOneWithoutReportNestedInput
 }
 
 export type ReportUncheckedUpdateManyWithoutMessageInput = {
@@ -1517,6 +1651,7 @@ export type ReportUpdateWithoutPostInput = {
   targetUser?: Prisma.UserUpdateOneWithoutReportsAgainstNestedInput
   message?: Prisma.MessageUpdateOneWithoutReportsNestedInput
   resolver?: Prisma.UserUpdateOneWithoutReportsResolvedNestedInput
+  appeal?: Prisma.AppealUpdateOneWithoutReportNestedInput
 }
 
 export type ReportUncheckedUpdateWithoutPostInput = {
@@ -1535,6 +1670,7 @@ export type ReportUncheckedUpdateWithoutPostInput = {
   resolverId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  appeal?: Prisma.AppealUncheckedUpdateOneWithoutReportNestedInput
 }
 
 export type ReportUncheckedUpdateManyWithoutPostInput = {
@@ -1579,6 +1715,7 @@ export type ReportSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   targetUser?: boolean | Prisma.Report$targetUserArgs<ExtArgs>
   message?: boolean | Prisma.Report$messageArgs<ExtArgs>
   resolver?: boolean | Prisma.Report$resolverArgs<ExtArgs>
+  appeal?: boolean | Prisma.Report$appealArgs<ExtArgs>
 }, ExtArgs["result"]["report"]>
 
 export type ReportSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1655,6 +1792,7 @@ export type ReportInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   targetUser?: boolean | Prisma.Report$targetUserArgs<ExtArgs>
   message?: boolean | Prisma.Report$messageArgs<ExtArgs>
   resolver?: boolean | Prisma.Report$resolverArgs<ExtArgs>
+  appeal?: boolean | Prisma.Report$appealArgs<ExtArgs>
 }
 export type ReportIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   reporter?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1679,6 +1817,7 @@ export type $ReportPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     targetUser: Prisma.$UserPayload<ExtArgs> | null
     message: Prisma.$MessagePayload<ExtArgs> | null
     resolver: Prisma.$UserPayload<ExtArgs> | null
+    appeal: Prisma.$AppealPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -2096,6 +2235,7 @@ export interface Prisma__ReportClient<T, Null = never, ExtArgs extends runtime.T
   targetUser<T extends Prisma.Report$targetUserArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Report$targetUserArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   message<T extends Prisma.Report$messageArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Report$messageArgs<ExtArgs>>): Prisma.Prisma__MessageClient<runtime.Types.Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   resolver<T extends Prisma.Report$resolverArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Report$resolverArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  appeal<T extends Prisma.Report$appealArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Report$appealArgs<ExtArgs>>): Prisma.Prisma__AppealClient<runtime.Types.Result.GetResult<Prisma.$AppealPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2615,6 +2755,25 @@ export type Report$resolverArgs<ExtArgs extends runtime.Types.Extensions.Interna
    */
   include?: Prisma.UserInclude<ExtArgs> | null
   where?: Prisma.UserWhereInput
+}
+
+/**
+ * Report.appeal
+ */
+export type Report$appealArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Appeal
+   */
+  select?: Prisma.AppealSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Appeal
+   */
+  omit?: Prisma.AppealOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AppealInclude<ExtArgs> | null
+  where?: Prisma.AppealWhereInput
 }
 
 /**

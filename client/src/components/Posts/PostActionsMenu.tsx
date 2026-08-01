@@ -6,9 +6,14 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 interface PostActionsMenuProps {
   onReport: () => void;
+  onBlock?: () => void;
+  blocked?: boolean;
+  showBlock?: boolean;
 }
 
-export default function PostActionsMenu({ onReport }: PostActionsMenuProps) {
+export default function PostActionsMenu({
+  onReport, onBlock, blocked = false, showBlock = false,
+}: PostActionsMenuProps) {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
   const handleOpen = (e: React.MouseEvent<HTMLElement>) => setAnchorEl(e.currentTarget);
@@ -21,6 +26,11 @@ export default function PostActionsMenu({ onReport }: PostActionsMenuProps) {
       </IconButton>
       <Menu anchorEl={anchorEl} open={!!anchorEl} onClose={handleClose}>
         <MenuItem onClick={() => { onReport(); handleClose(); }}>Report post</MenuItem>
+        {showBlock && (
+        <MenuItem onClick={() => { onBlock?.(); handleClose(); }}>
+          {blocked ? 'Unblock user' : 'Block user'}
+        </MenuItem>
+        )}
       </Menu>
     </>
   );
