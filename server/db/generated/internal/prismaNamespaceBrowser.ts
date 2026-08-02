@@ -62,6 +62,7 @@ export const ModelName = {
   Service: 'Service',
   Cat: 'Cat',
   Rep: 'Rep',
+  Block: 'Block',
   Report: 'Report',
   Appeal: 'Appeal',
   Media: 'Media',
@@ -219,6 +220,16 @@ export const RepScalarFieldEnum = {
 } as const
 
 export type RepScalarFieldEnum = (typeof RepScalarFieldEnum)[keyof typeof RepScalarFieldEnum]
+
+
+export const BlockScalarFieldEnum = {
+  id: 'id',
+  blockerId: 'blockerId',
+  blockedId: 'blockedId',
+  createdAt: 'createdAt'
+} as const
+
+export type BlockScalarFieldEnum = (typeof BlockScalarFieldEnum)[keyof typeof BlockScalarFieldEnum]
 
 
 export const ReportScalarFieldEnum = {

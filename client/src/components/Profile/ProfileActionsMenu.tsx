@@ -4,18 +4,16 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
-interface PostActionsMenuProps {
+interface ProfileActionsMenuProps {
   onReport: () => void;
-  onBlock?: () => void;
-  blocked?: boolean;
-  showBlock?: boolean;
+  onBlock: () => void;
+  blocked: boolean;
 }
 
-export default function PostActionsMenu({
-  onReport, onBlock, blocked = false, showBlock = false,
-}: PostActionsMenuProps) {
+export default function ProfileActionsMenu(
+  { onReport, onBlock, blocked }: ProfileActionsMenuProps,
+) {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-
   const handleOpen = (e: React.MouseEvent<HTMLElement>) => setAnchorEl(e.currentTarget);
   const handleClose = () => setAnchorEl(null);
 
@@ -25,12 +23,10 @@ export default function PostActionsMenu({
         <MoreVertIcon fontSize="small" />
       </IconButton>
       <Menu anchorEl={anchorEl} open={!!anchorEl} onClose={handleClose}>
-        <MenuItem onClick={() => { onReport(); handleClose(); }}>Report post</MenuItem>
-        {showBlock && (
-        <MenuItem onClick={() => { onBlock?.(); handleClose(); }}>
+        <MenuItem onClick={() => { onReport(); handleClose(); }}>Report user</MenuItem>
+        <MenuItem onClick={() => { onBlock(); handleClose(); }}>
           {blocked ? 'Unblock user' : 'Block user'}
         </MenuItem>
-        )}
       </Menu>
     </>
   );

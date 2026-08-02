@@ -6,6 +6,7 @@ import reports from './reports';
 import appeals from './appeals';
 import media from './media';
 import artTradeOffers from './artTradeOffers';
+import blocks from './blocks.js';
 
 export default {
   auth,
@@ -16,4 +17,5 @@ export default {
   appeals,
   media,
   artTradeOffers,
+  blocks,
 };

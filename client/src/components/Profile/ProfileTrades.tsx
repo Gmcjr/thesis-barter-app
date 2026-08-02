@@ -11,8 +11,24 @@ import Chip from '@mui/material/Chip';
 
 import PostActionsMenu from '../Posts/PostActionsMenu';
 import type { ProfileTradesProps } from './types';
+import { useAuth } from '../../context/AuthContext';
+import { useToast } from '../../context/ToastContext';
 
 export default function ProfileTrades({ posts, isOwnProfile, onReport }: ProfileTradesProps) {
+  const { blockedUserIds, blockUser, unblockUser } = useAuth();
+  const { showToast } = useToast();
+
+  const handleBlockToggle = async (userId: number) => {
+    try {
+      if (blockedUserIds.includes(userId)) {
+        await unblockUser(userId);
+      } else {
+        await blockUser(userId);
+      }
+    } catch {
+      showToast('Could not update block status - try again.', 'error');
+    }
+  };
   return (
     <Box sx={{
       display: 'flex', flexDirection: 'column', gap: 3, px: { xs: 2, md: 0 },
@@ -67,7 +83,12 @@ export default function ProfileTrades({ posts, isOwnProfile, onReport }: Profile
 
                 {!isOwnProfile && (
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <PostActionsMenu onReport={() => onReport(post.id)} />
+                    <PostActionsMenu
+                      onReport={() => onReport(post.id)}
+                      showBlock
+                      blocked={blockedUserIds.includes(post.userId)}
+                      onBlock={() => handleBlockToggle(post.userId)}
+                    />
                   </Box>
                 )}
               </Box>

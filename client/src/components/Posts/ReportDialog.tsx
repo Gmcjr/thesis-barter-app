@@ -12,12 +12,20 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { useToast } from '../../context/ToastContext';
 
-const reasons = [
+const baseReasons = [
   { value: 'SPAM_OR_SCAM', label: 'Spam or scam' },
   { value: 'INAPPROPRIATE_CONTENT', label: 'Inappropriate content' },
-  { value: 'ITEM_MISMATCH', label: "Item doesn't match description" },
+  { value: 'HARASSMENT', label: 'Harassment' },
   { value: 'OTHER', label: 'Other' },
 ];
+
+const reasonsFor = (targetType: 'POST' | 'USER' | 'MESSAGE') => (
+  targetType === 'USER' ? baseReasons : [
+    ...baseReasons.slice(0, 2),
+    { value: 'ITEM_MISMATCH', label: "Item doesn't match description" },
+    ...baseReasons.slice(2),
+  ]
+);
 
 interface ReportDialogProps {
   open: boolean;
@@ -32,6 +40,7 @@ export default function ReportDialog({
   const { showToast } = useToast();
   const [reason, setReason] = useState('');
   const [details, setDetails] = useState('');
+  const reasons = reasonsFor(targetType);
 
   const handleSubmit = async () => {
     const submittedReason = reason;
@@ -54,7 +63,7 @@ export default function ReportDialog({
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="xs">
-      <DialogTitle>Report this post</DialogTitle>
+      <DialogTitle>{`Report this ${targetType === 'USER' ? 'user' : 'post'}`}</DialogTitle>
       <DialogContent>
         <RadioGroup value={reason} onChange={(e) => setReason(e.target.value)}>
           {reasons.map((r) => (

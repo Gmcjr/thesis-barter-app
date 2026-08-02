@@ -18,6 +18,7 @@ import Divider from '@mui/material/Divider';
 import DownloadIcon from '@mui/icons-material/Download';
 import CircularProgress from '@mui/material/CircularProgress';
 
+import WhyRemovedMenu from './WhyRemovedMenu';
 import { formatPostDate } from '../../utils/utils';
 
 export type PostData = {

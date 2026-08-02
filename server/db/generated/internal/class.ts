@@ -299,6 +299,16 @@ export interface PrismaClient<
   get rep(): Prisma.RepDelegate<ExtArgs, { omit: OmitOpts }>;
 
   /**
+   * `prisma.block`: Exposes CRUD operations for the **Block** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Blocks
+    * const blocks = await prisma.block.findMany()
+    * ```
+    */
+  get block(): Prisma.BlockDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
    * `prisma.report`: Exposes CRUD operations for the **Report** model.
     * Example usage:
     * ```ts

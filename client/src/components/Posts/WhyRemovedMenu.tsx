@@ -53,60 +53,62 @@ export default function WhyRemovedMenu({ report }: { report: ReportInfo }) {
         sx={{ mt: 2 }}
       />
       <Menu anchorEl={anchorEl} open={!!anchorEl} onClose={handleClose}>
-        {view === 'info' ? (
-          <>
-            <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 0.5 }}>
-              {report.reason.replace(/_/g, ' ')}
-            </Typography>
-            {report.aiRationale && (
-            <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-              {report.aiRationale}
-            </Typography>
-            )}
-            <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1.5 }}>
-              Resolved by
-              {' '}
-              {report.resolver === null ? 'Auto (Gemini)' : (report.resolver.name ?? `Moderator #${report.resolver.id}`)}
-            </Typography>
-            {report.appeal ? (
-              <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                Appeal status:
-                {' '}
-                {report.appeal.status}
+        <Box sx={{ px: 2, py: 1.5, width: 320 }}>
+          {view === 'info' ? (
+            <>
+              <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 0.5 }}>
+                {report.reason.replace(/_/g, ' ')}
               </Typography>
-            ) : (
-              <Button size="small" variant="outlined" onClick={() => setView('appeal')}>
-                Appeal this decision
-              </Button>
-            )}
-          </>
-        ) : (
-          <>
-            <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
-              Explain why this should be reinstated
-            </Typography>
-            <TextField
-              fullWidth
-              multiline
-              minRows={3}
-              size="small"
-              value={appealText}
-              onChange={(e) => setAppealText(e.target.value)}
-              sx={{ mb: 1.5 }}
-            />
-            <Box sx={{ display: 'flex', gap: 1 }}>
-              <Button size="small" onClick={() => setView('info')}>Back</Button>
-              <Button
+              {report.aiRationale && (
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                  {report.aiRationale}
+                </Typography>
+              )}
+              <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1.5 }}>
+                Resolved by
+                {' '}
+                {report.resolver === null ? 'Auto (Gemini)' : (report.resolver.name ?? `Moderator #${report.resolver.id}`)}
+              </Typography>
+              {report.appeal ? (
+                <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                  Appeal status:
+                  {' '}
+                  {report.appeal.status}
+                </Typography>
+              ) : (
+                <Button size="small" variant="outlined" onClick={() => setView('appeal')}>
+                  Appeal this decision
+                </Button>
+              )}
+            </>
+          ) : (
+            <>
+              <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
+                Explain why this should be reinstated
+              </Typography>
+              <TextField
+                fullWidth
+                multiline
+                minRows={3}
                 size="small"
-                variant="contained"
-                disabled={!appealText.trim()}
-                onClick={handleSubmitAppeal}
-              >
-                Submit Appeal
-              </Button>
-            </Box>
-          </>
-        )}
+                value={appealText}
+                onChange={(e) => setAppealText(e.target.value)}
+                sx={{ mb: 1.5 }}
+              />
+              <Box sx={{ display: 'flex', gap: 1 }}>
+                <Button size="small" onClick={() => setView('info')}>Back</Button>
+                <Button
+                  size="small"
+                  variant="contained"
+                  disabled={!appealText.trim()}
+                  onClick={handleSubmitAppeal}
+                >
+                  Submit Appeal
+                </Button>
+              </Box>
+            </>
+          )}
+        </Box>
       </Menu>
     </>
   );
