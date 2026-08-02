@@ -434,7 +434,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "dM" | "message" | "log" | "post" | "tradeOffer" | "comment" | "product" | "service" | "cat" | "rep" | "report" | "appeal" | "media" | "postMedia" | "tradeOfferMedia" | "productMedia" | "serviceMedia" | "commentMedia" | "messageMedia" | "userMedia"
+    modelProps: "user" | "dM" | "message" | "log" | "post" | "tradeOffer" | "comment" | "product" | "service" | "cat" | "rep" | "block" | "report" | "appeal" | "media" | "postMedia" | "tradeOfferMedia" | "productMedia" | "serviceMedia" | "commentMedia" | "messageMedia" | "userMedia"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {

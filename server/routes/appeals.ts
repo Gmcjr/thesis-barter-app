@@ -3,9 +3,10 @@ import { prisma } from '../db/index.js';
 import { Prisma } from '../db/generated/client.js';
 import requireAuth from '../middleware/requireAuth';
 import requireModerator from '../middleware/requireModerator';
-import { ReportStatus, AppealStatus } from '../db/generated/enums';
+import { ReportStatus, AppealStatus, ReportReason } from '../db/generated/enums';
 
 const appeals = Router();
+const QUEUE_PAGE_SIZE = 50;
 
 // File an appeal (owner of the removed content)
 appeals.post('/', requireAuth, async (req, res) => {
@@ -61,17 +62,52 @@ appeals.post('/', requireAuth, async (req, res) => {
 // Moderator queue
 appeals.get('/', requireModerator, async (req, res) => {
   try {
-    const status = typeof req.query.status === 'string' && req.query.status in AppealStatus
-      ? req.query.status as AppealStatus
-      : undefined;
+    const scope = req.query.scope === 'history' ? 'history' : 'pending';
+    const where: Prisma.AppealWhereInput = {};
+
+    if (scope === 'pending') {
+      where.status = AppealStatus.PENDING;
+    } else {
+      const statusParam = typeof req.query.status === 'string' && req.query.status in AppealStatus
+        ? req.query.status as AppealStatus
+        : undefined;
+      where.status = statusParam ?? { not: AppealStatus.PENDING };
+
+      const reportWhere: Prisma.ReportWhereInput = {};
+
+      const reasonParam = typeof req.query.reason === 'string' && req.query.reason in ReportReason
+        ? req.query.reason as ReportReason
+        : undefined;
+      if (reasonParam) reportWhere.reason = reasonParam;
+
+      if (typeof req.query.reporterQuery === 'string' && req.query.reporterQuery.trim()) {
+        reportWhere.reporter = { name: { contains: req.query.reporterQuery.trim(), mode: 'insensitive' } };
+      }
+
+      if (Object.keys(reportWhere).length) where.report = reportWhere;
+
+      const { dateFrom, dateTo } = req.query;
+      if (typeof dateFrom === 'string' || typeof dateTo === 'string') {
+        where.createdAt = {
+          ...(typeof dateFrom === 'string' ? { gte: new Date(`${dateFrom}T00:00:00.000`) } : {}),
+          ...(typeof dateTo === 'string' ? { lte: new Date(`${dateTo}T23:59:59.999`) } : {}),
+        };
+      }
+
+      if (typeof req.query.appellantQuery === 'string' && req.query.appellantQuery.trim()) {
+        where.appellant = { name: { contains: req.query.appellantQuery.trim(), mode: 'insensitive' } };
+      }
+    }
 
     const queue = await prisma.appeal.findMany({
-      where: status ? { status } : undefined,
+      where,
+      take: QUEUE_PAGE_SIZE,
       include: {
         appellant: { select: { id: true, name: true } },
         resolver: { select: { id: true, name: true } },
         report: {
           include: {
+            reporter: { select: { id: true, name: true } },
             post: true,
             message: true,
             targetUser: { select: { id: true, name: true } },
@@ -104,6 +140,9 @@ appeals.patch('/:id', requireModerator, async (req, res) => {
     });
     if (!appeal) {
       res.status(404).json({ error: 'Appeal not found' });
+      return;
+    } if (appeal.status !== AppealStatus.PENDING) {
+      res.status(409).json({ error: 'This appeal has already been resolved' });
       return;
     }
 

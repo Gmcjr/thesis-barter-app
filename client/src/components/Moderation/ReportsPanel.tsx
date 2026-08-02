@@ -1,0 +1,128 @@
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
+import Typography from '@mui/material/Typography';
+import { useToast } from '../../context/ToastContext';
+import { EMPTY_FILTERS, REPORT_STATUS_OPTIONS, toQueryParams } from './format';
+import HistoryFilterBar from './HistoryFilterBar.js';
+import ReportCard from './ReportCard';
+import useDebouncedValue from './useDebouncedValue';
+import type { QueueFilters, ReportRow } from './types';
+
+  type Scope = 'pending' | 'history';
+
+export default function ReportsPanel() {
+  const { showToast } = useToast();
+  const [scope, setScope] = useState<Scope>('pending');
+  const [filters, setFilters] = useState<QueueFilters>(EMPTY_FILTERS);
+  const [rows, setRows] = useState<ReportRow[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [resolvingId, setResolvingId] = useState<number | null>(null);
+
+  // Debounces filters object to prevent API calls on every keystroke
+  const debouncedFilters = useDebouncedValue(filters, 300);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function loadReports() {
+      setLoading(true);
+      try {
+        const res = await axios.get<ReportRow[]>('/reports', {
+          params: toQueryParams(scope, debouncedFilters, 'reporteeQuery'),
+          signal: controller.signal,
+          withCredentials: true,
+        });
+        setRows(res.data);
+      } catch (err) {
+        // Aborted request is not a  network failure and can be ignored
+        if (!axios.isCancel(err)) showToast('Could not load reports', 'error');
+      } finally {
+        if (!controller.signal.aborted) setLoading(false);
+      }
+    }
+
+    loadReports();
+    return () => controller.abort();
+  }, [scope, debouncedFilters, showToast]);
+
+  const resolve = async (id: number, action: 'approve' | 'remove') => {
+    setResolvingId(id);
+    try {
+      await axios.patch(`/reports/${id}`, { action }, { withCredentials: true });
+      showToast(action === 'remove' ? 'Content removed' : 'Report allowed', 'success');
+      // Remove row since actions are only available in PENDING scope
+      setRows((prev) => prev.filter((r) => r.id !== id));
+    } catch (err) {
+      if (axios.isAxiosError(err) && err.response?.status === 409) {
+        showToast('This report was already resolved by someone else', 'warning');
+        setRows((prev) => prev.filter((r) => r.id !== id));
+      } else {
+        showToast('Could not resolve report - check your connection and try again.', 'error');
+      }
+    } finally {
+      setResolvingId(null);
+    }
+  };
+
+  const isPending = scope === 'pending';
+
+  return (
+    <Box>
+      <Box sx={{ display: 'flex', gap: 1, mb: 3 }}>
+        <Button
+          variant={isPending ? 'contained' : 'outlined'}
+          size="small"
+          onClick={() => setScope('pending')}
+        >
+          Pending
+        </Button>
+        <Button
+          variant={isPending ? 'outlined' : 'contained'}
+          size="small"
+          onClick={() => setScope('history')}
+        >
+          History
+        </Button>
+      </Box>
+
+      {!isPending && (
+      <HistoryFilterBar
+        value={filters}
+        onChange={setFilters}
+        statusOptions={REPORT_STATUS_OPTIONS}
+        subjectLabel="Reportee"
+      />
+      )}
+
+      {loading && (
+      <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
+        <CircularProgress size={28} />
+      </Box>
+      )}
+
+      {!loading && rows.length === 0 && (
+      <Typography variant="body2" color="text.secondary">
+        {isPending ? 'No reports waiting for review.' : 'No resolved reports match these filters.'}
+      </Typography>
+      )}
+
+      {!loading && (
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+        {rows.map((report) => (
+          <ReportCard
+            key={report.id}
+            report={report}
+            showActions={isPending}
+            resolvingId={resolvingId}
+            onApprove={(id) => resolve(id, 'approve')}
+            onRemove={(id) => resolve(id, 'remove')}
+          />
+        ))}
+      </Box>
+      )}
+    </Box>
+  );
+}
