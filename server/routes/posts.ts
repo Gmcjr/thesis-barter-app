@@ -2,9 +2,8 @@
 /* eslint-disable max-len */
 import { Router, type Request } from 'express';
 import { prisma } from '../db/index.js';
-import { screenContent, decideAutoAction } from '../services/moderation.js';
+import { screenOrReject } from '../services/moderation.js';
 import requireAuth from '../middleware/requireAuth.js';
-import { ReportStatus } from '../db/generated/enums.js';
 import { getDownloadUrl } from '../services/s3.js';
 
 const posts = Router();
@@ -121,11 +120,11 @@ posts.post('/', requireAuth, async (req, res) => {
   try {
     const { title, message, isLocal = false, zipCode, radiusMiles, previewMediaId, fullMediaId } = req.body;
 
-    const screening = await screenContent(`${title}\n\n${message}`);
-    if (screening && decideAutoAction(screening)?.status === ReportStatus.REMOVED) {
+    const rejection = await screenOrReject(`${title}\n\n${message}`);
+    if (rejection) {
       return res.status(400).json({
         error: 'This post violates community guidelines and cannot be published.',
-        rationale: screening.rationale,
+        rationale: rejection,
       });
     }
 
@@ -159,6 +158,17 @@ posts.post('/', requireAuth, async (req, res) => {
 posts.patch('/:id', requireAuth, async (req, res) => {
   try {
     const { title, message, isLocal = false, zipCode, radiusMiles } = req.body;
+
+    // This screens post edits when they're submitted
+    if (title || message) {
+      const rejection = await screenOrReject(`${title}\n\n${message}`);
+      if (rejection) {
+        return res.status(400).json({
+          error: 'This update violates community guidelines and cannot be saved.',
+          rationale: rejection,
+        });
+      }
+    }
 
     const { count } = await prisma.post.updateMany({
       where: getOwnedIncompletePostWhere(req),

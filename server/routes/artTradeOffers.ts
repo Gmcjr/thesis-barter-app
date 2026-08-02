@@ -4,6 +4,7 @@ import { Router, type Request } from 'express';
 import { prisma } from '../db/index.js';
 import requireAuth from '../middleware/requireAuth.js';
 import { getDownloadUrl } from '../services/s3.js';
+import { screenOrReject } from '../services/moderation.js';
 
 const artTradeOffers = Router();
 
@@ -132,6 +133,17 @@ artTradeOffers.post('/', requireAuth, async (req, res) => {
 
     if (post.userId === offererId) {
       return res.status(400).json({ error: 'Cannot offer on your own post.' });
+    }
+
+    // Screens offer messages
+    if (message) {
+      const rejection = await screenOrReject(message);
+      if (rejection) {
+        return res.status(400).json({
+          error: 'This offer violates community guidelines and cannot be sent.',
+          rationale: rejection,
+        });
+      }
     }
 
     const offer = await prisma.tradeOffer.create({
