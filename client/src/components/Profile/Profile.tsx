@@ -77,7 +77,11 @@ export default function Profile() {
 
     async function fetchPosts() {
       try {
-        const res = await axios.get<PostData[]>('/posts');
+        const res = await axios.get<PostData[]>('/posts', {
+          params: isOwnProfile ? { mine: true } : {},
+          withCredentials: true,
+        });
+
         const userPosts = res.data.filter((post) => post.userId === profile!.id);
         if (!cancelled) setPosts(userPosts);
       } catch (err) {
@@ -87,7 +91,7 @@ export default function Profile() {
 
     fetchPosts();
     return () => { cancelled = true; };
-  }, [profile]);
+  }, [profile, isOwnProfile]);
 
   if (loading) {
     return (

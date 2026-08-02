@@ -5,6 +5,7 @@ import { prisma } from '../db/index.js';
 import requireAuth from '../middleware/requireAuth.js';
 import { getDownloadUrl } from '../services/s3.js';
 import { screenOrReject } from '../services/moderation.js';
+import { getBlockedRelationshipIds, isBlocked } from '../services/blocks.js';
 
 const artTradeOffers = Router();
 
@@ -67,13 +68,18 @@ artTradeOffers.get('/', requireAuth, async (req, res) => {
       }
     }
 
+    const blockedIds = await getBlockedRelationshipIds(userId);
+    const notBlocked = blockedIds.length ? { offererId: { notIn: blockedIds } } : {};
+
     const rawOffers = await prisma.tradeOffer.findMany({
       where: numericPostId ? {
         postId: numericPostId,
+        ...notBlocked,
         ...(post?.isComplete ? { status: 'COMPLETED' } : { status: 'PENDING' }),
       } : {
         post: { userId, isComplete: false },
         status: 'PENDING',
+        ...notBlocked,
       },
       orderBy: { createdAt: 'asc' },
       include: {
@@ -133,6 +139,10 @@ artTradeOffers.post('/', requireAuth, async (req, res) => {
 
     if (post.userId === offererId) {
       return res.status(400).json({ error: 'Cannot offer on your own post.' });
+    }
+
+    if (await isBlocked(offererId, post.userId)) {
+      return res.status(400).json({ error: 'Post not found or trade already completed.' });
     }
 
     // Screens offer messages
