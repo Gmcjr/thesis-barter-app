@@ -17,6 +17,8 @@ import type { PostData } from './ManagePosts';
 
 import PostActionsMenu from './PostActionsMenu';
 import ArtTradeOffer from './ArtTradeOffer';
+import RequestTradeButton from '../Trades/RequestTradeButton';
+import IncomingTradeRequests from '../Trades/IncomingTradeRequests';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import { useRouter } from '../../context/RouterContext';
@@ -24,9 +26,13 @@ import { useRouter } from '../../context/RouterContext';
 interface PostProps {
   post: PostData;
   onReport: () => void;
+  myTradeRequests: TradeRequestData | null;
+  onTradeActivity: () => void | Promise<void>;
 }
 
-export default function Post({ post, onReport }: PostProps) {
+export default function Post({
+  post, onReport, myTradeRequests, onTradeActivity,
+}: PostProps) {
   const postUser = post.user.name ?? post.user.email;
   const {
     user, blockedUserIds, blockUser, unblockUser,

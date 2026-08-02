@@ -13,21 +13,29 @@ posts.get('/', async (req, res) => {
   try {
     const search = String(req.query.q ?? '').trim();
     const mine = req.query.mine === 'true';
+    const userId = req.query.userId ? Number(req.query.userId) : undefined;
 
     if (mine && !req.user) {
       return res.status(401).json({ error: 'Unauthorized' });
     }
 
-    const blockedRelationshipIds = (!mine && req.user)
+    const blockedRelationshipIds = (!mine && !userId && req.user)
       ? await getBlockedRelationshipIds((req.user as { id: number }).id)
       : [];
+
+    let userFilter = {};
+    if (userId) {
+      userFilter = { userId };
+    } else if (blockedRelationshipIds.length) {
+      userFilter = { userId: { notIn: blockedRelationshipIds } };
+    }
 
     return res.json(await prisma.post.findMany({
       where: mine
         ? { userId: (req.user as { id: number }).id }
         : {
           isRemoved: false,
-          ...(blockedRelationshipIds.length ? { userId: { notIn: blockedRelationshipIds } } : {}),
+          ...userFilter,
           ...(search ? {
             OR: [
               { title: { contains: search, mode: 'insensitive' } },
@@ -35,7 +43,7 @@ posts.get('/', async (req, res) => {
             ],
           } : {}),
         },
-      take: 50,
+      take: mine || userId ? undefined : 50,
       include: {
         user: { select: { id: true, name: true } },
         products: true,

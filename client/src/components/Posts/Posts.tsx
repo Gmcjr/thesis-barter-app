@@ -10,6 +10,8 @@ import AddIcon from '@mui/icons-material/Add';
 import NewPost, { type PostFormData } from './NewPost';
 import ManagePosts, { type PostData, type PostUpdateData } from './ManagePosts';
 import ViewArtTradeOffer from './ViewArtTradeOffer';
+import MyTrades from './MyTrades';
+import { TradeRequestData } from './RequestTradeButton';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import Post from './Post';
@@ -25,9 +27,11 @@ export default function Posts() {
   const [completedOpen, setCompletedOpen] = useState(false);
   const [viewArtOffersOpen, setViewArtOffersOpen] = useState(false);
   const [artOffersRefreshKey, setArtOffersRefreshKey] = useState(0);
+  const [myTradesOpen, setMyTradesOpen] = useState(false);
 
   const [posts, setPosts] = useState<PostData[]>([]);
   const [ownedPosts, setOwnedPosts] = useState<PostData[]>([]);
+  const [myTradeRequests, setMyTradeRequests] = useState<TradeRequestData[]>([]);
 
   const [search, setSearch] = useState('');
   const [error, setError] = useState('');
@@ -71,6 +75,26 @@ export default function Posts() {
       console.error('Failed to load posts:', requestError);
     });
   }, [loadPosts]);
+
+  const loadMyTradeRequests = useCallback(async () => {
+    if (!user) { setMyTradeRequests([]); return; }
+    try {
+      const response = await axios.get<TradeRequestData[]>('/trade-requests/mine');
+      setMyTradeRequests(response.data);
+    } catch (requestError) {
+      console.error('Failed to get your trade requests:', requestError);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    loadMyTradeRequests().catch((requestError) => {
+      console.error('Failed to load trade requests', requestError);
+    });
+  }, [loadMyTradeRequests]);
+
+  const handleTradeActivity = async () => {
+    await Promise.all([loadPosts(search), loadOwnedPosts(), loadMyTradeRequests()]);
+  };
 
   // search posts
   const handleSearch = (event: React.SubmitEvent<HTMLFormElement>) => {
@@ -286,6 +310,8 @@ export default function Posts() {
             key={post.id}
             post={post}
             onReport={() => setReportDialogPostId(post.id)}
+            myTradeRequests={myTradeRequests.find((r) => r.postId === post.id) ?? null}
+            onTradeActivity={handleTradeActivity}
           />
         ))}
       </Box>

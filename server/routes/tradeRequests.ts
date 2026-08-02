@@ -34,11 +34,26 @@ tradeRequests.post('/', requireAuth, async (req, res) => {
       return res.status(400).json({ error: 'Post is no longer open for trade requests.' });
     }
 
-    const tradeRequest = await prisma.tradeRequest.create({
-      data: {
-        postId,
-        requesterId,
-        message: typeof message === 'string' && message.trim() ? message.trim() : null,
+    const existingRequest = await prisma.tradeRequest.findUnique({
+      where: { postId_requesterId: { postId, requesterId }},
+    });
+
+    if (existingRequest && (
+      existingRequest.status === TradeRequestStatus.PENDING
+      || existingRequest.status === TradeRequestStatus.ACCEPTED
+    )) {
+      return res.status(400).json({ error: 'Duplicate trade request' });
+    }
+
+    const trimmedMessage = typeof message === 'string' && message.trim() ? message.trim() : null;
+
+    const tradeRequest = await prisma.tradeRequest.upsert({
+      where: { postId_requesterId: { postId, requesterId } },
+      create: { postId, requesterId, message: trimmedMessage },
+      update: {
+        status: TradeRequestStatus.PENDING,
+        message: trimmedMessage,
+        createdAt: new Date()
       },
     });
 
