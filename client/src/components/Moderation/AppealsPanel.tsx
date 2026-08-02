@@ -5,62 +5,62 @@ import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
 import { useToast } from '../../context/ToastContext';
-import { EMPTY_FILTERS, REPORT_STATUS_OPTIONS, toQueryParams } from './format';
-import HistoryFilterBar from './HistoryFilterBar.js';
-import ReportCard from './ReportCard';
+import { APPEAL_STATUS_OPTIONS, EMPTY_FILTERS, toQueryParams } from './format';
+import AppealCard from './AppealCard';
+import HistoryFilterBar from './HistoryFilterBar';
 import useDebouncedValue from './useDebouncedValue';
-import type { QueueFilters, ReportRow } from './types';
+import type { AppealRow, QueueFilters } from './types';
 
   type Scope = 'pending' | 'history';
 
-export default function ReportsPanel() {
+export default function AppealsPanel() {
   const { showToast } = useToast();
   const [scope, setScope] = useState<Scope>('pending');
   const [filters, setFilters] = useState<QueueFilters>(EMPTY_FILTERS);
-  const [rows, setRows] = useState<ReportRow[]>([]);
+  const [rows, setRows] = useState<AppealRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [resolvingId, setResolvingId] = useState<number | null>(null);
 
-  // Debounces filters object to prevent API calls on every keystroke
   const debouncedFilters = useDebouncedValue(filters, 300);
 
   useEffect(() => {
     const controller = new AbortController();
 
-    async function loadReports() {
+    async function loadAppeals() {
       setLoading(true);
       try {
-        const res = await axios.get<ReportRow[]>('/reports', {
-          params: toQueryParams(scope, debouncedFilters, 'reporteeQuery'),
+        const res = await axios.get<AppealRow[]>('/appeals', {
+          params: toQueryParams(scope, debouncedFilters, 'appellantQuery'),
           signal: controller.signal,
           withCredentials: true,
         });
         setRows(res.data);
       } catch (err) {
-        // Aborted request is not a  network failure and can be ignored
-        if (!axios.isCancel(err)) showToast('Could not load reports', 'error');
+        if (!axios.isCancel(err)) showToast('Could not load appeals', 'error');
       } finally {
         if (!controller.signal.aborted) setLoading(false);
       }
     }
 
-    loadReports();
+    loadAppeals();
     return () => controller.abort();
   }, [scope, debouncedFilters, showToast]);
 
-  const resolve = async (id: number, action: 'approve' | 'remove') => {
+  const resolve = async (id: number, action: 'grant' | 'deny') => {
     setResolvingId(id);
     try {
-      await axios.patch(`/reports/${id}`, { action }, { withCredentials: true });
-      showToast(action === 'remove' ? 'Content removed' : 'Report allowed', 'success');
-      // Remove row since actions are only available in PENDING scope
-      setRows((prev) => prev.filter((r) => r.id !== id));
+      await axios.patch(`/appeals/${id}`, { action }, { withCredentials: true });
+      showToast(
+        action === 'grant' ? 'Appeal granted - content reinstated' : 'Appeal denied',
+        'success',
+      );
+      setRows((prev) => prev.filter((a) => a.id !== id));
     } catch (err) {
       if (axios.isAxiosError(err) && err.response?.status === 409) {
-        showToast('This report was already resolved by someone else', 'warning');
-        setRows((prev) => prev.filter((r) => r.id !== id));
+        showToast('This appeal was already resolved by someone else', 'warning');
+        setRows((prev) => prev.filter((a) => a.id !== id));
       } else {
-        showToast('Could not resolve report - check your connection and try again.', 'error');
+        showToast('Could not resolve appeal - check your connection and try again.', 'error');
       }
     } finally {
       setResolvingId(null);
@@ -92,8 +92,8 @@ export default function ReportsPanel() {
       <HistoryFilterBar
         value={filters}
         onChange={setFilters}
-        statusOptions={REPORT_STATUS_OPTIONS}
-        subjectLabel="Reportee"
+        statusOptions={APPEAL_STATUS_OPTIONS}
+        subjectLabel="Appellant"
       />
       )}
 
@@ -105,20 +105,20 @@ export default function ReportsPanel() {
 
       {!loading && rows.length === 0 && (
       <Typography variant="body2" color="text.secondary">
-        {isPending ? 'No reports waiting for review.' : 'No resolved reports match these filters.'}
+        {isPending ? 'No appeals waiting for review.' : 'No resolved appeals match these filters.'}
       </Typography>
       )}
 
       {!loading && (
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-        {rows.map((report) => (
-          <ReportCard
-            key={report.id}
-            report={report}
+        {rows.map((appeal) => (
+          <AppealCard
+            key={appeal.id}
+            appeal={appeal}
             showActions={isPending}
             resolvingId={resolvingId}
-            onApprove={(id) => resolve(id, 'approve')}
-            onRemove={(id) => resolve(id, 'remove')}
+            onGrant={(id) => resolve(id, 'grant')}
+            onDeny={(id) => resolve(id, 'deny')}
           />
         ))}
       </Box>
