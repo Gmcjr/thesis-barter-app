@@ -12,14 +12,7 @@ export function SocketProvider({ children }: { children: ReactNode }) {
   const [socket, setSocket] = useState<Socket | null>(null);
 
   useEffect(() => {
-    if (!userId) {
-      setSocket(null);
-      return undefined;
-    }
     const s = io({ withCredentials: true });
-    s.on('connect', () => console.log('[socket] connected', s.id));
-    s.on('connect_error', (err) => console.log('[socket] connect_error', err.message));
-    s.on('disconnect', (reason) => console.log('[socket] disconnected', reason));
     setSocket(s);
     return () => { s.disconnect(); };
   }, [userId]);

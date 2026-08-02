@@ -126,12 +126,6 @@ dms.post('/:id/messages', async (req, res) => {
       },
     });
 
-    const room1 = `user:${userId}`;
-    const room2 = `user:${recieverId}`;
-    console.log(
-      `[dms] emitting to ${room1} (${getIo().sockets.adapter.rooms.get(room1)?.size ?? 0} sockets), `
-      + `${room2} (${getIo().sockets.adapter.rooms.get(room2)?.size ?? 0} sockets)`,
-    );
     getIo().to(`user:${userId}`).to(`user:${recieverId}`).emit('dm:message', { dmId, message });
 
     return res.status(201).json(message);

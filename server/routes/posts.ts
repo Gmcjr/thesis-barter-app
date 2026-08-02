@@ -7,6 +7,7 @@ import requireAuth from '../middleware/requireAuth.js';
 import { ReportStatus } from '../db/generated/enums.js';
 import { getDownloadUrl } from '../services/s3.js';
 import { getBlockedRelationshipIds } from '../services/blocks.js';
+import { getIo } from '../middleware/socket.js';
 
 const posts = Router();
 
@@ -203,7 +204,8 @@ posts.post('/', requireAuth, async (req, res) => {
 
       return post;
     });
-
+    console.log('[posts] emitting posts:changed, connected sockets:', getIo().sockets.sockets.size);
+    getIo().emit('posts:changed');
     return res.status(201).json(newPost);
   } catch (error) {
     console.error('Failed to POST new post:', error);
@@ -238,6 +240,7 @@ posts.patch('/:id', requireAuth, async (req, res) => {
     });
 
     if (!count) return res.status(404).json({ error: 'Post not found to PATCH as update.' });
+    getIo().emit('posts:changed');
     return res.json({ success: true });
   } catch (error) {
     console.error('Failed to PATCH post:', error);
@@ -253,6 +256,7 @@ posts.delete('/:id', requireAuth, async (req, res) => {
     });
 
     if (!count) return res.status(404).json({ error: 'Post not found to DELETE.' });
+    getIo().emit('posts:changed');
     return res.sendStatus(200);
   } catch (error) {
     console.error('Failed to DELETE post:', error);

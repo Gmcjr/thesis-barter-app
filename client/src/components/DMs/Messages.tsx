@@ -49,6 +49,12 @@ export default function Messages() {
     setInbox(res.data);
   }, []);
 
+  const appendMessage = (message: DMMessage) => {
+    setMessages((prev) => (
+      prev.some((m) => m.id === message.id) ? prev : [...prev, message]
+    ));
+  };
+
   useEffect(() => {
     loadInbox().finally(() => setLoadingInbox(false));
   }, [loadInbox]);
@@ -74,8 +80,7 @@ export default function Messages() {
     if (!socket) return undefined;
 
     const handleIncoming = ({ dmId, message }: { dmId: number; message: DMMessage }) => {
-      console.log('[messages] received dm:message for dm', dmId, message);
-      if (dmId === activeDmId) setMessages((prev) => [...prev, message]);
+      if (dmId === activeDmId) appendMessage(message);
       loadInbox();
     };
 
@@ -87,12 +92,7 @@ export default function Messages() {
     const text = draft.trim();
     if (!text || !activeDmId) return;
     setDraft('');
-    const res = await axios.post<DMMessage>(
-      `/dms/${activeDmId}/messages`,
-      { text },
-      { withCredentials: true },
-    );
-    setMessages((prev) => [...prev, res.data]);
+    await axios.post(`/dms/${activeDmId}/messages`, { text }, { withCredentials: true });
     loadInbox();
   };
 

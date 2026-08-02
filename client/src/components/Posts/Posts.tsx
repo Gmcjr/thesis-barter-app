@@ -17,10 +17,12 @@ import { useToast } from '../../context/ToastContext';
 import Post from './Post';
 import ReportDialog from './ReportDialog';
 import SearchPosts from './SearchPosts';
+import { useSocket } from '../../context/SocketContext';
 
 export default function Posts() {
   const { user } = useAuth();
   const { showToast } = useToast();
+  const socket = useSocket();
 
   const [modalOpen, setModalOpen] = useState(false);
   const [manageOpen, setManageOpen] = useState(false);
@@ -94,6 +96,21 @@ export default function Posts() {
   const handleTradeActivity = async () => {
     await Promise.all([loadPosts(search), loadOwnedPosts(), loadMyTradeRequests()]);
   };
+
+  useEffect(() => {
+    if (!socket) return undefined;
+    console.log('[posts] attaching listener, socket:', socket.id);
+    const handleChange = () => {
+      console.log('[posts] received posts:changed, socket:', socket.id);
+      loadPosts(search);
+      loadOwnedPosts();
+    };
+    socket.on('posts:changed', handleChange);
+    return () => {
+      console.log('[posts] detaching listener, socket:', socket.id);
+      socket.off('posts:changed', handleChange);
+    };
+  }, [socket, search, loadPosts, loadOwnedPosts]);
 
   // search posts
   const handleSearch = (event: React.SubmitEvent<HTMLFormElement>) => {

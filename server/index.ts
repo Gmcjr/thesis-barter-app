@@ -48,4 +48,4 @@ app.get(/.*/, (req, res) => {
 const httpServer = http.createServer(app);
 initSocket(httpServer, sessionMiddleware);
 
-app.listen(port, () => console.info(`Listening on http://localhost:${port}`));
+httpServer.listen(port, () => console.info(`Listening on ${process.env.CLIENT_URL}`));
