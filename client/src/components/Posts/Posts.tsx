@@ -10,8 +10,8 @@ import AddIcon from '@mui/icons-material/Add';
 import NewPost, { type PostFormData } from './NewPost';
 import ManagePosts, { type PostData, type PostUpdateData } from './ManagePosts';
 import ViewArtTradeOffer from './ViewArtTradeOffer';
-import MyTrades from './MyTrades';
-import { TradeRequestData } from './RequestTradeButton';
+import MyTrades from '../Trades/MyTrades';
+import type { TradeRequestData } from '../Trades/RequestTradeButton';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import Post from './Post';
@@ -80,7 +80,7 @@ export default function Posts() {
     if (!user) { setMyTradeRequests([]); return; }
     try {
       const response = await axios.get<TradeRequestData[]>('/trade-requests/mine');
-      setMyTradeRequests(response.data);
+      setMyTradeRequests(Array.isArray(response.data) ? response.data : []);
     } catch (requestError) {
       console.error('Failed to get your trade requests:', requestError);
     }
@@ -227,7 +227,7 @@ export default function Posts() {
       {/* all of the Buttons underneath Search and their lovely formatting */}
       <Box
         sx={{
-          display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(3, minmax(0, 1fr)) auto' }, alignItems: 'center', gap: { xs: 1, sm: 1.5 }, mb: 3, px: { xs: 2, md: 0 },
+          display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(4, minmax(0, 1fr)) auto' }, alignItems: 'center', gap: { xs: 1, sm: 1.5 }, mb: 3, px: { xs: 2, md: 0 },
         }}
       >
         {/* View Art Offers Button */}
@@ -240,6 +240,18 @@ export default function Posts() {
           }}
         >
           View Art Offers
+        </Button>
+
+        {/* My Trades button */}
+        <Button
+          variant="contained"
+          disabled={!user}
+          onClick={() => setMyTradesOpen(true)}
+          sx={{
+            width: '100%', borderRadius: 8, textTransform: 'none', fontWeight: 'bold', px: 3,
+          }}
+        >
+          My Trades
         </Button>
 
         {/* Completed Trades button */}
@@ -347,6 +359,12 @@ export default function Posts() {
         posts={completedPosts}
         title="Completed Trades"
         readOnly
+      />
+
+      {/* My Trades Modal */}
+      <MyTrades
+        open={myTradesOpen}
+        onClose={() => setMyTradesOpen(false)}
       />
 
       <ReportDialog

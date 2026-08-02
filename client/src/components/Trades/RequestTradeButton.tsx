@@ -80,7 +80,7 @@ export default function RequestTradeButton({
   if (isPending) {
     return (
       <Button size="small" variant="outlined" color="inherit" disabled={submitting} onClick={handleWithdraw} sx={{ borderRadius: 8, textTransform: 'none' }}>
-        {submitting ? 'Withdrawing...' : 'Requested — Withdraw?'}
+        {submitting ? 'Withdrawing...' : 'Withdraw Request'}
       </Button>
     );
   }

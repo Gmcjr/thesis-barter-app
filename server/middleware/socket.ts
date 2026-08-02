@@ -19,10 +19,16 @@ export function initSocket(httpServer: HttpServer, sessionMiddleware: RequestHan
   ioInstance.on('connection', (socket) => {
     const userId = (socket.request as RequestWithSession).session?.passport?.user;
     if (!userId) {
+      console.log('[socket] connection reject: no session found');
       socket.disconnect();
       return;
     }
+    console.log(`[socket] user ${userId} connected (socket ${socket.id})`);
     socket.join(`user:${userId}`);
+
+    socket.on('disconnect', (reason) => {
+      console.log(`[socket] user ${userId} disconneted: ${reason}`);
+    });
   });
   return ioInstance;
 }

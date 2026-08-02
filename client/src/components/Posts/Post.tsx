@@ -17,6 +17,7 @@ import type { PostData } from './ManagePosts';
 
 import PostActionsMenu from './PostActionsMenu';
 import ArtTradeOffer from './ArtTradeOffer';
+import type { TradeRequestData } from '../Trades/RequestTradeButton';
 import RequestTradeButton from '../Trades/RequestTradeButton';
 import IncomingTradeRequests from '../Trades/IncomingTradeRequests';
 import { useAuth } from '../../context/AuthContext';
@@ -164,11 +165,9 @@ export default function Post({
                   display: 'flex', gap: 2, alignItems: 'flex-start', p: 1.5, bgcolor: '#f4f6f8', borderRadius: 2,
                 }}
               >
-                <Typography variant="body2" sx={{ flex: 1 }}>
+                <Typography variant="body2" sx={{ flex: 1, color: 'black' }}>
                   {comment.text}
                 </Typography>
-
-                <Button size="small" sx={{ textTransform: 'none', minWidth: 'auto' }}>DM</Button>
               </Box>
             ))}
           </Box>
@@ -191,14 +190,29 @@ export default function Post({
           </Button>
         </Box>
 
-        {/* Offer Art Button */}
-        {post.status === 'OPEN' && (
+        {/* Request to Trade + Offer Art buttons */}
+        {!isOwnPost && post.status === 'OPEN' && (
           <Box sx={{
-            mt: 2, pt: 2, display: 'flex', justifyContent: 'flex-end',
+            mt: 2,
+            pt: 2,
+            display: 'flex',
+            justifyContent: 'flex-end',
+            gap: 1,
+            flexWrap: 'wrap',
           }}
           >
+            <RequestTradeButton
+              postId={post.id}
+              myRequest={myTradeRequests}
+              onRequestChanged={onTradeActivity}
+            />
             <ArtTradeOffer postId={post.id} />
           </Box>
+        )}
+
+        {/* Owner's view of incoming requests on their own open post */}
+        {isOwnPost && post.status === 'OPEN' && (
+          <IncomingTradeRequests postId={post.id} onAccepted={onTradeActivity} />
         )}
       </CardContent>
     </Card>

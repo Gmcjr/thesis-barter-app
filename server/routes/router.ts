@@ -7,9 +7,9 @@ import review from './reviews';
 import appeals from './appeals';
 import media from './media';
 import artTradeOffers from './artTradeOffers';
-import blocks from './blocks.js';
-import trades from './trades.js';
-import tradeRequests from './tradeRequests.js';
+import blocks from './blocks';
+import trades from './trades';
+import tradeRequests from './tradeRequests';
 import dms from './dms';
 
 export default {

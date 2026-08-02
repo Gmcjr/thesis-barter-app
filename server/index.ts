@@ -37,8 +37,8 @@ app.use('/appeals', router.appeals);
 app.use('/media', router.media);
 app.use('/artTradeOffers', router.artTradeOffers);
 app.use('/blocks', router.blocks);
-app.use('trades', router.trades);
-app.use('trade-requests', router.tradeRequests);
+app.use('/trades', router.trades);
+app.use('/trade-requests', router.tradeRequests);
 app.use('/dms', router.dms);
 
 app.get(/.*/, (req, res) => {

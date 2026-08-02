@@ -70,7 +70,10 @@ export default function IncomingTradeRequests({ postId, onAccepted }: IncomingTr
       </Button>
 
       {open && (
-        <Box sx={{ mt: 1.5, display: 'flex', flexDirection: 'column', gap: 1 }}>
+        <Box sx={{
+          mt: 1.5, display: 'flex', flexDirection: 'column', gap: 1,
+        }}
+        >
           {loading && <CircularProgress size={20} />}
 
           {!loading && pendingRequests.length === 0 && (
@@ -78,13 +81,18 @@ export default function IncomingTradeRequests({ postId, onAccepted }: IncomingTr
           )}
 
           {!loading && pendingRequests.map((request) => (
-            <Box key={request.id} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 1.5, bgcolor: '#f4f6f8', borderRadius: 2, gap: 2 }}>
+            <Box
+              key={request.id}
+              sx={{
+                display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 1.5, bgcolor: '#f4f6f8', borderRadius: 2, gap: 2,
+              }}
+            >
               <Box sx={{ minWidth: 0 }}>
-                <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                <Typography variant="body2" sx={{ fontWeight: 600, color: 'black' }}>
                   {request.requester.name ?? request.requester.email}
                 </Typography>
                 {request.message && (
-                  <Typography variant="body2" color="text.secondary">{request.message}</Typography>
+                  <Typography variant="body2" sx={{ color: 'black' }}>{request.message}</Typography>
                 )}
               </Box>
               <Button size="small" variant="contained" color="success" disabled={acceptingId !== null} onClick={() => handleAccept(request.id)}>
