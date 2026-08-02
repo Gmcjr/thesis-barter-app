@@ -14,6 +14,9 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import Divider from '@mui/material/Divider';
+import DownloadIcon from '@mui/icons-material/Download';
+import CircularProgress from '@mui/material/CircularProgress';
 
 import WhyRemovedMenu from './WhyRemovedMenu';
 import { formatPostDate } from '../../utils/utils';
@@ -30,6 +33,15 @@ export type PostData = {
   isRemoved: boolean;
   createdAt: string;
   updatedAt?: string;
+  previewUrl?: string | null;
+  fullUrl?: string | null;
+  tradeOffers?: {
+    id: number;
+    offererId: number;
+    status: string;
+    previewUrl?: string | null;
+    fullUrl?: string | null;
+  }[];
   user: {
     id: number;
     name: string | null;
@@ -67,6 +79,7 @@ interface ManagePostsProps {
   posts: PostData[];
   title?: string;
   readOnly?: boolean;
+  currentUserId?: number;
   onUpdate?: (postId: number, postData: PostUpdateData) => Promise<void>;
   onDelete?: (postId: number) => Promise<void>;
   onComplete?: (postId: number) => Promise<void>;
@@ -78,6 +91,7 @@ export default function ManagePosts({
   posts,
   title = 'Manage Posts',
   readOnly = false,
+  currentUserId,
   onUpdate,
   onDelete,
   onComplete,
@@ -87,6 +101,7 @@ export default function ManagePosts({
   const [saving, setSaving] = useState(false);
   const [deletingPostId, setDeletingPostId] = useState<number | null>(null);
   const [completingPostId, setCompletingPostId] = useState<number | null>(null);
+  const [downloadingId, setDownloadingId] = useState<number | null>(null);
 
   useEffect(() => {
     if (!open) {
@@ -95,11 +110,12 @@ export default function ManagePosts({
       setSaving(false);
       setDeletingPostId(null);
       setCompletingPostId(null);
+      setDownloadingId(null);
     }
   }, [open]);
 
   const actionInProgress = (
-    saving || deletingPostId !== null || completingPostId !== null
+    saving || deletingPostId !== null || completingPostId !== null || downloadingId !== null
   );
 
   const handleClose = () => {
@@ -174,6 +190,33 @@ export default function ManagePosts({
       console.error('Failed to complete trade:', error);
     } finally {
       setCompletingPostId(null);
+    }
+  };
+
+  // file download handler
+  const handleDownloadToPC = async (imageUrl: string, postId: number, postTitle: string) => {
+    try {
+      setDownloadingId(postId);
+      const response = await fetch(imageUrl);
+      const blob = await response.blob();
+
+      const blobUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = blobUrl;
+
+      const safeTitle = postTitle.replace(/[^a-zA-Z0-9_-]/g, '_');
+      link.download = `Art_Received_${safeTitle}.jpg`;
+
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      window.URL.revokeObjectURL(blobUrl);
+    } catch (error) {
+      console.error('Failed to save file:', error);
+      window.open(imageUrl, '_blank');
+    } finally {
+      setDownloadingId(null);
     }
   };
 
@@ -273,66 +316,136 @@ export default function ManagePosts({
               <Typography color="text.secondary">No posts found.</Typography>
             )}
 
-            {posts.map((post) => (
-              <Card key={post.id} variant="outlined">
-                <CardContent>
-                  <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-                    {post.title}
-                  </Typography>
+            {posts.map((post) => {
+              const completedOffer = post.tradeOffers?.find((o) => o.status === 'COMPLETED');
+              const sentUrl = post.userId === currentUserId
+                ? (post.previewUrl || undefined)
+                : (completedOffer?.previewUrl || undefined);
 
-                  <Typography sx={{ my: 1 }}>
-                    {post.message}
-                  </Typography>
+              const receivedUrl = post.userId === currentUserId
+                ? (completedOffer?.fullUrl || undefined)
+                : (post.fullUrl || undefined);
 
-                  <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
-                    {post.updatedAt && post.updatedAt !== post.createdAt
-                      ? `Updated on ${formatPostDate(post.updatedAt)}`
-                      : `Posted on ${formatPostDate(post.createdAt)}`}
-                  </Typography>
+              return (
+                <Card key={post.id} variant="outlined">
+                  <CardContent>
+                    <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+                      {post.title}
+                    </Typography>
 
-                  {!readOnly && !post.isRemoved && (
-                    <Box sx={{
-                      display: 'flex', flexWrap: 'wrap', gap: 1, mt: 2,
-                    }}
-                    >
-                      <Button
-                        size="small"
-                        variant="outlined"
-                        disabled={actionInProgress}
-                        onClick={() => startEditing(post)}
+                    <Typography sx={{ my: 1 }}>
+                      {post.message}
+                    </Typography>
+
+                    <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 2 }}>
+                      {post.updatedAt && post.updatedAt !== post.createdAt
+                        ? `Updated on ${formatPostDate(post.updatedAt)}`
+                        : `Posted on ${formatPostDate(post.createdAt)}`}
+                    </Typography>
+
+                    {/* Digital Art Layout for Completed Trades */}
+                    {readOnly && post.tradeOffers && completedOffer && (
+                      <>
+                        <Divider sx={{ my: 2 }} />
+                        <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: 2 }}>
+                          {/* Art Sent */}
+                          <Box sx={{ flex: 1 }}>
+                            <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 'bold' }}>
+                              Art Sent:
+                            </Typography>
+                            <Box sx={{
+                              bgcolor: '#121212', borderRadius: 2, p: 1, textAlign: 'center', minHeight: 200, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            }}
+                            >
+                              {sentUrl ? (
+                                <img
+                                  src={sentUrl}
+                                  alt="Traded Away"
+                                  style={{ maxWidth: '100%', maxHeight: 200, objectFit: 'contain' }}
+                                />
+                              ) : (
+                                <Typography variant="caption" color="text.secondary">No image available</Typography>
+                              )}
+                            </Box>
+                          </Box>
+
+                          {/* Art Received */}
+                          <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+                            <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 'bold' }}>
+                              Art Received:
+                            </Typography>
+                            <Box sx={{
+                              bgcolor: '#121212', borderRadius: 2, p: 1, textAlign: 'center', minHeight: 200, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            }}
+                            >
+                              {receivedUrl ? (
+                                <img
+                                  src={receivedUrl}
+                                  alt="Received Art"
+                                  style={{ maxWidth: '100%', maxHeight: 200, objectFit: 'contain' }}
+                                />
+                              ) : (
+                                <Typography variant="caption" color="text.secondary">No image available</Typography>
+                              )}
+                            </Box>
+
+                            {receivedUrl && (
+                              <Button
+                                variant="contained"
+                                color="success"
+                                size="small"
+                                startIcon={downloadingId === post.id ? <CircularProgress size={16} color="inherit" /> : <DownloadIcon />}
+                                disabled={actionInProgress}
+                                onClick={() => handleDownloadToPC(receivedUrl, post.id, post.title)}
+                                sx={{ mt: 1.5, alignSelf: 'flex-start' }}
+                              >
+                                {downloadingId === post.id ? 'Saving File...' : 'Download Art Received'}
+                              </Button>
+                            )}
+                          </Box>
+                        </Box>
+                      </>
+                    )}
+
+                    {!readOnly && !post.isRemoved && (
+                      <Box sx={{
+                        display: 'flex', flexWrap: 'wrap', gap: 1, mt: 2,
+                      }}
                       >
-                        Update
-                      </Button>
+                        <Button
+                          size="small"
+                          variant="outlined"
+                          disabled={actionInProgress}
+                          onClick={() => startEditing(post)}
+                        >
+                          Update
+                        </Button>
 
-                      <Button
-                        size="small"
-                        variant="outlined"
-                        color="error"
-                        disabled={actionInProgress}
-                        onClick={() => handleDelete(post.id)}
-                      >
-                        {deletingPostId === post.id ? 'Deleting...' : 'Delete'}
-                      </Button>
+                        <Button
+                          size="small"
+                          variant="outlined"
+                          color="error"
+                          disabled={actionInProgress}
+                          onClick={() => handleDelete(post.id)}
+                        >
+                          {deletingPostId === post.id ? 'Deleting...' : 'Delete'}
+                        </Button>
 
-                      <Button
-                        size="small"
-                        variant="contained"
-                        color="success"
-                        disabled={actionInProgress}
-                        onClick={() => handleComplete(post.id)}
-                      >
-                        {completingPostId === post.id ? 'Completing...' : 'Trade Complete'}
-                      </Button>
-                    </Box>
-                  )}
-
-                  {post.isRemoved && post.reports && post.reports.length > 0 && (
-                    <WhyRemovedMenu report={post.reports[0]} />
-                  )}
-
-                </CardContent>
-              </Card>
-            ))}
+                        <Button
+                          size="small"
+                          variant="contained"
+                          color="success"
+                          disabled={actionInProgress}
+                          onClick={() => handleComplete(post.id)}
+                        >
+                          {completingPostId === post.id ? 'Completing...' : 'Trade Complete'}
+                        </Button>
+                      </Box>
+                    )}
+                  </CardContent>
+                </Card>
+              );
+            })}
           </Box>
         )}
       </DialogContent>

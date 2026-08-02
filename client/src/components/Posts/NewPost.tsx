@@ -1,5 +1,6 @@
 /* eslint-disable max-len */
 import React, { useState } from 'react';
+import axios from 'axios';
 
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -18,6 +19,9 @@ import Switch from '@mui/material/Switch';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Collapse from '@mui/material/Collapse';
+import Typography from '@mui/material/Typography';
+import CircularProgress from '@mui/material/CircularProgress';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 import type { CatType, Cond } from '../../../../server/db/generated/browser';
 
@@ -32,6 +36,8 @@ export interface PostFormData {
   isLocal: boolean;
   zipCode?: string;
   radiusMiles?: number;
+  previewMediaId?: number;
+  fullMediaId?: number;
 }
 
 interface CreatePostModalProps {
@@ -64,56 +70,173 @@ const initialForm: FormState = {
   radiusMiles: 15,
 };
 
+// creates a watermark for the image preview
+const createWatermark = (file: File): Promise<Blob> => new Promise((resolve, reject) => {
+  const sourceImage = new Image();
+
+  sourceImage.onload = () => {
+    const outputCanvas = document.createElement('canvas');
+    const outputContext = outputCanvas.getContext('2d');
+    if (!outputContext) {
+      reject(new Error('Canvas context error'));
+      return;
+    }
+
+    const scaleFactor = Math.min(1000 / sourceImage.width, 1000 / sourceImage.height, 1);
+    const scaledWidth = sourceImage.width * scaleFactor;
+    const scaledHeight = sourceImage.height * scaleFactor;
+
+    outputCanvas.width = scaledWidth;
+    outputCanvas.height = scaledHeight;
+    outputContext.drawImage(sourceImage, 0, 0, scaledWidth, scaledHeight);
+
+    const watermarkTile = document.createElement('canvas');
+    watermarkTile.width = 180;
+    watermarkTile.height = 70;
+    const watermarkTileContext = watermarkTile.getContext('2d');
+
+    if (watermarkTileContext) {
+      watermarkTileContext.font = 'bold 14px sans-serif';
+      watermarkTileContext.fillStyle = 'rgba(255, 255, 255, 0.4)';
+      watermarkTileContext.textAlign = 'center';
+      watermarkTileContext.textBaseline = 'middle';
+
+      watermarkTileContext.fillText('TRADE PREVIEW ONLY', 90, 18);
+      watermarkTileContext.fillText('TRADE PREVIEW ONLY', 0, 52);
+      watermarkTileContext.fillText('TRADE PREVIEW ONLY', 180, 52);
+    }
+
+    outputContext.translate(scaledWidth / 2, scaledHeight / 2);
+    outputContext.rotate((-30 * Math.PI) / 180);
+
+    const watermarkPattern = outputContext.createPattern(watermarkTile, 'repeat');
+    if (watermarkPattern) {
+      outputContext.fillStyle = watermarkPattern;
+      const overfillSize = Math.max(scaledWidth, scaledHeight) * 2;
+      outputContext.fillRect(-overfillSize, -overfillSize, overfillSize * 2, overfillSize * 2);
+    }
+
+    outputCanvas.toBlob(
+      (blob) => {
+        if (blob) {
+          resolve(blob);
+        } else {
+          reject(new Error('Blob failed'));
+        }
+      },
+      'image/jpeg',
+      0.85,
+    );
+  };
+
+  sourceImage.onerror = () => {
+    reject(new Error('Failed to load image'));
+  };
+  sourceImage.src = URL.createObjectURL(file);
+});
+
 export default function CreatePostModal({
   open,
   onClose,
   onSubmit,
 }: CreatePostModalProps) {
   const [formData, setFormData] = useState<FormState>(initialForm);
+  const [file, setFile] = useState<File | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // change handler
   const handleChange = <K extends keyof FormState>(
     field: K,
     value: FormState[K],
   ) => {
-    setFormData((prev) => ({
-      ...prev,
-      [field]: value,
-      ...(field === 'offerType' ? { category: '' } : {}),
-    }));
+    setFormData((prev) => {
+      const updates: Partial<FormState> = { [field]: value };
+      if (field === 'offerType') {
+        updates.category = '';
+        if (value === 'DIGITAL') {
+          updates.isLocal = false;
+        }
+      }
+      return { ...prev, ...updates };
+    });
   };
 
   // close and reset the form
   const handleClose = () => {
     setFormData(initialForm);
+    setFile(null);
     onClose();
   };
 
+  const uploadFileToS3 = async (
+    fileOrBlob: File | Blob,
+    filename: string,
+    contentType: string,
+    variant: 'PREVIEW' | 'FULL',
+  ) => {
+    const presignRes = await axios.post<{ uploadUrl: string; key: string }>('/media/presign', {
+      filename,
+      contentType,
+    });
+    const { uploadUrl, key } = presignRes.data;
+
+    await axios.put(uploadUrl, fileOrBlob, {
+      headers: { 'Content-Type': contentType },
+    });
+
+    const mediaRes = await axios.post<{ id: number }>('/media', {
+      key,
+      variant,
+    });
+
+    return mediaRes.data.id;
+  };
+
   // check for valid data
-  const isInvalid = (!formData.title.trim() || !formData.name.trim() || !formData.category.trim() || !formData.description.trim() || (formData.isLocal && !formData.zipCode.trim()));
+  const isInvalid = (!formData.title.trim() || !formData.name.trim() || !formData.category.trim() || !formData.description.trim() || (formData.isLocal && !formData.zipCode.trim()) || (formData.offerType === 'DIGITAL' && !file));
 
   // submit handler for the form
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (isInvalid) return;
 
-    onSubmit({
-      title: formData.title.trim(),
-      name: formData.name.trim(),
-      offerType: formData.offerType,
-      category: formData.category.trim(),
-      description: formData.description.trim(),
-      condition: formData.offerType === 'PRODUCT' ? formData.condition : undefined,
-      isLocal: formData.isLocal,
-      zipCode: formData.isLocal ? formData.zipCode.trim() : undefined,
-      radiusMiles: formData.isLocal ? formData.radiusMiles : undefined,
-    });
+    setIsSubmitting(true);
+    try {
+      let previewMediaId: number | undefined;
+      let fullMediaId: number | undefined;
 
-    setFormData(initialForm);
-    onClose();
+      if (formData.offerType === 'DIGITAL' && file) {
+        const previewBlob = await createWatermark(file);
+        previewMediaId = await uploadFileToS3(previewBlob, `preview_${file.name}`, 'image/jpeg', 'PREVIEW');
+        fullMediaId = await uploadFileToS3(file, file.name, file.type, 'FULL');
+      }
+
+      await onSubmit({
+        title: formData.title.trim(),
+        name: formData.name.trim(),
+        offerType: formData.offerType,
+        category: formData.category.trim(),
+        description: formData.description.trim(),
+        condition: formData.offerType === 'PRODUCT' ? formData.condition : undefined,
+        isLocal: formData.isLocal,
+        zipCode: formData.isLocal ? formData.zipCode.trim() : undefined,
+        radiusMiles: formData.isLocal ? formData.radiusMiles : undefined,
+        previewMediaId,
+        fullMediaId,
+      });
+
+      setFormData(initialForm);
+      setFile(null);
+      onClose();
+    } catch (err) {
+      console.error('Failed to create post:', err);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
+
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
+    <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
       <DialogTitle sx={{ fontWeight: 'bold' }}>Create New Trade Post</DialogTitle>
 
       <form onSubmit={handleSubmit}>
@@ -127,6 +250,7 @@ export default function CreatePostModal({
               required
               value={formData.title}
               onChange={(e) => handleChange('title', e.target.value)}
+              disabled={isSubmitting}
             />
 
             {/* Item / Service Name */}
@@ -137,6 +261,7 @@ export default function CreatePostModal({
               required
               value={formData.name}
               onChange={(e) => handleChange('name', e.target.value)}
+              disabled={isSubmitting}
             />
 
             {/* Type of Offer */}
@@ -145,8 +270,9 @@ export default function CreatePostModal({
               value={formData.offerType}
               onChange={(e) => handleChange('offerType', e.target.value as CatType)}
             >
-              <FormControlLabel value="PRODUCT" control={<Radio />} label="Item" />
-              <FormControlLabel value="SERVICE" control={<Radio />} label="Service" />
+              <FormControlLabel value="PRODUCT" control={<Radio disabled={isSubmitting} />} label="Item" />
+              <FormControlLabel value="SERVICE" control={<Radio disabled={isSubmitting} />} label="Service" />
+              <FormControlLabel value="DIGITAL" control={<Radio disabled={isSubmitting} />} label="Digital Trade" />
             </RadioGroup>
 
             {/* Category */}
@@ -156,7 +282,28 @@ export default function CreatePostModal({
               required
               value={formData.category}
               onChange={(e) => handleChange('category', e.target.value)}
+              disabled={isSubmitting}
             />
+
+            {/* Digital Trade File Upload */}
+            <Collapse in={formData.offerType === 'DIGITAL'} unmountOnExit>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                <Button variant="outlined" component="label" startIcon={<CloudUploadIcon />} disabled={isSubmitting}>
+                  Attach Artwork
+                  <input
+                    type="file"
+                    accept="image/*"
+                    hidden
+                    onChange={(e) => setFile(e.target.files?.[0] || null)}
+                  />
+                </Button>
+                {file && (
+                  <Typography variant="body2" color="text.secondary" noWrap sx={{ maxWidth: 200 }}>
+                    {file.name}
+                  </Typography>
+                )}
+              </Box>
+            </Collapse>
 
             {/* Description */}
             <TextField
@@ -167,11 +314,12 @@ export default function CreatePostModal({
               required
               value={formData.description}
               onChange={(e) => handleChange('description', e.target.value)}
+              disabled={isSubmitting}
             />
 
             {/* Condition (Product Only) */}
             <Collapse in={formData.offerType === 'PRODUCT'} unmountOnExit>
-              <FormControl fullWidth>
+              <FormControl fullWidth disabled={isSubmitting}>
                 <InputLabel>Condition</InputLabel>
                 <Select
                   value={formData.condition}
@@ -188,18 +336,21 @@ export default function CreatePostModal({
             </Collapse>
 
             {/* Local Trade Toggle */}
-            <FormControlLabel
-              control={(
-                <Switch
-                  checked={formData.isLocal}
-                  onChange={(e) => handleChange('isLocal', e.target.checked)}
-                />
-              )}
-              label="Local Trade Only"
-            />
+            <Collapse in={formData.offerType !== 'DIGITAL'} unmountOnExit>
+              <FormControlLabel
+                control={(
+                  <Switch
+                    checked={formData.isLocal}
+                    disabled={isSubmitting}
+                    onChange={(e) => handleChange('isLocal', e.target.checked)}
+                  />
+                )}
+                label="Local Trade Only"
+              />
+            </Collapse>
 
             {/* Zip Code & Radius */}
-            <Collapse in={formData.isLocal} unmountOnExit>
+            <Collapse in={formData.isLocal && formData.offerType !== 'DIGITAL'} unmountOnExit>
               <Grid container spacing={2}>
                 <Grid size={6}>
                   <TextField
@@ -208,10 +359,11 @@ export default function CreatePostModal({
                     required
                     value={formData.zipCode}
                     onChange={(e) => handleChange('zipCode', e.target.value)}
+                    disabled={isSubmitting}
                   />
                 </Grid>
                 <Grid size={6}>
-                  <FormControl fullWidth>
+                  <FormControl fullWidth disabled={isSubmitting}>
                     <InputLabel>Max Distance</InputLabel>
                     <Select
                       value={formData.radiusMiles}
@@ -231,15 +383,15 @@ export default function CreatePostModal({
         </DialogContent>
 
         <DialogActions sx={{ px: 3, py: 2 }}>
-          <Button onClick={handleClose} color="inherit">
+          <Button onClick={handleClose} color="inherit" disabled={isSubmitting}>
             Cancel
           </Button>
           <Button
             type="submit"
             variant="contained"
-            disabled={isInvalid}
+            disabled={isInvalid || isSubmitting}
           >
-            Create Post
+            {isSubmitting ? <CircularProgress size={24} /> : 'Create Post'}
           </Button>
         </DialogActions>
       </form>
