@@ -94,6 +94,8 @@ export default function Posts() {
         isLocal: formData.isLocal,
         zipCode: formData.zipCode,
         radiusMiles: formData.radiusMiles,
+        previewMediaId: formData.previewMediaId,
+        fullMediaId: formData.fullMediaId,
       });
 
       showToast('Screening complete. Your post is live', 'success');
@@ -302,6 +304,12 @@ export default function Posts() {
         key={artOffersRefreshKey}
         open={viewArtOffersOpen}
         onClose={() => setViewArtOffersOpen(false)}
+        onAccept={() => {
+          setViewArtOffersOpen(false);
+          loadOwnedPosts();
+          loadPosts(search);
+          showToast('Trade Accepted!', 'success');
+        }}
       />
 
       {/* Manage Posts Modal */}
@@ -309,6 +317,7 @@ export default function Posts() {
         open={manageOpen}
         onClose={() => setManageOpen(false)}
         posts={manageablePosts}
+        currentUserId={user?.id}
         onUpdate={handleUpdatePost}
         onDelete={handleDeletePost}
         onComplete={handleCompleteTrade}
@@ -320,6 +329,7 @@ export default function Posts() {
         onClose={() => setCompletedOpen(false)}
         posts={completedPosts}
         title="Completed Trades"
+        currentUserId={user?.id}
         readOnly
       />
 
