@@ -203,6 +203,7 @@ model Cat {
 enum CatType {
   SERVICE
   PRODUCT
+  DIGITAL
 }
 
 model Rep {

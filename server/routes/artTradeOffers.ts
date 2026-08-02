@@ -1,57 +1,90 @@
 /* eslint-disable max-len */
 /* eslint-disable object-curly-newline */
-import { Router } from 'express';
-import { prisma } from '../db/index';
-import requireAuth from '../middleware/requireAuth';
-import { getDownloadUrl } from '../services/s3';
+import { Router, type Request } from 'express';
+import { prisma } from '../db/index.js';
+import requireAuth from '../middleware/requireAuth.js';
+import { getDownloadUrl } from '../services/s3.js';
 
 const artTradeOffers = Router();
+
+// type definitions
+interface MediaItem {
+  variant?: string | null;
+  s3Key: string;
+}
+
+interface NestedMediaItem {
+  media?: MediaItem | null;
+}
+
+// helpers
+
+const getUserId = (req: Request): number => req.user!.id;
+
+const getMediaUrls = async (
+  mediaArray?: NestedMediaItem[],
+  allowFull: boolean = false,
+  fallbackPreviewToFirst: boolean = false,
+) => {
+  if (!mediaArray) return { previewUrl: null, fullUrl: null };
+  const items = mediaArray.map((m) => m.media).filter(Boolean) as MediaItem[];
+  const [firstItem] = items;
+
+  const fetchUrl = async (variant: string, useFallback: boolean = false) => {
+    const item = items.find((m) => m.variant === variant) || (useFallback ? firstItem : undefined);
+
+    if (!item || !item.s3Key) return null;
+    return getDownloadUrl(item.s3Key).catch((err) => {
+      console.error(`S3 error for key ${item.s3Key}:`, err);
+      return null;
+    });
+  };
+
+  const [previewUrl, fullUrl] = await Promise.all([
+    fetchUrl('PREVIEW', fallbackPreviewToFirst),
+    allowFull ? fetchUrl('FULL') : Promise.resolve(null),
+  ]);
+
+  return { previewUrl, fullUrl };
+};
 
 // GET: the receiver of offers will be able to view them, others will not (including the user who offered trade)
 artTradeOffers.get('/', requireAuth, async (req, res) => {
   try {
-    const userId = (req.user as { id: number }).id;
-    const { postId } = req.query;
+    const userId = getUserId(req);
+    const numericPostId = req.query.postId ? Number(req.query.postId) : undefined;
+    let post = null;
 
-    // the post must belong to the logged-in user
-    const whereClause = {
-      post: { userId },
-      ...(postId ? { postId: Number(postId) } : {}),
-    };
+    if (numericPostId) {
+      post = await prisma.post.findUnique({
+        where: { id: numericPostId },
+        include: { postMedia: { include: { media: true } } },
+      });
+
+      if (!post || post.userId !== userId) {
+        return res.status(403).json({ error: 'Unauthorized or post not found.' });
+      }
+    }
 
     const rawOffers = await prisma.tradeOffer.findMany({
-      where: whereClause,
+      where: numericPostId ? {
+        postId: numericPostId,
+        ...(post?.isComplete ? { status: 'COMPLETED' } : { status: 'PENDING' }),
+      } : {
+        post: { userId, isComplete: false },
+        status: 'PENDING',
+      },
       orderBy: { createdAt: 'asc' },
       include: {
         offerer: { select: { id: true, name: true, email: true } },
-        post: {
-          include: {
-            postMedia: { include: { media: true } },
-          },
-        },
+        post: { include: { postMedia: { include: { media: true } } } },
         tradeOfferMedia: { include: { media: true } },
       },
     });
 
     const offers = await Promise.all(
       rawOffers.map(async (offer) => {
-        const offerMedia = offer.tradeOfferMedia.map((m) => m.media);
-        const previewMedia = offerMedia.find((m) => m.variant === 'PREVIEW') || offerMedia[0];
-        const fullMedia = offerMedia.find((m) => m.variant === 'FULL');
-
-        let previewUrl: string | null = null;
-        if (previewMedia?.s3Key) {
-          try {
-            previewUrl = await getDownloadUrl(previewMedia.s3Key);
-          } catch (s3Error) {
-            console.error(`S3 error for key ${previewMedia.s3Key}:`, s3Error);
-          }
-        }
-
-        const isCompleted = offer.status === 'COMPLETED' || offer.post.isComplete;
-        const fullUrl = (isCompleted && offer.status === 'COMPLETED' && fullMedia)
-          ? await getDownloadUrl(fullMedia.s3Key)
-          : null;
+        const urls = await getMediaUrls(offer.tradeOfferMedia, offer.status === 'COMPLETED', true);
 
         return {
           id: offer.id,
@@ -62,24 +95,19 @@ artTradeOffers.get('/', requireAuth, async (req, res) => {
           offererApproved: offer.offererApproved,
           offerer: offer.offerer,
           post: { id: offer.post.id, title: offer.post.title },
-          previewUrl,
-          fullUrl,
+          ...urls,
         };
       }),
     );
 
-    if (postId && rawOffers.length > 0) {
-      const parentPost = rawOffers[0].post;
-      const postMediaList = parentPost.postMedia.map((pm) => pm.media);
-      const postPreview = postMediaList.find((m) => m.variant === 'PREVIEW');
-      const postFull = postMediaList.find((m) => m.variant === 'FULL');
-      const isCompleted = parentPost.isComplete || rawOffers.some((o) => o.status === 'COMPLETED');
+    if (numericPostId && post) {
+      const { previewUrl: postPreviewUrl, fullUrl: postFullUrl } = await getMediaUrls(post.postMedia, post.isComplete, false);
 
       return res.json({
         isOwner: true,
-        isCompleted,
-        postPreviewUrl: postPreview ? await getDownloadUrl(postPreview.s3Key) : null,
-        postFullUrl: (isCompleted && postFull) ? await getDownloadUrl(postFull.s3Key) : null,
+        isCompleted: post.isComplete,
+        postPreviewUrl,
+        postFullUrl,
         offers,
       });
     }
@@ -94,7 +122,7 @@ artTradeOffers.get('/', requireAuth, async (req, res) => {
 // POST: submit a new offer
 artTradeOffers.post('/', requireAuth, async (req, res) => {
   try {
-    const offererId = (req.user as { id: number }).id;
+    const offererId = getUserId(req);
     const { postId, message, previewMediaId, fullMediaId } = req.body;
 
     const post = await prisma.post.findUnique({ where: { id: Number(postId) } });
@@ -135,7 +163,7 @@ artTradeOffers.post('/', requireAuth, async (req, res) => {
 artTradeOffers.patch('/:offerId/approve', requireAuth, async (req, res) => {
   try {
     const offerId = Number(req.params.offerId);
-    const userId = (req.user as { id: number }).id;
+    const userId = getUserId(req);
 
     const offer = await prisma.tradeOffer.findUnique({
       where: { id: offerId },
@@ -171,6 +199,13 @@ artTradeOffers.patch('/:offerId/approve', requireAuth, async (req, res) => {
         where: { id: offer.postId },
         data: { isComplete: true },
       });
+
+      await prisma.tradeOffer.deleteMany({
+        where: {
+          postId: offer.postId,
+          id: { not: offerId },
+        },
+      });
     }
 
     return res.json({
@@ -181,6 +216,52 @@ artTradeOffers.patch('/:offerId/approve', requireAuth, async (req, res) => {
   } catch (error) {
     console.error('Failed to approve trade offer:', error);
     return res.status(500).json({ error: 'Unable to approve trade offer.' });
+  }
+});
+
+// PATCH: single-sided accept logic
+artTradeOffers.patch('/:offerId/accept', requireAuth, async (req, res) => {
+  try {
+    const offerId = Number(req.params.offerId);
+    const userId = getUserId(req);
+
+    const offer = await prisma.tradeOffer.findUnique({
+      where: { id: offerId },
+      include: { post: true },
+    });
+
+    if (!offer || offer.post.userId !== userId) {
+      return res.status(403).json({ error: 'Unauthorized. Only post owner can accept.' });
+    }
+
+    if (offer.post.isComplete) {
+      return res.status(400).json({ error: 'Trade is already completed.' });
+    }
+
+    await prisma.post.update({
+      where: { id: offer.postId },
+      data: { isComplete: true },
+    });
+
+    await prisma.tradeOffer.update({
+      where: { id: offerId },
+      data: {
+        status: 'COMPLETED',
+        ownerApproved: true,
+      },
+    });
+
+    await prisma.tradeOffer.deleteMany({
+      where: {
+        postId: offer.postId,
+        id: { not: offerId },
+      },
+    });
+
+    return res.json({ success: true });
+  } catch (error) {
+    console.error('Failed to accept digital trade:', error);
+    return res.status(500).json({ error: 'Unable to accept the trade.' });
   }
 });
 
