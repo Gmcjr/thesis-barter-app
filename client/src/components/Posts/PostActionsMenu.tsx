@@ -9,15 +9,18 @@ interface PostActionsMenuProps {
   onBlock?: () => void;
   blocked?: boolean;
   showBlock?: boolean;
+  showReport?: boolean;
 }
 
 export default function PostActionsMenu({
-  onReport, onBlock, blocked = false, showBlock = false,
+  onReport, onBlock, blocked = false, showBlock = false, showReport = true,
 }: PostActionsMenuProps) {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
   const handleOpen = (e: React.MouseEvent<HTMLElement>) => setAnchorEl(e.currentTarget);
   const handleClose = () => setAnchorEl(null);
+
+  if (!showReport && !showBlock) return null;
 
   return (
     <>
@@ -25,7 +28,9 @@ export default function PostActionsMenu({
         <MoreVertIcon fontSize="small" />
       </IconButton>
       <Menu anchorEl={anchorEl} open={!!anchorEl} onClose={handleClose}>
+        {showReport && (
         <MenuItem onClick={() => { onReport(); handleClose(); }}>Report post</MenuItem>
+        )}
         {showBlock && (
         <MenuItem onClick={() => { onBlock?.(); handleClose(); }}>
           {blocked ? 'Unblock user' : 'Block user'}

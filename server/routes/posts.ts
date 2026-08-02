@@ -5,6 +5,7 @@ import { prisma } from '../db/index.js';
 import { screenOrReject } from '../services/moderation.js';
 import requireAuth from '../middleware/requireAuth.js';
 import { getDownloadUrl } from '../services/s3.js';
+import { getBlockedRelationshipIds } from '../services/blocks.js';
 
 const posts = Router();
 
@@ -60,6 +61,9 @@ posts.get('/', async (req, res) => {
 
     if (mine && !req.user) return res.status(401).json({ error: 'Unauthorized' });
     const userId = mine ? getUserId(req) : undefined;
+    const blockedIds = (!mine && req.user)
+      ? await getBlockedRelationshipIds(getUserId(req))
+      : [];
 
     const rawPosts = await prisma.post.findMany({
       where: mine ? {
@@ -69,6 +73,7 @@ posts.get('/', async (req, res) => {
         ],
       } : {
         isRemoved: false,
+        ...(blockedIds.length && { userId: { notIn: blockedIds } }),
         ...(search && {
           OR: [
             { title: { contains: search, mode: 'insensitive' } },

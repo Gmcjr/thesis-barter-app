@@ -17,7 +17,7 @@ import ReportDialog from './ReportDialog';
 import SearchPosts from './SearchPosts';
 
 export default function Posts() {
-  const { user } = useAuth();
+  const { user, blockedUserIds } = useAuth();
   const { showToast } = useToast();
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -63,21 +63,17 @@ export default function Posts() {
       console.error('Failed to get user posts:', requestError);
       setError('Failed to get your posts');
     }
-  // Server handles scoping via 'mine: true' in (server/routes/posts.ts)
   }, [user]);
 
   useEffect(() => {
-    loadPosts().catch((requestError) => {
-      console.error('Failed to load posts:', requestError);
-    });
-  }, [loadPosts]);
+    loadPosts(search);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loadPosts, blockedUserIds]);
 
   // search posts
   const handleSearch = (event: React.SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
-    loadPosts(search).catch((requestError) => {
-      console.error('Failed to search posts:', requestError);
-    });
+    loadPosts(search);
   };
 
   // create a post

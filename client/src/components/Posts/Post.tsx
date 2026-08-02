@@ -99,6 +99,7 @@ export default function Post({ post, onReport, onOfferSubmitted }: PostProps) {
             </Button>
             <PostActionsMenu
               onReport={onReport}
+              showReport={!isOwnPost}
               showBlock={!isOwnPost}
               blocked={isBlocked}
               onBlock={handleBlockToggle}
