@@ -4,6 +4,7 @@ import { Router, type Request } from 'express';
 import { prisma } from '../db/index.js';
 import requireAuth from '../middleware/requireAuth.js';
 import { getDownloadUrl } from '../services/s3.js';
+import { Status } from '../db/generated/enums.js';
 
 const artTradeOffers = Router();
 
@@ -69,9 +70,9 @@ artTradeOffers.get('/', requireAuth, async (req, res) => {
     const rawOffers = await prisma.tradeOffer.findMany({
       where: numericPostId ? {
         postId: numericPostId,
-        ...(post?.isComplete ? { status: 'COMPLETED' } : { status: 'PENDING' }),
+        ...(post?.status === Status.OPEN ? { status: 'COMPLETED' } : { status: 'PENDING' }),
       } : {
-        post: { userId, isComplete: false },
+        post: { userId, status: Status.OPEN },
         status: 'PENDING',
       },
       orderBy: { createdAt: 'asc' },
@@ -101,11 +102,11 @@ artTradeOffers.get('/', requireAuth, async (req, res) => {
     );
 
     if (numericPostId && post) {
-      const { previewUrl: postPreviewUrl, fullUrl: postFullUrl } = await getMediaUrls(post.postMedia, post.isComplete, false);
+      const { previewUrl: postPreviewUrl, fullUrl: postFullUrl } = await getMediaUrls(post.postMedia, post.status === Status.COMPLETED, false);
 
       return res.json({
         isOwner: true,
-        isCompleted: post.isComplete,
+        status: post.status,
         postPreviewUrl,
         postFullUrl,
         offers,
@@ -126,7 +127,7 @@ artTradeOffers.post('/', requireAuth, async (req, res) => {
     const { postId, message, previewMediaId, fullMediaId } = req.body;
 
     const post = await prisma.post.findUnique({ where: { id: Number(postId) } });
-    if (!post || post.isComplete) {
+    if (!post || post.status === Status.COMPLETED) {
       return res.status(400).json({ error: 'Post not found or trade already completed.' });
     }
 
@@ -170,7 +171,7 @@ artTradeOffers.patch('/:offerId/approve', requireAuth, async (req, res) => {
       include: { post: true },
     });
 
-    if (!offer || offer.post.isComplete) {
+    if (!offer || offer.post.status === Status.COMPLETED) {
       return res.status(400).json({ error: 'Trade offer unavailable or already completed.' });
     }
 
@@ -197,7 +198,7 @@ artTradeOffers.patch('/:offerId/approve', requireAuth, async (req, res) => {
     if (isBothApproved) {
       await prisma.post.update({
         where: { id: offer.postId },
-        data: { isComplete: true },
+        data: { status: Status.COMPLETED },
       });
 
       await prisma.tradeOffer.deleteMany({
@@ -234,13 +235,13 @@ artTradeOffers.patch('/:offerId/accept', requireAuth, async (req, res) => {
       return res.status(403).json({ error: 'Unauthorized. Only post owner can accept.' });
     }
 
-    if (offer.post.isComplete) {
+    if (offer.post.status === Status.COMPLETED) {
       return res.status(400).json({ error: 'Trade is already completed.' });
     }
 
     await prisma.post.update({
       where: { id: offer.postId },
-      data: { isComplete: true },
+      data: { status: Status.COMPLETED },
     });
 
     await prisma.tradeOffer.update({

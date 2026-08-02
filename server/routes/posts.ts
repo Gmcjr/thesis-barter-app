@@ -28,10 +28,10 @@ interface TradeOfferItem {
 const getUserId = (req: Request): number => req.user!.id;
 
 // generate the repeated where-clause for updating/deleting posts
-const getOwnedIncompletePostWhere = (req: Request) => ({
+const getOwnedOpenPostWhere = (req: Request) => ({
   id: Number(req.params.id),
   userId: getUserId(req),
-  isComplete: false,
+  status: 'OPEN' as const,
 });
 
 // fetch S3 URLs for preview and full media variants

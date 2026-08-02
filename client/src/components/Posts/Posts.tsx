@@ -24,7 +24,6 @@ export default function Posts() {
 
   const [modalOpen, setModalOpen] = useState(false);
   const [manageOpen, setManageOpen] = useState(false);
-  const [completedOpen, setCompletedOpen] = useState(false);
   const [viewArtOffersOpen, setViewArtOffersOpen] = useState(false);
   const [artOffersRefreshKey, setArtOffersRefreshKey] = useState(0);
   const [myTradesOpen, setMyTradesOpen] = useState(false);
@@ -198,11 +197,6 @@ export default function Posts() {
     setManageOpen(true);
   };
 
-  const handleOpenCompletedTrades = async () => {
-    await loadOwnedPosts();
-    setCompletedOpen(true);
-  };
-
   const handleOpenViewArtOffers = () => {
     setArtOffersRefreshKey((prev) => prev + 1);
     setViewArtOffersOpen(true);
@@ -210,10 +204,6 @@ export default function Posts() {
 
   const manageablePosts = ownedPosts.filter(
     (post) => post.status !== 'COMPLETED',
-  );
-
-  const completedPosts = ownedPosts.filter(
-    (post) => post.status === 'COMPLETED',
   );
 
   return (
@@ -254,18 +244,6 @@ export default function Posts() {
           }}
         >
           My Trades
-        </Button>
-
-        {/* Completed Trades button */}
-        <Button
-          variant="contained"
-          disabled={!user}
-          onClick={() => handleOpenCompletedTrades()}
-          sx={{
-            width: '100%', borderRadius: 8, textTransform: 'none', fontWeight: 'bold', px: 3,
-          }}
-        >
-          Completed Trades
         </Button>
 
         {/* Manage Posts button */}
@@ -359,16 +337,6 @@ export default function Posts() {
         onUpdate={handleUpdatePost}
         onDelete={handleDeletePost}
         onComplete={handleCompleteTrade}
-      />
-
-      {/* Completed Trades Modal */}
-      <ManagePosts
-        open={completedOpen}
-        onClose={() => setCompletedOpen(false)}
-        posts={completedPosts}
-        title="Completed Trades"
-        currentUserId={user?.id}
-        readOnly
       />
 
       {/* My Trades Modal */}
