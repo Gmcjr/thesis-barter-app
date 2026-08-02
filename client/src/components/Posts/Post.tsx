@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-one-expression-per-line */
-import React from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 
 import Card from '@mui/material/Card';
@@ -11,6 +11,8 @@ import TextField from '@mui/material/TextField';
 import Avatar from '@mui/material/Avatar';
 import Divider from '@mui/material/Divider';
 import Chip from '@mui/material/Chip';
+import DownloadIcon from '@mui/icons-material/Download';
+import CircularProgress from '@mui/material/CircularProgress';
 
 import { formatPostDate } from '../../utils/utils';
 import type { PostData } from './ManagePosts';
@@ -43,6 +45,38 @@ export default function Post({
   const { navigate } = useRouter();
   const isOwnPost = user?.id === post.userId;
   const isBlocked = blockedUserIds.includes(post.userId);
+  const [downloadingFull, setDownloadingFull] = useState(false);
+
+  const completedOffer = post.tradeOffers?.find((o) => o.status === 'COMPLETED');
+  const receivedUrl = isOwnPost
+    ? (completedOffer?.fullUrl ?? undefined)
+    : (post.fullUrl ?? undefined);
+
+  const handleDownloadFull = async (imageUrl: string) => {
+    try {
+      setDownloadingFull(true);
+      const response = await fetch(imageUrl);
+      const blob = await response.blob();
+
+      const blobUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = blobUrl;
+
+      const safeTitle = post.title.replace(/[^a-zA-Z0-9_-]/g, '_');
+      link.download = `Art_Received_${safeTitle}.jpg`;
+
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      window.URL.revokeObjectURL(blobUrl);
+    } catch (err) {
+      console.error('Failed to save file:', err);
+      window.open(imageUrl, '_blank');
+    } finally {
+      setDownloadingFull(false);
+    }
+  };
 
   const handleBlockToggle = async () => {
     try {
@@ -202,6 +236,38 @@ export default function Post({
             Send
           </Button>
         </Box>
+
+        {post.status === 'COMPLETED' && receivedUrl && (
+          <Box sx={{
+            mt: 2, pt: 2, borderTop: '1px solid', borderColor: 'divider',
+          }}
+          >
+            <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 'bold' }}>
+              Art Received:
+            </Typography>
+            <Box sx={{
+              bgcolor: '#121212', borderRadius: 2, p: 1, textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}
+            >
+              <img
+                src={receivedUrl}
+                alt="Received Art"
+                style={{ maxWidth: '100%', maxHeight: 300, objectFit: 'contain' }}
+              />
+            </Box>
+            <Button
+              variant="contained"
+              color="success"
+              size="small"
+              startIcon={downloadingFull ? <CircularProgress size={16} color="inherit" /> : <DownloadIcon />}
+              onClick={() => handleDownloadFull(receivedUrl)}
+              disabled={downloadingFull}
+              sx={{ mt: 1.5 }}
+            >
+              {downloadingFull ? 'Saving File...' : 'Download Art Received'}
+            </Button>
+          </Box>
+        )}
 
         {/* Request to Trade + Offer Art buttons */}
         {!isOwnPost && post.status === 'OPEN' && (

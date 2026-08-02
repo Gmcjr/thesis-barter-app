@@ -18,6 +18,7 @@ import ModQueue from './Moderation/ModQueue';
 import BlockedUsers from './BlockedUsers/BlockedUsers';
 import NotFound from './NotFound/NotFound';
 import Messages from './DMs/Messages';
+import DmNotifications from './DMs/DmNotifications';
 
 const routes: RouteDef[] = [
   { path: '/', component: Posts },
@@ -30,7 +31,7 @@ const routes: RouteDef[] = [
   { path: '/blocked-users', component: BlockedUsers, requiresAuth: true },
   { path: '/profile', component: Profile, requiresAuth: true },
   { path: '/profile/:id', component: Profile },
-  { path: 'messages', component: Messages, requiresAuth: true },
+  { path: '/messages', component: Messages, requiresAuth: true },
   { path: '/messages/:id', component: Messages, requiresAuth: true },
 ];
 
@@ -46,6 +47,7 @@ function AppShell() {
           <SocketProvider>
             <RouterProvider>
               <NavBar />
+              <DmNotifications />
               <Box
                 component="main"
                 sx={{

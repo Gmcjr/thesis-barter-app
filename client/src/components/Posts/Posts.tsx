@@ -99,15 +99,12 @@ export default function Posts() {
 
   useEffect(() => {
     if (!socket) return undefined;
-    console.log('[posts] attaching listener, socket:', socket.id);
     const handleChange = () => {
-      console.log('[posts] received posts:changed, socket:', socket.id);
       loadPosts(search);
       loadOwnedPosts();
     };
     socket.on('posts:changed', handleChange);
     return () => {
-      console.log('[posts] detaching listener, socket:', socket.id);
       socket.off('posts:changed', handleChange);
     };
   }, [socket, search, loadPosts, loadOwnedPosts]);

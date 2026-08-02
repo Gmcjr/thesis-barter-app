@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import axios from 'axios';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -8,10 +8,11 @@ import { useRouter, useParams } from '../../context/RouterContext';
 import { useToast } from '../../context/ToastContext';
 import { useAuth } from '../../context/AuthContext';
 import type { PostData } from '../Posts/ManagePosts';
+import type { TradeRequestData } from '../Trades/RequestTradeButton';
+import Post from '../Posts/Post';
 import ReportDialog from '../Posts/ReportDialog';
 import ProfileHeader from './ProfileHeader';
 import ProfileTabs from './ProfileTabs';
-import ProfileTrades from './ProfileTrades';
 import EditProfileModal from './EditProfileModal';
 import type { ProfileUser, ProfileUpdateData } from './types';
 
@@ -27,8 +28,11 @@ export default function Profile() {
   const [reportDialogPostId, setReportDialogPostId] = useState<number | null>(null);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [reportUserDialogOpen, setReportUserDialogOpen] = useState(false);
+  const [myTradeRequests, setMyTradeRequests] = useState<TradeRequestData[]>([]);
 
-  const { blockedUserIds, blockUser, unblockUser } = useAuth();
+  const {
+    user, blockedUserIds, blockUser, unblockUser,
+  } = useAuth();
   const { navigate } = useRouter();
   const { showToast } = useToast();
 
@@ -86,23 +90,40 @@ export default function Profile() {
     return () => { cancelled = true; };
   }, [id]);
 
-  useEffect(() => {
-    if (!profile) return undefined;
-    let cancelled = false;
-
-    async function fetchPosts() {
-      try {
-        const res = await axios.get<PostData[]>('/posts');
-        const userPosts = res.data.filter((post) => post.userId === profile!.id);
-        if (!cancelled) setPosts(userPosts);
-      } catch (err) {
-        console.error('Failed to load posts:', err);
-      }
+  const loadPosts = useCallback(async () => {
+    if (!profile) return;
+    try {
+      const res = await axios.get<PostData[]>('/posts', { params: { userId: profile.id } });
+      setPosts(Array.isArray(res.data) ? res.data : []);
+    } catch (err) {
+      console.error('Failed to load posts:', err);
     }
-
-    fetchPosts();
-    return () => { cancelled = true; };
   }, [profile]);
+
+  const loadMyTradeRequests = useCallback(async () => {
+    if (!user) {
+      setMyTradeRequests([]);
+      return;
+    }
+    try {
+      const res = await axios.get<TradeRequestData[]>('/trade-requests/mine');
+      setMyTradeRequests(Array.isArray(res.data) ? res.data : []);
+    } catch (err) {
+      console.error('Failed to load trade requests:', err);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    loadPosts();
+  }, [loadPosts]);
+
+  useEffect(() => {
+    loadMyTradeRequests();
+  }, [loadMyTradeRequests]);
+
+  const handleTradeActivity = async () => {
+    await Promise.all([loadPosts(), loadMyTradeRequests()]);
+  };
 
   if (loading) {
     return (
@@ -143,11 +164,25 @@ export default function Profile() {
         onDM={handleOpenDM}
       />
 
-      <ProfileTrades
-        posts={visiblePosts}
-        isOwnProfile={isOwnProfile}
-        onReport={(postId) => setReportDialogPostId(postId)}
-      />
+      <Box sx={{
+        display: 'flex', flexDirection: 'column', gap: 3, px: { xs: 2, md: 0 },
+      }}
+      >
+        {visiblePosts.length === 0 && (
+          <Typography color="text.secondary">No trades found.</Typography>
+        )}
+
+        {visiblePosts.map((post) => (
+          <Post
+            key={post.id}
+            post={post}
+            onReport={() => setReportDialogPostId(post.id)}
+            myTradeRequests={myTradeRequests.find((r) => r.postId === post.id) ?? null}
+            onTradeActivity={handleTradeActivity}
+            onOfferSubmitted={handleTradeActivity}
+          />
+        ))}
+      </Box>
 
       {isOwnProfile && (
         <EditProfileModal

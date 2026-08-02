@@ -36,7 +36,7 @@ const getOwnedOpenPostWhere = (req: Request) => ({
 });
 
 // fetch S3 URLs for preview and full media variants
-const getMediaUrls = async (mediaArray?: MediaItem[]) => {
+const getMediaUrls = async (mediaArray?: MediaItem[], allowFull: boolean = false) => {
   if (!mediaArray) return { previewUrl: null, fullUrl: null };
 
   const fetchUrl = async (variant: string) => {
@@ -50,7 +50,7 @@ const getMediaUrls = async (mediaArray?: MediaItem[]) => {
 
   return {
     previewUrl: await fetchUrl('PREVIEW'),
-    fullUrl: await fetchUrl('FULL'),
+    fullUrl: allowFull ? await fetchUrl('FULL') : null,
   };
 };
 
@@ -108,9 +108,12 @@ posts.get('/', async (req, res) => {
             reqCompl: true,
           },
         },
+        postMedia: { include: { media: true } },
+        tradeOffers: {
+          where: mine ? undefined : { status: 'COMPLETED' },
+          include: { offerer: true, tradeOfferMedia: { include: { media: true } } },
+        },
         ...(mine && {
-          postMedia: { include: { media: true } },
-          tradeOffers: { include: { offerer: true, tradeOfferMedia: { include: { media: true } } } },
           reports: {
             orderBy: { createdAt: 'desc' },
             take: 1,
@@ -204,7 +207,6 @@ posts.post('/', requireAuth, async (req, res) => {
 
       return post;
     });
-    console.log('[posts] emitting posts:changed, connected sockets:', getIo().sockets.sockets.size);
     getIo().emit('posts:changed');
     return res.status(201).json(newPost);
   } catch (error) {

@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { prisma } from '../db/index';
 import requireAuth from '../middleware/requireAuth';
 import { Status } from '../db/generated/client';
+import { getIo } from '../middleware/socket';
 
 const trades = Router();
 
@@ -188,6 +189,7 @@ trades.patch('/:id/complete', requireAuth, async (req, res) => {
           where: { id: trade.postId },
           data: { status: Status.COMPLETED },
         });
+        getIo().emit('posts:changed');
       }
     });
 

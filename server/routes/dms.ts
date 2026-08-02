@@ -126,7 +126,16 @@ dms.post('/:id/messages', async (req, res) => {
       },
     });
 
-    getIo().to(`user:${userId}`).to(`user:${recieverId}`).emit('dm:message', { dmId, message });
+    const sender = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { name: true, email: true },
+    });
+
+    getIo().to(`user:${userId}`).to(`user:${recieverId}`).emit('dm:message', {
+      dmId,
+      message,
+      senderName: sender?.name ?? sender?.email ?? null,
+    });
 
     return res.status(201).json(message);
   } catch (error) {
