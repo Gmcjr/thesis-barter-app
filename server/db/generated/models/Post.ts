@@ -48,7 +48,6 @@ export type PostMinAggregateOutputType = {
   status: $Enums.Status | null
   title: string | null
   message: string | null
-  isComplete: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
   isLocal: boolean | null
@@ -65,7 +64,6 @@ export type PostMaxAggregateOutputType = {
   status: $Enums.Status | null
   title: string | null
   message: string | null
-  isComplete: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
   isLocal: boolean | null
@@ -83,7 +81,6 @@ export type PostCountAggregateOutputType = {
   status: number
   title: number
   message: number
-  isComplete: number
   createdAt: number
   updatedAt: number
   isLocal: number
@@ -118,7 +115,6 @@ export type PostMinAggregateInputType = {
   status?: true
   title?: true
   message?: true
-  isComplete?: true
   createdAt?: true
   updatedAt?: true
   isLocal?: true
@@ -135,7 +131,6 @@ export type PostMaxAggregateInputType = {
   status?: true
   title?: true
   message?: true
-  isComplete?: true
   createdAt?: true
   updatedAt?: true
   isLocal?: true
@@ -153,7 +148,6 @@ export type PostCountAggregateInputType = {
   status?: true
   title?: true
   message?: true
-  isComplete?: true
   createdAt?: true
   updatedAt?: true
   isLocal?: true
@@ -258,7 +252,6 @@ export type PostGroupByOutputType = {
   status: $Enums.Status
   title: string
   message: string
-  isComplete: boolean
   createdAt: Date
   updatedAt: Date
   isLocal: boolean
@@ -299,7 +292,6 @@ export type PostWhereInput = {
   status?: Prisma.EnumStatusFilter<"Post"> | $Enums.Status
   title?: Prisma.StringFilter<"Post"> | string
   message?: Prisma.StringFilter<"Post"> | string
-  isComplete?: Prisma.BoolFilter<"Post"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Post"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Post"> | Date | string
   isLocal?: Prisma.BoolFilter<"Post"> | boolean
@@ -326,7 +318,6 @@ export type PostOrderByWithRelationInput = {
   status?: Prisma.SortOrder
   title?: Prisma.SortOrder
   message?: Prisma.SortOrder
-  isComplete?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   isLocal?: Prisma.SortOrder
@@ -356,7 +347,6 @@ export type PostWhereUniqueInput = Prisma.AtLeast<{
   status?: Prisma.EnumStatusFilter<"Post"> | $Enums.Status
   title?: Prisma.StringFilter<"Post"> | string
   message?: Prisma.StringFilter<"Post"> | string
-  isComplete?: Prisma.BoolFilter<"Post"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Post"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Post"> | Date | string
   isLocal?: Prisma.BoolFilter<"Post"> | boolean
@@ -383,7 +373,6 @@ export type PostOrderByWithAggregationInput = {
   status?: Prisma.SortOrder
   title?: Prisma.SortOrder
   message?: Prisma.SortOrder
-  isComplete?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   isLocal?: Prisma.SortOrder
@@ -409,7 +398,6 @@ export type PostScalarWhereWithAggregatesInput = {
   status?: Prisma.EnumStatusWithAggregatesFilter<"Post"> | $Enums.Status
   title?: Prisma.StringWithAggregatesFilter<"Post"> | string
   message?: Prisma.StringWithAggregatesFilter<"Post"> | string
-  isComplete?: Prisma.BoolWithAggregatesFilter<"Post"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Post"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Post"> | Date | string
   isLocal?: Prisma.BoolWithAggregatesFilter<"Post"> | boolean
@@ -425,7 +413,6 @@ export type PostCreateInput = {
   status?: $Enums.Status
   title: string
   message: string
-  isComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   isLocal?: boolean
@@ -452,7 +439,6 @@ export type PostUncheckedCreateInput = {
   status?: $Enums.Status
   title: string
   message: string
-  isComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   isLocal?: boolean
@@ -476,7 +462,6 @@ export type PostUpdateInput = {
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
-  isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isLocal?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -503,7 +488,6 @@ export type PostUncheckedUpdateInput = {
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
-  isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isLocal?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -529,7 +513,6 @@ export type PostCreateManyInput = {
   status?: $Enums.Status
   title: string
   message: string
-  isComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   isLocal?: boolean
@@ -545,7 +528,6 @@ export type PostUpdateManyMutationInput = {
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
-  isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isLocal?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -563,7 +545,6 @@ export type PostUncheckedUpdateManyInput = {
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
-  isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isLocal?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -599,7 +580,6 @@ export type PostCountOrderByAggregateInput = {
   status?: Prisma.SortOrder
   title?: Prisma.SortOrder
   message?: Prisma.SortOrder
-  isComplete?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   isLocal?: Prisma.SortOrder
@@ -624,7 +604,6 @@ export type PostMaxOrderByAggregateInput = {
   status?: Prisma.SortOrder
   title?: Prisma.SortOrder
   message?: Prisma.SortOrder
-  isComplete?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   isLocal?: Prisma.SortOrder
@@ -641,7 +620,6 @@ export type PostMinOrderByAggregateInput = {
   status?: Prisma.SortOrder
   title?: Prisma.SortOrder
   message?: Prisma.SortOrder
-  isComplete?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   isLocal?: Prisma.SortOrder
@@ -860,7 +838,6 @@ export type PostCreateWithoutUserInput = {
   status?: $Enums.Status
   title: string
   message: string
-  isComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   isLocal?: boolean
@@ -885,7 +862,6 @@ export type PostUncheckedCreateWithoutUserInput = {
   status?: $Enums.Status
   title: string
   message: string
-  isComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   isLocal?: boolean
@@ -940,7 +916,6 @@ export type PostScalarWhereInput = {
   status?: Prisma.EnumStatusFilter<"Post"> | $Enums.Status
   title?: Prisma.StringFilter<"Post"> | string
   message?: Prisma.StringFilter<"Post"> | string
-  isComplete?: Prisma.BoolFilter<"Post"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Post"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Post"> | Date | string
   isLocal?: Prisma.BoolFilter<"Post"> | boolean
@@ -956,7 +931,6 @@ export type PostCreateWithoutTradeInput = {
   status?: $Enums.Status
   title: string
   message: string
-  isComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   isLocal?: boolean
@@ -982,7 +956,6 @@ export type PostUncheckedCreateWithoutTradeInput = {
   status?: $Enums.Status
   title: string
   message: string
-  isComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   isLocal?: boolean
@@ -1021,7 +994,6 @@ export type PostUpdateWithoutTradeInput = {
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
-  isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isLocal?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1047,7 +1019,6 @@ export type PostUncheckedUpdateWithoutTradeInput = {
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
-  isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isLocal?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1070,7 +1041,6 @@ export type PostCreateWithoutTradeOffersInput = {
   status?: $Enums.Status
   title: string
   message: string
-  isComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   isLocal?: boolean
@@ -1096,7 +1066,6 @@ export type PostUncheckedCreateWithoutTradeOffersInput = {
   status?: $Enums.Status
   title: string
   message: string
-  isComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   isLocal?: boolean
@@ -1135,7 +1104,6 @@ export type PostUpdateWithoutTradeOffersInput = {
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
-  isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isLocal?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1161,7 +1129,6 @@ export type PostUncheckedUpdateWithoutTradeOffersInput = {
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
-  isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isLocal?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1184,7 +1151,6 @@ export type PostCreateWithoutTradeRequestsInput = {
   status?: $Enums.Status
   title: string
   message: string
-  isComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   isLocal?: boolean
@@ -1210,7 +1176,6 @@ export type PostUncheckedCreateWithoutTradeRequestsInput = {
   status?: $Enums.Status
   title: string
   message: string
-  isComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   isLocal?: boolean
@@ -1249,7 +1214,6 @@ export type PostUpdateWithoutTradeRequestsInput = {
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
-  isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isLocal?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1275,7 +1239,6 @@ export type PostUncheckedUpdateWithoutTradeRequestsInput = {
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
-  isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isLocal?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1298,7 +1261,6 @@ export type PostCreateWithoutCommentsInput = {
   status?: $Enums.Status
   title: string
   message: string
-  isComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   isLocal?: boolean
@@ -1324,7 +1286,6 @@ export type PostUncheckedCreateWithoutCommentsInput = {
   status?: $Enums.Status
   title: string
   message: string
-  isComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   isLocal?: boolean
@@ -1363,7 +1324,6 @@ export type PostUpdateWithoutCommentsInput = {
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
-  isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isLocal?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1389,7 +1349,6 @@ export type PostUncheckedUpdateWithoutCommentsInput = {
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
-  isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isLocal?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1412,7 +1371,6 @@ export type PostCreateWithoutProductsInput = {
   status?: $Enums.Status
   title: string
   message: string
-  isComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   isLocal?: boolean
@@ -1438,7 +1396,6 @@ export type PostUncheckedCreateWithoutProductsInput = {
   status?: $Enums.Status
   title: string
   message: string
-  isComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   isLocal?: boolean
@@ -1477,7 +1434,6 @@ export type PostUpdateWithoutProductsInput = {
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
-  isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isLocal?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1503,7 +1459,6 @@ export type PostUncheckedUpdateWithoutProductsInput = {
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
-  isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isLocal?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1526,7 +1481,6 @@ export type PostCreateWithoutServicesInput = {
   status?: $Enums.Status
   title: string
   message: string
-  isComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   isLocal?: boolean
@@ -1552,7 +1506,6 @@ export type PostUncheckedCreateWithoutServicesInput = {
   status?: $Enums.Status
   title: string
   message: string
-  isComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   isLocal?: boolean
@@ -1591,7 +1544,6 @@ export type PostUpdateWithoutServicesInput = {
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
-  isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isLocal?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1617,7 +1569,6 @@ export type PostUncheckedUpdateWithoutServicesInput = {
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
-  isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isLocal?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1640,7 +1591,6 @@ export type PostCreateWithoutReportsInput = {
   status?: $Enums.Status
   title: string
   message: string
-  isComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   isLocal?: boolean
@@ -1666,7 +1616,6 @@ export type PostUncheckedCreateWithoutReportsInput = {
   status?: $Enums.Status
   title: string
   message: string
-  isComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   isLocal?: boolean
@@ -1705,7 +1654,6 @@ export type PostUpdateWithoutReportsInput = {
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
-  isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isLocal?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1731,7 +1679,6 @@ export type PostUncheckedUpdateWithoutReportsInput = {
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
-  isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isLocal?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1754,7 +1701,6 @@ export type PostCreateWithoutPostMediaInput = {
   status?: $Enums.Status
   title: string
   message: string
-  isComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   isLocal?: boolean
@@ -1780,7 +1726,6 @@ export type PostUncheckedCreateWithoutPostMediaInput = {
   status?: $Enums.Status
   title: string
   message: string
-  isComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   isLocal?: boolean
@@ -1819,7 +1764,6 @@ export type PostUpdateWithoutPostMediaInput = {
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
-  isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isLocal?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1845,7 +1789,6 @@ export type PostUncheckedUpdateWithoutPostMediaInput = {
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
-  isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isLocal?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1869,7 +1812,6 @@ export type PostCreateManyUserInput = {
   status?: $Enums.Status
   title: string
   message: string
-  isComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   isLocal?: boolean
@@ -1885,7 +1827,6 @@ export type PostUpdateWithoutUserInput = {
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
-  isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isLocal?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1910,7 +1851,6 @@ export type PostUncheckedUpdateWithoutUserInput = {
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
-  isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isLocal?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1935,7 +1875,6 @@ export type PostUncheckedUpdateManyWithoutUserInput = {
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   title?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
-  isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isLocal?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2038,7 +1977,6 @@ export type PostSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   status?: boolean
   title?: boolean
   message?: boolean
-  isComplete?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   isLocal?: boolean
@@ -2066,7 +2004,6 @@ export type PostSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   status?: boolean
   title?: boolean
   message?: boolean
-  isComplete?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   isLocal?: boolean
@@ -2085,7 +2022,6 @@ export type PostSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   status?: boolean
   title?: boolean
   message?: boolean
-  isComplete?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   isLocal?: boolean
@@ -2104,7 +2040,6 @@ export type PostSelectScalar = {
   status?: boolean
   title?: boolean
   message?: boolean
-  isComplete?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   isLocal?: boolean
@@ -2115,7 +2050,7 @@ export type PostSelectScalar = {
   isRemoved?: boolean
 }
 
-export type PostOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "images" | "status" | "title" | "message" | "isComplete" | "createdAt" | "updatedAt" | "isLocal" | "zipCode" | "radiusMiles" | "lat" | "lng" | "isRemoved", ExtArgs["result"]["post"]>
+export type PostOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "images" | "status" | "title" | "message" | "createdAt" | "updatedAt" | "isLocal" | "zipCode" | "radiusMiles" | "lat" | "lng" | "isRemoved", ExtArgs["result"]["post"]>
 export type PostInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   products?: boolean | Prisma.Post$productsArgs<ExtArgs>
@@ -2155,7 +2090,6 @@ export type $PostPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     status: $Enums.Status
     title: string
     message: string
-    isComplete: boolean
     createdAt: Date
     updatedAt: Date
     isLocal: boolean
@@ -2602,7 +2536,6 @@ export interface PostFieldRefs {
   readonly status: Prisma.FieldRef<"Post", 'Status'>
   readonly title: Prisma.FieldRef<"Post", 'String'>
   readonly message: Prisma.FieldRef<"Post", 'String'>
-  readonly isComplete: Prisma.FieldRef<"Post", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Post", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Post", 'DateTime'>
   readonly isLocal: Prisma.FieldRef<"Post", 'Boolean'>

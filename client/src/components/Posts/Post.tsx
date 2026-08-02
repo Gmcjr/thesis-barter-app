@@ -29,10 +29,11 @@ interface PostProps {
   onReport: () => void;
   myTradeRequests: TradeRequestData | null;
   onTradeActivity: () => void | Promise<void>;
+  onOfferSubmitted?: () => void;
 }
 
 export default function Post({
-  post, onReport, myTradeRequests, onTradeActivity,
+  post, onReport, myTradeRequests, onTradeActivity, onOfferSubmitted,
 }: PostProps) {
   const postUser = post.user.name ?? post.user.email;
   const {
@@ -146,6 +147,18 @@ export default function Post({
           </Box>
         </Box>
 
+        {post.previewUrl && (
+          <Box sx={{ mb: 2 }}>
+            <img
+              src={post.previewUrl}
+              alt="Art Preview"
+              style={{
+                maxWidth: '100%', borderRadius: 8, maxHeight: '350px', objectFit: 'contain',
+              }}
+            />
+          </Box>
+        )}
+
         <Typography variant="body1" sx={{ mb: 3, lineHeight: 1.6 }}>
           {post.message}
         </Typography>
@@ -206,7 +219,7 @@ export default function Post({
               myRequest={myTradeRequests}
               onRequestChanged={onTradeActivity}
             />
-            <ArtTradeOffer postId={post.id} />
+            <ArtTradeOffer postId={post.id} onSuccess={onOfferSubmitted} />
           </Box>
         )}
 

@@ -8,6 +8,8 @@ import { Prisma } from '../db/generated/client.js';
 
 const reports = Router();
 
+const QUEUE_PAGE_SIZE = 50;
+
 // File a report (any logged-in user)
 reports.post('/', requireAuth, async (req, res) => {
   try {
@@ -119,8 +121,8 @@ reports.get('/', requireModerator, async (req, res) => {
       const { dateFrom, dateTo } = req.query;
       if (typeof dateFrom === 'string' || typeof dateTo === 'string') {
         where.createdAt = {
-          ...(typeof dateFrom === 'string' ? { gte: new Date(dateFrom) } : {}),
-          ...(typeof dateTo === 'string' ? { lte: new Date(`${dateTo}T23:59:59:999`) } : {}),
+          ...(typeof dateFrom === 'string' ? { gte: new Date(`${dateFrom}T00:00:00.000`) } : {}),
+          ...(typeof dateTo === 'string' ? { lte: new Date(`${dateTo}T23:59:59.999`) } : {}),
         };
       }
 
@@ -140,6 +142,7 @@ reports.get('/', requireModerator, async (req, res) => {
 
     const queue = await prisma.report.findMany({
       where,
+      take: QUEUE_PAGE_SIZE,
       include: {
         reporter: { select: { id: true, name: true } },
         post: true,
@@ -170,6 +173,11 @@ reports.patch('/:id', requireModerator, async (req, res) => {
     const report = await prisma.report.findUnique({ where: { id } });
     if (!report) {
       res.status(404).json({ error: 'Report not found' });
+      return;
+    }
+
+    if (report.status !== ReportStatus.PENDING) {
+      res.status(409).json({ error: 'This report has already been resolved' });
       return;
     }
 

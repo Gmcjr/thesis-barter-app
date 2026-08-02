@@ -177,13 +177,11 @@ tradeRequests.patch('/:id/accept', requireAuth, async (req, res) => {
         data: { status: TradeRequestStatus.ACCEPTED },
       });
 
-      await tx.tradeRequest.updateMany({
+      await tx.tradeRequest.deleteMany({
         where: {
           postId: tradeRequest.postId,
           status: TradeRequestStatus.PENDING,
-          id: { not: tradeRequest.id },
         },
-        data: { status: TradeRequestStatus.REJECTED },
       });
 
       return newTrade;

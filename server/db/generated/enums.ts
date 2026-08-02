@@ -63,7 +63,8 @@ export type Cond = (typeof Cond)[keyof typeof Cond]
 
 export const CatType = {
   SERVICE: 'SERVICE',
-  PRODUCT: 'PRODUCT'
+  PRODUCT: 'PRODUCT',
+  DIGITAL: 'DIGITAL'
 } as const
 
 export type CatType = (typeof CatType)[keyof typeof CatType]

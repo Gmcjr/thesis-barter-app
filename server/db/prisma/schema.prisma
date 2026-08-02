@@ -113,7 +113,6 @@ model Post {
 
   title      String
   message    String
-  isComplete Boolean  @default(false)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
@@ -257,12 +256,15 @@ model Cat {
   services Service[]
 
   type CatType
-  name String  @unique
+  name String  
+
+  @@unique([name, type])
 }
 
 enum CatType {
   SERVICE
   PRODUCT
+  DIGITAL
 }
 
 model Review {
@@ -324,6 +326,8 @@ model Report {
   resolvedAt DateTime?
 
   appeal Appeal?
+
+  @@index([status, createdAt])
 }
 
 model Appeal {
@@ -344,6 +348,8 @@ model Appeal {
 
   createdAt  DateTime  @default(now())
   resolvedAt DateTime?
+
+  @@index([status, createdAt])
 }
 
 enum AppealStatus {

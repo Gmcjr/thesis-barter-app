@@ -214,14 +214,15 @@ export type CatOrderByWithRelationInput = {
 
 export type CatWhereUniqueInput = Prisma.AtLeast<{
   id?: number
-  name?: string
+  name_type?: Prisma.CatNameTypeCompoundUniqueInput
   AND?: Prisma.CatWhereInput | Prisma.CatWhereInput[]
   OR?: Prisma.CatWhereInput[]
   NOT?: Prisma.CatWhereInput | Prisma.CatWhereInput[]
   type?: Prisma.EnumCatTypeFilter<"Cat"> | $Enums.CatType
+  name?: Prisma.StringFilter<"Cat"> | string
   products?: Prisma.ProductListRelationFilter
   services?: Prisma.ServiceListRelationFilter
-}, "id" | "name">
+}, "id" | "name_type">
 
 export type CatOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -293,6 +294,11 @@ export type CatUncheckedUpdateManyInput = {
 export type CatScalarRelationFilter = {
   is?: Prisma.CatWhereInput
   isNot?: Prisma.CatWhereInput
+}
+
+export type CatNameTypeCompoundUniqueInput = {
+  name: string
+  type: $Enums.CatType
 }
 
 export type CatCountOrderByAggregateInput = {

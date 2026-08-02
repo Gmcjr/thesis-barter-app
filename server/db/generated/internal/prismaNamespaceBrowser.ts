@@ -145,7 +145,6 @@ export const PostScalarFieldEnum = {
   status: 'status',
   title: 'title',
   message: 'message',
-  isComplete: 'isComplete',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   isLocal: 'isLocal',
