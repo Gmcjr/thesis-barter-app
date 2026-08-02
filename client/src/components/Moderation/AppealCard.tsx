@@ -1,10 +1,13 @@
 import React from 'react';
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
+import Chip from '@mui/material/Chip';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { appealTargetSnippet, humanizeReason, humanizeStatus } from './format';
 import type { AppealRow } from './types';
 
@@ -19,20 +22,45 @@ import type { AppealRow } from './types';
 export default function AppealCard({
   appeal, showActions, resolvingId, onGrant, onDeny,
 }: Props) {
+  const appellant = appeal.appellant.name ?? `User #${appeal.appellant.id}`;
+
   return (
-    <Card variant="outlined" sx={{ borderRadius: 0.5 }}>
-      <CardContent>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-          <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
-            Appeal from
-            {' '}
-            {appeal.appellant.name ?? `User #${appeal.appellant.id}`}
-          </Typography>
-          <Typography variant="caption" color="text.secondary">
-            {new Date(appeal.createdAt).toLocaleString()}
+    <Accordion
+      disableGutters
+      elevation={0}
+      sx={{
+        border: '1px solid',
+        borderColor: 'divider',
+        borderRadius: 2,
+        '&:before': { display: 'none' },
+      }}
+    >
+      <AccordionSummary
+        expandIcon={<ExpandMoreIcon />}
+        sx={{ minHeight: 0, '& .MuiAccordionSummary-content': { my: 1 } }}
+      >
+        <Box sx={{
+          display: 'flex', alignItems: 'center', gap: 1, minWidth: 0, width: '100%',
+        }}
+        >
+          <Chip label="APPEAL" size="small" />
+
+          <Box sx={{ minWidth: 0, flex: 1 }}>
+            <Typography variant="subtitle2" sx={{ fontWeight: 600 }} noWrap>
+              {appellant}
+            </Typography>
+            <Typography variant="caption" color="text.secondary">
+              {humanizeReason(appeal.report.reason)}
+            </Typography>
+          </Box>
+
+          <Typography variant="caption" color="text.secondary" sx={{ flexShrink: 0 }}>
+            {new Date(appeal.createdAt).toLocaleDateString()}
           </Typography>
         </Box>
+      </AccordionSummary>
 
+      <AccordionDetails sx={{ pt: 0 }}>
         <Typography variant="body2" sx={{ mb: 1.5, fontStyle: 'italic' }}>
           &quot;
           {appeal.message}
@@ -100,7 +128,7 @@ export default function AppealCard({
           </Button>
         </Box>
         )}
-      </CardContent>
-    </Card>
+      </AccordionDetails>
+    </Accordion>
   );
 }

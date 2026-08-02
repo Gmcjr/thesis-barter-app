@@ -11,7 +11,7 @@ export interface ReportRow {
   resolverId: number | null;
   createdAt: string;
   reporter: { id: number; name: string | null };
-  post: { id: number; message: string; isRemoved: boolean } | null;
+  post: { id: number; title: string; message: string; isRemoved: boolean } | null;
   targetUser: { id: number; name: string | null } | null;
   message: { id: number; text: string; isRemoved: boolean } | null;
   resolver: { id: number; name: string | null } | null;
