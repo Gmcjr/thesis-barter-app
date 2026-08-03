@@ -6,7 +6,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
 import { useToast } from '../../context/ToastContext';
 import { EMPTY_FILTERS, REPORT_STATUS_OPTIONS, toQueryParams } from './format';
-import HistoryFilterBar from './HistoryFilterBar.js';
+import HistoryFilterBar from './HistoryFilterBar';
 import ReportCard from './ReportCard';
 import useDebouncedValue from './useDebouncedValue';
 import type { QueueFilters, ReportRow } from './types';

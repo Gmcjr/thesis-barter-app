@@ -18,6 +18,18 @@ export const Role = {
 export type Role = (typeof Role)[keyof typeof Role]
 
 
+export const Status = {
+  OPEN: 'OPEN',
+  ACCEPTED: 'ACCEPTED',
+  IN_PROGRESS: 'IN_PROGRESS',
+  WAITING_FOR_OTHER_USER: 'WAITING_FOR_OTHER_USER',
+  COMPLETED: 'COMPLETED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type Status = (typeof Status)[keyof typeof Status]
+
+
 export const TradeOfferStatus = {
   PENDING: 'PENDING',
   ACCEPTED: 'ACCEPTED',
@@ -26,6 +38,16 @@ export const TradeOfferStatus = {
 } as const
 
 export type TradeOfferStatus = (typeof TradeOfferStatus)[keyof typeof TradeOfferStatus]
+
+
+export const TradeRequestStatus = {
+  PENDING: 'PENDING',
+  ACCEPTED: 'ACCEPTED',
+  REJECTED: 'REJECTED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type TradeRequestStatus = (typeof TradeRequestStatus)[keyof typeof TradeRequestStatus]
 
 
 export const Cond = {

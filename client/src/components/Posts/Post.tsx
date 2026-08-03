@@ -1,5 +1,6 @@
 /* eslint-disable react/jsx-one-expression-per-line */
-import React from 'react';
+import React, { useState } from 'react';
+import axios from 'axios';
 
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -10,29 +11,72 @@ import TextField from '@mui/material/TextField';
 import Avatar from '@mui/material/Avatar';
 import Divider from '@mui/material/Divider';
 import Chip from '@mui/material/Chip';
+import DownloadIcon from '@mui/icons-material/Download';
+import CircularProgress from '@mui/material/CircularProgress';
 
 import { formatPostDate } from '../../utils/utils';
 import type { PostData } from './ManagePosts';
 
 import PostActionsMenu from './PostActionsMenu';
 import ArtTradeOffer from './ArtTradeOffer';
+import type { TradeRequestData } from '../Trades/RequestTradeButton';
+import RequestTradeButton from '../Trades/RequestTradeButton';
+import IncomingTradeRequests from '../Trades/IncomingTradeRequests';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
+import { useRouter } from '../../context/RouterContext';
 
 interface PostProps {
   post: PostData;
   onReport: () => void;
+  myTradeRequests: TradeRequestData | null;
+  onTradeActivity: () => void | Promise<void>;
   onOfferSubmitted?: () => void;
 }
 
-export default function Post({ post, onReport, onOfferSubmitted }: PostProps) {
+export default function Post({
+  post, onReport, myTradeRequests, onTradeActivity, onOfferSubmitted,
+}: PostProps) {
   const postUser = post.user.name ?? post.user.email;
   const {
     user, blockedUserIds, blockUser, unblockUser,
   } = useAuth();
   const { showToast } = useToast();
+  const { navigate } = useRouter();
   const isOwnPost = user?.id === post.userId;
   const isBlocked = blockedUserIds.includes(post.userId);
+  const [downloadingFull, setDownloadingFull] = useState(false);
+
+  const completedOffer = post.tradeOffers?.find((o) => o.status === 'COMPLETED');
+  const receivedUrl = isOwnPost
+    ? (completedOffer?.fullUrl ?? undefined)
+    : (post.fullUrl ?? undefined);
+
+  const handleDownloadFull = async (imageUrl: string) => {
+    try {
+      setDownloadingFull(true);
+      const response = await fetch(imageUrl);
+      const blob = await response.blob();
+
+      const blobUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = blobUrl;
+
+      const safeTitle = post.title.replace(/[^a-zA-Z0-9_-]/g, '_');
+      link.download = `Art_Received_${safeTitle}.jpg`;
+
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      window.URL.revokeObjectURL(blobUrl);
+    } catch (err) {
+      console.error('Failed to save file:', err);
+      window.open(imageUrl, '_blank');
+    } finally {
+      setDownloadingFull(false);
+    }
+  };
 
   const handleBlockToggle = async () => {
     try {
@@ -45,6 +89,22 @@ export default function Post({ post, onReport, onOfferSubmitted }: PostProps) {
       }
     } catch {
       showToast('Could not update block status - try again.', 'error');
+    }
+  };
+
+  const handleOpenDM = async () => {
+    try {
+      const res = await axios.post<{ id: number }>(
+        '/dms',
+        { userId: post.user.id },
+        { withCredentials: true },
+      );
+      navigate(`/messages/${res.data.id}`);
+    } catch (err) {
+      const message = axios.isAxiosError(err) && err.response?.data?.error
+        ? err.response.data.error
+        : 'Could not start conversation.';
+      showToast(message, 'error');
     }
   };
 
@@ -66,7 +126,7 @@ export default function Post({ post, onReport, onOfferSubmitted }: PostProps) {
                 {post.title}
               </Typography>
 
-              {post.isComplete && (
+              {post.status === 'COMPLETED' && (
                 <Chip
                   size="small"
                   color="success"
@@ -85,18 +145,33 @@ export default function Post({ post, onReport, onOfferSubmitted }: PostProps) {
             display: 'flex', alignItems: 'center', gap: 1, flexShrink: 0, flexWrap: 'wrap',
           }}
           >
-            <Avatar sx={{
-              bgcolor: 'primary.main', width: 32, height: 32, fontSize: '0.9rem',
-            }}
+            <Box
+              onClick={() => navigate(`/profile/${post.user.id}`)}
+              role="button"
+              tabIndex={0}
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 1,
+                cursor: 'pointer',
+                '&:hover .post-username': { textDecoration: 'underline' },
+              }}
             >
-              {postUser.charAt(0).toUpperCase()}
-            </Avatar>
-            <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
-              {postUser}
-            </Typography>
-            <Button size="small" variant="outlined" sx={{ borderRadius: 4, textTransform: 'none' }}>
-              Open DM
-            </Button>
+              <Avatar sx={{
+                bgcolor: 'primary.main', width: 32, height: 32, fontSize: '0.9rem',
+              }}
+              >
+                {postUser.charAt(0).toUpperCase()}
+              </Avatar>
+              <Typography variant="subtitle2" className="post-username" sx={{ fontWeight: 600 }}>
+                {postUser}
+              </Typography>
+            </Box>
+            {!isOwnPost && (
+              <Button size="small" variant="outlined" onClick={handleOpenDM} sx={{ borderRadius: 4, textTransform: 'none' }}>
+                Open DM
+              </Button>
+            )}
             <PostActionsMenu
               onReport={onReport}
               showBlock={!isOwnPost}
@@ -137,11 +212,9 @@ export default function Post({ post, onReport, onOfferSubmitted }: PostProps) {
                   display: 'flex', gap: 2, alignItems: 'flex-start', p: 1.5, bgcolor: '#f4f6f8', borderRadius: 2,
                 }}
               >
-                <Typography variant="body2" sx={{ flex: 1 }}>
+                <Typography variant="body2" sx={{ flex: 1, color: 'black' }}>
                   {comment.text}
                 </Typography>
-
-                <Button size="small" sx={{ textTransform: 'none', minWidth: 'auto' }}>DM</Button>
               </Box>
             ))}
           </Box>
@@ -164,14 +237,61 @@ export default function Post({ post, onReport, onOfferSubmitted }: PostProps) {
           </Button>
         </Box>
 
-        {/* Offer Art Button */}
-        {!post.isComplete && (
+        {post.status === 'COMPLETED' && receivedUrl && (
           <Box sx={{
-            mt: 2, pt: 2, display: 'flex', justifyContent: 'flex-end',
+            mt: 2, pt: 2, borderTop: '1px solid', borderColor: 'divider',
           }}
           >
+            <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 'bold' }}>
+              Art Received:
+            </Typography>
+            <Box sx={{
+              bgcolor: '#121212', borderRadius: 2, p: 1, textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}
+            >
+              <img
+                src={receivedUrl}
+                alt="Received Art"
+                style={{ maxWidth: '100%', maxHeight: 300, objectFit: 'contain' }}
+              />
+            </Box>
+            <Button
+              variant="contained"
+              color="success"
+              size="small"
+              startIcon={downloadingFull ? <CircularProgress size={16} color="inherit" /> : <DownloadIcon />}
+              onClick={() => handleDownloadFull(receivedUrl)}
+              disabled={downloadingFull}
+              sx={{ mt: 1.5 }}
+            >
+              {downloadingFull ? 'Saving File...' : 'Download Art Received'}
+            </Button>
+          </Box>
+        )}
+
+        {/* Request to Trade + Offer Art buttons */}
+        {!isOwnPost && post.status === 'OPEN' && (
+          <Box sx={{
+            mt: 2,
+            pt: 2,
+            display: 'flex',
+            justifyContent: 'flex-end',
+            gap: 1,
+            flexWrap: 'wrap',
+          }}
+          >
+            <RequestTradeButton
+              postId={post.id}
+              myRequest={myTradeRequests}
+              onRequestChanged={onTradeActivity}
+            />
             <ArtTradeOffer postId={post.id} onSuccess={onOfferSubmitted} />
           </Box>
+        )}
+
+        {/* Owner's view of incoming requests on their own open post */}
+        {isOwnPost && post.status === 'OPEN' && (
+          <IncomingTradeRequests postId={post.id} onAccepted={onTradeActivity} />
         )}
       </CardContent>
     </Card>
