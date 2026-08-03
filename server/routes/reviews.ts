@@ -159,4 +159,19 @@ reviews.get('/user/:userId', async (req, res) => {
   }
 });
 
+// Get all reviews written by self
+reviews.get('/mine', requireAuth, async (req, res) => {
+  try {
+    const reviewerId = (req.user as { id: number }).id;
+    const myReviews = await prisma.review.findMany({
+      where: { reviewerId },
+      orderBy: { createdAt: 'desc' },
+    });
+    return res.json(myReviews);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: 'Unable to retrieve your reviews.' });
+  }
+});
+
 export default reviews;
