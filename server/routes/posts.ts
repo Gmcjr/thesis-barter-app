@@ -6,6 +6,7 @@ import { screenOrReject } from '../services/moderation.js';
 import requireAuth from '../middleware/requireAuth.js';
 import { getDownloadUrl } from '../services/s3.js';
 import { getBlockedRelationshipIds } from '../services/blocks.js';
+import { getIo } from '../middleware/socket.js';
 
 const posts = Router();
 
@@ -18,6 +19,8 @@ interface MediaItem {
 }
 
 interface TradeOfferItem {
+  offererId: number;
+  status: string;
   tradeOfferMedia?: MediaItem[];
   [key: string]: unknown;
 }
@@ -27,14 +30,14 @@ interface TradeOfferItem {
 const getUserId = (req: Request): number => req.user!.id;
 
 // generate the repeated where-clause for updating/deleting posts
-const getOwnedIncompletePostWhere = (req: Request) => ({
+const getOwnedOpenPostWhere = (req: Request) => ({
   id: Number(req.params.id),
   userId: getUserId(req),
-  isComplete: false,
+  status: 'OPEN' as const,
 });
 
 // fetch S3 URLs for preview and full media variants
-const getMediaUrls = async (mediaArray?: MediaItem[]) => {
+const getMediaUrls = async (mediaArray?: MediaItem[], allowFull: boolean = false) => {
   if (!mediaArray) return { previewUrl: null, fullUrl: null };
 
   const fetchUrl = async (variant: string) => {
@@ -48,7 +51,7 @@ const getMediaUrls = async (mediaArray?: MediaItem[]) => {
 
   return {
     previewUrl: await fetchUrl('PREVIEW'),
-    fullUrl: await fetchUrl('FULL'),
+    fullUrl: allowFull ? await fetchUrl('FULL') : null,
   };
 };
 
@@ -58,39 +61,69 @@ posts.get('/', async (req, res) => {
   try {
     const search = String(req.query.q ?? '').trim();
     const mine = req.query.mine === 'true';
+    const profileUserId = req.query.userId ? Number(req.query.userId) : undefined;
 
     if (mine && !req.user) return res.status(401).json({ error: 'Unauthorized' });
-    const userId = mine ? getUserId(req) : undefined;
-    const blockedIds = (!mine && req.user)
+
+    const blockedRelationshipIds = (!mine && !profileUserId && req.user)
       ? await getBlockedRelationshipIds(getUserId(req))
       : [];
 
-    const rawPosts = await prisma.post.findMany({
-      where: mine ? {
-        OR: [
-          { userId },
-          { tradeOffers: { some: { offererId: userId, status: 'COMPLETED' } } },
+    // A user's "trading history" includes posts they authored, posts where they
+    // completed an art trade offer, and posts where they completed a generic
+    // trade as the requester - not just posts they own.
+    const ownedOrCompletedFilter = (userId: number) => ({
+      OR: [
+        { userId },
+        { tradeOffers: { some: { offererId: userId, status: 'COMPLETED' as const } } },
+        { trades: { some: { requesterId: userId, status: 'COMPLETED' as const } } },
+      ],
+    });
+
+    const searchFilter = search ? [{
+      OR: [
+        { title: { contains: search, mode: 'insensitive' as const } },
+        { message: { contains: search, mode: 'insensitive' as const } },
+      ],
+    }] : [];
+
+    const buildWhere = () => {
+      if (mine) return ownedOrCompletedFilter(getUserId(req));
+      if (profileUserId) {
+        return { AND: [{ isRemoved: false }, ownedOrCompletedFilter(profileUserId), ...searchFilter] };
+      }
+      return {
+        AND: [
+          { isRemoved: false },
+          { status: { not: 'COMPLETED' as const } },
+          ...(blockedRelationshipIds.length ? [{ userId: { notIn: blockedRelationshipIds } }] : []),
+          ...searchFilter,
         ],
-      } : {
-        isRemoved: false,
-        ...(blockedIds.length && { userId: { notIn: blockedIds } }),
-        ...(search && {
-          OR: [
-            { title: { contains: search, mode: 'insensitive' } },
-            { message: { contains: search, mode: 'insensitive' } },
-          ],
-        }),
-      },
-      take: 50,
+      };
+    };
+
+    const rawPosts = await prisma.post.findMany({
+      where: buildWhere(),
+      take: mine || profileUserId ? undefined : 50,
       orderBy: { createdAt: 'desc' },
       include: {
         user: { select: { id: true, name: true } },
         products: true,
         services: true,
         comments: true,
+        trades: {
+          orderBy: { createdAt: 'desc' },
+          take: 1,
+          select: {
+            id: true, status: true, ownerId: true, requesterId: true, ownerCompl: true, reqCompl: true,
+          },
+        },
         postMedia: { include: { media: true } },
+        tradeOffers: {
+          where: mine ? undefined : { status: 'COMPLETED' },
+          include: { offerer: true, tradeOfferMedia: { include: { media: true } } },
+        },
         ...(mine && {
-          tradeOffers: { include: { offerer: true, tradeOfferMedia: { include: { media: true } } } },
           reports: {
             orderBy: { createdAt: 'desc' },
             take: 1,
@@ -100,16 +133,31 @@ posts.get('/', async (req, res) => {
       },
     });
 
+    const viewerId = req.user?.id;
+
     const postsWithUrls = await Promise.all(rawPosts.map(async (post) => {
-      const postUrls = await getMediaUrls(post.postMedia);
-      const tradeOffers = await Promise.all(
-        (post.tradeOffers || []).map(async (offer: TradeOfferItem) => ({
-          ...offer,
-          ...(await getMediaUrls(offer.tradeOfferMedia)),
-        })),
+      const { trades, ...postRest } = post;
+      const isOwner = viewerId !== undefined && post.userId === viewerId;
+      const viewerCompletedOffer = (post.tradeOffers || []).find(
+        (o: TradeOfferItem) => o.offererId === viewerId && o.status === 'COMPLETED',
       );
 
-      return { ...post, ...postUrls, tradeOffers };
+      const postUrls = await getMediaUrls(post.postMedia, isOwner || Boolean(viewerCompletedOffer));
+
+      const tradeOffers = await Promise.all(
+        (post.tradeOffers || []).map(async (offer: TradeOfferItem) => {
+          const isOfferer = viewerId !== undefined && offer.offererId === viewerId;
+          const offerAllowFull = isOfferer || (isOwner && offer.status === 'COMPLETED');
+          return {
+            ...offer,
+            ...(await getMediaUrls(offer.tradeOfferMedia, offerAllowFull)),
+          };
+        }),
+      );
+
+      return {
+        ...postRest, trade: trades[0] ?? null, ...postUrls, tradeOffers,
+      };
     }));
 
     return res.json(postsWithUrls);
@@ -123,7 +171,10 @@ posts.get('/', async (req, res) => {
 // Screens post before creating it, rejecting clear violations outright
 posts.post('/', requireAuth, async (req, res) => {
   try {
-    const { title, message, isLocal = false, zipCode, radiusMiles, previewMediaId, fullMediaId } = req.body;
+    const {
+      title, message, isLocal = false, zipCode, radiusMiles, previewMediaId, fullMediaId,
+      name, offerType, category, condition,
+    } = req.body;
 
     const outcome = await screenOrReject(`${title}\n\n${message}`);
     if (!outcome.ok) {
@@ -133,26 +184,56 @@ posts.post('/', requireAuth, async (req, res) => {
       });
     }
 
-    const newPost = await prisma.post.create({
-      data: {
-        userId: getUserId(req),
-        title,
-        message,
-        isLocal,
-        zipCode: isLocal ? zipCode : null,
-        radiusMiles: isLocal ? radiusMiles : null,
-        ...(previewMediaId && fullMediaId && {
-          postMedia: {
-            create: [
-              { mediaId: Number(previewMediaId), sortOrder: 0 },
-              { mediaId: Number(fullMediaId), sortOrder: 1 },
-            ],
-          },
-        }),
-      },
-    });
+    const userId = getUserId(req);
+    const trimmedCategory = typeof category === 'string' ? category.trim() : '';
 
-    return res.status(201).json({ ...newPost, screened: outcome.screened });
+    const newPost = await prisma.$transaction(async (tx) => {
+      const post = await tx.post.create({
+        data: {
+          userId,
+          title,
+          message,
+          isLocal,
+          zipCode: isLocal ? zipCode : null,
+          radiusMiles: isLocal ? radiusMiles : null,
+          ...(previewMediaId && fullMediaId && {
+            postMedia: {
+              create: [
+                { mediaId: Number(previewMediaId), sortOrder: 0 },
+                { mediaId: Number(fullMediaId), sortOrder: 1 },
+              ],
+            },
+          }),
+        },
+      });
+
+      // DIGITAL offers have no Product/Service catalog entry — the post + attached media is the offering
+      if ((offerType === 'PRODUCT' || offerType === 'SERVICE') && trimmedCategory && name) {
+        const cat = await tx.cat.upsert({
+          where: { name_type: { name: trimmedCategory, type: offerType } },
+          create: { name: trimmedCategory, type: offerType },
+          update: {},
+        });
+
+    if (offerType === 'PRODUCT') {
+      await tx.product.create({
+        data: {
+          postId: post.id, userId, catId: cat.id, name, condition: condition || 'GOOD',
+        },
+      });
+    } else {
+      await tx.service.create({
+        data: {
+          postId: post.id, userId, catId: cat.id, name,
+        },
+      });
+    }
+  }
+
+  return post;
+});
+getIo().emit('posts:changed');
+return res.status(201).json({ ...newPost, screened: outcome.screened });
   } catch (error) {
     console.error('Failed to POST new post:', error);
     return res.status(500).json({ error: 'Unable to create post' });
@@ -174,19 +255,29 @@ posts.patch('/:id', requireAuth, async (req, res) => {
         });
       }
     }
+    if (isLocal && (zipCode === undefined || zipCode === null || zipCode === '')) {
+      return res.status(400).json({ error: 'zipCode is required when isLocal is true.' });
+    }
+
+    const parsedRadius = isLocal ? Number(radiusMiles) : null;
+
+    if (isLocal && !Number.isFinite(parsedRadius)) {
+      return res.status(400).json({ error: 'radiusMiles must be a number when isLocal is true.' });
+    }
 
     const { count } = await prisma.post.updateMany({
-      where: getOwnedIncompletePostWhere(req),
+      where: getOwnedOpenPostWhere(req),
       data: {
         title,
         message,
         isLocal,
         zipCode: isLocal ? String(zipCode) : null,
-        radiusMiles: isLocal ? Number(radiusMiles) : null,
+        radiusMiles: parsedRadius,
       },
     });
 
     if (!count) return res.status(404).json({ error: 'Post not found to PATCH as update.' });
+    getIo().emit('posts:changed');
     return res.json({ success: true });
   } catch (error) {
     console.error('Failed to PATCH post:', error);
@@ -198,30 +289,15 @@ posts.patch('/:id', requireAuth, async (req, res) => {
 posts.delete('/:id', requireAuth, async (req, res) => {
   try {
     const { count } = await prisma.post.deleteMany({
-      where: getOwnedIncompletePostWhere(req),
+      where: getOwnedOpenPostWhere(req),
     });
 
     if (!count) return res.status(404).json({ error: 'Post not found to DELETE.' });
+    getIo().emit('posts:changed');
     return res.sendStatus(200);
   } catch (error) {
     console.error('Failed to DELETE post:', error);
     return res.status(500).json({ error: 'Unable to delete post.' });
-  }
-});
-
-// PATCH: allows a user to mark a trade as complete
-posts.patch('/:id/complete', requireAuth, async (req, res) => {
-  try {
-    const { count } = await prisma.post.updateMany({
-      where: getOwnedIncompletePostWhere(req),
-      data: { isComplete: true },
-    });
-
-    if (!count) return res.status(404).json({ error: 'Post not found to PATCH as complete.' });
-    return res.json({ success: true, id: Number(req.params.id), isComplete: true });
-  } catch (error) {
-    console.error('Failed to complete trade:', error);
-    return res.status(500).json({ error: 'Unable to complete trade.' });
   }
 });
 

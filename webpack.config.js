@@ -22,6 +22,9 @@ export default {
   // cache: process.env.MODE === 'development' ? { type: 'filesystem' } : false,
   resolve: {
     extensions: ['.tsx', '.ts', '.jsx', '.js'],
+    fallback: {
+      url: false,
+    },
   },
   module: {
     rules: [

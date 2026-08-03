@@ -44,4 +44,5 @@ export interface ProfileTabsProps {
   onTabChange: (tab: 'current' | 'history') => void;
   tradeCount: number;
   isOwnProfile: boolean;
+  onDM: () => void;
 }

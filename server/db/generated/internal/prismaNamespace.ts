@@ -402,12 +402,14 @@ export const ModelName = {
   Message: 'Message',
   Log: 'Log',
   Post: 'Post',
+  Trade: 'Trade',
   TradeOffer: 'TradeOffer',
+  TradeRequest: 'TradeRequest',
   Comment: 'Comment',
   Product: 'Product',
   Service: 'Service',
   Cat: 'Cat',
-  Rep: 'Rep',
+  Review: 'Review',
   Block: 'Block',
   Report: 'Report',
   Appeal: 'Appeal',
@@ -434,7 +436,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "dM" | "message" | "log" | "post" | "tradeOffer" | "comment" | "product" | "service" | "cat" | "rep" | "block" | "report" | "appeal" | "media" | "postMedia" | "tradeOfferMedia" | "productMedia" | "serviceMedia" | "commentMedia" | "messageMedia" | "userMedia"
+    modelProps: "user" | "dM" | "message" | "log" | "post" | "trade" | "tradeOffer" | "tradeRequest" | "comment" | "product" | "service" | "cat" | "review" | "block" | "report" | "appeal" | "media" | "postMedia" | "tradeOfferMedia" | "productMedia" | "serviceMedia" | "commentMedia" | "messageMedia" | "userMedia"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -808,6 +810,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Trade: {
+      payload: Prisma.$TradePayload<ExtArgs>
+      fields: Prisma.TradeFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TradeFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TradePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TradeFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TradePayload>
+        }
+        findFirst: {
+          args: Prisma.TradeFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TradePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TradeFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TradePayload>
+        }
+        findMany: {
+          args: Prisma.TradeFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TradePayload>[]
+        }
+        create: {
+          args: Prisma.TradeCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TradePayload>
+        }
+        createMany: {
+          args: Prisma.TradeCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.TradeCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TradePayload>[]
+        }
+        delete: {
+          args: Prisma.TradeDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TradePayload>
+        }
+        update: {
+          args: Prisma.TradeUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TradePayload>
+        }
+        deleteMany: {
+          args: Prisma.TradeDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TradeUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.TradeUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TradePayload>[]
+        }
+        upsert: {
+          args: Prisma.TradeUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TradePayload>
+        }
+        aggregate: {
+          args: Prisma.TradeAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTrade>
+        }
+        groupBy: {
+          args: Prisma.TradeGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TradeGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TradeCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TradeCountAggregateOutputType> | number
+        }
+      }
+    }
     TradeOffer: {
       payload: Prisma.$TradeOfferPayload<ExtArgs>
       fields: Prisma.TradeOfferFieldRefs
@@ -879,6 +955,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.TradeOfferCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.TradeOfferCountAggregateOutputType> | number
+        }
+      }
+    }
+    TradeRequest: {
+      payload: Prisma.$TradeRequestPayload<ExtArgs>
+      fields: Prisma.TradeRequestFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TradeRequestFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TradeRequestPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TradeRequestFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TradeRequestPayload>
+        }
+        findFirst: {
+          args: Prisma.TradeRequestFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TradeRequestPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TradeRequestFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TradeRequestPayload>
+        }
+        findMany: {
+          args: Prisma.TradeRequestFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TradeRequestPayload>[]
+        }
+        create: {
+          args: Prisma.TradeRequestCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TradeRequestPayload>
+        }
+        createMany: {
+          args: Prisma.TradeRequestCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.TradeRequestCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TradeRequestPayload>[]
+        }
+        delete: {
+          args: Prisma.TradeRequestDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TradeRequestPayload>
+        }
+        update: {
+          args: Prisma.TradeRequestUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TradeRequestPayload>
+        }
+        deleteMany: {
+          args: Prisma.TradeRequestDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TradeRequestUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.TradeRequestUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TradeRequestPayload>[]
+        }
+        upsert: {
+          args: Prisma.TradeRequestUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TradeRequestPayload>
+        }
+        aggregate: {
+          args: Prisma.TradeRequestAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTradeRequest>
+        }
+        groupBy: {
+          args: Prisma.TradeRequestGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TradeRequestGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TradeRequestCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TradeRequestCountAggregateOutputType> | number
         }
       }
     }
@@ -1178,77 +1328,77 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
-    Rep: {
-      payload: Prisma.$RepPayload<ExtArgs>
-      fields: Prisma.RepFieldRefs
+    Review: {
+      payload: Prisma.$ReviewPayload<ExtArgs>
+      fields: Prisma.ReviewFieldRefs
       operations: {
         findUnique: {
-          args: Prisma.RepFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RepPayload> | null
+          args: Prisma.ReviewFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReviewPayload> | null
         }
         findUniqueOrThrow: {
-          args: Prisma.RepFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RepPayload>
+          args: Prisma.ReviewFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReviewPayload>
         }
         findFirst: {
-          args: Prisma.RepFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RepPayload> | null
+          args: Prisma.ReviewFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReviewPayload> | null
         }
         findFirstOrThrow: {
-          args: Prisma.RepFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RepPayload>
+          args: Prisma.ReviewFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReviewPayload>
         }
         findMany: {
-          args: Prisma.RepFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RepPayload>[]
+          args: Prisma.ReviewFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReviewPayload>[]
         }
         create: {
-          args: Prisma.RepCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RepPayload>
+          args: Prisma.ReviewCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReviewPayload>
         }
         createMany: {
-          args: Prisma.RepCreateManyArgs<ExtArgs>
+          args: Prisma.ReviewCreateManyArgs<ExtArgs>
           result: BatchPayload
         }
         createManyAndReturn: {
-          args: Prisma.RepCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RepPayload>[]
+          args: Prisma.ReviewCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReviewPayload>[]
         }
         delete: {
-          args: Prisma.RepDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RepPayload>
+          args: Prisma.ReviewDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReviewPayload>
         }
         update: {
-          args: Prisma.RepUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RepPayload>
+          args: Prisma.ReviewUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReviewPayload>
         }
         deleteMany: {
-          args: Prisma.RepDeleteManyArgs<ExtArgs>
+          args: Prisma.ReviewDeleteManyArgs<ExtArgs>
           result: BatchPayload
         }
         updateMany: {
-          args: Prisma.RepUpdateManyArgs<ExtArgs>
+          args: Prisma.ReviewUpdateManyArgs<ExtArgs>
           result: BatchPayload
         }
         updateManyAndReturn: {
-          args: Prisma.RepUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RepPayload>[]
+          args: Prisma.ReviewUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReviewPayload>[]
         }
         upsert: {
-          args: Prisma.RepUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RepPayload>
+          args: Prisma.ReviewUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReviewPayload>
         }
         aggregate: {
-          args: Prisma.RepAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateRep>
+          args: Prisma.ReviewAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateReview>
         }
         groupBy: {
-          args: Prisma.RepGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.RepGroupByOutputType>[]
+          args: Prisma.ReviewGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ReviewGroupByOutputType>[]
         }
         count: {
-          args: Prisma.RepCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.RepCountAggregateOutputType> | number
+          args: Prisma.ReviewCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ReviewCountAggregateOutputType> | number
         }
       }
     }
@@ -2135,6 +2285,7 @@ export const MessageScalarFieldEnum = {
   senderId: 'senderId',
   recieverId: 'recieverId',
   text: 'text',
+  createdAt: 'createdAt',
   isRemoved: 'isRemoved'
 } as const
 
@@ -2152,9 +2303,10 @@ export type LogScalarFieldEnum = (typeof LogScalarFieldEnum)[keyof typeof LogSca
 export const PostScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
+  images: 'images',
+  status: 'status',
   title: 'title',
   message: 'message',
-  isComplete: 'isComplete',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   isLocal: 'isLocal',
@@ -2166,6 +2318,20 @@ export const PostScalarFieldEnum = {
 } as const
 
 export type PostScalarFieldEnum = (typeof PostScalarFieldEnum)[keyof typeof PostScalarFieldEnum]
+
+
+export const TradeScalarFieldEnum = {
+  id: 'id',
+  postId: 'postId',
+  ownerId: 'ownerId',
+  requesterId: 'requesterId',
+  ownerCompl: 'ownerCompl',
+  reqCompl: 'reqCompl',
+  status: 'status',
+  createdAt: 'createdAt'
+} as const
+
+export type TradeScalarFieldEnum = (typeof TradeScalarFieldEnum)[keyof typeof TradeScalarFieldEnum]
 
 
 export const TradeOfferScalarFieldEnum = {
@@ -2180,6 +2346,18 @@ export const TradeOfferScalarFieldEnum = {
 } as const
 
 export type TradeOfferScalarFieldEnum = (typeof TradeOfferScalarFieldEnum)[keyof typeof TradeOfferScalarFieldEnum]
+
+
+export const TradeRequestScalarFieldEnum = {
+  id: 'id',
+  postId: 'postId',
+  requesterId: 'requesterId',
+  message: 'message',
+  status: 'status',
+  createdAt: 'createdAt'
+} as const
+
+export type TradeRequestScalarFieldEnum = (typeof TradeRequestScalarFieldEnum)[keyof typeof TradeRequestScalarFieldEnum]
 
 
 export const CommentScalarFieldEnum = {
@@ -2228,12 +2406,17 @@ export const CatScalarFieldEnum = {
 export type CatScalarFieldEnum = (typeof CatScalarFieldEnum)[keyof typeof CatScalarFieldEnum]
 
 
-export const RepScalarFieldEnum = {
+export const ReviewScalarFieldEnum = {
   id: 'id',
-  userId: 'userId'
+  tradeId: 'tradeId',
+  reviewerId: 'reviewerId',
+  revieweeId: 'revieweeId',
+  rating: 'rating',
+  comment: 'comment',
+  createdAt: 'createdAt'
 } as const
 
-export type RepScalarFieldEnum = (typeof RepScalarFieldEnum)[keyof typeof RepScalarFieldEnum]
+export type ReviewScalarFieldEnum = (typeof ReviewScalarFieldEnum)[keyof typeof ReviewScalarFieldEnum]
 
 
 export const BlockScalarFieldEnum = {
@@ -2453,6 +2636,20 @@ export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
 
 
 /**
+ * Reference to a field of type 'Status'
+ */
+export type EnumStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Status'>
+    
+
+
+/**
+ * Reference to a field of type 'Status[]'
+ */
+export type ListEnumStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Status[]'>
+    
+
+
+/**
  * Reference to a field of type 'Float'
  */
 export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -2477,6 +2674,20 @@ export type EnumTradeOfferStatusFieldRefInput<$PrismaModel> = FieldRefInputType<
  * Reference to a field of type 'TradeOfferStatus[]'
  */
 export type ListEnumTradeOfferStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TradeOfferStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'TradeRequestStatus'
+ */
+export type EnumTradeRequestStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TradeRequestStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'TradeRequestStatus[]'
+ */
+export type ListEnumTradeRequestStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TradeRequestStatus[]'>
     
 
 
@@ -2733,12 +2944,14 @@ export type GlobalOmitConfig = {
   message?: Prisma.MessageOmit
   log?: Prisma.LogOmit
   post?: Prisma.PostOmit
+  trade?: Prisma.TradeOmit
   tradeOffer?: Prisma.TradeOfferOmit
+  tradeRequest?: Prisma.TradeRequestOmit
   comment?: Prisma.CommentOmit
   product?: Prisma.ProductOmit
   service?: Prisma.ServiceOmit
   cat?: Prisma.CatOmit
-  rep?: Prisma.RepOmit
+  review?: Prisma.ReviewOmit
   block?: Prisma.BlockOmit
   report?: Prisma.ReportOmit
   appeal?: Prisma.AppealOmit
