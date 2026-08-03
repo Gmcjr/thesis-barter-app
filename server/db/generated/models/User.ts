@@ -249,18 +249,21 @@ export type UserWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   zipCode?: Prisma.StringNullableFilter<"User"> | string | null
   posts?: Prisma.PostListRelationFilter
+  reqTrades?: Prisma.TradeListRelationFilter
+  ownedTrades?: Prisma.TradeListRelationFilter
   comments?: Prisma.CommentListRelationFilter
   logs?: Prisma.LogListRelationFilter
   products?: Prisma.ProductListRelationFilter
   services?: Prisma.ServiceListRelationFilter
-  tradeOffers?: Prisma.TradeOfferListRelationFilter
-  media?: Prisma.MediaListRelationFilter
-  userMedia?: Prisma.UserMediaListRelationFilter
   initiatedDMs?: Prisma.DMListRelationFilter
   recievedDMs?: Prisma.DMListRelationFilter
   sMessages?: Prisma.MessageListRelationFilter
   rMessages?: Prisma.MessageListRelationFilter
-  rep?: Prisma.RepListRelationFilter
+  sReviews?: Prisma.ReviewListRelationFilter
+  rReviews?: Prisma.ReviewListRelationFilter
+  tradeOffers?: Prisma.TradeOfferListRelationFilter
+  media?: Prisma.MediaListRelationFilter
+  userMedia?: Prisma.UserMediaListRelationFilter
   reportsFiled?: Prisma.ReportListRelationFilter
   reportsAgainst?: Prisma.ReportListRelationFilter
   reportsResolved?: Prisma.ReportListRelationFilter
@@ -268,6 +271,7 @@ export type UserWhereInput = {
   appealsResolved?: Prisma.AppealListRelationFilter
   blocksInitiated?: Prisma.BlockListRelationFilter
   blocksReceived?: Prisma.BlockListRelationFilter
+  tradeRequests?: Prisma.TradeRequestListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -281,18 +285,21 @@ export type UserOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   zipCode?: Prisma.SortOrderInput | Prisma.SortOrder
   posts?: Prisma.PostOrderByRelationAggregateInput
+  reqTrades?: Prisma.TradeOrderByRelationAggregateInput
+  ownedTrades?: Prisma.TradeOrderByRelationAggregateInput
   comments?: Prisma.CommentOrderByRelationAggregateInput
   logs?: Prisma.LogOrderByRelationAggregateInput
   products?: Prisma.ProductOrderByRelationAggregateInput
   services?: Prisma.ServiceOrderByRelationAggregateInput
-  tradeOffers?: Prisma.TradeOfferOrderByRelationAggregateInput
-  media?: Prisma.MediaOrderByRelationAggregateInput
-  userMedia?: Prisma.UserMediaOrderByRelationAggregateInput
   initiatedDMs?: Prisma.DMOrderByRelationAggregateInput
   recievedDMs?: Prisma.DMOrderByRelationAggregateInput
   sMessages?: Prisma.MessageOrderByRelationAggregateInput
   rMessages?: Prisma.MessageOrderByRelationAggregateInput
-  rep?: Prisma.RepOrderByRelationAggregateInput
+  sReviews?: Prisma.ReviewOrderByRelationAggregateInput
+  rReviews?: Prisma.ReviewOrderByRelationAggregateInput
+  tradeOffers?: Prisma.TradeOfferOrderByRelationAggregateInput
+  media?: Prisma.MediaOrderByRelationAggregateInput
+  userMedia?: Prisma.UserMediaOrderByRelationAggregateInput
   reportsFiled?: Prisma.ReportOrderByRelationAggregateInput
   reportsAgainst?: Prisma.ReportOrderByRelationAggregateInput
   reportsResolved?: Prisma.ReportOrderByRelationAggregateInput
@@ -300,6 +307,7 @@ export type UserOrderByWithRelationInput = {
   appealsResolved?: Prisma.AppealOrderByRelationAggregateInput
   blocksInitiated?: Prisma.BlockOrderByRelationAggregateInput
   blocksReceived?: Prisma.BlockOrderByRelationAggregateInput
+  tradeRequests?: Prisma.TradeRequestOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -316,18 +324,21 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   zipCode?: Prisma.StringNullableFilter<"User"> | string | null
   posts?: Prisma.PostListRelationFilter
+  reqTrades?: Prisma.TradeListRelationFilter
+  ownedTrades?: Prisma.TradeListRelationFilter
   comments?: Prisma.CommentListRelationFilter
   logs?: Prisma.LogListRelationFilter
   products?: Prisma.ProductListRelationFilter
   services?: Prisma.ServiceListRelationFilter
-  tradeOffers?: Prisma.TradeOfferListRelationFilter
-  media?: Prisma.MediaListRelationFilter
-  userMedia?: Prisma.UserMediaListRelationFilter
   initiatedDMs?: Prisma.DMListRelationFilter
   recievedDMs?: Prisma.DMListRelationFilter
   sMessages?: Prisma.MessageListRelationFilter
   rMessages?: Prisma.MessageListRelationFilter
-  rep?: Prisma.RepListRelationFilter
+  sReviews?: Prisma.ReviewListRelationFilter
+  rReviews?: Prisma.ReviewListRelationFilter
+  tradeOffers?: Prisma.TradeOfferListRelationFilter
+  media?: Prisma.MediaListRelationFilter
+  userMedia?: Prisma.UserMediaListRelationFilter
   reportsFiled?: Prisma.ReportListRelationFilter
   reportsAgainst?: Prisma.ReportListRelationFilter
   reportsResolved?: Prisma.ReportListRelationFilter
@@ -335,6 +346,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   appealsResolved?: Prisma.AppealListRelationFilter
   blocksInitiated?: Prisma.BlockListRelationFilter
   blocksReceived?: Prisma.BlockListRelationFilter
+  tradeRequests?: Prisma.TradeRequestListRelationFilter
 }, "id" | "googleId" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -379,18 +391,21 @@ export type UserCreateInput = {
   createdAt?: Date | string
   zipCode?: string | null
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
+  reqTrades?: Prisma.TradeCreateNestedManyWithoutRequesterInput
+  ownedTrades?: Prisma.TradeCreateNestedManyWithoutOwnerInput
   comments?: Prisma.CommentCreateNestedManyWithoutUserInput
   logs?: Prisma.LogCreateNestedManyWithoutUserInput
   products?: Prisma.ProductCreateNestedManyWithoutUserInput
   services?: Prisma.ServiceCreateNestedManyWithoutUserInput
-  tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
-  media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
-  userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
   initiatedDMs?: Prisma.DMCreateNestedManyWithoutUser1Input
   recievedDMs?: Prisma.DMCreateNestedManyWithoutUser2Input
   sMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   rMessages?: Prisma.MessageCreateNestedManyWithoutRecieverInput
-  rep?: Prisma.RepCreateNestedManyWithoutUserInput
+  sReviews?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
+  rReviews?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
+  tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
+  media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
+  userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportCreateNestedManyWithoutResolverInput
@@ -398,6 +413,7 @@ export type UserCreateInput = {
   appealsResolved?: Prisma.AppealCreateNestedManyWithoutResolverInput
   blocksInitiated?: Prisma.BlockCreateNestedManyWithoutBlockerInput
   blocksReceived?: Prisma.BlockCreateNestedManyWithoutBlockedInput
+  tradeRequests?: Prisma.TradeRequestCreateNestedManyWithoutRequesterInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -411,18 +427,21 @@ export type UserUncheckedCreateInput = {
   createdAt?: Date | string
   zipCode?: string | null
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
+  reqTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutRequesterInput
+  ownedTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutOwnerInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
   logs?: Prisma.LogUncheckedCreateNestedManyWithoutUserInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutUserInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutUserInput
-  tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
-  media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
-  userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
   initiatedDMs?: Prisma.DMUncheckedCreateNestedManyWithoutUser1Input
   recievedDMs?: Prisma.DMUncheckedCreateNestedManyWithoutUser2Input
   sMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   rMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutRecieverInput
-  rep?: Prisma.RepUncheckedCreateNestedManyWithoutUserInput
+  sReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
+  rReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
+  tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
+  media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
+  userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportUncheckedCreateNestedManyWithoutResolverInput
@@ -430,6 +449,7 @@ export type UserUncheckedCreateInput = {
   appealsResolved?: Prisma.AppealUncheckedCreateNestedManyWithoutResolverInput
   blocksInitiated?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockerInput
   blocksReceived?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockedInput
+  tradeRequests?: Prisma.TradeRequestUncheckedCreateNestedManyWithoutRequesterInput
 }
 
 export type UserUpdateInput = {
@@ -442,18 +462,21 @@ export type UserUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
+  reqTrades?: Prisma.TradeUpdateManyWithoutRequesterNestedInput
+  ownedTrades?: Prisma.TradeUpdateManyWithoutOwnerNestedInput
   comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
   logs?: Prisma.LogUpdateManyWithoutUserNestedInput
   products?: Prisma.ProductUpdateManyWithoutUserNestedInput
   services?: Prisma.ServiceUpdateManyWithoutUserNestedInput
-  tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
-  media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
-  userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
   initiatedDMs?: Prisma.DMUpdateManyWithoutUser1NestedInput
   recievedDMs?: Prisma.DMUpdateManyWithoutUser2NestedInput
   sMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   rMessages?: Prisma.MessageUpdateManyWithoutRecieverNestedInput
-  rep?: Prisma.RepUpdateManyWithoutUserNestedInput
+  sReviews?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
+  rReviews?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
+  tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
+  media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
+  userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUpdateManyWithoutResolverNestedInput
@@ -461,6 +484,7 @@ export type UserUpdateInput = {
   appealsResolved?: Prisma.AppealUpdateManyWithoutResolverNestedInput
   blocksInitiated?: Prisma.BlockUpdateManyWithoutBlockerNestedInput
   blocksReceived?: Prisma.BlockUpdateManyWithoutBlockedNestedInput
+  tradeRequests?: Prisma.TradeRequestUpdateManyWithoutRequesterNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -474,18 +498,21 @@ export type UserUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
+  reqTrades?: Prisma.TradeUncheckedUpdateManyWithoutRequesterNestedInput
+  ownedTrades?: Prisma.TradeUncheckedUpdateManyWithoutOwnerNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
   logs?: Prisma.LogUncheckedUpdateManyWithoutUserNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutUserNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutUserNestedInput
-  tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
-  media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
-  userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
   initiatedDMs?: Prisma.DMUncheckedUpdateManyWithoutUser1NestedInput
   recievedDMs?: Prisma.DMUncheckedUpdateManyWithoutUser2NestedInput
   sMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   rMessages?: Prisma.MessageUncheckedUpdateManyWithoutRecieverNestedInput
-  rep?: Prisma.RepUncheckedUpdateManyWithoutUserNestedInput
+  sReviews?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+  rReviews?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
+  tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
+  media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
+  userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUncheckedUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUncheckedUpdateManyWithoutResolverNestedInput
@@ -493,6 +520,7 @@ export type UserUncheckedUpdateInput = {
   appealsResolved?: Prisma.AppealUncheckedUpdateManyWithoutResolverNestedInput
   blocksInitiated?: Prisma.BlockUncheckedUpdateManyWithoutBlockerNestedInput
   blocksReceived?: Prisma.BlockUncheckedUpdateManyWithoutBlockedNestedInput
+  tradeRequests?: Prisma.TradeRequestUncheckedUpdateManyWithoutRequesterNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -692,6 +720,34 @@ export type UserUpdateOneRequiredWithoutPostsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutPostsInput, Prisma.UserUpdateWithoutPostsInput>, Prisma.UserUncheckedUpdateWithoutPostsInput>
 }
 
+export type UserCreateNestedOneWithoutOwnedTradesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutOwnedTradesInput, Prisma.UserUncheckedCreateWithoutOwnedTradesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutOwnedTradesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutReqTradesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutReqTradesInput, Prisma.UserUncheckedCreateWithoutReqTradesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReqTradesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutOwnedTradesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutOwnedTradesInput, Prisma.UserUncheckedCreateWithoutOwnedTradesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutOwnedTradesInput
+  upsert?: Prisma.UserUpsertWithoutOwnedTradesInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutOwnedTradesInput, Prisma.UserUpdateWithoutOwnedTradesInput>, Prisma.UserUncheckedUpdateWithoutOwnedTradesInput>
+}
+
+export type UserUpdateOneRequiredWithoutReqTradesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutReqTradesInput, Prisma.UserUncheckedCreateWithoutReqTradesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReqTradesInput
+  upsert?: Prisma.UserUpsertWithoutReqTradesInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutReqTradesInput, Prisma.UserUpdateWithoutReqTradesInput>, Prisma.UserUncheckedUpdateWithoutReqTradesInput>
+}
+
 export type UserCreateNestedOneWithoutTradeOffersInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutTradeOffersInput, Prisma.UserUncheckedCreateWithoutTradeOffersInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutTradeOffersInput
@@ -704,6 +760,20 @@ export type UserUpdateOneRequiredWithoutTradeOffersNestedInput = {
   upsert?: Prisma.UserUpsertWithoutTradeOffersInput
   connect?: Prisma.UserWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutTradeOffersInput, Prisma.UserUpdateWithoutTradeOffersInput>, Prisma.UserUncheckedUpdateWithoutTradeOffersInput>
+}
+
+export type UserCreateNestedOneWithoutTradeRequestsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutTradeRequestsInput, Prisma.UserUncheckedCreateWithoutTradeRequestsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutTradeRequestsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutTradeRequestsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutTradeRequestsInput, Prisma.UserUncheckedCreateWithoutTradeRequestsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutTradeRequestsInput
+  upsert?: Prisma.UserUpsertWithoutTradeRequestsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutTradeRequestsInput, Prisma.UserUpdateWithoutTradeRequestsInput>, Prisma.UserUncheckedUpdateWithoutTradeRequestsInput>
 }
 
 export type UserCreateNestedOneWithoutCommentsInput = {
@@ -748,18 +818,32 @@ export type UserUpdateOneRequiredWithoutServicesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutServicesInput, Prisma.UserUpdateWithoutServicesInput>, Prisma.UserUncheckedUpdateWithoutServicesInput>
 }
 
-export type UserCreateNestedOneWithoutRepInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutRepInput, Prisma.UserUncheckedCreateWithoutRepInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutRepInput
+export type UserCreateNestedOneWithoutSReviewsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSReviewsInput, Prisma.UserUncheckedCreateWithoutSReviewsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSReviewsInput
   connect?: Prisma.UserWhereUniqueInput
 }
 
-export type UserUpdateOneRequiredWithoutRepNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutRepInput, Prisma.UserUncheckedCreateWithoutRepInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutRepInput
-  upsert?: Prisma.UserUpsertWithoutRepInput
+export type UserCreateNestedOneWithoutRReviewsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutRReviewsInput, Prisma.UserUncheckedCreateWithoutRReviewsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutRReviewsInput
   connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutRepInput, Prisma.UserUpdateWithoutRepInput>, Prisma.UserUncheckedUpdateWithoutRepInput>
+}
+
+export type UserUpdateOneRequiredWithoutSReviewsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSReviewsInput, Prisma.UserUncheckedCreateWithoutSReviewsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSReviewsInput
+  upsert?: Prisma.UserUpsertWithoutSReviewsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSReviewsInput, Prisma.UserUpdateWithoutSReviewsInput>, Prisma.UserUncheckedUpdateWithoutSReviewsInput>
+}
+
+export type UserUpdateOneRequiredWithoutRReviewsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutRReviewsInput, Prisma.UserUncheckedCreateWithoutRReviewsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutRReviewsInput
+  upsert?: Prisma.UserUpsertWithoutRReviewsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutRReviewsInput, Prisma.UserUpdateWithoutRReviewsInput>, Prisma.UserUncheckedUpdateWithoutRReviewsInput>
 }
 
 export type UserCreateNestedOneWithoutBlocksInitiatedInput = {
@@ -904,17 +988,20 @@ export type UserCreateWithoutInitiatedDMsInput = {
   createdAt?: Date | string
   zipCode?: string | null
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
+  reqTrades?: Prisma.TradeCreateNestedManyWithoutRequesterInput
+  ownedTrades?: Prisma.TradeCreateNestedManyWithoutOwnerInput
   comments?: Prisma.CommentCreateNestedManyWithoutUserInput
   logs?: Prisma.LogCreateNestedManyWithoutUserInput
   products?: Prisma.ProductCreateNestedManyWithoutUserInput
   services?: Prisma.ServiceCreateNestedManyWithoutUserInput
-  tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
-  media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
-  userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
   recievedDMs?: Prisma.DMCreateNestedManyWithoutUser2Input
   sMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   rMessages?: Prisma.MessageCreateNestedManyWithoutRecieverInput
-  rep?: Prisma.RepCreateNestedManyWithoutUserInput
+  sReviews?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
+  rReviews?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
+  tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
+  media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
+  userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportCreateNestedManyWithoutResolverInput
@@ -922,6 +1009,7 @@ export type UserCreateWithoutInitiatedDMsInput = {
   appealsResolved?: Prisma.AppealCreateNestedManyWithoutResolverInput
   blocksInitiated?: Prisma.BlockCreateNestedManyWithoutBlockerInput
   blocksReceived?: Prisma.BlockCreateNestedManyWithoutBlockedInput
+  tradeRequests?: Prisma.TradeRequestCreateNestedManyWithoutRequesterInput
 }
 
 export type UserUncheckedCreateWithoutInitiatedDMsInput = {
@@ -935,17 +1023,20 @@ export type UserUncheckedCreateWithoutInitiatedDMsInput = {
   createdAt?: Date | string
   zipCode?: string | null
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
+  reqTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutRequesterInput
+  ownedTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutOwnerInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
   logs?: Prisma.LogUncheckedCreateNestedManyWithoutUserInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutUserInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutUserInput
-  tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
-  media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
-  userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
   recievedDMs?: Prisma.DMUncheckedCreateNestedManyWithoutUser2Input
   sMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   rMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutRecieverInput
-  rep?: Prisma.RepUncheckedCreateNestedManyWithoutUserInput
+  sReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
+  rReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
+  tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
+  media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
+  userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportUncheckedCreateNestedManyWithoutResolverInput
@@ -953,6 +1044,7 @@ export type UserUncheckedCreateWithoutInitiatedDMsInput = {
   appealsResolved?: Prisma.AppealUncheckedCreateNestedManyWithoutResolverInput
   blocksInitiated?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockerInput
   blocksReceived?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockedInput
+  tradeRequests?: Prisma.TradeRequestUncheckedCreateNestedManyWithoutRequesterInput
 }
 
 export type UserCreateOrConnectWithoutInitiatedDMsInput = {
@@ -970,17 +1062,20 @@ export type UserCreateWithoutRecievedDMsInput = {
   createdAt?: Date | string
   zipCode?: string | null
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
+  reqTrades?: Prisma.TradeCreateNestedManyWithoutRequesterInput
+  ownedTrades?: Prisma.TradeCreateNestedManyWithoutOwnerInput
   comments?: Prisma.CommentCreateNestedManyWithoutUserInput
   logs?: Prisma.LogCreateNestedManyWithoutUserInput
   products?: Prisma.ProductCreateNestedManyWithoutUserInput
   services?: Prisma.ServiceCreateNestedManyWithoutUserInput
-  tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
-  media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
-  userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
   initiatedDMs?: Prisma.DMCreateNestedManyWithoutUser1Input
   sMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   rMessages?: Prisma.MessageCreateNestedManyWithoutRecieverInput
-  rep?: Prisma.RepCreateNestedManyWithoutUserInput
+  sReviews?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
+  rReviews?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
+  tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
+  media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
+  userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportCreateNestedManyWithoutResolverInput
@@ -988,6 +1083,7 @@ export type UserCreateWithoutRecievedDMsInput = {
   appealsResolved?: Prisma.AppealCreateNestedManyWithoutResolverInput
   blocksInitiated?: Prisma.BlockCreateNestedManyWithoutBlockerInput
   blocksReceived?: Prisma.BlockCreateNestedManyWithoutBlockedInput
+  tradeRequests?: Prisma.TradeRequestCreateNestedManyWithoutRequesterInput
 }
 
 export type UserUncheckedCreateWithoutRecievedDMsInput = {
@@ -1001,17 +1097,20 @@ export type UserUncheckedCreateWithoutRecievedDMsInput = {
   createdAt?: Date | string
   zipCode?: string | null
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
+  reqTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutRequesterInput
+  ownedTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutOwnerInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
   logs?: Prisma.LogUncheckedCreateNestedManyWithoutUserInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutUserInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutUserInput
-  tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
-  media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
-  userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
   initiatedDMs?: Prisma.DMUncheckedCreateNestedManyWithoutUser1Input
   sMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   rMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutRecieverInput
-  rep?: Prisma.RepUncheckedCreateNestedManyWithoutUserInput
+  sReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
+  rReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
+  tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
+  media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
+  userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportUncheckedCreateNestedManyWithoutResolverInput
@@ -1019,6 +1118,7 @@ export type UserUncheckedCreateWithoutRecievedDMsInput = {
   appealsResolved?: Prisma.AppealUncheckedCreateNestedManyWithoutResolverInput
   blocksInitiated?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockerInput
   blocksReceived?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockedInput
+  tradeRequests?: Prisma.TradeRequestUncheckedCreateNestedManyWithoutRequesterInput
 }
 
 export type UserCreateOrConnectWithoutRecievedDMsInput = {
@@ -1047,17 +1147,20 @@ export type UserUpdateWithoutInitiatedDMsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
+  reqTrades?: Prisma.TradeUpdateManyWithoutRequesterNestedInput
+  ownedTrades?: Prisma.TradeUpdateManyWithoutOwnerNestedInput
   comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
   logs?: Prisma.LogUpdateManyWithoutUserNestedInput
   products?: Prisma.ProductUpdateManyWithoutUserNestedInput
   services?: Prisma.ServiceUpdateManyWithoutUserNestedInput
-  tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
-  media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
-  userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
   recievedDMs?: Prisma.DMUpdateManyWithoutUser2NestedInput
   sMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   rMessages?: Prisma.MessageUpdateManyWithoutRecieverNestedInput
-  rep?: Prisma.RepUpdateManyWithoutUserNestedInput
+  sReviews?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
+  rReviews?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
+  tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
+  media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
+  userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUpdateManyWithoutResolverNestedInput
@@ -1065,6 +1168,7 @@ export type UserUpdateWithoutInitiatedDMsInput = {
   appealsResolved?: Prisma.AppealUpdateManyWithoutResolverNestedInput
   blocksInitiated?: Prisma.BlockUpdateManyWithoutBlockerNestedInput
   blocksReceived?: Prisma.BlockUpdateManyWithoutBlockedNestedInput
+  tradeRequests?: Prisma.TradeRequestUpdateManyWithoutRequesterNestedInput
 }
 
 export type UserUncheckedUpdateWithoutInitiatedDMsInput = {
@@ -1078,17 +1182,20 @@ export type UserUncheckedUpdateWithoutInitiatedDMsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
+  reqTrades?: Prisma.TradeUncheckedUpdateManyWithoutRequesterNestedInput
+  ownedTrades?: Prisma.TradeUncheckedUpdateManyWithoutOwnerNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
   logs?: Prisma.LogUncheckedUpdateManyWithoutUserNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutUserNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutUserNestedInput
-  tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
-  media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
-  userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
   recievedDMs?: Prisma.DMUncheckedUpdateManyWithoutUser2NestedInput
   sMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   rMessages?: Prisma.MessageUncheckedUpdateManyWithoutRecieverNestedInput
-  rep?: Prisma.RepUncheckedUpdateManyWithoutUserNestedInput
+  sReviews?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+  rReviews?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
+  tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
+  media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
+  userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUncheckedUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUncheckedUpdateManyWithoutResolverNestedInput
@@ -1096,6 +1203,7 @@ export type UserUncheckedUpdateWithoutInitiatedDMsInput = {
   appealsResolved?: Prisma.AppealUncheckedUpdateManyWithoutResolverNestedInput
   blocksInitiated?: Prisma.BlockUncheckedUpdateManyWithoutBlockerNestedInput
   blocksReceived?: Prisma.BlockUncheckedUpdateManyWithoutBlockedNestedInput
+  tradeRequests?: Prisma.TradeRequestUncheckedUpdateManyWithoutRequesterNestedInput
 }
 
 export type UserUpsertWithoutRecievedDMsInput = {
@@ -1119,17 +1227,20 @@ export type UserUpdateWithoutRecievedDMsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
+  reqTrades?: Prisma.TradeUpdateManyWithoutRequesterNestedInput
+  ownedTrades?: Prisma.TradeUpdateManyWithoutOwnerNestedInput
   comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
   logs?: Prisma.LogUpdateManyWithoutUserNestedInput
   products?: Prisma.ProductUpdateManyWithoutUserNestedInput
   services?: Prisma.ServiceUpdateManyWithoutUserNestedInput
-  tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
-  media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
-  userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
   initiatedDMs?: Prisma.DMUpdateManyWithoutUser1NestedInput
   sMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   rMessages?: Prisma.MessageUpdateManyWithoutRecieverNestedInput
-  rep?: Prisma.RepUpdateManyWithoutUserNestedInput
+  sReviews?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
+  rReviews?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
+  tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
+  media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
+  userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUpdateManyWithoutResolverNestedInput
@@ -1137,6 +1248,7 @@ export type UserUpdateWithoutRecievedDMsInput = {
   appealsResolved?: Prisma.AppealUpdateManyWithoutResolverNestedInput
   blocksInitiated?: Prisma.BlockUpdateManyWithoutBlockerNestedInput
   blocksReceived?: Prisma.BlockUpdateManyWithoutBlockedNestedInput
+  tradeRequests?: Prisma.TradeRequestUpdateManyWithoutRequesterNestedInput
 }
 
 export type UserUncheckedUpdateWithoutRecievedDMsInput = {
@@ -1150,17 +1262,20 @@ export type UserUncheckedUpdateWithoutRecievedDMsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
+  reqTrades?: Prisma.TradeUncheckedUpdateManyWithoutRequesterNestedInput
+  ownedTrades?: Prisma.TradeUncheckedUpdateManyWithoutOwnerNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
   logs?: Prisma.LogUncheckedUpdateManyWithoutUserNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutUserNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutUserNestedInput
-  tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
-  media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
-  userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
   initiatedDMs?: Prisma.DMUncheckedUpdateManyWithoutUser1NestedInput
   sMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   rMessages?: Prisma.MessageUncheckedUpdateManyWithoutRecieverNestedInput
-  rep?: Prisma.RepUncheckedUpdateManyWithoutUserNestedInput
+  sReviews?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+  rReviews?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
+  tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
+  media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
+  userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUncheckedUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUncheckedUpdateManyWithoutResolverNestedInput
@@ -1168,6 +1283,7 @@ export type UserUncheckedUpdateWithoutRecievedDMsInput = {
   appealsResolved?: Prisma.AppealUncheckedUpdateManyWithoutResolverNestedInput
   blocksInitiated?: Prisma.BlockUncheckedUpdateManyWithoutBlockerNestedInput
   blocksReceived?: Prisma.BlockUncheckedUpdateManyWithoutBlockedNestedInput
+  tradeRequests?: Prisma.TradeRequestUncheckedUpdateManyWithoutRequesterNestedInput
 }
 
 export type UserCreateWithoutSMessagesInput = {
@@ -1180,17 +1296,20 @@ export type UserCreateWithoutSMessagesInput = {
   createdAt?: Date | string
   zipCode?: string | null
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
+  reqTrades?: Prisma.TradeCreateNestedManyWithoutRequesterInput
+  ownedTrades?: Prisma.TradeCreateNestedManyWithoutOwnerInput
   comments?: Prisma.CommentCreateNestedManyWithoutUserInput
   logs?: Prisma.LogCreateNestedManyWithoutUserInput
   products?: Prisma.ProductCreateNestedManyWithoutUserInput
   services?: Prisma.ServiceCreateNestedManyWithoutUserInput
-  tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
-  media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
-  userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
   initiatedDMs?: Prisma.DMCreateNestedManyWithoutUser1Input
   recievedDMs?: Prisma.DMCreateNestedManyWithoutUser2Input
   rMessages?: Prisma.MessageCreateNestedManyWithoutRecieverInput
-  rep?: Prisma.RepCreateNestedManyWithoutUserInput
+  sReviews?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
+  rReviews?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
+  tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
+  media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
+  userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportCreateNestedManyWithoutResolverInput
@@ -1198,6 +1317,7 @@ export type UserCreateWithoutSMessagesInput = {
   appealsResolved?: Prisma.AppealCreateNestedManyWithoutResolverInput
   blocksInitiated?: Prisma.BlockCreateNestedManyWithoutBlockerInput
   blocksReceived?: Prisma.BlockCreateNestedManyWithoutBlockedInput
+  tradeRequests?: Prisma.TradeRequestCreateNestedManyWithoutRequesterInput
 }
 
 export type UserUncheckedCreateWithoutSMessagesInput = {
@@ -1211,17 +1331,20 @@ export type UserUncheckedCreateWithoutSMessagesInput = {
   createdAt?: Date | string
   zipCode?: string | null
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
+  reqTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutRequesterInput
+  ownedTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutOwnerInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
   logs?: Prisma.LogUncheckedCreateNestedManyWithoutUserInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutUserInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutUserInput
-  tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
-  media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
-  userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
   initiatedDMs?: Prisma.DMUncheckedCreateNestedManyWithoutUser1Input
   recievedDMs?: Prisma.DMUncheckedCreateNestedManyWithoutUser2Input
   rMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutRecieverInput
-  rep?: Prisma.RepUncheckedCreateNestedManyWithoutUserInput
+  sReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
+  rReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
+  tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
+  media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
+  userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportUncheckedCreateNestedManyWithoutResolverInput
@@ -1229,6 +1352,7 @@ export type UserUncheckedCreateWithoutSMessagesInput = {
   appealsResolved?: Prisma.AppealUncheckedCreateNestedManyWithoutResolverInput
   blocksInitiated?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockerInput
   blocksReceived?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockedInput
+  tradeRequests?: Prisma.TradeRequestUncheckedCreateNestedManyWithoutRequesterInput
 }
 
 export type UserCreateOrConnectWithoutSMessagesInput = {
@@ -1246,17 +1370,20 @@ export type UserCreateWithoutRMessagesInput = {
   createdAt?: Date | string
   zipCode?: string | null
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
+  reqTrades?: Prisma.TradeCreateNestedManyWithoutRequesterInput
+  ownedTrades?: Prisma.TradeCreateNestedManyWithoutOwnerInput
   comments?: Prisma.CommentCreateNestedManyWithoutUserInput
   logs?: Prisma.LogCreateNestedManyWithoutUserInput
   products?: Prisma.ProductCreateNestedManyWithoutUserInput
   services?: Prisma.ServiceCreateNestedManyWithoutUserInput
-  tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
-  media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
-  userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
   initiatedDMs?: Prisma.DMCreateNestedManyWithoutUser1Input
   recievedDMs?: Prisma.DMCreateNestedManyWithoutUser2Input
   sMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
-  rep?: Prisma.RepCreateNestedManyWithoutUserInput
+  sReviews?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
+  rReviews?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
+  tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
+  media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
+  userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportCreateNestedManyWithoutResolverInput
@@ -1264,6 +1391,7 @@ export type UserCreateWithoutRMessagesInput = {
   appealsResolved?: Prisma.AppealCreateNestedManyWithoutResolverInput
   blocksInitiated?: Prisma.BlockCreateNestedManyWithoutBlockerInput
   blocksReceived?: Prisma.BlockCreateNestedManyWithoutBlockedInput
+  tradeRequests?: Prisma.TradeRequestCreateNestedManyWithoutRequesterInput
 }
 
 export type UserUncheckedCreateWithoutRMessagesInput = {
@@ -1277,17 +1405,20 @@ export type UserUncheckedCreateWithoutRMessagesInput = {
   createdAt?: Date | string
   zipCode?: string | null
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
+  reqTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutRequesterInput
+  ownedTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutOwnerInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
   logs?: Prisma.LogUncheckedCreateNestedManyWithoutUserInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutUserInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutUserInput
-  tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
-  media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
-  userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
   initiatedDMs?: Prisma.DMUncheckedCreateNestedManyWithoutUser1Input
   recievedDMs?: Prisma.DMUncheckedCreateNestedManyWithoutUser2Input
   sMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
-  rep?: Prisma.RepUncheckedCreateNestedManyWithoutUserInput
+  sReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
+  rReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
+  tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
+  media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
+  userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportUncheckedCreateNestedManyWithoutResolverInput
@@ -1295,6 +1426,7 @@ export type UserUncheckedCreateWithoutRMessagesInput = {
   appealsResolved?: Prisma.AppealUncheckedCreateNestedManyWithoutResolverInput
   blocksInitiated?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockerInput
   blocksReceived?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockedInput
+  tradeRequests?: Prisma.TradeRequestUncheckedCreateNestedManyWithoutRequesterInput
 }
 
 export type UserCreateOrConnectWithoutRMessagesInput = {
@@ -1323,17 +1455,20 @@ export type UserUpdateWithoutSMessagesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
+  reqTrades?: Prisma.TradeUpdateManyWithoutRequesterNestedInput
+  ownedTrades?: Prisma.TradeUpdateManyWithoutOwnerNestedInput
   comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
   logs?: Prisma.LogUpdateManyWithoutUserNestedInput
   products?: Prisma.ProductUpdateManyWithoutUserNestedInput
   services?: Prisma.ServiceUpdateManyWithoutUserNestedInput
-  tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
-  media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
-  userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
   initiatedDMs?: Prisma.DMUpdateManyWithoutUser1NestedInput
   recievedDMs?: Prisma.DMUpdateManyWithoutUser2NestedInput
   rMessages?: Prisma.MessageUpdateManyWithoutRecieverNestedInput
-  rep?: Prisma.RepUpdateManyWithoutUserNestedInput
+  sReviews?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
+  rReviews?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
+  tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
+  media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
+  userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUpdateManyWithoutResolverNestedInput
@@ -1341,6 +1476,7 @@ export type UserUpdateWithoutSMessagesInput = {
   appealsResolved?: Prisma.AppealUpdateManyWithoutResolverNestedInput
   blocksInitiated?: Prisma.BlockUpdateManyWithoutBlockerNestedInput
   blocksReceived?: Prisma.BlockUpdateManyWithoutBlockedNestedInput
+  tradeRequests?: Prisma.TradeRequestUpdateManyWithoutRequesterNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSMessagesInput = {
@@ -1354,17 +1490,20 @@ export type UserUncheckedUpdateWithoutSMessagesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
+  reqTrades?: Prisma.TradeUncheckedUpdateManyWithoutRequesterNestedInput
+  ownedTrades?: Prisma.TradeUncheckedUpdateManyWithoutOwnerNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
   logs?: Prisma.LogUncheckedUpdateManyWithoutUserNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutUserNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutUserNestedInput
-  tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
-  media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
-  userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
   initiatedDMs?: Prisma.DMUncheckedUpdateManyWithoutUser1NestedInput
   recievedDMs?: Prisma.DMUncheckedUpdateManyWithoutUser2NestedInput
   rMessages?: Prisma.MessageUncheckedUpdateManyWithoutRecieverNestedInput
-  rep?: Prisma.RepUncheckedUpdateManyWithoutUserNestedInput
+  sReviews?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+  rReviews?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
+  tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
+  media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
+  userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUncheckedUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUncheckedUpdateManyWithoutResolverNestedInput
@@ -1372,6 +1511,7 @@ export type UserUncheckedUpdateWithoutSMessagesInput = {
   appealsResolved?: Prisma.AppealUncheckedUpdateManyWithoutResolverNestedInput
   blocksInitiated?: Prisma.BlockUncheckedUpdateManyWithoutBlockerNestedInput
   blocksReceived?: Prisma.BlockUncheckedUpdateManyWithoutBlockedNestedInput
+  tradeRequests?: Prisma.TradeRequestUncheckedUpdateManyWithoutRequesterNestedInput
 }
 
 export type UserUpsertWithoutRMessagesInput = {
@@ -1395,17 +1535,20 @@ export type UserUpdateWithoutRMessagesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
+  reqTrades?: Prisma.TradeUpdateManyWithoutRequesterNestedInput
+  ownedTrades?: Prisma.TradeUpdateManyWithoutOwnerNestedInput
   comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
   logs?: Prisma.LogUpdateManyWithoutUserNestedInput
   products?: Prisma.ProductUpdateManyWithoutUserNestedInput
   services?: Prisma.ServiceUpdateManyWithoutUserNestedInput
-  tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
-  media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
-  userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
   initiatedDMs?: Prisma.DMUpdateManyWithoutUser1NestedInput
   recievedDMs?: Prisma.DMUpdateManyWithoutUser2NestedInput
   sMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
-  rep?: Prisma.RepUpdateManyWithoutUserNestedInput
+  sReviews?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
+  rReviews?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
+  tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
+  media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
+  userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUpdateManyWithoutResolverNestedInput
@@ -1413,6 +1556,7 @@ export type UserUpdateWithoutRMessagesInput = {
   appealsResolved?: Prisma.AppealUpdateManyWithoutResolverNestedInput
   blocksInitiated?: Prisma.BlockUpdateManyWithoutBlockerNestedInput
   blocksReceived?: Prisma.BlockUpdateManyWithoutBlockedNestedInput
+  tradeRequests?: Prisma.TradeRequestUpdateManyWithoutRequesterNestedInput
 }
 
 export type UserUncheckedUpdateWithoutRMessagesInput = {
@@ -1426,17 +1570,20 @@ export type UserUncheckedUpdateWithoutRMessagesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
+  reqTrades?: Prisma.TradeUncheckedUpdateManyWithoutRequesterNestedInput
+  ownedTrades?: Prisma.TradeUncheckedUpdateManyWithoutOwnerNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
   logs?: Prisma.LogUncheckedUpdateManyWithoutUserNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutUserNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutUserNestedInput
-  tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
-  media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
-  userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
   initiatedDMs?: Prisma.DMUncheckedUpdateManyWithoutUser1NestedInput
   recievedDMs?: Prisma.DMUncheckedUpdateManyWithoutUser2NestedInput
   sMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
-  rep?: Prisma.RepUncheckedUpdateManyWithoutUserNestedInput
+  sReviews?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+  rReviews?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
+  tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
+  media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
+  userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUncheckedUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUncheckedUpdateManyWithoutResolverNestedInput
@@ -1444,6 +1591,7 @@ export type UserUncheckedUpdateWithoutRMessagesInput = {
   appealsResolved?: Prisma.AppealUncheckedUpdateManyWithoutResolverNestedInput
   blocksInitiated?: Prisma.BlockUncheckedUpdateManyWithoutBlockerNestedInput
   blocksReceived?: Prisma.BlockUncheckedUpdateManyWithoutBlockedNestedInput
+  tradeRequests?: Prisma.TradeRequestUncheckedUpdateManyWithoutRequesterNestedInput
 }
 
 export type UserCreateWithoutLogsInput = {
@@ -1456,17 +1604,20 @@ export type UserCreateWithoutLogsInput = {
   createdAt?: Date | string
   zipCode?: string | null
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
+  reqTrades?: Prisma.TradeCreateNestedManyWithoutRequesterInput
+  ownedTrades?: Prisma.TradeCreateNestedManyWithoutOwnerInput
   comments?: Prisma.CommentCreateNestedManyWithoutUserInput
   products?: Prisma.ProductCreateNestedManyWithoutUserInput
   services?: Prisma.ServiceCreateNestedManyWithoutUserInput
-  tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
-  media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
-  userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
   initiatedDMs?: Prisma.DMCreateNestedManyWithoutUser1Input
   recievedDMs?: Prisma.DMCreateNestedManyWithoutUser2Input
   sMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   rMessages?: Prisma.MessageCreateNestedManyWithoutRecieverInput
-  rep?: Prisma.RepCreateNestedManyWithoutUserInput
+  sReviews?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
+  rReviews?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
+  tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
+  media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
+  userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportCreateNestedManyWithoutResolverInput
@@ -1474,6 +1625,7 @@ export type UserCreateWithoutLogsInput = {
   appealsResolved?: Prisma.AppealCreateNestedManyWithoutResolverInput
   blocksInitiated?: Prisma.BlockCreateNestedManyWithoutBlockerInput
   blocksReceived?: Prisma.BlockCreateNestedManyWithoutBlockedInput
+  tradeRequests?: Prisma.TradeRequestCreateNestedManyWithoutRequesterInput
 }
 
 export type UserUncheckedCreateWithoutLogsInput = {
@@ -1487,17 +1639,20 @@ export type UserUncheckedCreateWithoutLogsInput = {
   createdAt?: Date | string
   zipCode?: string | null
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
+  reqTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutRequesterInput
+  ownedTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutOwnerInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutUserInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutUserInput
-  tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
-  media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
-  userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
   initiatedDMs?: Prisma.DMUncheckedCreateNestedManyWithoutUser1Input
   recievedDMs?: Prisma.DMUncheckedCreateNestedManyWithoutUser2Input
   sMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   rMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutRecieverInput
-  rep?: Prisma.RepUncheckedCreateNestedManyWithoutUserInput
+  sReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
+  rReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
+  tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
+  media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
+  userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportUncheckedCreateNestedManyWithoutResolverInput
@@ -1505,6 +1660,7 @@ export type UserUncheckedCreateWithoutLogsInput = {
   appealsResolved?: Prisma.AppealUncheckedCreateNestedManyWithoutResolverInput
   blocksInitiated?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockerInput
   blocksReceived?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockedInput
+  tradeRequests?: Prisma.TradeRequestUncheckedCreateNestedManyWithoutRequesterInput
 }
 
 export type UserCreateOrConnectWithoutLogsInput = {
@@ -1533,17 +1689,20 @@ export type UserUpdateWithoutLogsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
+  reqTrades?: Prisma.TradeUpdateManyWithoutRequesterNestedInput
+  ownedTrades?: Prisma.TradeUpdateManyWithoutOwnerNestedInput
   comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
   products?: Prisma.ProductUpdateManyWithoutUserNestedInput
   services?: Prisma.ServiceUpdateManyWithoutUserNestedInput
-  tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
-  media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
-  userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
   initiatedDMs?: Prisma.DMUpdateManyWithoutUser1NestedInput
   recievedDMs?: Prisma.DMUpdateManyWithoutUser2NestedInput
   sMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   rMessages?: Prisma.MessageUpdateManyWithoutRecieverNestedInput
-  rep?: Prisma.RepUpdateManyWithoutUserNestedInput
+  sReviews?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
+  rReviews?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
+  tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
+  media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
+  userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUpdateManyWithoutResolverNestedInput
@@ -1551,6 +1710,7 @@ export type UserUpdateWithoutLogsInput = {
   appealsResolved?: Prisma.AppealUpdateManyWithoutResolverNestedInput
   blocksInitiated?: Prisma.BlockUpdateManyWithoutBlockerNestedInput
   blocksReceived?: Prisma.BlockUpdateManyWithoutBlockedNestedInput
+  tradeRequests?: Prisma.TradeRequestUpdateManyWithoutRequesterNestedInput
 }
 
 export type UserUncheckedUpdateWithoutLogsInput = {
@@ -1564,17 +1724,20 @@ export type UserUncheckedUpdateWithoutLogsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
+  reqTrades?: Prisma.TradeUncheckedUpdateManyWithoutRequesterNestedInput
+  ownedTrades?: Prisma.TradeUncheckedUpdateManyWithoutOwnerNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutUserNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutUserNestedInput
-  tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
-  media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
-  userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
   initiatedDMs?: Prisma.DMUncheckedUpdateManyWithoutUser1NestedInput
   recievedDMs?: Prisma.DMUncheckedUpdateManyWithoutUser2NestedInput
   sMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   rMessages?: Prisma.MessageUncheckedUpdateManyWithoutRecieverNestedInput
-  rep?: Prisma.RepUncheckedUpdateManyWithoutUserNestedInput
+  sReviews?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+  rReviews?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
+  tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
+  media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
+  userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUncheckedUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUncheckedUpdateManyWithoutResolverNestedInput
@@ -1582,6 +1745,7 @@ export type UserUncheckedUpdateWithoutLogsInput = {
   appealsResolved?: Prisma.AppealUncheckedUpdateManyWithoutResolverNestedInput
   blocksInitiated?: Prisma.BlockUncheckedUpdateManyWithoutBlockerNestedInput
   blocksReceived?: Prisma.BlockUncheckedUpdateManyWithoutBlockedNestedInput
+  tradeRequests?: Prisma.TradeRequestUncheckedUpdateManyWithoutRequesterNestedInput
 }
 
 export type UserCreateWithoutPostsInput = {
@@ -1593,18 +1757,21 @@ export type UserCreateWithoutPostsInput = {
   bio?: string | null
   createdAt?: Date | string
   zipCode?: string | null
+  reqTrades?: Prisma.TradeCreateNestedManyWithoutRequesterInput
+  ownedTrades?: Prisma.TradeCreateNestedManyWithoutOwnerInput
   comments?: Prisma.CommentCreateNestedManyWithoutUserInput
   logs?: Prisma.LogCreateNestedManyWithoutUserInput
   products?: Prisma.ProductCreateNestedManyWithoutUserInput
   services?: Prisma.ServiceCreateNestedManyWithoutUserInput
-  tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
-  media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
-  userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
   initiatedDMs?: Prisma.DMCreateNestedManyWithoutUser1Input
   recievedDMs?: Prisma.DMCreateNestedManyWithoutUser2Input
   sMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   rMessages?: Prisma.MessageCreateNestedManyWithoutRecieverInput
-  rep?: Prisma.RepCreateNestedManyWithoutUserInput
+  sReviews?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
+  rReviews?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
+  tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
+  media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
+  userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportCreateNestedManyWithoutResolverInput
@@ -1612,6 +1779,7 @@ export type UserCreateWithoutPostsInput = {
   appealsResolved?: Prisma.AppealCreateNestedManyWithoutResolverInput
   blocksInitiated?: Prisma.BlockCreateNestedManyWithoutBlockerInput
   blocksReceived?: Prisma.BlockCreateNestedManyWithoutBlockedInput
+  tradeRequests?: Prisma.TradeRequestCreateNestedManyWithoutRequesterInput
 }
 
 export type UserUncheckedCreateWithoutPostsInput = {
@@ -1624,18 +1792,21 @@ export type UserUncheckedCreateWithoutPostsInput = {
   bio?: string | null
   createdAt?: Date | string
   zipCode?: string | null
+  reqTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutRequesterInput
+  ownedTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutOwnerInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
   logs?: Prisma.LogUncheckedCreateNestedManyWithoutUserInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutUserInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutUserInput
-  tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
-  media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
-  userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
   initiatedDMs?: Prisma.DMUncheckedCreateNestedManyWithoutUser1Input
   recievedDMs?: Prisma.DMUncheckedCreateNestedManyWithoutUser2Input
   sMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   rMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutRecieverInput
-  rep?: Prisma.RepUncheckedCreateNestedManyWithoutUserInput
+  sReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
+  rReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
+  tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
+  media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
+  userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportUncheckedCreateNestedManyWithoutResolverInput
@@ -1643,6 +1814,7 @@ export type UserUncheckedCreateWithoutPostsInput = {
   appealsResolved?: Prisma.AppealUncheckedCreateNestedManyWithoutResolverInput
   blocksInitiated?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockerInput
   blocksReceived?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockedInput
+  tradeRequests?: Prisma.TradeRequestUncheckedCreateNestedManyWithoutRequesterInput
 }
 
 export type UserCreateOrConnectWithoutPostsInput = {
@@ -1670,18 +1842,21 @@ export type UserUpdateWithoutPostsInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reqTrades?: Prisma.TradeUpdateManyWithoutRequesterNestedInput
+  ownedTrades?: Prisma.TradeUpdateManyWithoutOwnerNestedInput
   comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
   logs?: Prisma.LogUpdateManyWithoutUserNestedInput
   products?: Prisma.ProductUpdateManyWithoutUserNestedInput
   services?: Prisma.ServiceUpdateManyWithoutUserNestedInput
-  tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
-  media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
-  userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
   initiatedDMs?: Prisma.DMUpdateManyWithoutUser1NestedInput
   recievedDMs?: Prisma.DMUpdateManyWithoutUser2NestedInput
   sMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   rMessages?: Prisma.MessageUpdateManyWithoutRecieverNestedInput
-  rep?: Prisma.RepUpdateManyWithoutUserNestedInput
+  sReviews?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
+  rReviews?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
+  tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
+  media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
+  userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUpdateManyWithoutResolverNestedInput
@@ -1689,6 +1864,7 @@ export type UserUpdateWithoutPostsInput = {
   appealsResolved?: Prisma.AppealUpdateManyWithoutResolverNestedInput
   blocksInitiated?: Prisma.BlockUpdateManyWithoutBlockerNestedInput
   blocksReceived?: Prisma.BlockUpdateManyWithoutBlockedNestedInput
+  tradeRequests?: Prisma.TradeRequestUpdateManyWithoutRequesterNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPostsInput = {
@@ -1701,18 +1877,21 @@ export type UserUncheckedUpdateWithoutPostsInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reqTrades?: Prisma.TradeUncheckedUpdateManyWithoutRequesterNestedInput
+  ownedTrades?: Prisma.TradeUncheckedUpdateManyWithoutOwnerNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
   logs?: Prisma.LogUncheckedUpdateManyWithoutUserNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutUserNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutUserNestedInput
-  tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
-  media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
-  userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
   initiatedDMs?: Prisma.DMUncheckedUpdateManyWithoutUser1NestedInput
   recievedDMs?: Prisma.DMUncheckedUpdateManyWithoutUser2NestedInput
   sMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   rMessages?: Prisma.MessageUncheckedUpdateManyWithoutRecieverNestedInput
-  rep?: Prisma.RepUncheckedUpdateManyWithoutUserNestedInput
+  sReviews?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+  rReviews?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
+  tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
+  media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
+  userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUncheckedUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUncheckedUpdateManyWithoutResolverNestedInput
@@ -1720,6 +1899,315 @@ export type UserUncheckedUpdateWithoutPostsInput = {
   appealsResolved?: Prisma.AppealUncheckedUpdateManyWithoutResolverNestedInput
   blocksInitiated?: Prisma.BlockUncheckedUpdateManyWithoutBlockerNestedInput
   blocksReceived?: Prisma.BlockUncheckedUpdateManyWithoutBlockedNestedInput
+  tradeRequests?: Prisma.TradeRequestUncheckedUpdateManyWithoutRequesterNestedInput
+}
+
+export type UserCreateWithoutOwnedTradesInput = {
+  googleId?: string | null
+  name: string
+  email: string
+  phone?: string | null
+  role?: $Enums.Role | null
+  bio?: string | null
+  createdAt?: Date | string
+  zipCode?: string | null
+  posts?: Prisma.PostCreateNestedManyWithoutUserInput
+  reqTrades?: Prisma.TradeCreateNestedManyWithoutRequesterInput
+  comments?: Prisma.CommentCreateNestedManyWithoutUserInput
+  logs?: Prisma.LogCreateNestedManyWithoutUserInput
+  products?: Prisma.ProductCreateNestedManyWithoutUserInput
+  services?: Prisma.ServiceCreateNestedManyWithoutUserInput
+  initiatedDMs?: Prisma.DMCreateNestedManyWithoutUser1Input
+  recievedDMs?: Prisma.DMCreateNestedManyWithoutUser2Input
+  sMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  rMessages?: Prisma.MessageCreateNestedManyWithoutRecieverInput
+  sReviews?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
+  rReviews?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
+  tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
+  media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
+  userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
+  reportsFiled?: Prisma.ReportCreateNestedManyWithoutReporterInput
+  reportsAgainst?: Prisma.ReportCreateNestedManyWithoutTargetUserInput
+  reportsResolved?: Prisma.ReportCreateNestedManyWithoutResolverInput
+  appealsFiled?: Prisma.AppealCreateNestedManyWithoutAppellantInput
+  appealsResolved?: Prisma.AppealCreateNestedManyWithoutResolverInput
+  blocksInitiated?: Prisma.BlockCreateNestedManyWithoutBlockerInput
+  blocksReceived?: Prisma.BlockCreateNestedManyWithoutBlockedInput
+  tradeRequests?: Prisma.TradeRequestCreateNestedManyWithoutRequesterInput
+}
+
+export type UserUncheckedCreateWithoutOwnedTradesInput = {
+  id?: number
+  googleId?: string | null
+  name: string
+  email: string
+  phone?: string | null
+  role?: $Enums.Role | null
+  bio?: string | null
+  createdAt?: Date | string
+  zipCode?: string | null
+  posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
+  reqTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutRequesterInput
+  comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
+  logs?: Prisma.LogUncheckedCreateNestedManyWithoutUserInput
+  products?: Prisma.ProductUncheckedCreateNestedManyWithoutUserInput
+  services?: Prisma.ServiceUncheckedCreateNestedManyWithoutUserInput
+  initiatedDMs?: Prisma.DMUncheckedCreateNestedManyWithoutUser1Input
+  recievedDMs?: Prisma.DMUncheckedCreateNestedManyWithoutUser2Input
+  sMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  rMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutRecieverInput
+  sReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
+  rReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
+  tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
+  media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
+  userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
+  reportsFiled?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
+  reportsAgainst?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetUserInput
+  reportsResolved?: Prisma.ReportUncheckedCreateNestedManyWithoutResolverInput
+  appealsFiled?: Prisma.AppealUncheckedCreateNestedManyWithoutAppellantInput
+  appealsResolved?: Prisma.AppealUncheckedCreateNestedManyWithoutResolverInput
+  blocksInitiated?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockerInput
+  blocksReceived?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockedInput
+  tradeRequests?: Prisma.TradeRequestUncheckedCreateNestedManyWithoutRequesterInput
+}
+
+export type UserCreateOrConnectWithoutOwnedTradesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutOwnedTradesInput, Prisma.UserUncheckedCreateWithoutOwnedTradesInput>
+}
+
+export type UserCreateWithoutReqTradesInput = {
+  googleId?: string | null
+  name: string
+  email: string
+  phone?: string | null
+  role?: $Enums.Role | null
+  bio?: string | null
+  createdAt?: Date | string
+  zipCode?: string | null
+  posts?: Prisma.PostCreateNestedManyWithoutUserInput
+  ownedTrades?: Prisma.TradeCreateNestedManyWithoutOwnerInput
+  comments?: Prisma.CommentCreateNestedManyWithoutUserInput
+  logs?: Prisma.LogCreateNestedManyWithoutUserInput
+  products?: Prisma.ProductCreateNestedManyWithoutUserInput
+  services?: Prisma.ServiceCreateNestedManyWithoutUserInput
+  initiatedDMs?: Prisma.DMCreateNestedManyWithoutUser1Input
+  recievedDMs?: Prisma.DMCreateNestedManyWithoutUser2Input
+  sMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  rMessages?: Prisma.MessageCreateNestedManyWithoutRecieverInput
+  sReviews?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
+  rReviews?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
+  tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
+  media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
+  userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
+  reportsFiled?: Prisma.ReportCreateNestedManyWithoutReporterInput
+  reportsAgainst?: Prisma.ReportCreateNestedManyWithoutTargetUserInput
+  reportsResolved?: Prisma.ReportCreateNestedManyWithoutResolverInput
+  appealsFiled?: Prisma.AppealCreateNestedManyWithoutAppellantInput
+  appealsResolved?: Prisma.AppealCreateNestedManyWithoutResolverInput
+  blocksInitiated?: Prisma.BlockCreateNestedManyWithoutBlockerInput
+  blocksReceived?: Prisma.BlockCreateNestedManyWithoutBlockedInput
+  tradeRequests?: Prisma.TradeRequestCreateNestedManyWithoutRequesterInput
+}
+
+export type UserUncheckedCreateWithoutReqTradesInput = {
+  id?: number
+  googleId?: string | null
+  name: string
+  email: string
+  phone?: string | null
+  role?: $Enums.Role | null
+  bio?: string | null
+  createdAt?: Date | string
+  zipCode?: string | null
+  posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
+  ownedTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutOwnerInput
+  comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
+  logs?: Prisma.LogUncheckedCreateNestedManyWithoutUserInput
+  products?: Prisma.ProductUncheckedCreateNestedManyWithoutUserInput
+  services?: Prisma.ServiceUncheckedCreateNestedManyWithoutUserInput
+  initiatedDMs?: Prisma.DMUncheckedCreateNestedManyWithoutUser1Input
+  recievedDMs?: Prisma.DMUncheckedCreateNestedManyWithoutUser2Input
+  sMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  rMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutRecieverInput
+  sReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
+  rReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
+  tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
+  media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
+  userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
+  reportsFiled?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
+  reportsAgainst?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetUserInput
+  reportsResolved?: Prisma.ReportUncheckedCreateNestedManyWithoutResolverInput
+  appealsFiled?: Prisma.AppealUncheckedCreateNestedManyWithoutAppellantInput
+  appealsResolved?: Prisma.AppealUncheckedCreateNestedManyWithoutResolverInput
+  blocksInitiated?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockerInput
+  blocksReceived?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockedInput
+  tradeRequests?: Prisma.TradeRequestUncheckedCreateNestedManyWithoutRequesterInput
+}
+
+export type UserCreateOrConnectWithoutReqTradesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutReqTradesInput, Prisma.UserUncheckedCreateWithoutReqTradesInput>
+}
+
+export type UserUpsertWithoutOwnedTradesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutOwnedTradesInput, Prisma.UserUncheckedUpdateWithoutOwnedTradesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutOwnedTradesInput, Prisma.UserUncheckedCreateWithoutOwnedTradesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutOwnedTradesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutOwnedTradesInput, Prisma.UserUncheckedUpdateWithoutOwnedTradesInput>
+}
+
+export type UserUpdateWithoutOwnedTradesInput = {
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.NullableEnumRoleFieldUpdateOperationsInput | $Enums.Role | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  posts?: Prisma.PostUpdateManyWithoutUserNestedInput
+  reqTrades?: Prisma.TradeUpdateManyWithoutRequesterNestedInput
+  comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
+  logs?: Prisma.LogUpdateManyWithoutUserNestedInput
+  products?: Prisma.ProductUpdateManyWithoutUserNestedInput
+  services?: Prisma.ServiceUpdateManyWithoutUserNestedInput
+  initiatedDMs?: Prisma.DMUpdateManyWithoutUser1NestedInput
+  recievedDMs?: Prisma.DMUpdateManyWithoutUser2NestedInput
+  sMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  rMessages?: Prisma.MessageUpdateManyWithoutRecieverNestedInput
+  sReviews?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
+  rReviews?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
+  tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
+  media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
+  userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
+  reportsFiled?: Prisma.ReportUpdateManyWithoutReporterNestedInput
+  reportsAgainst?: Prisma.ReportUpdateManyWithoutTargetUserNestedInput
+  reportsResolved?: Prisma.ReportUpdateManyWithoutResolverNestedInput
+  appealsFiled?: Prisma.AppealUpdateManyWithoutAppellantNestedInput
+  appealsResolved?: Prisma.AppealUpdateManyWithoutResolverNestedInput
+  blocksInitiated?: Prisma.BlockUpdateManyWithoutBlockerNestedInput
+  blocksReceived?: Prisma.BlockUpdateManyWithoutBlockedNestedInput
+  tradeRequests?: Prisma.TradeRequestUpdateManyWithoutRequesterNestedInput
+}
+
+export type UserUncheckedUpdateWithoutOwnedTradesInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.NullableEnumRoleFieldUpdateOperationsInput | $Enums.Role | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
+  reqTrades?: Prisma.TradeUncheckedUpdateManyWithoutRequesterNestedInput
+  comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
+  logs?: Prisma.LogUncheckedUpdateManyWithoutUserNestedInput
+  products?: Prisma.ProductUncheckedUpdateManyWithoutUserNestedInput
+  services?: Prisma.ServiceUncheckedUpdateManyWithoutUserNestedInput
+  initiatedDMs?: Prisma.DMUncheckedUpdateManyWithoutUser1NestedInput
+  recievedDMs?: Prisma.DMUncheckedUpdateManyWithoutUser2NestedInput
+  sMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  rMessages?: Prisma.MessageUncheckedUpdateManyWithoutRecieverNestedInput
+  sReviews?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+  rReviews?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
+  tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
+  media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
+  userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
+  reportsFiled?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsAgainst?: Prisma.ReportUncheckedUpdateManyWithoutTargetUserNestedInput
+  reportsResolved?: Prisma.ReportUncheckedUpdateManyWithoutResolverNestedInput
+  appealsFiled?: Prisma.AppealUncheckedUpdateManyWithoutAppellantNestedInput
+  appealsResolved?: Prisma.AppealUncheckedUpdateManyWithoutResolverNestedInput
+  blocksInitiated?: Prisma.BlockUncheckedUpdateManyWithoutBlockerNestedInput
+  blocksReceived?: Prisma.BlockUncheckedUpdateManyWithoutBlockedNestedInput
+  tradeRequests?: Prisma.TradeRequestUncheckedUpdateManyWithoutRequesterNestedInput
+}
+
+export type UserUpsertWithoutReqTradesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutReqTradesInput, Prisma.UserUncheckedUpdateWithoutReqTradesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutReqTradesInput, Prisma.UserUncheckedCreateWithoutReqTradesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutReqTradesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutReqTradesInput, Prisma.UserUncheckedUpdateWithoutReqTradesInput>
+}
+
+export type UserUpdateWithoutReqTradesInput = {
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.NullableEnumRoleFieldUpdateOperationsInput | $Enums.Role | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  posts?: Prisma.PostUpdateManyWithoutUserNestedInput
+  ownedTrades?: Prisma.TradeUpdateManyWithoutOwnerNestedInput
+  comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
+  logs?: Prisma.LogUpdateManyWithoutUserNestedInput
+  products?: Prisma.ProductUpdateManyWithoutUserNestedInput
+  services?: Prisma.ServiceUpdateManyWithoutUserNestedInput
+  initiatedDMs?: Prisma.DMUpdateManyWithoutUser1NestedInput
+  recievedDMs?: Prisma.DMUpdateManyWithoutUser2NestedInput
+  sMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  rMessages?: Prisma.MessageUpdateManyWithoutRecieverNestedInput
+  sReviews?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
+  rReviews?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
+  tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
+  media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
+  userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
+  reportsFiled?: Prisma.ReportUpdateManyWithoutReporterNestedInput
+  reportsAgainst?: Prisma.ReportUpdateManyWithoutTargetUserNestedInput
+  reportsResolved?: Prisma.ReportUpdateManyWithoutResolverNestedInput
+  appealsFiled?: Prisma.AppealUpdateManyWithoutAppellantNestedInput
+  appealsResolved?: Prisma.AppealUpdateManyWithoutResolverNestedInput
+  blocksInitiated?: Prisma.BlockUpdateManyWithoutBlockerNestedInput
+  blocksReceived?: Prisma.BlockUpdateManyWithoutBlockedNestedInput
+  tradeRequests?: Prisma.TradeRequestUpdateManyWithoutRequesterNestedInput
+}
+
+export type UserUncheckedUpdateWithoutReqTradesInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.NullableEnumRoleFieldUpdateOperationsInput | $Enums.Role | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
+  ownedTrades?: Prisma.TradeUncheckedUpdateManyWithoutOwnerNestedInput
+  comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
+  logs?: Prisma.LogUncheckedUpdateManyWithoutUserNestedInput
+  products?: Prisma.ProductUncheckedUpdateManyWithoutUserNestedInput
+  services?: Prisma.ServiceUncheckedUpdateManyWithoutUserNestedInput
+  initiatedDMs?: Prisma.DMUncheckedUpdateManyWithoutUser1NestedInput
+  recievedDMs?: Prisma.DMUncheckedUpdateManyWithoutUser2NestedInput
+  sMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  rMessages?: Prisma.MessageUncheckedUpdateManyWithoutRecieverNestedInput
+  sReviews?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+  rReviews?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
+  tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
+  media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
+  userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
+  reportsFiled?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsAgainst?: Prisma.ReportUncheckedUpdateManyWithoutTargetUserNestedInput
+  reportsResolved?: Prisma.ReportUncheckedUpdateManyWithoutResolverNestedInput
+  appealsFiled?: Prisma.AppealUncheckedUpdateManyWithoutAppellantNestedInput
+  appealsResolved?: Prisma.AppealUncheckedUpdateManyWithoutResolverNestedInput
+  blocksInitiated?: Prisma.BlockUncheckedUpdateManyWithoutBlockerNestedInput
+  blocksReceived?: Prisma.BlockUncheckedUpdateManyWithoutBlockedNestedInput
+  tradeRequests?: Prisma.TradeRequestUncheckedUpdateManyWithoutRequesterNestedInput
 }
 
 export type UserCreateWithoutTradeOffersInput = {
@@ -1732,17 +2220,20 @@ export type UserCreateWithoutTradeOffersInput = {
   createdAt?: Date | string
   zipCode?: string | null
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
+  reqTrades?: Prisma.TradeCreateNestedManyWithoutRequesterInput
+  ownedTrades?: Prisma.TradeCreateNestedManyWithoutOwnerInput
   comments?: Prisma.CommentCreateNestedManyWithoutUserInput
   logs?: Prisma.LogCreateNestedManyWithoutUserInput
   products?: Prisma.ProductCreateNestedManyWithoutUserInput
   services?: Prisma.ServiceCreateNestedManyWithoutUserInput
-  media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
-  userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
   initiatedDMs?: Prisma.DMCreateNestedManyWithoutUser1Input
   recievedDMs?: Prisma.DMCreateNestedManyWithoutUser2Input
   sMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   rMessages?: Prisma.MessageCreateNestedManyWithoutRecieverInput
-  rep?: Prisma.RepCreateNestedManyWithoutUserInput
+  sReviews?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
+  rReviews?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
+  media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
+  userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportCreateNestedManyWithoutResolverInput
@@ -1750,6 +2241,7 @@ export type UserCreateWithoutTradeOffersInput = {
   appealsResolved?: Prisma.AppealCreateNestedManyWithoutResolverInput
   blocksInitiated?: Prisma.BlockCreateNestedManyWithoutBlockerInput
   blocksReceived?: Prisma.BlockCreateNestedManyWithoutBlockedInput
+  tradeRequests?: Prisma.TradeRequestCreateNestedManyWithoutRequesterInput
 }
 
 export type UserUncheckedCreateWithoutTradeOffersInput = {
@@ -1763,17 +2255,20 @@ export type UserUncheckedCreateWithoutTradeOffersInput = {
   createdAt?: Date | string
   zipCode?: string | null
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
+  reqTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutRequesterInput
+  ownedTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutOwnerInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
   logs?: Prisma.LogUncheckedCreateNestedManyWithoutUserInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutUserInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutUserInput
-  media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
-  userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
   initiatedDMs?: Prisma.DMUncheckedCreateNestedManyWithoutUser1Input
   recievedDMs?: Prisma.DMUncheckedCreateNestedManyWithoutUser2Input
   sMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   rMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutRecieverInput
-  rep?: Prisma.RepUncheckedCreateNestedManyWithoutUserInput
+  sReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
+  rReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
+  media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
+  userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportUncheckedCreateNestedManyWithoutResolverInput
@@ -1781,6 +2276,7 @@ export type UserUncheckedCreateWithoutTradeOffersInput = {
   appealsResolved?: Prisma.AppealUncheckedCreateNestedManyWithoutResolverInput
   blocksInitiated?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockerInput
   blocksReceived?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockedInput
+  tradeRequests?: Prisma.TradeRequestUncheckedCreateNestedManyWithoutRequesterInput
 }
 
 export type UserCreateOrConnectWithoutTradeOffersInput = {
@@ -1809,17 +2305,20 @@ export type UserUpdateWithoutTradeOffersInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
+  reqTrades?: Prisma.TradeUpdateManyWithoutRequesterNestedInput
+  ownedTrades?: Prisma.TradeUpdateManyWithoutOwnerNestedInput
   comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
   logs?: Prisma.LogUpdateManyWithoutUserNestedInput
   products?: Prisma.ProductUpdateManyWithoutUserNestedInput
   services?: Prisma.ServiceUpdateManyWithoutUserNestedInput
-  media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
-  userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
   initiatedDMs?: Prisma.DMUpdateManyWithoutUser1NestedInput
   recievedDMs?: Prisma.DMUpdateManyWithoutUser2NestedInput
   sMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   rMessages?: Prisma.MessageUpdateManyWithoutRecieverNestedInput
-  rep?: Prisma.RepUpdateManyWithoutUserNestedInput
+  sReviews?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
+  rReviews?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
+  media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
+  userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUpdateManyWithoutResolverNestedInput
@@ -1827,6 +2326,7 @@ export type UserUpdateWithoutTradeOffersInput = {
   appealsResolved?: Prisma.AppealUpdateManyWithoutResolverNestedInput
   blocksInitiated?: Prisma.BlockUpdateManyWithoutBlockerNestedInput
   blocksReceived?: Prisma.BlockUpdateManyWithoutBlockedNestedInput
+  tradeRequests?: Prisma.TradeRequestUpdateManyWithoutRequesterNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTradeOffersInput = {
@@ -1840,17 +2340,175 @@ export type UserUncheckedUpdateWithoutTradeOffersInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
+  reqTrades?: Prisma.TradeUncheckedUpdateManyWithoutRequesterNestedInput
+  ownedTrades?: Prisma.TradeUncheckedUpdateManyWithoutOwnerNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
   logs?: Prisma.LogUncheckedUpdateManyWithoutUserNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutUserNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutUserNestedInput
-  media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
-  userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
   initiatedDMs?: Prisma.DMUncheckedUpdateManyWithoutUser1NestedInput
   recievedDMs?: Prisma.DMUncheckedUpdateManyWithoutUser2NestedInput
   sMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   rMessages?: Prisma.MessageUncheckedUpdateManyWithoutRecieverNestedInput
-  rep?: Prisma.RepUncheckedUpdateManyWithoutUserNestedInput
+  sReviews?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+  rReviews?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
+  media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
+  userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
+  reportsFiled?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsAgainst?: Prisma.ReportUncheckedUpdateManyWithoutTargetUserNestedInput
+  reportsResolved?: Prisma.ReportUncheckedUpdateManyWithoutResolverNestedInput
+  appealsFiled?: Prisma.AppealUncheckedUpdateManyWithoutAppellantNestedInput
+  appealsResolved?: Prisma.AppealUncheckedUpdateManyWithoutResolverNestedInput
+  blocksInitiated?: Prisma.BlockUncheckedUpdateManyWithoutBlockerNestedInput
+  blocksReceived?: Prisma.BlockUncheckedUpdateManyWithoutBlockedNestedInput
+  tradeRequests?: Prisma.TradeRequestUncheckedUpdateManyWithoutRequesterNestedInput
+}
+
+export type UserCreateWithoutTradeRequestsInput = {
+  googleId?: string | null
+  name: string
+  email: string
+  phone?: string | null
+  role?: $Enums.Role | null
+  bio?: string | null
+  createdAt?: Date | string
+  zipCode?: string | null
+  posts?: Prisma.PostCreateNestedManyWithoutUserInput
+  reqTrades?: Prisma.TradeCreateNestedManyWithoutRequesterInput
+  ownedTrades?: Prisma.TradeCreateNestedManyWithoutOwnerInput
+  comments?: Prisma.CommentCreateNestedManyWithoutUserInput
+  logs?: Prisma.LogCreateNestedManyWithoutUserInput
+  products?: Prisma.ProductCreateNestedManyWithoutUserInput
+  services?: Prisma.ServiceCreateNestedManyWithoutUserInput
+  initiatedDMs?: Prisma.DMCreateNestedManyWithoutUser1Input
+  recievedDMs?: Prisma.DMCreateNestedManyWithoutUser2Input
+  sMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  rMessages?: Prisma.MessageCreateNestedManyWithoutRecieverInput
+  sReviews?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
+  rReviews?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
+  tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
+  media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
+  userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
+  reportsFiled?: Prisma.ReportCreateNestedManyWithoutReporterInput
+  reportsAgainst?: Prisma.ReportCreateNestedManyWithoutTargetUserInput
+  reportsResolved?: Prisma.ReportCreateNestedManyWithoutResolverInput
+  appealsFiled?: Prisma.AppealCreateNestedManyWithoutAppellantInput
+  appealsResolved?: Prisma.AppealCreateNestedManyWithoutResolverInput
+  blocksInitiated?: Prisma.BlockCreateNestedManyWithoutBlockerInput
+  blocksReceived?: Prisma.BlockCreateNestedManyWithoutBlockedInput
+}
+
+export type UserUncheckedCreateWithoutTradeRequestsInput = {
+  id?: number
+  googleId?: string | null
+  name: string
+  email: string
+  phone?: string | null
+  role?: $Enums.Role | null
+  bio?: string | null
+  createdAt?: Date | string
+  zipCode?: string | null
+  posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
+  reqTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutRequesterInput
+  ownedTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutOwnerInput
+  comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
+  logs?: Prisma.LogUncheckedCreateNestedManyWithoutUserInput
+  products?: Prisma.ProductUncheckedCreateNestedManyWithoutUserInput
+  services?: Prisma.ServiceUncheckedCreateNestedManyWithoutUserInput
+  initiatedDMs?: Prisma.DMUncheckedCreateNestedManyWithoutUser1Input
+  recievedDMs?: Prisma.DMUncheckedCreateNestedManyWithoutUser2Input
+  sMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  rMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutRecieverInput
+  sReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
+  rReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
+  tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
+  media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
+  userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
+  reportsFiled?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
+  reportsAgainst?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetUserInput
+  reportsResolved?: Prisma.ReportUncheckedCreateNestedManyWithoutResolverInput
+  appealsFiled?: Prisma.AppealUncheckedCreateNestedManyWithoutAppellantInput
+  appealsResolved?: Prisma.AppealUncheckedCreateNestedManyWithoutResolverInput
+  blocksInitiated?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockerInput
+  blocksReceived?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockedInput
+}
+
+export type UserCreateOrConnectWithoutTradeRequestsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutTradeRequestsInput, Prisma.UserUncheckedCreateWithoutTradeRequestsInput>
+}
+
+export type UserUpsertWithoutTradeRequestsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutTradeRequestsInput, Prisma.UserUncheckedUpdateWithoutTradeRequestsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutTradeRequestsInput, Prisma.UserUncheckedCreateWithoutTradeRequestsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutTradeRequestsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutTradeRequestsInput, Prisma.UserUncheckedUpdateWithoutTradeRequestsInput>
+}
+
+export type UserUpdateWithoutTradeRequestsInput = {
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.NullableEnumRoleFieldUpdateOperationsInput | $Enums.Role | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  posts?: Prisma.PostUpdateManyWithoutUserNestedInput
+  reqTrades?: Prisma.TradeUpdateManyWithoutRequesterNestedInput
+  ownedTrades?: Prisma.TradeUpdateManyWithoutOwnerNestedInput
+  comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
+  logs?: Prisma.LogUpdateManyWithoutUserNestedInput
+  products?: Prisma.ProductUpdateManyWithoutUserNestedInput
+  services?: Prisma.ServiceUpdateManyWithoutUserNestedInput
+  initiatedDMs?: Prisma.DMUpdateManyWithoutUser1NestedInput
+  recievedDMs?: Prisma.DMUpdateManyWithoutUser2NestedInput
+  sMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  rMessages?: Prisma.MessageUpdateManyWithoutRecieverNestedInput
+  sReviews?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
+  rReviews?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
+  tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
+  media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
+  userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
+  reportsFiled?: Prisma.ReportUpdateManyWithoutReporterNestedInput
+  reportsAgainst?: Prisma.ReportUpdateManyWithoutTargetUserNestedInput
+  reportsResolved?: Prisma.ReportUpdateManyWithoutResolverNestedInput
+  appealsFiled?: Prisma.AppealUpdateManyWithoutAppellantNestedInput
+  appealsResolved?: Prisma.AppealUpdateManyWithoutResolverNestedInput
+  blocksInitiated?: Prisma.BlockUpdateManyWithoutBlockerNestedInput
+  blocksReceived?: Prisma.BlockUpdateManyWithoutBlockedNestedInput
+}
+
+export type UserUncheckedUpdateWithoutTradeRequestsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.NullableEnumRoleFieldUpdateOperationsInput | $Enums.Role | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
+  reqTrades?: Prisma.TradeUncheckedUpdateManyWithoutRequesterNestedInput
+  ownedTrades?: Prisma.TradeUncheckedUpdateManyWithoutOwnerNestedInput
+  comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
+  logs?: Prisma.LogUncheckedUpdateManyWithoutUserNestedInput
+  products?: Prisma.ProductUncheckedUpdateManyWithoutUserNestedInput
+  services?: Prisma.ServiceUncheckedUpdateManyWithoutUserNestedInput
+  initiatedDMs?: Prisma.DMUncheckedUpdateManyWithoutUser1NestedInput
+  recievedDMs?: Prisma.DMUncheckedUpdateManyWithoutUser2NestedInput
+  sMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  rMessages?: Prisma.MessageUncheckedUpdateManyWithoutRecieverNestedInput
+  sReviews?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+  rReviews?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
+  tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
+  media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
+  userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUncheckedUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUncheckedUpdateManyWithoutResolverNestedInput
@@ -1870,17 +2528,20 @@ export type UserCreateWithoutCommentsInput = {
   createdAt?: Date | string
   zipCode?: string | null
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
+  reqTrades?: Prisma.TradeCreateNestedManyWithoutRequesterInput
+  ownedTrades?: Prisma.TradeCreateNestedManyWithoutOwnerInput
   logs?: Prisma.LogCreateNestedManyWithoutUserInput
   products?: Prisma.ProductCreateNestedManyWithoutUserInput
   services?: Prisma.ServiceCreateNestedManyWithoutUserInput
-  tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
-  media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
-  userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
   initiatedDMs?: Prisma.DMCreateNestedManyWithoutUser1Input
   recievedDMs?: Prisma.DMCreateNestedManyWithoutUser2Input
   sMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   rMessages?: Prisma.MessageCreateNestedManyWithoutRecieverInput
-  rep?: Prisma.RepCreateNestedManyWithoutUserInput
+  sReviews?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
+  rReviews?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
+  tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
+  media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
+  userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportCreateNestedManyWithoutResolverInput
@@ -1888,6 +2549,7 @@ export type UserCreateWithoutCommentsInput = {
   appealsResolved?: Prisma.AppealCreateNestedManyWithoutResolverInput
   blocksInitiated?: Prisma.BlockCreateNestedManyWithoutBlockerInput
   blocksReceived?: Prisma.BlockCreateNestedManyWithoutBlockedInput
+  tradeRequests?: Prisma.TradeRequestCreateNestedManyWithoutRequesterInput
 }
 
 export type UserUncheckedCreateWithoutCommentsInput = {
@@ -1901,17 +2563,20 @@ export type UserUncheckedCreateWithoutCommentsInput = {
   createdAt?: Date | string
   zipCode?: string | null
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
+  reqTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutRequesterInput
+  ownedTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutOwnerInput
   logs?: Prisma.LogUncheckedCreateNestedManyWithoutUserInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutUserInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutUserInput
-  tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
-  media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
-  userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
   initiatedDMs?: Prisma.DMUncheckedCreateNestedManyWithoutUser1Input
   recievedDMs?: Prisma.DMUncheckedCreateNestedManyWithoutUser2Input
   sMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   rMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutRecieverInput
-  rep?: Prisma.RepUncheckedCreateNestedManyWithoutUserInput
+  sReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
+  rReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
+  tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
+  media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
+  userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportUncheckedCreateNestedManyWithoutResolverInput
@@ -1919,6 +2584,7 @@ export type UserUncheckedCreateWithoutCommentsInput = {
   appealsResolved?: Prisma.AppealUncheckedCreateNestedManyWithoutResolverInput
   blocksInitiated?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockerInput
   blocksReceived?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockedInput
+  tradeRequests?: Prisma.TradeRequestUncheckedCreateNestedManyWithoutRequesterInput
 }
 
 export type UserCreateOrConnectWithoutCommentsInput = {
@@ -1947,17 +2613,20 @@ export type UserUpdateWithoutCommentsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
+  reqTrades?: Prisma.TradeUpdateManyWithoutRequesterNestedInput
+  ownedTrades?: Prisma.TradeUpdateManyWithoutOwnerNestedInput
   logs?: Prisma.LogUpdateManyWithoutUserNestedInput
   products?: Prisma.ProductUpdateManyWithoutUserNestedInput
   services?: Prisma.ServiceUpdateManyWithoutUserNestedInput
-  tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
-  media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
-  userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
   initiatedDMs?: Prisma.DMUpdateManyWithoutUser1NestedInput
   recievedDMs?: Prisma.DMUpdateManyWithoutUser2NestedInput
   sMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   rMessages?: Prisma.MessageUpdateManyWithoutRecieverNestedInput
-  rep?: Prisma.RepUpdateManyWithoutUserNestedInput
+  sReviews?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
+  rReviews?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
+  tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
+  media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
+  userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUpdateManyWithoutResolverNestedInput
@@ -1965,6 +2634,7 @@ export type UserUpdateWithoutCommentsInput = {
   appealsResolved?: Prisma.AppealUpdateManyWithoutResolverNestedInput
   blocksInitiated?: Prisma.BlockUpdateManyWithoutBlockerNestedInput
   blocksReceived?: Prisma.BlockUpdateManyWithoutBlockedNestedInput
+  tradeRequests?: Prisma.TradeRequestUpdateManyWithoutRequesterNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCommentsInput = {
@@ -1978,17 +2648,20 @@ export type UserUncheckedUpdateWithoutCommentsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
+  reqTrades?: Prisma.TradeUncheckedUpdateManyWithoutRequesterNestedInput
+  ownedTrades?: Prisma.TradeUncheckedUpdateManyWithoutOwnerNestedInput
   logs?: Prisma.LogUncheckedUpdateManyWithoutUserNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutUserNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutUserNestedInput
-  tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
-  media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
-  userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
   initiatedDMs?: Prisma.DMUncheckedUpdateManyWithoutUser1NestedInput
   recievedDMs?: Prisma.DMUncheckedUpdateManyWithoutUser2NestedInput
   sMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   rMessages?: Prisma.MessageUncheckedUpdateManyWithoutRecieverNestedInput
-  rep?: Prisma.RepUncheckedUpdateManyWithoutUserNestedInput
+  sReviews?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+  rReviews?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
+  tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
+  media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
+  userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUncheckedUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUncheckedUpdateManyWithoutResolverNestedInput
@@ -1996,6 +2669,7 @@ export type UserUncheckedUpdateWithoutCommentsInput = {
   appealsResolved?: Prisma.AppealUncheckedUpdateManyWithoutResolverNestedInput
   blocksInitiated?: Prisma.BlockUncheckedUpdateManyWithoutBlockerNestedInput
   blocksReceived?: Prisma.BlockUncheckedUpdateManyWithoutBlockedNestedInput
+  tradeRequests?: Prisma.TradeRequestUncheckedUpdateManyWithoutRequesterNestedInput
 }
 
 export type UserCreateWithoutProductsInput = {
@@ -2008,17 +2682,20 @@ export type UserCreateWithoutProductsInput = {
   createdAt?: Date | string
   zipCode?: string | null
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
+  reqTrades?: Prisma.TradeCreateNestedManyWithoutRequesterInput
+  ownedTrades?: Prisma.TradeCreateNestedManyWithoutOwnerInput
   comments?: Prisma.CommentCreateNestedManyWithoutUserInput
   logs?: Prisma.LogCreateNestedManyWithoutUserInput
   services?: Prisma.ServiceCreateNestedManyWithoutUserInput
-  tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
-  media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
-  userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
   initiatedDMs?: Prisma.DMCreateNestedManyWithoutUser1Input
   recievedDMs?: Prisma.DMCreateNestedManyWithoutUser2Input
   sMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   rMessages?: Prisma.MessageCreateNestedManyWithoutRecieverInput
-  rep?: Prisma.RepCreateNestedManyWithoutUserInput
+  sReviews?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
+  rReviews?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
+  tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
+  media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
+  userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportCreateNestedManyWithoutResolverInput
@@ -2026,6 +2703,7 @@ export type UserCreateWithoutProductsInput = {
   appealsResolved?: Prisma.AppealCreateNestedManyWithoutResolverInput
   blocksInitiated?: Prisma.BlockCreateNestedManyWithoutBlockerInput
   blocksReceived?: Prisma.BlockCreateNestedManyWithoutBlockedInput
+  tradeRequests?: Prisma.TradeRequestCreateNestedManyWithoutRequesterInput
 }
 
 export type UserUncheckedCreateWithoutProductsInput = {
@@ -2039,17 +2717,20 @@ export type UserUncheckedCreateWithoutProductsInput = {
   createdAt?: Date | string
   zipCode?: string | null
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
+  reqTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutRequesterInput
+  ownedTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutOwnerInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
   logs?: Prisma.LogUncheckedCreateNestedManyWithoutUserInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutUserInput
-  tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
-  media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
-  userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
   initiatedDMs?: Prisma.DMUncheckedCreateNestedManyWithoutUser1Input
   recievedDMs?: Prisma.DMUncheckedCreateNestedManyWithoutUser2Input
   sMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   rMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutRecieverInput
-  rep?: Prisma.RepUncheckedCreateNestedManyWithoutUserInput
+  sReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
+  rReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
+  tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
+  media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
+  userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportUncheckedCreateNestedManyWithoutResolverInput
@@ -2057,6 +2738,7 @@ export type UserUncheckedCreateWithoutProductsInput = {
   appealsResolved?: Prisma.AppealUncheckedCreateNestedManyWithoutResolverInput
   blocksInitiated?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockerInput
   blocksReceived?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockedInput
+  tradeRequests?: Prisma.TradeRequestUncheckedCreateNestedManyWithoutRequesterInput
 }
 
 export type UserCreateOrConnectWithoutProductsInput = {
@@ -2085,17 +2767,20 @@ export type UserUpdateWithoutProductsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
+  reqTrades?: Prisma.TradeUpdateManyWithoutRequesterNestedInput
+  ownedTrades?: Prisma.TradeUpdateManyWithoutOwnerNestedInput
   comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
   logs?: Prisma.LogUpdateManyWithoutUserNestedInput
   services?: Prisma.ServiceUpdateManyWithoutUserNestedInput
-  tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
-  media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
-  userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
   initiatedDMs?: Prisma.DMUpdateManyWithoutUser1NestedInput
   recievedDMs?: Prisma.DMUpdateManyWithoutUser2NestedInput
   sMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   rMessages?: Prisma.MessageUpdateManyWithoutRecieverNestedInput
-  rep?: Prisma.RepUpdateManyWithoutUserNestedInput
+  sReviews?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
+  rReviews?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
+  tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
+  media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
+  userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUpdateManyWithoutResolverNestedInput
@@ -2103,6 +2788,7 @@ export type UserUpdateWithoutProductsInput = {
   appealsResolved?: Prisma.AppealUpdateManyWithoutResolverNestedInput
   blocksInitiated?: Prisma.BlockUpdateManyWithoutBlockerNestedInput
   blocksReceived?: Prisma.BlockUpdateManyWithoutBlockedNestedInput
+  tradeRequests?: Prisma.TradeRequestUpdateManyWithoutRequesterNestedInput
 }
 
 export type UserUncheckedUpdateWithoutProductsInput = {
@@ -2116,17 +2802,20 @@ export type UserUncheckedUpdateWithoutProductsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
+  reqTrades?: Prisma.TradeUncheckedUpdateManyWithoutRequesterNestedInput
+  ownedTrades?: Prisma.TradeUncheckedUpdateManyWithoutOwnerNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
   logs?: Prisma.LogUncheckedUpdateManyWithoutUserNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutUserNestedInput
-  tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
-  media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
-  userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
   initiatedDMs?: Prisma.DMUncheckedUpdateManyWithoutUser1NestedInput
   recievedDMs?: Prisma.DMUncheckedUpdateManyWithoutUser2NestedInput
   sMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   rMessages?: Prisma.MessageUncheckedUpdateManyWithoutRecieverNestedInput
-  rep?: Prisma.RepUncheckedUpdateManyWithoutUserNestedInput
+  sReviews?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+  rReviews?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
+  tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
+  media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
+  userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUncheckedUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUncheckedUpdateManyWithoutResolverNestedInput
@@ -2134,6 +2823,7 @@ export type UserUncheckedUpdateWithoutProductsInput = {
   appealsResolved?: Prisma.AppealUncheckedUpdateManyWithoutResolverNestedInput
   blocksInitiated?: Prisma.BlockUncheckedUpdateManyWithoutBlockerNestedInput
   blocksReceived?: Prisma.BlockUncheckedUpdateManyWithoutBlockedNestedInput
+  tradeRequests?: Prisma.TradeRequestUncheckedUpdateManyWithoutRequesterNestedInput
 }
 
 export type UserCreateWithoutServicesInput = {
@@ -2146,17 +2836,20 @@ export type UserCreateWithoutServicesInput = {
   createdAt?: Date | string
   zipCode?: string | null
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
+  reqTrades?: Prisma.TradeCreateNestedManyWithoutRequesterInput
+  ownedTrades?: Prisma.TradeCreateNestedManyWithoutOwnerInput
   comments?: Prisma.CommentCreateNestedManyWithoutUserInput
   logs?: Prisma.LogCreateNestedManyWithoutUserInput
   products?: Prisma.ProductCreateNestedManyWithoutUserInput
-  tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
-  media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
-  userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
   initiatedDMs?: Prisma.DMCreateNestedManyWithoutUser1Input
   recievedDMs?: Prisma.DMCreateNestedManyWithoutUser2Input
   sMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   rMessages?: Prisma.MessageCreateNestedManyWithoutRecieverInput
-  rep?: Prisma.RepCreateNestedManyWithoutUserInput
+  sReviews?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
+  rReviews?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
+  tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
+  media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
+  userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportCreateNestedManyWithoutResolverInput
@@ -2164,6 +2857,7 @@ export type UserCreateWithoutServicesInput = {
   appealsResolved?: Prisma.AppealCreateNestedManyWithoutResolverInput
   blocksInitiated?: Prisma.BlockCreateNestedManyWithoutBlockerInput
   blocksReceived?: Prisma.BlockCreateNestedManyWithoutBlockedInput
+  tradeRequests?: Prisma.TradeRequestCreateNestedManyWithoutRequesterInput
 }
 
 export type UserUncheckedCreateWithoutServicesInput = {
@@ -2177,17 +2871,20 @@ export type UserUncheckedCreateWithoutServicesInput = {
   createdAt?: Date | string
   zipCode?: string | null
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
+  reqTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutRequesterInput
+  ownedTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutOwnerInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
   logs?: Prisma.LogUncheckedCreateNestedManyWithoutUserInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutUserInput
-  tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
-  media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
-  userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
   initiatedDMs?: Prisma.DMUncheckedCreateNestedManyWithoutUser1Input
   recievedDMs?: Prisma.DMUncheckedCreateNestedManyWithoutUser2Input
   sMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   rMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutRecieverInput
-  rep?: Prisma.RepUncheckedCreateNestedManyWithoutUserInput
+  sReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
+  rReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
+  tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
+  media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
+  userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportUncheckedCreateNestedManyWithoutResolverInput
@@ -2195,6 +2892,7 @@ export type UserUncheckedCreateWithoutServicesInput = {
   appealsResolved?: Prisma.AppealUncheckedCreateNestedManyWithoutResolverInput
   blocksInitiated?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockerInput
   blocksReceived?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockedInput
+  tradeRequests?: Prisma.TradeRequestUncheckedCreateNestedManyWithoutRequesterInput
 }
 
 export type UserCreateOrConnectWithoutServicesInput = {
@@ -2223,17 +2921,20 @@ export type UserUpdateWithoutServicesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
+  reqTrades?: Prisma.TradeUpdateManyWithoutRequesterNestedInput
+  ownedTrades?: Prisma.TradeUpdateManyWithoutOwnerNestedInput
   comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
   logs?: Prisma.LogUpdateManyWithoutUserNestedInput
   products?: Prisma.ProductUpdateManyWithoutUserNestedInput
-  tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
-  media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
-  userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
   initiatedDMs?: Prisma.DMUpdateManyWithoutUser1NestedInput
   recievedDMs?: Prisma.DMUpdateManyWithoutUser2NestedInput
   sMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   rMessages?: Prisma.MessageUpdateManyWithoutRecieverNestedInput
-  rep?: Prisma.RepUpdateManyWithoutUserNestedInput
+  sReviews?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
+  rReviews?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
+  tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
+  media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
+  userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUpdateManyWithoutResolverNestedInput
@@ -2241,6 +2942,7 @@ export type UserUpdateWithoutServicesInput = {
   appealsResolved?: Prisma.AppealUpdateManyWithoutResolverNestedInput
   blocksInitiated?: Prisma.BlockUpdateManyWithoutBlockerNestedInput
   blocksReceived?: Prisma.BlockUpdateManyWithoutBlockedNestedInput
+  tradeRequests?: Prisma.TradeRequestUpdateManyWithoutRequesterNestedInput
 }
 
 export type UserUncheckedUpdateWithoutServicesInput = {
@@ -2254,17 +2956,20 @@ export type UserUncheckedUpdateWithoutServicesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
+  reqTrades?: Prisma.TradeUncheckedUpdateManyWithoutRequesterNestedInput
+  ownedTrades?: Prisma.TradeUncheckedUpdateManyWithoutOwnerNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
   logs?: Prisma.LogUncheckedUpdateManyWithoutUserNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutUserNestedInput
-  tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
-  media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
-  userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
   initiatedDMs?: Prisma.DMUncheckedUpdateManyWithoutUser1NestedInput
   recievedDMs?: Prisma.DMUncheckedUpdateManyWithoutUser2NestedInput
   sMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   rMessages?: Prisma.MessageUncheckedUpdateManyWithoutRecieverNestedInput
-  rep?: Prisma.RepUncheckedUpdateManyWithoutUserNestedInput
+  sReviews?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+  rReviews?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
+  tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
+  media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
+  userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUncheckedUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUncheckedUpdateManyWithoutResolverNestedInput
@@ -2272,9 +2977,10 @@ export type UserUncheckedUpdateWithoutServicesInput = {
   appealsResolved?: Prisma.AppealUncheckedUpdateManyWithoutResolverNestedInput
   blocksInitiated?: Prisma.BlockUncheckedUpdateManyWithoutBlockerNestedInput
   blocksReceived?: Prisma.BlockUncheckedUpdateManyWithoutBlockedNestedInput
+  tradeRequests?: Prisma.TradeRequestUncheckedUpdateManyWithoutRequesterNestedInput
 }
 
-export type UserCreateWithoutRepInput = {
+export type UserCreateWithoutSReviewsInput = {
   googleId?: string | null
   name: string
   email: string
@@ -2284,17 +2990,20 @@ export type UserCreateWithoutRepInput = {
   createdAt?: Date | string
   zipCode?: string | null
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
+  reqTrades?: Prisma.TradeCreateNestedManyWithoutRequesterInput
+  ownedTrades?: Prisma.TradeCreateNestedManyWithoutOwnerInput
   comments?: Prisma.CommentCreateNestedManyWithoutUserInput
   logs?: Prisma.LogCreateNestedManyWithoutUserInput
   products?: Prisma.ProductCreateNestedManyWithoutUserInput
   services?: Prisma.ServiceCreateNestedManyWithoutUserInput
-  tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
-  media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
-  userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
   initiatedDMs?: Prisma.DMCreateNestedManyWithoutUser1Input
   recievedDMs?: Prisma.DMCreateNestedManyWithoutUser2Input
   sMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   rMessages?: Prisma.MessageCreateNestedManyWithoutRecieverInput
+  rReviews?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
+  tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
+  media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
+  userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportCreateNestedManyWithoutResolverInput
@@ -2302,9 +3011,10 @@ export type UserCreateWithoutRepInput = {
   appealsResolved?: Prisma.AppealCreateNestedManyWithoutResolverInput
   blocksInitiated?: Prisma.BlockCreateNestedManyWithoutBlockerInput
   blocksReceived?: Prisma.BlockCreateNestedManyWithoutBlockedInput
+  tradeRequests?: Prisma.TradeRequestCreateNestedManyWithoutRequesterInput
 }
 
-export type UserUncheckedCreateWithoutRepInput = {
+export type UserUncheckedCreateWithoutSReviewsInput = {
   id?: number
   googleId?: string | null
   name: string
@@ -2315,17 +3025,20 @@ export type UserUncheckedCreateWithoutRepInput = {
   createdAt?: Date | string
   zipCode?: string | null
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
+  reqTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutRequesterInput
+  ownedTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutOwnerInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
   logs?: Prisma.LogUncheckedCreateNestedManyWithoutUserInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutUserInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutUserInput
-  tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
-  media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
-  userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
   initiatedDMs?: Prisma.DMUncheckedCreateNestedManyWithoutUser1Input
   recievedDMs?: Prisma.DMUncheckedCreateNestedManyWithoutUser2Input
   sMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   rMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutRecieverInput
+  rReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
+  tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
+  media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
+  userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportUncheckedCreateNestedManyWithoutResolverInput
@@ -2333,25 +3046,100 @@ export type UserUncheckedCreateWithoutRepInput = {
   appealsResolved?: Prisma.AppealUncheckedCreateNestedManyWithoutResolverInput
   blocksInitiated?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockerInput
   blocksReceived?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockedInput
+  tradeRequests?: Prisma.TradeRequestUncheckedCreateNestedManyWithoutRequesterInput
 }
 
-export type UserCreateOrConnectWithoutRepInput = {
+export type UserCreateOrConnectWithoutSReviewsInput = {
   where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutRepInput, Prisma.UserUncheckedCreateWithoutRepInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutSReviewsInput, Prisma.UserUncheckedCreateWithoutSReviewsInput>
 }
 
-export type UserUpsertWithoutRepInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutRepInput, Prisma.UserUncheckedUpdateWithoutRepInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutRepInput, Prisma.UserUncheckedCreateWithoutRepInput>
+export type UserCreateWithoutRReviewsInput = {
+  googleId?: string | null
+  name: string
+  email: string
+  phone?: string | null
+  role?: $Enums.Role | null
+  bio?: string | null
+  createdAt?: Date | string
+  zipCode?: string | null
+  posts?: Prisma.PostCreateNestedManyWithoutUserInput
+  reqTrades?: Prisma.TradeCreateNestedManyWithoutRequesterInput
+  ownedTrades?: Prisma.TradeCreateNestedManyWithoutOwnerInput
+  comments?: Prisma.CommentCreateNestedManyWithoutUserInput
+  logs?: Prisma.LogCreateNestedManyWithoutUserInput
+  products?: Prisma.ProductCreateNestedManyWithoutUserInput
+  services?: Prisma.ServiceCreateNestedManyWithoutUserInput
+  initiatedDMs?: Prisma.DMCreateNestedManyWithoutUser1Input
+  recievedDMs?: Prisma.DMCreateNestedManyWithoutUser2Input
+  sMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  rMessages?: Prisma.MessageCreateNestedManyWithoutRecieverInput
+  sReviews?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
+  tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
+  media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
+  userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
+  reportsFiled?: Prisma.ReportCreateNestedManyWithoutReporterInput
+  reportsAgainst?: Prisma.ReportCreateNestedManyWithoutTargetUserInput
+  reportsResolved?: Prisma.ReportCreateNestedManyWithoutResolverInput
+  appealsFiled?: Prisma.AppealCreateNestedManyWithoutAppellantInput
+  appealsResolved?: Prisma.AppealCreateNestedManyWithoutResolverInput
+  blocksInitiated?: Prisma.BlockCreateNestedManyWithoutBlockerInput
+  blocksReceived?: Prisma.BlockCreateNestedManyWithoutBlockedInput
+  tradeRequests?: Prisma.TradeRequestCreateNestedManyWithoutRequesterInput
+}
+
+export type UserUncheckedCreateWithoutRReviewsInput = {
+  id?: number
+  googleId?: string | null
+  name: string
+  email: string
+  phone?: string | null
+  role?: $Enums.Role | null
+  bio?: string | null
+  createdAt?: Date | string
+  zipCode?: string | null
+  posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
+  reqTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutRequesterInput
+  ownedTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutOwnerInput
+  comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
+  logs?: Prisma.LogUncheckedCreateNestedManyWithoutUserInput
+  products?: Prisma.ProductUncheckedCreateNestedManyWithoutUserInput
+  services?: Prisma.ServiceUncheckedCreateNestedManyWithoutUserInput
+  initiatedDMs?: Prisma.DMUncheckedCreateNestedManyWithoutUser1Input
+  recievedDMs?: Prisma.DMUncheckedCreateNestedManyWithoutUser2Input
+  sMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  rMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutRecieverInput
+  sReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
+  tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
+  media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
+  userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
+  reportsFiled?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
+  reportsAgainst?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetUserInput
+  reportsResolved?: Prisma.ReportUncheckedCreateNestedManyWithoutResolverInput
+  appealsFiled?: Prisma.AppealUncheckedCreateNestedManyWithoutAppellantInput
+  appealsResolved?: Prisma.AppealUncheckedCreateNestedManyWithoutResolverInput
+  blocksInitiated?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockerInput
+  blocksReceived?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockedInput
+  tradeRequests?: Prisma.TradeRequestUncheckedCreateNestedManyWithoutRequesterInput
+}
+
+export type UserCreateOrConnectWithoutRReviewsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutRReviewsInput, Prisma.UserUncheckedCreateWithoutRReviewsInput>
+}
+
+export type UserUpsertWithoutSReviewsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutSReviewsInput, Prisma.UserUncheckedUpdateWithoutSReviewsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutSReviewsInput, Prisma.UserUncheckedCreateWithoutSReviewsInput>
   where?: Prisma.UserWhereInput
 }
 
-export type UserUpdateToOneWithWhereWithoutRepInput = {
+export type UserUpdateToOneWithWhereWithoutSReviewsInput = {
   where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutRepInput, Prisma.UserUncheckedUpdateWithoutRepInput>
+  data: Prisma.XOR<Prisma.UserUpdateWithoutSReviewsInput, Prisma.UserUncheckedUpdateWithoutSReviewsInput>
 }
 
-export type UserUpdateWithoutRepInput = {
+export type UserUpdateWithoutSReviewsInput = {
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2361,17 +3149,20 @@ export type UserUpdateWithoutRepInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
+  reqTrades?: Prisma.TradeUpdateManyWithoutRequesterNestedInput
+  ownedTrades?: Prisma.TradeUpdateManyWithoutOwnerNestedInput
   comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
   logs?: Prisma.LogUpdateManyWithoutUserNestedInput
   products?: Prisma.ProductUpdateManyWithoutUserNestedInput
   services?: Prisma.ServiceUpdateManyWithoutUserNestedInput
-  tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
-  media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
-  userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
   initiatedDMs?: Prisma.DMUpdateManyWithoutUser1NestedInput
   recievedDMs?: Prisma.DMUpdateManyWithoutUser2NestedInput
   sMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   rMessages?: Prisma.MessageUpdateManyWithoutRecieverNestedInput
+  rReviews?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
+  tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
+  media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
+  userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUpdateManyWithoutResolverNestedInput
@@ -2379,9 +3170,10 @@ export type UserUpdateWithoutRepInput = {
   appealsResolved?: Prisma.AppealUpdateManyWithoutResolverNestedInput
   blocksInitiated?: Prisma.BlockUpdateManyWithoutBlockerNestedInput
   blocksReceived?: Prisma.BlockUpdateManyWithoutBlockedNestedInput
+  tradeRequests?: Prisma.TradeRequestUpdateManyWithoutRequesterNestedInput
 }
 
-export type UserUncheckedUpdateWithoutRepInput = {
+export type UserUncheckedUpdateWithoutSReviewsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2392,17 +3184,20 @@ export type UserUncheckedUpdateWithoutRepInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
+  reqTrades?: Prisma.TradeUncheckedUpdateManyWithoutRequesterNestedInput
+  ownedTrades?: Prisma.TradeUncheckedUpdateManyWithoutOwnerNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
   logs?: Prisma.LogUncheckedUpdateManyWithoutUserNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutUserNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutUserNestedInput
-  tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
-  media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
-  userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
   initiatedDMs?: Prisma.DMUncheckedUpdateManyWithoutUser1NestedInput
   recievedDMs?: Prisma.DMUncheckedUpdateManyWithoutUser2NestedInput
   sMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   rMessages?: Prisma.MessageUncheckedUpdateManyWithoutRecieverNestedInput
+  rReviews?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
+  tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
+  media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
+  userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUncheckedUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUncheckedUpdateManyWithoutResolverNestedInput
@@ -2410,6 +3205,87 @@ export type UserUncheckedUpdateWithoutRepInput = {
   appealsResolved?: Prisma.AppealUncheckedUpdateManyWithoutResolverNestedInput
   blocksInitiated?: Prisma.BlockUncheckedUpdateManyWithoutBlockerNestedInput
   blocksReceived?: Prisma.BlockUncheckedUpdateManyWithoutBlockedNestedInput
+  tradeRequests?: Prisma.TradeRequestUncheckedUpdateManyWithoutRequesterNestedInput
+}
+
+export type UserUpsertWithoutRReviewsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutRReviewsInput, Prisma.UserUncheckedUpdateWithoutRReviewsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutRReviewsInput, Prisma.UserUncheckedCreateWithoutRReviewsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutRReviewsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutRReviewsInput, Prisma.UserUncheckedUpdateWithoutRReviewsInput>
+}
+
+export type UserUpdateWithoutRReviewsInput = {
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.NullableEnumRoleFieldUpdateOperationsInput | $Enums.Role | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  posts?: Prisma.PostUpdateManyWithoutUserNestedInput
+  reqTrades?: Prisma.TradeUpdateManyWithoutRequesterNestedInput
+  ownedTrades?: Prisma.TradeUpdateManyWithoutOwnerNestedInput
+  comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
+  logs?: Prisma.LogUpdateManyWithoutUserNestedInput
+  products?: Prisma.ProductUpdateManyWithoutUserNestedInput
+  services?: Prisma.ServiceUpdateManyWithoutUserNestedInput
+  initiatedDMs?: Prisma.DMUpdateManyWithoutUser1NestedInput
+  recievedDMs?: Prisma.DMUpdateManyWithoutUser2NestedInput
+  sMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  rMessages?: Prisma.MessageUpdateManyWithoutRecieverNestedInput
+  sReviews?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
+  tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
+  media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
+  userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
+  reportsFiled?: Prisma.ReportUpdateManyWithoutReporterNestedInput
+  reportsAgainst?: Prisma.ReportUpdateManyWithoutTargetUserNestedInput
+  reportsResolved?: Prisma.ReportUpdateManyWithoutResolverNestedInput
+  appealsFiled?: Prisma.AppealUpdateManyWithoutAppellantNestedInput
+  appealsResolved?: Prisma.AppealUpdateManyWithoutResolverNestedInput
+  blocksInitiated?: Prisma.BlockUpdateManyWithoutBlockerNestedInput
+  blocksReceived?: Prisma.BlockUpdateManyWithoutBlockedNestedInput
+  tradeRequests?: Prisma.TradeRequestUpdateManyWithoutRequesterNestedInput
+}
+
+export type UserUncheckedUpdateWithoutRReviewsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.NullableEnumRoleFieldUpdateOperationsInput | $Enums.Role | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
+  reqTrades?: Prisma.TradeUncheckedUpdateManyWithoutRequesterNestedInput
+  ownedTrades?: Prisma.TradeUncheckedUpdateManyWithoutOwnerNestedInput
+  comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
+  logs?: Prisma.LogUncheckedUpdateManyWithoutUserNestedInput
+  products?: Prisma.ProductUncheckedUpdateManyWithoutUserNestedInput
+  services?: Prisma.ServiceUncheckedUpdateManyWithoutUserNestedInput
+  initiatedDMs?: Prisma.DMUncheckedUpdateManyWithoutUser1NestedInput
+  recievedDMs?: Prisma.DMUncheckedUpdateManyWithoutUser2NestedInput
+  sMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  rMessages?: Prisma.MessageUncheckedUpdateManyWithoutRecieverNestedInput
+  sReviews?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+  tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
+  media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
+  userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
+  reportsFiled?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsAgainst?: Prisma.ReportUncheckedUpdateManyWithoutTargetUserNestedInput
+  reportsResolved?: Prisma.ReportUncheckedUpdateManyWithoutResolverNestedInput
+  appealsFiled?: Prisma.AppealUncheckedUpdateManyWithoutAppellantNestedInput
+  appealsResolved?: Prisma.AppealUncheckedUpdateManyWithoutResolverNestedInput
+  blocksInitiated?: Prisma.BlockUncheckedUpdateManyWithoutBlockerNestedInput
+  blocksReceived?: Prisma.BlockUncheckedUpdateManyWithoutBlockedNestedInput
+  tradeRequests?: Prisma.TradeRequestUncheckedUpdateManyWithoutRequesterNestedInput
 }
 
 export type UserCreateWithoutBlocksInitiatedInput = {
@@ -2422,24 +3298,28 @@ export type UserCreateWithoutBlocksInitiatedInput = {
   createdAt?: Date | string
   zipCode?: string | null
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
+  reqTrades?: Prisma.TradeCreateNestedManyWithoutRequesterInput
+  ownedTrades?: Prisma.TradeCreateNestedManyWithoutOwnerInput
   comments?: Prisma.CommentCreateNestedManyWithoutUserInput
   logs?: Prisma.LogCreateNestedManyWithoutUserInput
   products?: Prisma.ProductCreateNestedManyWithoutUserInput
   services?: Prisma.ServiceCreateNestedManyWithoutUserInput
-  tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
-  media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
-  userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
   initiatedDMs?: Prisma.DMCreateNestedManyWithoutUser1Input
   recievedDMs?: Prisma.DMCreateNestedManyWithoutUser2Input
   sMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   rMessages?: Prisma.MessageCreateNestedManyWithoutRecieverInput
-  rep?: Prisma.RepCreateNestedManyWithoutUserInput
+  sReviews?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
+  rReviews?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
+  tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
+  media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
+  userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportCreateNestedManyWithoutResolverInput
   appealsFiled?: Prisma.AppealCreateNestedManyWithoutAppellantInput
   appealsResolved?: Prisma.AppealCreateNestedManyWithoutResolverInput
   blocksReceived?: Prisma.BlockCreateNestedManyWithoutBlockedInput
+  tradeRequests?: Prisma.TradeRequestCreateNestedManyWithoutRequesterInput
 }
 
 export type UserUncheckedCreateWithoutBlocksInitiatedInput = {
@@ -2453,24 +3333,28 @@ export type UserUncheckedCreateWithoutBlocksInitiatedInput = {
   createdAt?: Date | string
   zipCode?: string | null
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
+  reqTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutRequesterInput
+  ownedTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutOwnerInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
   logs?: Prisma.LogUncheckedCreateNestedManyWithoutUserInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutUserInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutUserInput
-  tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
-  media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
-  userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
   initiatedDMs?: Prisma.DMUncheckedCreateNestedManyWithoutUser1Input
   recievedDMs?: Prisma.DMUncheckedCreateNestedManyWithoutUser2Input
   sMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   rMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutRecieverInput
-  rep?: Prisma.RepUncheckedCreateNestedManyWithoutUserInput
+  sReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
+  rReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
+  tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
+  media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
+  userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportUncheckedCreateNestedManyWithoutResolverInput
   appealsFiled?: Prisma.AppealUncheckedCreateNestedManyWithoutAppellantInput
   appealsResolved?: Prisma.AppealUncheckedCreateNestedManyWithoutResolverInput
   blocksReceived?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockedInput
+  tradeRequests?: Prisma.TradeRequestUncheckedCreateNestedManyWithoutRequesterInput
 }
 
 export type UserCreateOrConnectWithoutBlocksInitiatedInput = {
@@ -2488,24 +3372,28 @@ export type UserCreateWithoutBlocksReceivedInput = {
   createdAt?: Date | string
   zipCode?: string | null
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
+  reqTrades?: Prisma.TradeCreateNestedManyWithoutRequesterInput
+  ownedTrades?: Prisma.TradeCreateNestedManyWithoutOwnerInput
   comments?: Prisma.CommentCreateNestedManyWithoutUserInput
   logs?: Prisma.LogCreateNestedManyWithoutUserInput
   products?: Prisma.ProductCreateNestedManyWithoutUserInput
   services?: Prisma.ServiceCreateNestedManyWithoutUserInput
-  tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
-  media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
-  userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
   initiatedDMs?: Prisma.DMCreateNestedManyWithoutUser1Input
   recievedDMs?: Prisma.DMCreateNestedManyWithoutUser2Input
   sMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   rMessages?: Prisma.MessageCreateNestedManyWithoutRecieverInput
-  rep?: Prisma.RepCreateNestedManyWithoutUserInput
+  sReviews?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
+  rReviews?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
+  tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
+  media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
+  userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportCreateNestedManyWithoutResolverInput
   appealsFiled?: Prisma.AppealCreateNestedManyWithoutAppellantInput
   appealsResolved?: Prisma.AppealCreateNestedManyWithoutResolverInput
   blocksInitiated?: Prisma.BlockCreateNestedManyWithoutBlockerInput
+  tradeRequests?: Prisma.TradeRequestCreateNestedManyWithoutRequesterInput
 }
 
 export type UserUncheckedCreateWithoutBlocksReceivedInput = {
@@ -2519,24 +3407,28 @@ export type UserUncheckedCreateWithoutBlocksReceivedInput = {
   createdAt?: Date | string
   zipCode?: string | null
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
+  reqTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutRequesterInput
+  ownedTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutOwnerInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
   logs?: Prisma.LogUncheckedCreateNestedManyWithoutUserInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutUserInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutUserInput
-  tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
-  media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
-  userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
   initiatedDMs?: Prisma.DMUncheckedCreateNestedManyWithoutUser1Input
   recievedDMs?: Prisma.DMUncheckedCreateNestedManyWithoutUser2Input
   sMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   rMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutRecieverInput
-  rep?: Prisma.RepUncheckedCreateNestedManyWithoutUserInput
+  sReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
+  rReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
+  tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
+  media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
+  userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportUncheckedCreateNestedManyWithoutResolverInput
   appealsFiled?: Prisma.AppealUncheckedCreateNestedManyWithoutAppellantInput
   appealsResolved?: Prisma.AppealUncheckedCreateNestedManyWithoutResolverInput
   blocksInitiated?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockerInput
+  tradeRequests?: Prisma.TradeRequestUncheckedCreateNestedManyWithoutRequesterInput
 }
 
 export type UserCreateOrConnectWithoutBlocksReceivedInput = {
@@ -2565,24 +3457,28 @@ export type UserUpdateWithoutBlocksInitiatedInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
+  reqTrades?: Prisma.TradeUpdateManyWithoutRequesterNestedInput
+  ownedTrades?: Prisma.TradeUpdateManyWithoutOwnerNestedInput
   comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
   logs?: Prisma.LogUpdateManyWithoutUserNestedInput
   products?: Prisma.ProductUpdateManyWithoutUserNestedInput
   services?: Prisma.ServiceUpdateManyWithoutUserNestedInput
-  tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
-  media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
-  userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
   initiatedDMs?: Prisma.DMUpdateManyWithoutUser1NestedInput
   recievedDMs?: Prisma.DMUpdateManyWithoutUser2NestedInput
   sMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   rMessages?: Prisma.MessageUpdateManyWithoutRecieverNestedInput
-  rep?: Prisma.RepUpdateManyWithoutUserNestedInput
+  sReviews?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
+  rReviews?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
+  tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
+  media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
+  userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUpdateManyWithoutResolverNestedInput
   appealsFiled?: Prisma.AppealUpdateManyWithoutAppellantNestedInput
   appealsResolved?: Prisma.AppealUpdateManyWithoutResolverNestedInput
   blocksReceived?: Prisma.BlockUpdateManyWithoutBlockedNestedInput
+  tradeRequests?: Prisma.TradeRequestUpdateManyWithoutRequesterNestedInput
 }
 
 export type UserUncheckedUpdateWithoutBlocksInitiatedInput = {
@@ -2596,24 +3492,28 @@ export type UserUncheckedUpdateWithoutBlocksInitiatedInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
+  reqTrades?: Prisma.TradeUncheckedUpdateManyWithoutRequesterNestedInput
+  ownedTrades?: Prisma.TradeUncheckedUpdateManyWithoutOwnerNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
   logs?: Prisma.LogUncheckedUpdateManyWithoutUserNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutUserNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutUserNestedInput
-  tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
-  media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
-  userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
   initiatedDMs?: Prisma.DMUncheckedUpdateManyWithoutUser1NestedInput
   recievedDMs?: Prisma.DMUncheckedUpdateManyWithoutUser2NestedInput
   sMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   rMessages?: Prisma.MessageUncheckedUpdateManyWithoutRecieverNestedInput
-  rep?: Prisma.RepUncheckedUpdateManyWithoutUserNestedInput
+  sReviews?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+  rReviews?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
+  tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
+  media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
+  userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUncheckedUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUncheckedUpdateManyWithoutResolverNestedInput
   appealsFiled?: Prisma.AppealUncheckedUpdateManyWithoutAppellantNestedInput
   appealsResolved?: Prisma.AppealUncheckedUpdateManyWithoutResolverNestedInput
   blocksReceived?: Prisma.BlockUncheckedUpdateManyWithoutBlockedNestedInput
+  tradeRequests?: Prisma.TradeRequestUncheckedUpdateManyWithoutRequesterNestedInput
 }
 
 export type UserUpsertWithoutBlocksReceivedInput = {
@@ -2637,24 +3537,28 @@ export type UserUpdateWithoutBlocksReceivedInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
+  reqTrades?: Prisma.TradeUpdateManyWithoutRequesterNestedInput
+  ownedTrades?: Prisma.TradeUpdateManyWithoutOwnerNestedInput
   comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
   logs?: Prisma.LogUpdateManyWithoutUserNestedInput
   products?: Prisma.ProductUpdateManyWithoutUserNestedInput
   services?: Prisma.ServiceUpdateManyWithoutUserNestedInput
-  tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
-  media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
-  userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
   initiatedDMs?: Prisma.DMUpdateManyWithoutUser1NestedInput
   recievedDMs?: Prisma.DMUpdateManyWithoutUser2NestedInput
   sMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   rMessages?: Prisma.MessageUpdateManyWithoutRecieverNestedInput
-  rep?: Prisma.RepUpdateManyWithoutUserNestedInput
+  sReviews?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
+  rReviews?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
+  tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
+  media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
+  userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUpdateManyWithoutResolverNestedInput
   appealsFiled?: Prisma.AppealUpdateManyWithoutAppellantNestedInput
   appealsResolved?: Prisma.AppealUpdateManyWithoutResolverNestedInput
   blocksInitiated?: Prisma.BlockUpdateManyWithoutBlockerNestedInput
+  tradeRequests?: Prisma.TradeRequestUpdateManyWithoutRequesterNestedInput
 }
 
 export type UserUncheckedUpdateWithoutBlocksReceivedInput = {
@@ -2668,24 +3572,28 @@ export type UserUncheckedUpdateWithoutBlocksReceivedInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
+  reqTrades?: Prisma.TradeUncheckedUpdateManyWithoutRequesterNestedInput
+  ownedTrades?: Prisma.TradeUncheckedUpdateManyWithoutOwnerNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
   logs?: Prisma.LogUncheckedUpdateManyWithoutUserNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutUserNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutUserNestedInput
-  tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
-  media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
-  userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
   initiatedDMs?: Prisma.DMUncheckedUpdateManyWithoutUser1NestedInput
   recievedDMs?: Prisma.DMUncheckedUpdateManyWithoutUser2NestedInput
   sMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   rMessages?: Prisma.MessageUncheckedUpdateManyWithoutRecieverNestedInput
-  rep?: Prisma.RepUncheckedUpdateManyWithoutUserNestedInput
+  sReviews?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+  rReviews?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
+  tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
+  media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
+  userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUncheckedUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUncheckedUpdateManyWithoutResolverNestedInput
   appealsFiled?: Prisma.AppealUncheckedUpdateManyWithoutAppellantNestedInput
   appealsResolved?: Prisma.AppealUncheckedUpdateManyWithoutResolverNestedInput
   blocksInitiated?: Prisma.BlockUncheckedUpdateManyWithoutBlockerNestedInput
+  tradeRequests?: Prisma.TradeRequestUncheckedUpdateManyWithoutRequesterNestedInput
 }
 
 export type UserCreateWithoutReportsFiledInput = {
@@ -2698,24 +3606,28 @@ export type UserCreateWithoutReportsFiledInput = {
   createdAt?: Date | string
   zipCode?: string | null
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
+  reqTrades?: Prisma.TradeCreateNestedManyWithoutRequesterInput
+  ownedTrades?: Prisma.TradeCreateNestedManyWithoutOwnerInput
   comments?: Prisma.CommentCreateNestedManyWithoutUserInput
   logs?: Prisma.LogCreateNestedManyWithoutUserInput
   products?: Prisma.ProductCreateNestedManyWithoutUserInput
   services?: Prisma.ServiceCreateNestedManyWithoutUserInput
-  tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
-  media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
-  userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
   initiatedDMs?: Prisma.DMCreateNestedManyWithoutUser1Input
   recievedDMs?: Prisma.DMCreateNestedManyWithoutUser2Input
   sMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   rMessages?: Prisma.MessageCreateNestedManyWithoutRecieverInput
-  rep?: Prisma.RepCreateNestedManyWithoutUserInput
+  sReviews?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
+  rReviews?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
+  tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
+  media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
+  userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
   reportsAgainst?: Prisma.ReportCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportCreateNestedManyWithoutResolverInput
   appealsFiled?: Prisma.AppealCreateNestedManyWithoutAppellantInput
   appealsResolved?: Prisma.AppealCreateNestedManyWithoutResolverInput
   blocksInitiated?: Prisma.BlockCreateNestedManyWithoutBlockerInput
   blocksReceived?: Prisma.BlockCreateNestedManyWithoutBlockedInput
+  tradeRequests?: Prisma.TradeRequestCreateNestedManyWithoutRequesterInput
 }
 
 export type UserUncheckedCreateWithoutReportsFiledInput = {
@@ -2729,24 +3641,28 @@ export type UserUncheckedCreateWithoutReportsFiledInput = {
   createdAt?: Date | string
   zipCode?: string | null
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
+  reqTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutRequesterInput
+  ownedTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutOwnerInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
   logs?: Prisma.LogUncheckedCreateNestedManyWithoutUserInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutUserInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutUserInput
-  tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
-  media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
-  userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
   initiatedDMs?: Prisma.DMUncheckedCreateNestedManyWithoutUser1Input
   recievedDMs?: Prisma.DMUncheckedCreateNestedManyWithoutUser2Input
   sMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   rMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutRecieverInput
-  rep?: Prisma.RepUncheckedCreateNestedManyWithoutUserInput
+  sReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
+  rReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
+  tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
+  media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
+  userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
   reportsAgainst?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportUncheckedCreateNestedManyWithoutResolverInput
   appealsFiled?: Prisma.AppealUncheckedCreateNestedManyWithoutAppellantInput
   appealsResolved?: Prisma.AppealUncheckedCreateNestedManyWithoutResolverInput
   blocksInitiated?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockerInput
   blocksReceived?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockedInput
+  tradeRequests?: Prisma.TradeRequestUncheckedCreateNestedManyWithoutRequesterInput
 }
 
 export type UserCreateOrConnectWithoutReportsFiledInput = {
@@ -2764,24 +3680,28 @@ export type UserCreateWithoutReportsAgainstInput = {
   createdAt?: Date | string
   zipCode?: string | null
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
+  reqTrades?: Prisma.TradeCreateNestedManyWithoutRequesterInput
+  ownedTrades?: Prisma.TradeCreateNestedManyWithoutOwnerInput
   comments?: Prisma.CommentCreateNestedManyWithoutUserInput
   logs?: Prisma.LogCreateNestedManyWithoutUserInput
   products?: Prisma.ProductCreateNestedManyWithoutUserInput
   services?: Prisma.ServiceCreateNestedManyWithoutUserInput
-  tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
-  media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
-  userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
   initiatedDMs?: Prisma.DMCreateNestedManyWithoutUser1Input
   recievedDMs?: Prisma.DMCreateNestedManyWithoutUser2Input
   sMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   rMessages?: Prisma.MessageCreateNestedManyWithoutRecieverInput
-  rep?: Prisma.RepCreateNestedManyWithoutUserInput
+  sReviews?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
+  rReviews?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
+  tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
+  media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
+  userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportCreateNestedManyWithoutReporterInput
   reportsResolved?: Prisma.ReportCreateNestedManyWithoutResolverInput
   appealsFiled?: Prisma.AppealCreateNestedManyWithoutAppellantInput
   appealsResolved?: Prisma.AppealCreateNestedManyWithoutResolverInput
   blocksInitiated?: Prisma.BlockCreateNestedManyWithoutBlockerInput
   blocksReceived?: Prisma.BlockCreateNestedManyWithoutBlockedInput
+  tradeRequests?: Prisma.TradeRequestCreateNestedManyWithoutRequesterInput
 }
 
 export type UserUncheckedCreateWithoutReportsAgainstInput = {
@@ -2795,24 +3715,28 @@ export type UserUncheckedCreateWithoutReportsAgainstInput = {
   createdAt?: Date | string
   zipCode?: string | null
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
+  reqTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutRequesterInput
+  ownedTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutOwnerInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
   logs?: Prisma.LogUncheckedCreateNestedManyWithoutUserInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutUserInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutUserInput
-  tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
-  media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
-  userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
   initiatedDMs?: Prisma.DMUncheckedCreateNestedManyWithoutUser1Input
   recievedDMs?: Prisma.DMUncheckedCreateNestedManyWithoutUser2Input
   sMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   rMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutRecieverInput
-  rep?: Prisma.RepUncheckedCreateNestedManyWithoutUserInput
+  sReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
+  rReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
+  tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
+  media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
+  userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
   reportsResolved?: Prisma.ReportUncheckedCreateNestedManyWithoutResolverInput
   appealsFiled?: Prisma.AppealUncheckedCreateNestedManyWithoutAppellantInput
   appealsResolved?: Prisma.AppealUncheckedCreateNestedManyWithoutResolverInput
   blocksInitiated?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockerInput
   blocksReceived?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockedInput
+  tradeRequests?: Prisma.TradeRequestUncheckedCreateNestedManyWithoutRequesterInput
 }
 
 export type UserCreateOrConnectWithoutReportsAgainstInput = {
@@ -2830,24 +3754,28 @@ export type UserCreateWithoutReportsResolvedInput = {
   createdAt?: Date | string
   zipCode?: string | null
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
+  reqTrades?: Prisma.TradeCreateNestedManyWithoutRequesterInput
+  ownedTrades?: Prisma.TradeCreateNestedManyWithoutOwnerInput
   comments?: Prisma.CommentCreateNestedManyWithoutUserInput
   logs?: Prisma.LogCreateNestedManyWithoutUserInput
   products?: Prisma.ProductCreateNestedManyWithoutUserInput
   services?: Prisma.ServiceCreateNestedManyWithoutUserInput
-  tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
-  media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
-  userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
   initiatedDMs?: Prisma.DMCreateNestedManyWithoutUser1Input
   recievedDMs?: Prisma.DMCreateNestedManyWithoutUser2Input
   sMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   rMessages?: Prisma.MessageCreateNestedManyWithoutRecieverInput
-  rep?: Prisma.RepCreateNestedManyWithoutUserInput
+  sReviews?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
+  rReviews?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
+  tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
+  media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
+  userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportCreateNestedManyWithoutTargetUserInput
   appealsFiled?: Prisma.AppealCreateNestedManyWithoutAppellantInput
   appealsResolved?: Prisma.AppealCreateNestedManyWithoutResolverInput
   blocksInitiated?: Prisma.BlockCreateNestedManyWithoutBlockerInput
   blocksReceived?: Prisma.BlockCreateNestedManyWithoutBlockedInput
+  tradeRequests?: Prisma.TradeRequestCreateNestedManyWithoutRequesterInput
 }
 
 export type UserUncheckedCreateWithoutReportsResolvedInput = {
@@ -2861,24 +3789,28 @@ export type UserUncheckedCreateWithoutReportsResolvedInput = {
   createdAt?: Date | string
   zipCode?: string | null
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
+  reqTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutRequesterInput
+  ownedTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutOwnerInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
   logs?: Prisma.LogUncheckedCreateNestedManyWithoutUserInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutUserInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutUserInput
-  tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
-  media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
-  userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
   initiatedDMs?: Prisma.DMUncheckedCreateNestedManyWithoutUser1Input
   recievedDMs?: Prisma.DMUncheckedCreateNestedManyWithoutUser2Input
   sMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   rMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutRecieverInput
-  rep?: Prisma.RepUncheckedCreateNestedManyWithoutUserInput
+  sReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
+  rReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
+  tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
+  media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
+  userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetUserInput
   appealsFiled?: Prisma.AppealUncheckedCreateNestedManyWithoutAppellantInput
   appealsResolved?: Prisma.AppealUncheckedCreateNestedManyWithoutResolverInput
   blocksInitiated?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockerInput
   blocksReceived?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockedInput
+  tradeRequests?: Prisma.TradeRequestUncheckedCreateNestedManyWithoutRequesterInput
 }
 
 export type UserCreateOrConnectWithoutReportsResolvedInput = {
@@ -2907,24 +3839,28 @@ export type UserUpdateWithoutReportsFiledInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
+  reqTrades?: Prisma.TradeUpdateManyWithoutRequesterNestedInput
+  ownedTrades?: Prisma.TradeUpdateManyWithoutOwnerNestedInput
   comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
   logs?: Prisma.LogUpdateManyWithoutUserNestedInput
   products?: Prisma.ProductUpdateManyWithoutUserNestedInput
   services?: Prisma.ServiceUpdateManyWithoutUserNestedInput
-  tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
-  media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
-  userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
   initiatedDMs?: Prisma.DMUpdateManyWithoutUser1NestedInput
   recievedDMs?: Prisma.DMUpdateManyWithoutUser2NestedInput
   sMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   rMessages?: Prisma.MessageUpdateManyWithoutRecieverNestedInput
-  rep?: Prisma.RepUpdateManyWithoutUserNestedInput
+  sReviews?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
+  rReviews?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
+  tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
+  media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
+  userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
   reportsAgainst?: Prisma.ReportUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUpdateManyWithoutResolverNestedInput
   appealsFiled?: Prisma.AppealUpdateManyWithoutAppellantNestedInput
   appealsResolved?: Prisma.AppealUpdateManyWithoutResolverNestedInput
   blocksInitiated?: Prisma.BlockUpdateManyWithoutBlockerNestedInput
   blocksReceived?: Prisma.BlockUpdateManyWithoutBlockedNestedInput
+  tradeRequests?: Prisma.TradeRequestUpdateManyWithoutRequesterNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReportsFiledInput = {
@@ -2938,24 +3874,28 @@ export type UserUncheckedUpdateWithoutReportsFiledInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
+  reqTrades?: Prisma.TradeUncheckedUpdateManyWithoutRequesterNestedInput
+  ownedTrades?: Prisma.TradeUncheckedUpdateManyWithoutOwnerNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
   logs?: Prisma.LogUncheckedUpdateManyWithoutUserNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutUserNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutUserNestedInput
-  tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
-  media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
-  userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
   initiatedDMs?: Prisma.DMUncheckedUpdateManyWithoutUser1NestedInput
   recievedDMs?: Prisma.DMUncheckedUpdateManyWithoutUser2NestedInput
   sMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   rMessages?: Prisma.MessageUncheckedUpdateManyWithoutRecieverNestedInput
-  rep?: Prisma.RepUncheckedUpdateManyWithoutUserNestedInput
+  sReviews?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+  rReviews?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
+  tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
+  media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
+  userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
   reportsAgainst?: Prisma.ReportUncheckedUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUncheckedUpdateManyWithoutResolverNestedInput
   appealsFiled?: Prisma.AppealUncheckedUpdateManyWithoutAppellantNestedInput
   appealsResolved?: Prisma.AppealUncheckedUpdateManyWithoutResolverNestedInput
   blocksInitiated?: Prisma.BlockUncheckedUpdateManyWithoutBlockerNestedInput
   blocksReceived?: Prisma.BlockUncheckedUpdateManyWithoutBlockedNestedInput
+  tradeRequests?: Prisma.TradeRequestUncheckedUpdateManyWithoutRequesterNestedInput
 }
 
 export type UserUpsertWithoutReportsAgainstInput = {
@@ -2979,24 +3919,28 @@ export type UserUpdateWithoutReportsAgainstInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
+  reqTrades?: Prisma.TradeUpdateManyWithoutRequesterNestedInput
+  ownedTrades?: Prisma.TradeUpdateManyWithoutOwnerNestedInput
   comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
   logs?: Prisma.LogUpdateManyWithoutUserNestedInput
   products?: Prisma.ProductUpdateManyWithoutUserNestedInput
   services?: Prisma.ServiceUpdateManyWithoutUserNestedInput
-  tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
-  media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
-  userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
   initiatedDMs?: Prisma.DMUpdateManyWithoutUser1NestedInput
   recievedDMs?: Prisma.DMUpdateManyWithoutUser2NestedInput
   sMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   rMessages?: Prisma.MessageUpdateManyWithoutRecieverNestedInput
-  rep?: Prisma.RepUpdateManyWithoutUserNestedInput
+  sReviews?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
+  rReviews?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
+  tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
+  media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
+  userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUpdateManyWithoutReporterNestedInput
   reportsResolved?: Prisma.ReportUpdateManyWithoutResolverNestedInput
   appealsFiled?: Prisma.AppealUpdateManyWithoutAppellantNestedInput
   appealsResolved?: Prisma.AppealUpdateManyWithoutResolverNestedInput
   blocksInitiated?: Prisma.BlockUpdateManyWithoutBlockerNestedInput
   blocksReceived?: Prisma.BlockUpdateManyWithoutBlockedNestedInput
+  tradeRequests?: Prisma.TradeRequestUpdateManyWithoutRequesterNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReportsAgainstInput = {
@@ -3010,24 +3954,28 @@ export type UserUncheckedUpdateWithoutReportsAgainstInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
+  reqTrades?: Prisma.TradeUncheckedUpdateManyWithoutRequesterNestedInput
+  ownedTrades?: Prisma.TradeUncheckedUpdateManyWithoutOwnerNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
   logs?: Prisma.LogUncheckedUpdateManyWithoutUserNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutUserNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutUserNestedInput
-  tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
-  media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
-  userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
   initiatedDMs?: Prisma.DMUncheckedUpdateManyWithoutUser1NestedInput
   recievedDMs?: Prisma.DMUncheckedUpdateManyWithoutUser2NestedInput
   sMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   rMessages?: Prisma.MessageUncheckedUpdateManyWithoutRecieverNestedInput
-  rep?: Prisma.RepUncheckedUpdateManyWithoutUserNestedInput
+  sReviews?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+  rReviews?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
+  tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
+  media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
+  userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
   reportsResolved?: Prisma.ReportUncheckedUpdateManyWithoutResolverNestedInput
   appealsFiled?: Prisma.AppealUncheckedUpdateManyWithoutAppellantNestedInput
   appealsResolved?: Prisma.AppealUncheckedUpdateManyWithoutResolverNestedInput
   blocksInitiated?: Prisma.BlockUncheckedUpdateManyWithoutBlockerNestedInput
   blocksReceived?: Prisma.BlockUncheckedUpdateManyWithoutBlockedNestedInput
+  tradeRequests?: Prisma.TradeRequestUncheckedUpdateManyWithoutRequesterNestedInput
 }
 
 export type UserUpsertWithoutReportsResolvedInput = {
@@ -3051,24 +3999,28 @@ export type UserUpdateWithoutReportsResolvedInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
+  reqTrades?: Prisma.TradeUpdateManyWithoutRequesterNestedInput
+  ownedTrades?: Prisma.TradeUpdateManyWithoutOwnerNestedInput
   comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
   logs?: Prisma.LogUpdateManyWithoutUserNestedInput
   products?: Prisma.ProductUpdateManyWithoutUserNestedInput
   services?: Prisma.ServiceUpdateManyWithoutUserNestedInput
-  tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
-  media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
-  userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
   initiatedDMs?: Prisma.DMUpdateManyWithoutUser1NestedInput
   recievedDMs?: Prisma.DMUpdateManyWithoutUser2NestedInput
   sMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   rMessages?: Prisma.MessageUpdateManyWithoutRecieverNestedInput
-  rep?: Prisma.RepUpdateManyWithoutUserNestedInput
+  sReviews?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
+  rReviews?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
+  tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
+  media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
+  userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUpdateManyWithoutTargetUserNestedInput
   appealsFiled?: Prisma.AppealUpdateManyWithoutAppellantNestedInput
   appealsResolved?: Prisma.AppealUpdateManyWithoutResolverNestedInput
   blocksInitiated?: Prisma.BlockUpdateManyWithoutBlockerNestedInput
   blocksReceived?: Prisma.BlockUpdateManyWithoutBlockedNestedInput
+  tradeRequests?: Prisma.TradeRequestUpdateManyWithoutRequesterNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReportsResolvedInput = {
@@ -3082,24 +4034,28 @@ export type UserUncheckedUpdateWithoutReportsResolvedInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
+  reqTrades?: Prisma.TradeUncheckedUpdateManyWithoutRequesterNestedInput
+  ownedTrades?: Prisma.TradeUncheckedUpdateManyWithoutOwnerNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
   logs?: Prisma.LogUncheckedUpdateManyWithoutUserNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutUserNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutUserNestedInput
-  tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
-  media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
-  userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
   initiatedDMs?: Prisma.DMUncheckedUpdateManyWithoutUser1NestedInput
   recievedDMs?: Prisma.DMUncheckedUpdateManyWithoutUser2NestedInput
   sMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   rMessages?: Prisma.MessageUncheckedUpdateManyWithoutRecieverNestedInput
-  rep?: Prisma.RepUncheckedUpdateManyWithoutUserNestedInput
+  sReviews?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+  rReviews?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
+  tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
+  media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
+  userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUncheckedUpdateManyWithoutTargetUserNestedInput
   appealsFiled?: Prisma.AppealUncheckedUpdateManyWithoutAppellantNestedInput
   appealsResolved?: Prisma.AppealUncheckedUpdateManyWithoutResolverNestedInput
   blocksInitiated?: Prisma.BlockUncheckedUpdateManyWithoutBlockerNestedInput
   blocksReceived?: Prisma.BlockUncheckedUpdateManyWithoutBlockedNestedInput
+  tradeRequests?: Prisma.TradeRequestUncheckedUpdateManyWithoutRequesterNestedInput
 }
 
 export type UserCreateWithoutAppealsFiledInput = {
@@ -3112,24 +4068,28 @@ export type UserCreateWithoutAppealsFiledInput = {
   createdAt?: Date | string
   zipCode?: string | null
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
+  reqTrades?: Prisma.TradeCreateNestedManyWithoutRequesterInput
+  ownedTrades?: Prisma.TradeCreateNestedManyWithoutOwnerInput
   comments?: Prisma.CommentCreateNestedManyWithoutUserInput
   logs?: Prisma.LogCreateNestedManyWithoutUserInput
   products?: Prisma.ProductCreateNestedManyWithoutUserInput
   services?: Prisma.ServiceCreateNestedManyWithoutUserInput
-  tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
-  media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
-  userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
   initiatedDMs?: Prisma.DMCreateNestedManyWithoutUser1Input
   recievedDMs?: Prisma.DMCreateNestedManyWithoutUser2Input
   sMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   rMessages?: Prisma.MessageCreateNestedManyWithoutRecieverInput
-  rep?: Prisma.RepCreateNestedManyWithoutUserInput
+  sReviews?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
+  rReviews?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
+  tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
+  media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
+  userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportCreateNestedManyWithoutResolverInput
   appealsResolved?: Prisma.AppealCreateNestedManyWithoutResolverInput
   blocksInitiated?: Prisma.BlockCreateNestedManyWithoutBlockerInput
   blocksReceived?: Prisma.BlockCreateNestedManyWithoutBlockedInput
+  tradeRequests?: Prisma.TradeRequestCreateNestedManyWithoutRequesterInput
 }
 
 export type UserUncheckedCreateWithoutAppealsFiledInput = {
@@ -3143,24 +4103,28 @@ export type UserUncheckedCreateWithoutAppealsFiledInput = {
   createdAt?: Date | string
   zipCode?: string | null
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
+  reqTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutRequesterInput
+  ownedTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutOwnerInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
   logs?: Prisma.LogUncheckedCreateNestedManyWithoutUserInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutUserInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutUserInput
-  tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
-  media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
-  userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
   initiatedDMs?: Prisma.DMUncheckedCreateNestedManyWithoutUser1Input
   recievedDMs?: Prisma.DMUncheckedCreateNestedManyWithoutUser2Input
   sMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   rMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutRecieverInput
-  rep?: Prisma.RepUncheckedCreateNestedManyWithoutUserInput
+  sReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
+  rReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
+  tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
+  media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
+  userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportUncheckedCreateNestedManyWithoutResolverInput
   appealsResolved?: Prisma.AppealUncheckedCreateNestedManyWithoutResolverInput
   blocksInitiated?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockerInput
   blocksReceived?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockedInput
+  tradeRequests?: Prisma.TradeRequestUncheckedCreateNestedManyWithoutRequesterInput
 }
 
 export type UserCreateOrConnectWithoutAppealsFiledInput = {
@@ -3178,24 +4142,28 @@ export type UserCreateWithoutAppealsResolvedInput = {
   createdAt?: Date | string
   zipCode?: string | null
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
+  reqTrades?: Prisma.TradeCreateNestedManyWithoutRequesterInput
+  ownedTrades?: Prisma.TradeCreateNestedManyWithoutOwnerInput
   comments?: Prisma.CommentCreateNestedManyWithoutUserInput
   logs?: Prisma.LogCreateNestedManyWithoutUserInput
   products?: Prisma.ProductCreateNestedManyWithoutUserInput
   services?: Prisma.ServiceCreateNestedManyWithoutUserInput
-  tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
-  media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
-  userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
   initiatedDMs?: Prisma.DMCreateNestedManyWithoutUser1Input
   recievedDMs?: Prisma.DMCreateNestedManyWithoutUser2Input
   sMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   rMessages?: Prisma.MessageCreateNestedManyWithoutRecieverInput
-  rep?: Prisma.RepCreateNestedManyWithoutUserInput
+  sReviews?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
+  rReviews?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
+  tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
+  media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
+  userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportCreateNestedManyWithoutResolverInput
   appealsFiled?: Prisma.AppealCreateNestedManyWithoutAppellantInput
   blocksInitiated?: Prisma.BlockCreateNestedManyWithoutBlockerInput
   blocksReceived?: Prisma.BlockCreateNestedManyWithoutBlockedInput
+  tradeRequests?: Prisma.TradeRequestCreateNestedManyWithoutRequesterInput
 }
 
 export type UserUncheckedCreateWithoutAppealsResolvedInput = {
@@ -3209,24 +4177,28 @@ export type UserUncheckedCreateWithoutAppealsResolvedInput = {
   createdAt?: Date | string
   zipCode?: string | null
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
+  reqTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutRequesterInput
+  ownedTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutOwnerInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
   logs?: Prisma.LogUncheckedCreateNestedManyWithoutUserInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutUserInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutUserInput
-  tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
-  media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
-  userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
   initiatedDMs?: Prisma.DMUncheckedCreateNestedManyWithoutUser1Input
   recievedDMs?: Prisma.DMUncheckedCreateNestedManyWithoutUser2Input
   sMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   rMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutRecieverInput
-  rep?: Prisma.RepUncheckedCreateNestedManyWithoutUserInput
+  sReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
+  rReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
+  tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
+  media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
+  userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportUncheckedCreateNestedManyWithoutResolverInput
   appealsFiled?: Prisma.AppealUncheckedCreateNestedManyWithoutAppellantInput
   blocksInitiated?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockerInput
   blocksReceived?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockedInput
+  tradeRequests?: Prisma.TradeRequestUncheckedCreateNestedManyWithoutRequesterInput
 }
 
 export type UserCreateOrConnectWithoutAppealsResolvedInput = {
@@ -3255,24 +4227,28 @@ export type UserUpdateWithoutAppealsFiledInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
+  reqTrades?: Prisma.TradeUpdateManyWithoutRequesterNestedInput
+  ownedTrades?: Prisma.TradeUpdateManyWithoutOwnerNestedInput
   comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
   logs?: Prisma.LogUpdateManyWithoutUserNestedInput
   products?: Prisma.ProductUpdateManyWithoutUserNestedInput
   services?: Prisma.ServiceUpdateManyWithoutUserNestedInput
-  tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
-  media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
-  userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
   initiatedDMs?: Prisma.DMUpdateManyWithoutUser1NestedInput
   recievedDMs?: Prisma.DMUpdateManyWithoutUser2NestedInput
   sMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   rMessages?: Prisma.MessageUpdateManyWithoutRecieverNestedInput
-  rep?: Prisma.RepUpdateManyWithoutUserNestedInput
+  sReviews?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
+  rReviews?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
+  tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
+  media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
+  userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUpdateManyWithoutResolverNestedInput
   appealsResolved?: Prisma.AppealUpdateManyWithoutResolverNestedInput
   blocksInitiated?: Prisma.BlockUpdateManyWithoutBlockerNestedInput
   blocksReceived?: Prisma.BlockUpdateManyWithoutBlockedNestedInput
+  tradeRequests?: Prisma.TradeRequestUpdateManyWithoutRequesterNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAppealsFiledInput = {
@@ -3286,24 +4262,28 @@ export type UserUncheckedUpdateWithoutAppealsFiledInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
+  reqTrades?: Prisma.TradeUncheckedUpdateManyWithoutRequesterNestedInput
+  ownedTrades?: Prisma.TradeUncheckedUpdateManyWithoutOwnerNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
   logs?: Prisma.LogUncheckedUpdateManyWithoutUserNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutUserNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutUserNestedInput
-  tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
-  media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
-  userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
   initiatedDMs?: Prisma.DMUncheckedUpdateManyWithoutUser1NestedInput
   recievedDMs?: Prisma.DMUncheckedUpdateManyWithoutUser2NestedInput
   sMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   rMessages?: Prisma.MessageUncheckedUpdateManyWithoutRecieverNestedInput
-  rep?: Prisma.RepUncheckedUpdateManyWithoutUserNestedInput
+  sReviews?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+  rReviews?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
+  tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
+  media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
+  userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUncheckedUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUncheckedUpdateManyWithoutResolverNestedInput
   appealsResolved?: Prisma.AppealUncheckedUpdateManyWithoutResolverNestedInput
   blocksInitiated?: Prisma.BlockUncheckedUpdateManyWithoutBlockerNestedInput
   blocksReceived?: Prisma.BlockUncheckedUpdateManyWithoutBlockedNestedInput
+  tradeRequests?: Prisma.TradeRequestUncheckedUpdateManyWithoutRequesterNestedInput
 }
 
 export type UserUpsertWithoutAppealsResolvedInput = {
@@ -3327,24 +4307,28 @@ export type UserUpdateWithoutAppealsResolvedInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
+  reqTrades?: Prisma.TradeUpdateManyWithoutRequesterNestedInput
+  ownedTrades?: Prisma.TradeUpdateManyWithoutOwnerNestedInput
   comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
   logs?: Prisma.LogUpdateManyWithoutUserNestedInput
   products?: Prisma.ProductUpdateManyWithoutUserNestedInput
   services?: Prisma.ServiceUpdateManyWithoutUserNestedInput
-  tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
-  media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
-  userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
   initiatedDMs?: Prisma.DMUpdateManyWithoutUser1NestedInput
   recievedDMs?: Prisma.DMUpdateManyWithoutUser2NestedInput
   sMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   rMessages?: Prisma.MessageUpdateManyWithoutRecieverNestedInput
-  rep?: Prisma.RepUpdateManyWithoutUserNestedInput
+  sReviews?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
+  rReviews?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
+  tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
+  media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
+  userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUpdateManyWithoutResolverNestedInput
   appealsFiled?: Prisma.AppealUpdateManyWithoutAppellantNestedInput
   blocksInitiated?: Prisma.BlockUpdateManyWithoutBlockerNestedInput
   blocksReceived?: Prisma.BlockUpdateManyWithoutBlockedNestedInput
+  tradeRequests?: Prisma.TradeRequestUpdateManyWithoutRequesterNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAppealsResolvedInput = {
@@ -3358,24 +4342,28 @@ export type UserUncheckedUpdateWithoutAppealsResolvedInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
+  reqTrades?: Prisma.TradeUncheckedUpdateManyWithoutRequesterNestedInput
+  ownedTrades?: Prisma.TradeUncheckedUpdateManyWithoutOwnerNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
   logs?: Prisma.LogUncheckedUpdateManyWithoutUserNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutUserNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutUserNestedInput
-  tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
-  media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
-  userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
   initiatedDMs?: Prisma.DMUncheckedUpdateManyWithoutUser1NestedInput
   recievedDMs?: Prisma.DMUncheckedUpdateManyWithoutUser2NestedInput
   sMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   rMessages?: Prisma.MessageUncheckedUpdateManyWithoutRecieverNestedInput
-  rep?: Prisma.RepUncheckedUpdateManyWithoutUserNestedInput
+  sReviews?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+  rReviews?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
+  tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
+  media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
+  userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUncheckedUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUncheckedUpdateManyWithoutResolverNestedInput
   appealsFiled?: Prisma.AppealUncheckedUpdateManyWithoutAppellantNestedInput
   blocksInitiated?: Prisma.BlockUncheckedUpdateManyWithoutBlockerNestedInput
   blocksReceived?: Prisma.BlockUncheckedUpdateManyWithoutBlockedNestedInput
+  tradeRequests?: Prisma.TradeRequestUncheckedUpdateManyWithoutRequesterNestedInput
 }
 
 export type UserCreateWithoutMediaInput = {
@@ -3388,17 +4376,20 @@ export type UserCreateWithoutMediaInput = {
   createdAt?: Date | string
   zipCode?: string | null
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
+  reqTrades?: Prisma.TradeCreateNestedManyWithoutRequesterInput
+  ownedTrades?: Prisma.TradeCreateNestedManyWithoutOwnerInput
   comments?: Prisma.CommentCreateNestedManyWithoutUserInput
   logs?: Prisma.LogCreateNestedManyWithoutUserInput
   products?: Prisma.ProductCreateNestedManyWithoutUserInput
   services?: Prisma.ServiceCreateNestedManyWithoutUserInput
-  tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
-  userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
   initiatedDMs?: Prisma.DMCreateNestedManyWithoutUser1Input
   recievedDMs?: Prisma.DMCreateNestedManyWithoutUser2Input
   sMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   rMessages?: Prisma.MessageCreateNestedManyWithoutRecieverInput
-  rep?: Prisma.RepCreateNestedManyWithoutUserInput
+  sReviews?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
+  rReviews?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
+  tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
+  userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportCreateNestedManyWithoutResolverInput
@@ -3406,6 +4397,7 @@ export type UserCreateWithoutMediaInput = {
   appealsResolved?: Prisma.AppealCreateNestedManyWithoutResolverInput
   blocksInitiated?: Prisma.BlockCreateNestedManyWithoutBlockerInput
   blocksReceived?: Prisma.BlockCreateNestedManyWithoutBlockedInput
+  tradeRequests?: Prisma.TradeRequestCreateNestedManyWithoutRequesterInput
 }
 
 export type UserUncheckedCreateWithoutMediaInput = {
@@ -3419,17 +4411,20 @@ export type UserUncheckedCreateWithoutMediaInput = {
   createdAt?: Date | string
   zipCode?: string | null
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
+  reqTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutRequesterInput
+  ownedTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutOwnerInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
   logs?: Prisma.LogUncheckedCreateNestedManyWithoutUserInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutUserInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutUserInput
-  tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
-  userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
   initiatedDMs?: Prisma.DMUncheckedCreateNestedManyWithoutUser1Input
   recievedDMs?: Prisma.DMUncheckedCreateNestedManyWithoutUser2Input
   sMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   rMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutRecieverInput
-  rep?: Prisma.RepUncheckedCreateNestedManyWithoutUserInput
+  sReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
+  rReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
+  tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
+  userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportUncheckedCreateNestedManyWithoutResolverInput
@@ -3437,6 +4432,7 @@ export type UserUncheckedCreateWithoutMediaInput = {
   appealsResolved?: Prisma.AppealUncheckedCreateNestedManyWithoutResolverInput
   blocksInitiated?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockerInput
   blocksReceived?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockedInput
+  tradeRequests?: Prisma.TradeRequestUncheckedCreateNestedManyWithoutRequesterInput
 }
 
 export type UserCreateOrConnectWithoutMediaInput = {
@@ -3465,17 +4461,20 @@ export type UserUpdateWithoutMediaInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
+  reqTrades?: Prisma.TradeUpdateManyWithoutRequesterNestedInput
+  ownedTrades?: Prisma.TradeUpdateManyWithoutOwnerNestedInput
   comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
   logs?: Prisma.LogUpdateManyWithoutUserNestedInput
   products?: Prisma.ProductUpdateManyWithoutUserNestedInput
   services?: Prisma.ServiceUpdateManyWithoutUserNestedInput
-  tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
-  userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
   initiatedDMs?: Prisma.DMUpdateManyWithoutUser1NestedInput
   recievedDMs?: Prisma.DMUpdateManyWithoutUser2NestedInput
   sMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   rMessages?: Prisma.MessageUpdateManyWithoutRecieverNestedInput
-  rep?: Prisma.RepUpdateManyWithoutUserNestedInput
+  sReviews?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
+  rReviews?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
+  tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
+  userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUpdateManyWithoutResolverNestedInput
@@ -3483,6 +4482,7 @@ export type UserUpdateWithoutMediaInput = {
   appealsResolved?: Prisma.AppealUpdateManyWithoutResolverNestedInput
   blocksInitiated?: Prisma.BlockUpdateManyWithoutBlockerNestedInput
   blocksReceived?: Prisma.BlockUpdateManyWithoutBlockedNestedInput
+  tradeRequests?: Prisma.TradeRequestUpdateManyWithoutRequesterNestedInput
 }
 
 export type UserUncheckedUpdateWithoutMediaInput = {
@@ -3496,17 +4496,20 @@ export type UserUncheckedUpdateWithoutMediaInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
+  reqTrades?: Prisma.TradeUncheckedUpdateManyWithoutRequesterNestedInput
+  ownedTrades?: Prisma.TradeUncheckedUpdateManyWithoutOwnerNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
   logs?: Prisma.LogUncheckedUpdateManyWithoutUserNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutUserNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutUserNestedInput
-  tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
-  userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
   initiatedDMs?: Prisma.DMUncheckedUpdateManyWithoutUser1NestedInput
   recievedDMs?: Prisma.DMUncheckedUpdateManyWithoutUser2NestedInput
   sMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   rMessages?: Prisma.MessageUncheckedUpdateManyWithoutRecieverNestedInput
-  rep?: Prisma.RepUncheckedUpdateManyWithoutUserNestedInput
+  sReviews?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+  rReviews?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
+  tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
+  userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUncheckedUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUncheckedUpdateManyWithoutResolverNestedInput
@@ -3514,6 +4517,7 @@ export type UserUncheckedUpdateWithoutMediaInput = {
   appealsResolved?: Prisma.AppealUncheckedUpdateManyWithoutResolverNestedInput
   blocksInitiated?: Prisma.BlockUncheckedUpdateManyWithoutBlockerNestedInput
   blocksReceived?: Prisma.BlockUncheckedUpdateManyWithoutBlockedNestedInput
+  tradeRequests?: Prisma.TradeRequestUncheckedUpdateManyWithoutRequesterNestedInput
 }
 
 export type UserCreateWithoutUserMediaInput = {
@@ -3526,17 +4530,20 @@ export type UserCreateWithoutUserMediaInput = {
   createdAt?: Date | string
   zipCode?: string | null
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
+  reqTrades?: Prisma.TradeCreateNestedManyWithoutRequesterInput
+  ownedTrades?: Prisma.TradeCreateNestedManyWithoutOwnerInput
   comments?: Prisma.CommentCreateNestedManyWithoutUserInput
   logs?: Prisma.LogCreateNestedManyWithoutUserInput
   products?: Prisma.ProductCreateNestedManyWithoutUserInput
   services?: Prisma.ServiceCreateNestedManyWithoutUserInput
-  tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
-  media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
   initiatedDMs?: Prisma.DMCreateNestedManyWithoutUser1Input
   recievedDMs?: Prisma.DMCreateNestedManyWithoutUser2Input
   sMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   rMessages?: Prisma.MessageCreateNestedManyWithoutRecieverInput
-  rep?: Prisma.RepCreateNestedManyWithoutUserInput
+  sReviews?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
+  rReviews?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
+  tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
+  media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
   reportsFiled?: Prisma.ReportCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportCreateNestedManyWithoutResolverInput
@@ -3544,6 +4551,7 @@ export type UserCreateWithoutUserMediaInput = {
   appealsResolved?: Prisma.AppealCreateNestedManyWithoutResolverInput
   blocksInitiated?: Prisma.BlockCreateNestedManyWithoutBlockerInput
   blocksReceived?: Prisma.BlockCreateNestedManyWithoutBlockedInput
+  tradeRequests?: Prisma.TradeRequestCreateNestedManyWithoutRequesterInput
 }
 
 export type UserUncheckedCreateWithoutUserMediaInput = {
@@ -3557,17 +4565,20 @@ export type UserUncheckedCreateWithoutUserMediaInput = {
   createdAt?: Date | string
   zipCode?: string | null
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
+  reqTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutRequesterInput
+  ownedTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutOwnerInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
   logs?: Prisma.LogUncheckedCreateNestedManyWithoutUserInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutUserInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutUserInput
-  tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
-  media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
   initiatedDMs?: Prisma.DMUncheckedCreateNestedManyWithoutUser1Input
   recievedDMs?: Prisma.DMUncheckedCreateNestedManyWithoutUser2Input
   sMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   rMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutRecieverInput
-  rep?: Prisma.RepUncheckedCreateNestedManyWithoutUserInput
+  sReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
+  rReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
+  tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
+  media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
   reportsFiled?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportUncheckedCreateNestedManyWithoutResolverInput
@@ -3575,6 +4586,7 @@ export type UserUncheckedCreateWithoutUserMediaInput = {
   appealsResolved?: Prisma.AppealUncheckedCreateNestedManyWithoutResolverInput
   blocksInitiated?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockerInput
   blocksReceived?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockedInput
+  tradeRequests?: Prisma.TradeRequestUncheckedCreateNestedManyWithoutRequesterInput
 }
 
 export type UserCreateOrConnectWithoutUserMediaInput = {
@@ -3603,17 +4615,20 @@ export type UserUpdateWithoutUserMediaInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
+  reqTrades?: Prisma.TradeUpdateManyWithoutRequesterNestedInput
+  ownedTrades?: Prisma.TradeUpdateManyWithoutOwnerNestedInput
   comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
   logs?: Prisma.LogUpdateManyWithoutUserNestedInput
   products?: Prisma.ProductUpdateManyWithoutUserNestedInput
   services?: Prisma.ServiceUpdateManyWithoutUserNestedInput
-  tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
-  media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
   initiatedDMs?: Prisma.DMUpdateManyWithoutUser1NestedInput
   recievedDMs?: Prisma.DMUpdateManyWithoutUser2NestedInput
   sMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   rMessages?: Prisma.MessageUpdateManyWithoutRecieverNestedInput
-  rep?: Prisma.RepUpdateManyWithoutUserNestedInput
+  sReviews?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
+  rReviews?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
+  tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
+  media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
   reportsFiled?: Prisma.ReportUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUpdateManyWithoutResolverNestedInput
@@ -3621,6 +4636,7 @@ export type UserUpdateWithoutUserMediaInput = {
   appealsResolved?: Prisma.AppealUpdateManyWithoutResolverNestedInput
   blocksInitiated?: Prisma.BlockUpdateManyWithoutBlockerNestedInput
   blocksReceived?: Prisma.BlockUpdateManyWithoutBlockedNestedInput
+  tradeRequests?: Prisma.TradeRequestUpdateManyWithoutRequesterNestedInput
 }
 
 export type UserUncheckedUpdateWithoutUserMediaInput = {
@@ -3634,17 +4650,20 @@ export type UserUncheckedUpdateWithoutUserMediaInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
+  reqTrades?: Prisma.TradeUncheckedUpdateManyWithoutRequesterNestedInput
+  ownedTrades?: Prisma.TradeUncheckedUpdateManyWithoutOwnerNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
   logs?: Prisma.LogUncheckedUpdateManyWithoutUserNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutUserNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutUserNestedInput
-  tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
-  media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
   initiatedDMs?: Prisma.DMUncheckedUpdateManyWithoutUser1NestedInput
   recievedDMs?: Prisma.DMUncheckedUpdateManyWithoutUser2NestedInput
   sMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   rMessages?: Prisma.MessageUncheckedUpdateManyWithoutRecieverNestedInput
-  rep?: Prisma.RepUncheckedUpdateManyWithoutUserNestedInput
+  sReviews?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+  rReviews?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
+  tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
+  media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
   reportsFiled?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUncheckedUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUncheckedUpdateManyWithoutResolverNestedInput
@@ -3652,6 +4671,7 @@ export type UserUncheckedUpdateWithoutUserMediaInput = {
   appealsResolved?: Prisma.AppealUncheckedUpdateManyWithoutResolverNestedInput
   blocksInitiated?: Prisma.BlockUncheckedUpdateManyWithoutBlockerNestedInput
   blocksReceived?: Prisma.BlockUncheckedUpdateManyWithoutBlockedNestedInput
+  tradeRequests?: Prisma.TradeRequestUncheckedUpdateManyWithoutRequesterNestedInput
 }
 
 
@@ -3661,18 +4681,21 @@ export type UserUncheckedUpdateWithoutUserMediaInput = {
 
 export type UserCountOutputType = {
   posts: number
+  reqTrades: number
+  ownedTrades: number
   comments: number
   logs: number
   products: number
   services: number
-  tradeOffers: number
-  media: number
-  userMedia: number
   initiatedDMs: number
   recievedDMs: number
   sMessages: number
   rMessages: number
-  rep: number
+  sReviews: number
+  rReviews: number
+  tradeOffers: number
+  media: number
+  userMedia: number
   reportsFiled: number
   reportsAgainst: number
   reportsResolved: number
@@ -3680,22 +4703,26 @@ export type UserCountOutputType = {
   appealsResolved: number
   blocksInitiated: number
   blocksReceived: number
+  tradeRequests: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   posts?: boolean | UserCountOutputTypeCountPostsArgs
+  reqTrades?: boolean | UserCountOutputTypeCountReqTradesArgs
+  ownedTrades?: boolean | UserCountOutputTypeCountOwnedTradesArgs
   comments?: boolean | UserCountOutputTypeCountCommentsArgs
   logs?: boolean | UserCountOutputTypeCountLogsArgs
   products?: boolean | UserCountOutputTypeCountProductsArgs
   services?: boolean | UserCountOutputTypeCountServicesArgs
-  tradeOffers?: boolean | UserCountOutputTypeCountTradeOffersArgs
-  media?: boolean | UserCountOutputTypeCountMediaArgs
-  userMedia?: boolean | UserCountOutputTypeCountUserMediaArgs
   initiatedDMs?: boolean | UserCountOutputTypeCountInitiatedDMsArgs
   recievedDMs?: boolean | UserCountOutputTypeCountRecievedDMsArgs
   sMessages?: boolean | UserCountOutputTypeCountSMessagesArgs
   rMessages?: boolean | UserCountOutputTypeCountRMessagesArgs
-  rep?: boolean | UserCountOutputTypeCountRepArgs
+  sReviews?: boolean | UserCountOutputTypeCountSReviewsArgs
+  rReviews?: boolean | UserCountOutputTypeCountRReviewsArgs
+  tradeOffers?: boolean | UserCountOutputTypeCountTradeOffersArgs
+  media?: boolean | UserCountOutputTypeCountMediaArgs
+  userMedia?: boolean | UserCountOutputTypeCountUserMediaArgs
   reportsFiled?: boolean | UserCountOutputTypeCountReportsFiledArgs
   reportsAgainst?: boolean | UserCountOutputTypeCountReportsAgainstArgs
   reportsResolved?: boolean | UserCountOutputTypeCountReportsResolvedArgs
@@ -3703,6 +4730,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   appealsResolved?: boolean | UserCountOutputTypeCountAppealsResolvedArgs
   blocksInitiated?: boolean | UserCountOutputTypeCountBlocksInitiatedArgs
   blocksReceived?: boolean | UserCountOutputTypeCountBlocksReceivedArgs
+  tradeRequests?: boolean | UserCountOutputTypeCountTradeRequestsArgs
 }
 
 /**
@@ -3720,6 +4748,20 @@ export type UserCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensi
  */
 export type UserCountOutputTypeCountPostsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.PostWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountReqTradesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TradeWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountOwnedTradesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TradeWhereInput
 }
 
 /**
@@ -3753,27 +4795,6 @@ export type UserCountOutputTypeCountServicesArgs<ExtArgs extends runtime.Types.E
 /**
  * UserCountOutputType without action
  */
-export type UserCountOutputTypeCountTradeOffersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.TradeOfferWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeCountMediaArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.MediaWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeCountUserMediaArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.UserMediaWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
 export type UserCountOutputTypeCountInitiatedDMsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.DMWhereInput
 }
@@ -3802,8 +4823,36 @@ export type UserCountOutputTypeCountRMessagesArgs<ExtArgs extends runtime.Types.
 /**
  * UserCountOutputType without action
  */
-export type UserCountOutputTypeCountRepArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.RepWhereInput
+export type UserCountOutputTypeCountSReviewsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ReviewWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountRReviewsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ReviewWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountTradeOffersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TradeOfferWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountMediaArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.MediaWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountUserMediaArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.UserMediaWhereInput
 }
 
 /**
@@ -3855,6 +4904,13 @@ export type UserCountOutputTypeCountBlocksReceivedArgs<ExtArgs extends runtime.T
   where?: Prisma.BlockWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountTradeRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TradeRequestWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -3867,18 +4923,21 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   createdAt?: boolean
   zipCode?: boolean
   posts?: boolean | Prisma.User$postsArgs<ExtArgs>
+  reqTrades?: boolean | Prisma.User$reqTradesArgs<ExtArgs>
+  ownedTrades?: boolean | Prisma.User$ownedTradesArgs<ExtArgs>
   comments?: boolean | Prisma.User$commentsArgs<ExtArgs>
   logs?: boolean | Prisma.User$logsArgs<ExtArgs>
   products?: boolean | Prisma.User$productsArgs<ExtArgs>
   services?: boolean | Prisma.User$servicesArgs<ExtArgs>
-  tradeOffers?: boolean | Prisma.User$tradeOffersArgs<ExtArgs>
-  media?: boolean | Prisma.User$mediaArgs<ExtArgs>
-  userMedia?: boolean | Prisma.User$userMediaArgs<ExtArgs>
   initiatedDMs?: boolean | Prisma.User$initiatedDMsArgs<ExtArgs>
   recievedDMs?: boolean | Prisma.User$recievedDMsArgs<ExtArgs>
   sMessages?: boolean | Prisma.User$sMessagesArgs<ExtArgs>
   rMessages?: boolean | Prisma.User$rMessagesArgs<ExtArgs>
-  rep?: boolean | Prisma.User$repArgs<ExtArgs>
+  sReviews?: boolean | Prisma.User$sReviewsArgs<ExtArgs>
+  rReviews?: boolean | Prisma.User$rReviewsArgs<ExtArgs>
+  tradeOffers?: boolean | Prisma.User$tradeOffersArgs<ExtArgs>
+  media?: boolean | Prisma.User$mediaArgs<ExtArgs>
+  userMedia?: boolean | Prisma.User$userMediaArgs<ExtArgs>
   reportsFiled?: boolean | Prisma.User$reportsFiledArgs<ExtArgs>
   reportsAgainst?: boolean | Prisma.User$reportsAgainstArgs<ExtArgs>
   reportsResolved?: boolean | Prisma.User$reportsResolvedArgs<ExtArgs>
@@ -3886,6 +4945,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   appealsResolved?: boolean | Prisma.User$appealsResolvedArgs<ExtArgs>
   blocksInitiated?: boolean | Prisma.User$blocksInitiatedArgs<ExtArgs>
   blocksReceived?: boolean | Prisma.User$blocksReceivedArgs<ExtArgs>
+  tradeRequests?: boolean | Prisma.User$tradeRequestsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -3928,18 +4988,21 @@ export type UserSelectScalar = {
 export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "googleId" | "name" | "email" | "phone" | "role" | "bio" | "createdAt" | "zipCode", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   posts?: boolean | Prisma.User$postsArgs<ExtArgs>
+  reqTrades?: boolean | Prisma.User$reqTradesArgs<ExtArgs>
+  ownedTrades?: boolean | Prisma.User$ownedTradesArgs<ExtArgs>
   comments?: boolean | Prisma.User$commentsArgs<ExtArgs>
   logs?: boolean | Prisma.User$logsArgs<ExtArgs>
   products?: boolean | Prisma.User$productsArgs<ExtArgs>
   services?: boolean | Prisma.User$servicesArgs<ExtArgs>
-  tradeOffers?: boolean | Prisma.User$tradeOffersArgs<ExtArgs>
-  media?: boolean | Prisma.User$mediaArgs<ExtArgs>
-  userMedia?: boolean | Prisma.User$userMediaArgs<ExtArgs>
   initiatedDMs?: boolean | Prisma.User$initiatedDMsArgs<ExtArgs>
   recievedDMs?: boolean | Prisma.User$recievedDMsArgs<ExtArgs>
   sMessages?: boolean | Prisma.User$sMessagesArgs<ExtArgs>
   rMessages?: boolean | Prisma.User$rMessagesArgs<ExtArgs>
-  rep?: boolean | Prisma.User$repArgs<ExtArgs>
+  sReviews?: boolean | Prisma.User$sReviewsArgs<ExtArgs>
+  rReviews?: boolean | Prisma.User$rReviewsArgs<ExtArgs>
+  tradeOffers?: boolean | Prisma.User$tradeOffersArgs<ExtArgs>
+  media?: boolean | Prisma.User$mediaArgs<ExtArgs>
+  userMedia?: boolean | Prisma.User$userMediaArgs<ExtArgs>
   reportsFiled?: boolean | Prisma.User$reportsFiledArgs<ExtArgs>
   reportsAgainst?: boolean | Prisma.User$reportsAgainstArgs<ExtArgs>
   reportsResolved?: boolean | Prisma.User$reportsResolvedArgs<ExtArgs>
@@ -3947,6 +5010,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   appealsResolved?: boolean | Prisma.User$appealsResolvedArgs<ExtArgs>
   blocksInitiated?: boolean | Prisma.User$blocksInitiatedArgs<ExtArgs>
   blocksReceived?: boolean | Prisma.User$blocksReceivedArgs<ExtArgs>
+  tradeRequests?: boolean | Prisma.User$tradeRequestsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -3956,18 +5020,21 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   name: "User"
   objects: {
     posts: Prisma.$PostPayload<ExtArgs>[]
+    reqTrades: Prisma.$TradePayload<ExtArgs>[]
+    ownedTrades: Prisma.$TradePayload<ExtArgs>[]
     comments: Prisma.$CommentPayload<ExtArgs>[]
     logs: Prisma.$LogPayload<ExtArgs>[]
     products: Prisma.$ProductPayload<ExtArgs>[]
     services: Prisma.$ServicePayload<ExtArgs>[]
-    tradeOffers: Prisma.$TradeOfferPayload<ExtArgs>[]
-    media: Prisma.$MediaPayload<ExtArgs>[]
-    userMedia: Prisma.$UserMediaPayload<ExtArgs>[]
     initiatedDMs: Prisma.$DMPayload<ExtArgs>[]
     recievedDMs: Prisma.$DMPayload<ExtArgs>[]
     sMessages: Prisma.$MessagePayload<ExtArgs>[]
     rMessages: Prisma.$MessagePayload<ExtArgs>[]
-    rep: Prisma.$RepPayload<ExtArgs>[]
+    sReviews: Prisma.$ReviewPayload<ExtArgs>[]
+    rReviews: Prisma.$ReviewPayload<ExtArgs>[]
+    tradeOffers: Prisma.$TradeOfferPayload<ExtArgs>[]
+    media: Prisma.$MediaPayload<ExtArgs>[]
+    userMedia: Prisma.$UserMediaPayload<ExtArgs>[]
     reportsFiled: Prisma.$ReportPayload<ExtArgs>[]
     reportsAgainst: Prisma.$ReportPayload<ExtArgs>[]
     reportsResolved: Prisma.$ReportPayload<ExtArgs>[]
@@ -3975,6 +5042,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     appealsResolved: Prisma.$AppealPayload<ExtArgs>[]
     blocksInitiated: Prisma.$BlockPayload<ExtArgs>[]
     blocksReceived: Prisma.$BlockPayload<ExtArgs>[]
+    tradeRequests: Prisma.$TradeRequestPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -4381,18 +5449,21 @@ readonly fields: UserFieldRefs;
 export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   posts<T extends Prisma.User$postsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$postsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PostPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  reqTrades<T extends Prisma.User$reqTradesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$reqTradesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TradePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  ownedTrades<T extends Prisma.User$ownedTradesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$ownedTradesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TradePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   comments<T extends Prisma.User$commentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$commentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   logs<T extends Prisma.User$logsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$logsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   products<T extends Prisma.User$productsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$productsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   services<T extends Prisma.User$servicesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$servicesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ServicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  tradeOffers<T extends Prisma.User$tradeOffersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$tradeOffersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TradeOfferPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  media<T extends Prisma.User$mediaArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$mediaArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MediaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  userMedia<T extends Prisma.User$userMediaArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$userMediaArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserMediaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   initiatedDMs<T extends Prisma.User$initiatedDMsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$initiatedDMsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DMPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   recievedDMs<T extends Prisma.User$recievedDMsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$recievedDMsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DMPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   sMessages<T extends Prisma.User$sMessagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$sMessagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   rMessages<T extends Prisma.User$rMessagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$rMessagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  rep<T extends Prisma.User$repArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$repArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RepPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  sReviews<T extends Prisma.User$sReviewsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$sReviewsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  rReviews<T extends Prisma.User$rReviewsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$rReviewsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  tradeOffers<T extends Prisma.User$tradeOffersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$tradeOffersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TradeOfferPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  media<T extends Prisma.User$mediaArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$mediaArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MediaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  userMedia<T extends Prisma.User$userMediaArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$userMediaArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserMediaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   reportsFiled<T extends Prisma.User$reportsFiledArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$reportsFiledArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   reportsAgainst<T extends Prisma.User$reportsAgainstArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$reportsAgainstArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   reportsResolved<T extends Prisma.User$reportsResolvedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$reportsResolvedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -4400,6 +5471,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   appealsResolved<T extends Prisma.User$appealsResolvedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$appealsResolvedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AppealPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   blocksInitiated<T extends Prisma.User$blocksInitiatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$blocksInitiatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BlockPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   blocksReceived<T extends Prisma.User$blocksReceivedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$blocksReceivedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BlockPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  tradeRequests<T extends Prisma.User$tradeRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$tradeRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TradeRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4855,6 +5927,54 @@ export type User$postsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs
 }
 
 /**
+ * User.reqTrades
+ */
+export type User$reqTradesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Trade
+   */
+  select?: Prisma.TradeSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Trade
+   */
+  omit?: Prisma.TradeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TradeInclude<ExtArgs> | null
+  where?: Prisma.TradeWhereInput
+  orderBy?: Prisma.TradeOrderByWithRelationInput | Prisma.TradeOrderByWithRelationInput[]
+  cursor?: Prisma.TradeWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TradeScalarFieldEnum | Prisma.TradeScalarFieldEnum[]
+}
+
+/**
+ * User.ownedTrades
+ */
+export type User$ownedTradesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Trade
+   */
+  select?: Prisma.TradeSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Trade
+   */
+  omit?: Prisma.TradeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TradeInclude<ExtArgs> | null
+  where?: Prisma.TradeWhereInput
+  orderBy?: Prisma.TradeOrderByWithRelationInput | Prisma.TradeOrderByWithRelationInput[]
+  cursor?: Prisma.TradeWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TradeScalarFieldEnum | Prisma.TradeScalarFieldEnum[]
+}
+
+/**
  * User.comments
  */
 export type User$commentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -4948,78 +6068,6 @@ export type User$servicesArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   take?: number
   skip?: number
   distinct?: Prisma.ServiceScalarFieldEnum | Prisma.ServiceScalarFieldEnum[]
-}
-
-/**
- * User.tradeOffers
- */
-export type User$tradeOffersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the TradeOffer
-   */
-  select?: Prisma.TradeOfferSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the TradeOffer
-   */
-  omit?: Prisma.TradeOfferOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.TradeOfferInclude<ExtArgs> | null
-  where?: Prisma.TradeOfferWhereInput
-  orderBy?: Prisma.TradeOfferOrderByWithRelationInput | Prisma.TradeOfferOrderByWithRelationInput[]
-  cursor?: Prisma.TradeOfferWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.TradeOfferScalarFieldEnum | Prisma.TradeOfferScalarFieldEnum[]
-}
-
-/**
- * User.media
- */
-export type User$mediaArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Media
-   */
-  select?: Prisma.MediaSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Media
-   */
-  omit?: Prisma.MediaOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.MediaInclude<ExtArgs> | null
-  where?: Prisma.MediaWhereInput
-  orderBy?: Prisma.MediaOrderByWithRelationInput | Prisma.MediaOrderByWithRelationInput[]
-  cursor?: Prisma.MediaWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.MediaScalarFieldEnum | Prisma.MediaScalarFieldEnum[]
-}
-
-/**
- * User.userMedia
- */
-export type User$userMediaArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the UserMedia
-   */
-  select?: Prisma.UserMediaSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the UserMedia
-   */
-  omit?: Prisma.UserMediaOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.UserMediaInclude<ExtArgs> | null
-  where?: Prisma.UserMediaWhereInput
-  orderBy?: Prisma.UserMediaOrderByWithRelationInput | Prisma.UserMediaOrderByWithRelationInput[]
-  cursor?: Prisma.UserMediaWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.UserMediaScalarFieldEnum | Prisma.UserMediaScalarFieldEnum[]
 }
 
 /**
@@ -5119,27 +6167,123 @@ export type User$rMessagesArgs<ExtArgs extends runtime.Types.Extensions.Internal
 }
 
 /**
- * User.rep
+ * User.sReviews
  */
-export type User$repArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type User$sReviewsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Rep
+   * Select specific fields to fetch from the Review
    */
-  select?: Prisma.RepSelect<ExtArgs> | null
+  select?: Prisma.ReviewSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Rep
+   * Omit specific fields from the Review
    */
-  omit?: Prisma.RepOmit<ExtArgs> | null
+  omit?: Prisma.ReviewOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.RepInclude<ExtArgs> | null
-  where?: Prisma.RepWhereInput
-  orderBy?: Prisma.RepOrderByWithRelationInput | Prisma.RepOrderByWithRelationInput[]
-  cursor?: Prisma.RepWhereUniqueInput
+  include?: Prisma.ReviewInclude<ExtArgs> | null
+  where?: Prisma.ReviewWhereInput
+  orderBy?: Prisma.ReviewOrderByWithRelationInput | Prisma.ReviewOrderByWithRelationInput[]
+  cursor?: Prisma.ReviewWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.RepScalarFieldEnum | Prisma.RepScalarFieldEnum[]
+  distinct?: Prisma.ReviewScalarFieldEnum | Prisma.ReviewScalarFieldEnum[]
+}
+
+/**
+ * User.rReviews
+ */
+export type User$rReviewsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Review
+   */
+  select?: Prisma.ReviewSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Review
+   */
+  omit?: Prisma.ReviewOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ReviewInclude<ExtArgs> | null
+  where?: Prisma.ReviewWhereInput
+  orderBy?: Prisma.ReviewOrderByWithRelationInput | Prisma.ReviewOrderByWithRelationInput[]
+  cursor?: Prisma.ReviewWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ReviewScalarFieldEnum | Prisma.ReviewScalarFieldEnum[]
+}
+
+/**
+ * User.tradeOffers
+ */
+export type User$tradeOffersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TradeOffer
+   */
+  select?: Prisma.TradeOfferSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TradeOffer
+   */
+  omit?: Prisma.TradeOfferOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TradeOfferInclude<ExtArgs> | null
+  where?: Prisma.TradeOfferWhereInput
+  orderBy?: Prisma.TradeOfferOrderByWithRelationInput | Prisma.TradeOfferOrderByWithRelationInput[]
+  cursor?: Prisma.TradeOfferWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TradeOfferScalarFieldEnum | Prisma.TradeOfferScalarFieldEnum[]
+}
+
+/**
+ * User.media
+ */
+export type User$mediaArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Media
+   */
+  select?: Prisma.MediaSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Media
+   */
+  omit?: Prisma.MediaOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MediaInclude<ExtArgs> | null
+  where?: Prisma.MediaWhereInput
+  orderBy?: Prisma.MediaOrderByWithRelationInput | Prisma.MediaOrderByWithRelationInput[]
+  cursor?: Prisma.MediaWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.MediaScalarFieldEnum | Prisma.MediaScalarFieldEnum[]
+}
+
+/**
+ * User.userMedia
+ */
+export type User$userMediaArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the UserMedia
+   */
+  select?: Prisma.UserMediaSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the UserMedia
+   */
+  omit?: Prisma.UserMediaOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserMediaInclude<ExtArgs> | null
+  where?: Prisma.UserMediaWhereInput
+  orderBy?: Prisma.UserMediaOrderByWithRelationInput | Prisma.UserMediaOrderByWithRelationInput[]
+  cursor?: Prisma.UserMediaWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.UserMediaScalarFieldEnum | Prisma.UserMediaScalarFieldEnum[]
 }
 
 /**
@@ -5308,6 +6452,30 @@ export type User$blocksReceivedArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   distinct?: Prisma.BlockScalarFieldEnum | Prisma.BlockScalarFieldEnum[]
+}
+
+/**
+ * User.tradeRequests
+ */
+export type User$tradeRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TradeRequest
+   */
+  select?: Prisma.TradeRequestSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TradeRequest
+   */
+  omit?: Prisma.TradeRequestOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TradeRequestInclude<ExtArgs> | null
+  where?: Prisma.TradeRequestWhereInput
+  orderBy?: Prisma.TradeRequestOrderByWithRelationInput | Prisma.TradeRequestOrderByWithRelationInput[]
+  cursor?: Prisma.TradeRequestWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TradeRequestScalarFieldEnum | Prisma.TradeRequestScalarFieldEnum[]
 }
 
 /**

@@ -56,12 +56,14 @@ export const ModelName = {
   Message: 'Message',
   Log: 'Log',
   Post: 'Post',
+  Trade: 'Trade',
   TradeOffer: 'TradeOffer',
+  TradeRequest: 'TradeRequest',
   Comment: 'Comment',
   Product: 'Product',
   Service: 'Service',
   Cat: 'Cat',
-  Rep: 'Rep',
+  Review: 'Review',
   Block: 'Block',
   Report: 'Report',
   Appeal: 'Appeal',
@@ -121,6 +123,7 @@ export const MessageScalarFieldEnum = {
   senderId: 'senderId',
   recieverId: 'recieverId',
   text: 'text',
+  createdAt: 'createdAt',
   isRemoved: 'isRemoved'
 } as const
 
@@ -138,9 +141,10 @@ export type LogScalarFieldEnum = (typeof LogScalarFieldEnum)[keyof typeof LogSca
 export const PostScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
+  images: 'images',
+  status: 'status',
   title: 'title',
   message: 'message',
-  isComplete: 'isComplete',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   isLocal: 'isLocal',
@@ -152,6 +156,20 @@ export const PostScalarFieldEnum = {
 } as const
 
 export type PostScalarFieldEnum = (typeof PostScalarFieldEnum)[keyof typeof PostScalarFieldEnum]
+
+
+export const TradeScalarFieldEnum = {
+  id: 'id',
+  postId: 'postId',
+  ownerId: 'ownerId',
+  requesterId: 'requesterId',
+  ownerCompl: 'ownerCompl',
+  reqCompl: 'reqCompl',
+  status: 'status',
+  createdAt: 'createdAt'
+} as const
+
+export type TradeScalarFieldEnum = (typeof TradeScalarFieldEnum)[keyof typeof TradeScalarFieldEnum]
 
 
 export const TradeOfferScalarFieldEnum = {
@@ -166,6 +184,18 @@ export const TradeOfferScalarFieldEnum = {
 } as const
 
 export type TradeOfferScalarFieldEnum = (typeof TradeOfferScalarFieldEnum)[keyof typeof TradeOfferScalarFieldEnum]
+
+
+export const TradeRequestScalarFieldEnum = {
+  id: 'id',
+  postId: 'postId',
+  requesterId: 'requesterId',
+  message: 'message',
+  status: 'status',
+  createdAt: 'createdAt'
+} as const
+
+export type TradeRequestScalarFieldEnum = (typeof TradeRequestScalarFieldEnum)[keyof typeof TradeRequestScalarFieldEnum]
 
 
 export const CommentScalarFieldEnum = {
@@ -214,12 +244,17 @@ export const CatScalarFieldEnum = {
 export type CatScalarFieldEnum = (typeof CatScalarFieldEnum)[keyof typeof CatScalarFieldEnum]
 
 
-export const RepScalarFieldEnum = {
+export const ReviewScalarFieldEnum = {
   id: 'id',
-  userId: 'userId'
+  tradeId: 'tradeId',
+  reviewerId: 'reviewerId',
+  revieweeId: 'revieweeId',
+  rating: 'rating',
+  comment: 'comment',
+  createdAt: 'createdAt'
 } as const
 
-export type RepScalarFieldEnum = (typeof RepScalarFieldEnum)[keyof typeof RepScalarFieldEnum]
+export type ReviewScalarFieldEnum = (typeof ReviewScalarFieldEnum)[keyof typeof ReviewScalarFieldEnum]
 
 
 export const BlockScalarFieldEnum = {

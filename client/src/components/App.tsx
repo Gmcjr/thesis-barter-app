@@ -8,6 +8,7 @@ import { AuthProvider } from '../context/AuthContext';
 import { ToastProvider } from '../context/ToastContext';
 import { SettingsProvider, useSettings } from '../context/SettingsContext';
 import { RouterProvider, Router, type RouteDef } from '../context/RouterContext';
+import { SocketProvider } from '../context/SocketContext';
 
 // component imports
 import NavBar from './NavBar/NavBar';
@@ -16,6 +17,8 @@ import Profile from './Profile/Profile';
 import ModQueue from './Moderation/ModQueue';
 import BlockedUsers from './BlockedUsers/BlockedUsers';
 import NotFound from './NotFound/NotFound';
+import Messages from './DMs/Messages';
+import DmNotifications from './DMs/DmNotifications';
 
 const routes: RouteDef[] = [
   { path: '/', component: Posts },
@@ -28,6 +31,8 @@ const routes: RouteDef[] = [
   { path: '/blocked-users', component: BlockedUsers, requiresAuth: true },
   { path: '/profile', component: Profile, requiresAuth: true },
   { path: '/profile/:id', component: Profile },
+  { path: '/messages', component: Messages, requiresAuth: true },
+  { path: '/messages/:id', component: Messages, requiresAuth: true },
 ];
 
 function AppShell() {
@@ -39,19 +44,22 @@ function AppShell() {
       <CssBaseline />
       <ToastProvider>
         <AuthProvider>
-          <RouterProvider>
-            <NavBar />
-            <Box
-              component="main"
-              sx={{
-                pt: 16, pb: 8, backgroundColor: 'background.default', minHeight: '100vh',
-              }}
-            >
-              <Container maxWidth="md">
-                <Router routes={routes} notFound={NotFound} />
-              </Container>
-            </Box>
-          </RouterProvider>
+          <SocketProvider>
+            <RouterProvider>
+              <NavBar />
+              <DmNotifications />
+              <Box
+                component="main"
+                sx={{
+                  pt: 16, pb: 8, backgroundColor: 'background.default', minHeight: '100vh',
+                }}
+              >
+                <Container maxWidth="md">
+                  <Router routes={routes} notFound={NotFound} />
+                </Container>
+              </Box>
+            </RouterProvider>
+          </SocketProvider>
         </AuthProvider>
       </ToastProvider>
     </ThemeProvider>

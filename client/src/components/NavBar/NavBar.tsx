@@ -12,11 +12,11 @@ import SettingsMenu from './SettingsMenu';
 import { useAuth } from '../../context/AuthContext';
 
 function NavBar() {
-  const { path } = useRouter();
+  const { path, navigate } = useRouter();
   const { user, loading, logout } = useAuth();
 
   const navLinks = [
-    { to: '/profile', label: 'Profile' },
+    { to: '/messages', label: 'Messages' },
   ];
 
   return (
@@ -48,7 +48,7 @@ function NavBar() {
           </Typography>
         </Link>
 
-        {/* Profile link */}
+        {/* NavLinks */}
         <Box sx={{
           display: 'flex',
           alignItems: 'center',
@@ -106,13 +106,27 @@ function NavBar() {
               <Typography variant="caption" color="text.secondary">Loading…</Typography>
             ) : user ? (
               <>
-                <Avatar sx={{
-                  width: 28, height: 28, bgcolor: 'primary.main', fontSize: '0.75rem',
-                }}
+                <Avatar
+                  sx={{
+                    width: 28,
+                    height: 28,
+                    bgcolor: 'primary.main',
+                    fontSize: '0.75rem',
+                    cursor: 'pointer',
+                  }}
+                  onClick={() => navigate('/profile')}
                 >
                   {(user.name ?? user.email).charAt(0).toUpperCase()}
                 </Avatar>
-                <Typography variant="subtitle2" sx={{ fontWeight: 600, fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>
+                <Typography
+                  variant="subtitle2"
+                  sx={{
+                    fontWeight: 600,
+                    fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                    cursor: 'pointer',
+                  }}
+                  onClick={() => navigate('/profile')}
+                >
                   {user.name ?? user.email}
                 </Typography>
                 <Button size="small" color="inherit" onClick={() => logout()} sx={{ fontSize: '0.75rem' }}>

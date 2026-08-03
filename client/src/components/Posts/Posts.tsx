@@ -10,24 +10,29 @@ import AddIcon from '@mui/icons-material/Add';
 import NewPost, { type PostFormData } from './NewPost';
 import ManagePosts, { type PostData, type PostUpdateData } from './ManagePosts';
 import ViewArtTradeOffer from './ViewArtTradeOffer';
+import MyTrades from '../Trades/MyTrades';
+import type { TradeRequestData } from '../Trades/RequestTradeButton';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import Post from './Post';
 import ReportDialog from './ReportDialog';
 import SearchPosts from './SearchPosts';
+import { useSocket } from '../../context/SocketContext';
 
 export default function Posts() {
   const { user, blockedUserIds } = useAuth();
   const { showToast } = useToast();
+  const socket = useSocket();
 
   const [modalOpen, setModalOpen] = useState(false);
   const [manageOpen, setManageOpen] = useState(false);
-  const [completedOpen, setCompletedOpen] = useState(false);
   const [viewArtOffersOpen, setViewArtOffersOpen] = useState(false);
   const [artOffersRefreshKey, setArtOffersRefreshKey] = useState(0);
+  const [myTradesOpen, setMyTradesOpen] = useState(false);
 
   const [posts, setPosts] = useState<PostData[]>([]);
   const [ownedPosts, setOwnedPosts] = useState<PostData[]>([]);
+  const [myTradeRequests, setMyTradeRequests] = useState<TradeRequestData[]>([]);
 
   const [search, setSearch] = useState('');
   const [error, setError] = useState('');
@@ -69,6 +74,38 @@ export default function Posts() {
     loadPosts(search);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadPosts, blockedUserIds]);
+
+  const loadMyTradeRequests = useCallback(async () => {
+    if (!user) { setMyTradeRequests([]); return; }
+    try {
+      const response = await axios.get<TradeRequestData[]>('/trade-requests/mine');
+      setMyTradeRequests(Array.isArray(response.data) ? response.data : []);
+    } catch (requestError) {
+      console.error('Failed to get your trade requests:', requestError);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    loadMyTradeRequests().catch((requestError) => {
+      console.error('Failed to load trade requests', requestError);
+    });
+  }, [loadMyTradeRequests]);
+
+  const handleTradeActivity = async () => {
+    await Promise.all([loadPosts(search), loadOwnedPosts(), loadMyTradeRequests()]);
+  };
+
+  useEffect(() => {
+    if (!socket) return undefined;
+    const handleChange = () => {
+      loadPosts(search);
+      loadOwnedPosts();
+    };
+    socket.on('posts:changed', handleChange);
+    return () => {
+      socket.off('posts:changed', handleChange);
+    };
+  }, [socket, search, loadPosts, loadOwnedPosts]);
 
   // search posts
   const handleSearch = (event: React.SubmitEvent<HTMLFormElement>) => {
@@ -149,11 +186,11 @@ export default function Posts() {
   };
 
   // mark a trade as complete
-  const handleCompleteTrade = async (postId: number) => {
+  const handleCompleteTrade = async (tradeId: number) => {
     try {
       setError('');
 
-      await axios.patch(`/posts/${postId}/complete`);
+      await axios.patch(`/trades/${tradeId}/complete`);
 
       await Promise.all([
         loadPosts(search),
@@ -170,22 +207,13 @@ export default function Posts() {
     setManageOpen(true);
   };
 
-  const handleOpenCompletedTrades = async () => {
-    await loadOwnedPosts();
-    setCompletedOpen(true);
-  };
-
   const handleOpenViewArtOffers = () => {
     setArtOffersRefreshKey((prev) => prev + 1);
     setViewArtOffersOpen(true);
   };
 
   const manageablePosts = ownedPosts.filter(
-    (post) => !post.isComplete,
-  );
-
-  const completedPosts = ownedPosts.filter(
-    (post) => post.isComplete,
+    (post) => post.status !== 'COMPLETED',
   );
 
   return (
@@ -201,7 +229,7 @@ export default function Posts() {
       {/* all of the Buttons underneath Search and their lovely formatting */}
       <Box
         sx={{
-          display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(3, minmax(0, 1fr)) auto' }, alignItems: 'center', gap: { xs: 1, sm: 1.5 }, mb: 3, px: { xs: 2, md: 0 },
+          display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(4, minmax(0, 1fr)) auto' }, alignItems: 'center', gap: { xs: 1, sm: 1.5 }, mb: 3, px: { xs: 2, md: 0 },
         }}
       >
         {/* View Art Offers Button */}
@@ -216,16 +244,16 @@ export default function Posts() {
           View Art Offers
         </Button>
 
-        {/* Completed Trades button */}
+        {/* My Trades button */}
         <Button
           variant="contained"
           disabled={!user}
-          onClick={() => handleOpenCompletedTrades()}
+          onClick={() => setMyTradesOpen(true)}
           sx={{
             width: '100%', borderRadius: 8, textTransform: 'none', fontWeight: 'bold', px: 3,
           }}
         >
-          Completed Trades
+          My Trades
         </Button>
 
         {/* Manage Posts button */}
@@ -284,6 +312,8 @@ export default function Posts() {
             key={post.id}
             post={post}
             onReport={() => setReportDialogPostId(post.id)}
+            myTradeRequests={myTradeRequests.find((r) => r.postId === post.id) ?? null}
+            onTradeActivity={handleTradeActivity}
           />
         ))}
       </Box>
@@ -319,14 +349,10 @@ export default function Posts() {
         onComplete={handleCompleteTrade}
       />
 
-      {/* Completed Trades Modal */}
-      <ManagePosts
-        open={completedOpen}
-        onClose={() => setCompletedOpen(false)}
-        posts={completedPosts}
-        title="Completed Trades"
-        currentUserId={user?.id}
-        readOnly
+      {/* My Trades Modal */}
+      <MyTrades
+        open={myTradesOpen}
+        onClose={() => setMyTradesOpen(false)}
       />
 
       <ReportDialog

@@ -42,7 +42,6 @@ router.get('/me', requireAuth, async (req, res) => {
       where: { id: req.user!.id },
       include: {
         posts: true,
-        rep: true,
       },
     });
     if (!user) {
@@ -95,7 +94,6 @@ router.get('/:id', async (req, res) => {
       where: { id },
       include: {
         posts: true,
-        rep: true,
       },
     });
 
