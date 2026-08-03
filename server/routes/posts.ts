@@ -125,11 +125,11 @@ posts.post('/', requireAuth, async (req, res) => {
   try {
     const { title, message, isLocal = false, zipCode, radiusMiles, previewMediaId, fullMediaId } = req.body;
 
-    const rejection = await screenOrReject(`${title}\n\n${message}`);
-    if (rejection) {
+    const outcome = await screenOrReject(`${title}\n\n${message}`);
+    if (!outcome.ok) {
       return res.status(400).json({
         error: 'This post violates community guidelines and cannot be published.',
-        rationale: rejection,
+        rationale: outcome.rationale,
       });
     }
 
@@ -152,7 +152,7 @@ posts.post('/', requireAuth, async (req, res) => {
       },
     });
 
-    return res.status(201).json(newPost);
+    return res.status(201).json({ ...newPost, screened: outcome.screened });
   } catch (error) {
     console.error('Failed to POST new post:', error);
     return res.status(500).json({ error: 'Unable to create post' });
@@ -166,11 +166,11 @@ posts.patch('/:id', requireAuth, async (req, res) => {
 
     // This screens post edits when they're submitted
     if (title || message) {
-      const rejection = await screenOrReject(`${title}\n\n${message}`);
-      if (rejection) {
+      const outcome = await screenOrReject(`${title}\n\n${message}`);
+      if (!outcome.ok) {
         return res.status(400).json({
           error: 'This update violates community guidelines and cannot be saved.',
-          rationale: rejection,
+          rationale: outcome.rationale,
         });
       }
     }

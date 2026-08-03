@@ -94,11 +94,19 @@ export function decideAutoAction(screening: ScreeningResult): AutoAction | null 
   return null; // Ambiguous/middle-confidence band, leave as 'PENDING' for human review
 }
 
+export type ScreenOutcome =
+    | { ok: true; screened: boolean }
+    | { ok: false; rationale: string };
+
 // Content moderation gate for all user-generated text (posts, offers, edits)
-export async function screenOrReject(text: string): Promise<string | null> {
+export async function screenOrReject(text: string): Promise<ScreenOutcome> {
   const screening = await screenContent(text);
-  if (!screening) return null;
+  if (!screening) return { ok: true, screened: false };
 
   const action = decideAutoAction(screening);
-  return action?.status === ReportStatus.REMOVED ? screening.rationale : null;
+  if (action?.status === ReportStatus.REMOVED) {
+    return { ok: false, rationale: screening.rationale };
+  }
+
+  return { ok: true, screened: true };
 }

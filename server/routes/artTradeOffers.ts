@@ -141,19 +141,23 @@ artTradeOffers.post('/', requireAuth, async (req, res) => {
       return res.status(400).json({ error: 'Cannot offer on your own post.' });
     }
 
+    // Blocking is mutual, reuses not-found message, response does not reveal that a block exists
     if (await isBlocked(offererId, post.userId)) {
       return res.status(400).json({ error: 'Post not found or trade already completed.' });
     }
 
     // Screens offer messages
+    let screened = false;
+
     if (message) {
-      const rejection = await screenOrReject(message);
-      if (rejection) {
+      const outcome = await screenOrReject(message);
+      if (!outcome.ok) {
         return res.status(400).json({
           error: 'This offer violates community guidelines and cannot be sent.',
-          rationale: rejection,
+          rationale: outcome.rationale,
         });
       }
+      screened = outcome.screened;
     }
 
     const offer = await prisma.tradeOffer.create({
@@ -174,7 +178,7 @@ artTradeOffers.post('/', requireAuth, async (req, res) => {
       },
     });
 
-    return res.status(201).json(offer);
+    return res.status(201).json({ ...offer, screened });
   } catch (error) {
     console.error('Failed to submit trade offer:', error);
     return res.status(500).json({ error: 'Unable to submit trade offer.' });
