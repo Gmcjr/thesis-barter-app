@@ -215,25 +215,25 @@ posts.post('/', requireAuth, async (req, res) => {
           update: {},
         });
 
-    if (offerType === 'PRODUCT') {
-      await tx.product.create({
-        data: {
-          postId: post.id, userId, catId: cat.id, name, condition: condition || 'GOOD',
-        },
-      });
-    } else {
-      await tx.service.create({
-        data: {
-          postId: post.id, userId, catId: cat.id, name,
-        },
-      });
-    }
-  }
+        if (offerType === 'PRODUCT') {
+          await tx.product.create({
+            data: {
+              postId: post.id, userId, catId: cat.id, name, condition: condition || 'GOOD',
+            },
+          });
+        } else {
+          await tx.service.create({
+            data: {
+              postId: post.id, userId, catId: cat.id, name,
+            },
+          });
+        }
+      }
 
-  return post;
-});
-getIo().emit('posts:changed');
-return res.status(201).json({ ...newPost, screened: outcome.screened });
+      return post;
+    });
+    getIo().emit('posts:changed');
+    return res.status(201).json({ ...newPost, screened: outcome.screened });
   } catch (error) {
     console.error('Failed to POST new post:', error);
     return res.status(500).json({ error: 'Unable to create post' });
