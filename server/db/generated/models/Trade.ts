@@ -275,10 +275,10 @@ export type TradeOrderByWithRelationInput = {
 
 export type TradeWhereUniqueInput = Prisma.AtLeast<{
   id?: number
-  postId?: number
   AND?: Prisma.TradeWhereInput | Prisma.TradeWhereInput[]
   OR?: Prisma.TradeWhereInput[]
   NOT?: Prisma.TradeWhereInput | Prisma.TradeWhereInput[]
+  postId?: Prisma.IntFilter<"Trade"> | number
   ownerId?: Prisma.IntFilter<"Trade"> | number
   requesterId?: Prisma.IntFilter<"Trade"> | number
   ownerCompl?: Prisma.BoolFilter<"Trade"> | boolean
@@ -289,7 +289,7 @@ export type TradeWhereUniqueInput = Prisma.AtLeast<{
   owner?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   requester?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   reviews?: Prisma.ReviewListRelationFilter
-}, "id" | "postId">
+}, "id">
 
 export type TradeOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -326,7 +326,7 @@ export type TradeCreateInput = {
   reqCompl?: boolean
   status?: $Enums.Status
   createdAt?: Date | string
-  post: Prisma.PostCreateNestedOneWithoutTradeInput
+  post: Prisma.PostCreateNestedOneWithoutTradesInput
   owner: Prisma.UserCreateNestedOneWithoutOwnedTradesInput
   requester: Prisma.UserCreateNestedOneWithoutReqTradesInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutTradeInput
@@ -349,7 +349,7 @@ export type TradeUpdateInput = {
   reqCompl?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  post?: Prisma.PostUpdateOneRequiredWithoutTradeNestedInput
+  post?: Prisma.PostUpdateOneRequiredWithoutTradesNestedInput
   owner?: Prisma.UserUpdateOneRequiredWithoutOwnedTradesNestedInput
   requester?: Prisma.UserUpdateOneRequiredWithoutReqTradesNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutTradeNestedInput
@@ -404,11 +404,6 @@ export type TradeListRelationFilter = {
 
 export type TradeOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
-}
-
-export type TradeNullableScalarRelationFilter = {
-  is?: Prisma.TradeWhereInput | null
-  isNot?: Prisma.TradeWhereInput | null
 }
 
 export type TradeCountOrderByAggregateInput = {
@@ -547,36 +542,46 @@ export type TradeUncheckedUpdateManyWithoutOwnerNestedInput = {
   deleteMany?: Prisma.TradeScalarWhereInput | Prisma.TradeScalarWhereInput[]
 }
 
-export type TradeCreateNestedOneWithoutPostInput = {
-  create?: Prisma.XOR<Prisma.TradeCreateWithoutPostInput, Prisma.TradeUncheckedCreateWithoutPostInput>
-  connectOrCreate?: Prisma.TradeCreateOrConnectWithoutPostInput
-  connect?: Prisma.TradeWhereUniqueInput
+export type TradeCreateNestedManyWithoutPostInput = {
+  create?: Prisma.XOR<Prisma.TradeCreateWithoutPostInput, Prisma.TradeUncheckedCreateWithoutPostInput> | Prisma.TradeCreateWithoutPostInput[] | Prisma.TradeUncheckedCreateWithoutPostInput[]
+  connectOrCreate?: Prisma.TradeCreateOrConnectWithoutPostInput | Prisma.TradeCreateOrConnectWithoutPostInput[]
+  createMany?: Prisma.TradeCreateManyPostInputEnvelope
+  connect?: Prisma.TradeWhereUniqueInput | Prisma.TradeWhereUniqueInput[]
 }
 
-export type TradeUncheckedCreateNestedOneWithoutPostInput = {
-  create?: Prisma.XOR<Prisma.TradeCreateWithoutPostInput, Prisma.TradeUncheckedCreateWithoutPostInput>
-  connectOrCreate?: Prisma.TradeCreateOrConnectWithoutPostInput
-  connect?: Prisma.TradeWhereUniqueInput
+export type TradeUncheckedCreateNestedManyWithoutPostInput = {
+  create?: Prisma.XOR<Prisma.TradeCreateWithoutPostInput, Prisma.TradeUncheckedCreateWithoutPostInput> | Prisma.TradeCreateWithoutPostInput[] | Prisma.TradeUncheckedCreateWithoutPostInput[]
+  connectOrCreate?: Prisma.TradeCreateOrConnectWithoutPostInput | Prisma.TradeCreateOrConnectWithoutPostInput[]
+  createMany?: Prisma.TradeCreateManyPostInputEnvelope
+  connect?: Prisma.TradeWhereUniqueInput | Prisma.TradeWhereUniqueInput[]
 }
 
-export type TradeUpdateOneWithoutPostNestedInput = {
-  create?: Prisma.XOR<Prisma.TradeCreateWithoutPostInput, Prisma.TradeUncheckedCreateWithoutPostInput>
-  connectOrCreate?: Prisma.TradeCreateOrConnectWithoutPostInput
-  upsert?: Prisma.TradeUpsertWithoutPostInput
-  disconnect?: Prisma.TradeWhereInput | boolean
-  delete?: Prisma.TradeWhereInput | boolean
-  connect?: Prisma.TradeWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.TradeUpdateToOneWithWhereWithoutPostInput, Prisma.TradeUpdateWithoutPostInput>, Prisma.TradeUncheckedUpdateWithoutPostInput>
+export type TradeUpdateManyWithoutPostNestedInput = {
+  create?: Prisma.XOR<Prisma.TradeCreateWithoutPostInput, Prisma.TradeUncheckedCreateWithoutPostInput> | Prisma.TradeCreateWithoutPostInput[] | Prisma.TradeUncheckedCreateWithoutPostInput[]
+  connectOrCreate?: Prisma.TradeCreateOrConnectWithoutPostInput | Prisma.TradeCreateOrConnectWithoutPostInput[]
+  upsert?: Prisma.TradeUpsertWithWhereUniqueWithoutPostInput | Prisma.TradeUpsertWithWhereUniqueWithoutPostInput[]
+  createMany?: Prisma.TradeCreateManyPostInputEnvelope
+  set?: Prisma.TradeWhereUniqueInput | Prisma.TradeWhereUniqueInput[]
+  disconnect?: Prisma.TradeWhereUniqueInput | Prisma.TradeWhereUniqueInput[]
+  delete?: Prisma.TradeWhereUniqueInput | Prisma.TradeWhereUniqueInput[]
+  connect?: Prisma.TradeWhereUniqueInput | Prisma.TradeWhereUniqueInput[]
+  update?: Prisma.TradeUpdateWithWhereUniqueWithoutPostInput | Prisma.TradeUpdateWithWhereUniqueWithoutPostInput[]
+  updateMany?: Prisma.TradeUpdateManyWithWhereWithoutPostInput | Prisma.TradeUpdateManyWithWhereWithoutPostInput[]
+  deleteMany?: Prisma.TradeScalarWhereInput | Prisma.TradeScalarWhereInput[]
 }
 
-export type TradeUncheckedUpdateOneWithoutPostNestedInput = {
-  create?: Prisma.XOR<Prisma.TradeCreateWithoutPostInput, Prisma.TradeUncheckedCreateWithoutPostInput>
-  connectOrCreate?: Prisma.TradeCreateOrConnectWithoutPostInput
-  upsert?: Prisma.TradeUpsertWithoutPostInput
-  disconnect?: Prisma.TradeWhereInput | boolean
-  delete?: Prisma.TradeWhereInput | boolean
-  connect?: Prisma.TradeWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.TradeUpdateToOneWithWhereWithoutPostInput, Prisma.TradeUpdateWithoutPostInput>, Prisma.TradeUncheckedUpdateWithoutPostInput>
+export type TradeUncheckedUpdateManyWithoutPostNestedInput = {
+  create?: Prisma.XOR<Prisma.TradeCreateWithoutPostInput, Prisma.TradeUncheckedCreateWithoutPostInput> | Prisma.TradeCreateWithoutPostInput[] | Prisma.TradeUncheckedCreateWithoutPostInput[]
+  connectOrCreate?: Prisma.TradeCreateOrConnectWithoutPostInput | Prisma.TradeCreateOrConnectWithoutPostInput[]
+  upsert?: Prisma.TradeUpsertWithWhereUniqueWithoutPostInput | Prisma.TradeUpsertWithWhereUniqueWithoutPostInput[]
+  createMany?: Prisma.TradeCreateManyPostInputEnvelope
+  set?: Prisma.TradeWhereUniqueInput | Prisma.TradeWhereUniqueInput[]
+  disconnect?: Prisma.TradeWhereUniqueInput | Prisma.TradeWhereUniqueInput[]
+  delete?: Prisma.TradeWhereUniqueInput | Prisma.TradeWhereUniqueInput[]
+  connect?: Prisma.TradeWhereUniqueInput | Prisma.TradeWhereUniqueInput[]
+  update?: Prisma.TradeUpdateWithWhereUniqueWithoutPostInput | Prisma.TradeUpdateWithWhereUniqueWithoutPostInput[]
+  updateMany?: Prisma.TradeUpdateManyWithWhereWithoutPostInput | Prisma.TradeUpdateManyWithWhereWithoutPostInput[]
+  deleteMany?: Prisma.TradeScalarWhereInput | Prisma.TradeScalarWhereInput[]
 }
 
 export type TradeCreateNestedOneWithoutReviewsInput = {
@@ -598,7 +603,7 @@ export type TradeCreateWithoutRequesterInput = {
   reqCompl?: boolean
   status?: $Enums.Status
   createdAt?: Date | string
-  post: Prisma.PostCreateNestedOneWithoutTradeInput
+  post: Prisma.PostCreateNestedOneWithoutTradesInput
   owner: Prisma.UserCreateNestedOneWithoutOwnedTradesInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutTradeInput
 }
@@ -629,7 +634,7 @@ export type TradeCreateWithoutOwnerInput = {
   reqCompl?: boolean
   status?: $Enums.Status
   createdAt?: Date | string
-  post: Prisma.PostCreateNestedOneWithoutTradeInput
+  post: Prisma.PostCreateNestedOneWithoutTradesInput
   requester: Prisma.UserCreateNestedOneWithoutReqTradesInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutTradeInput
 }
@@ -727,36 +732,25 @@ export type TradeCreateOrConnectWithoutPostInput = {
   create: Prisma.XOR<Prisma.TradeCreateWithoutPostInput, Prisma.TradeUncheckedCreateWithoutPostInput>
 }
 
-export type TradeUpsertWithoutPostInput = {
-  update: Prisma.XOR<Prisma.TradeUpdateWithoutPostInput, Prisma.TradeUncheckedUpdateWithoutPostInput>
-  create: Prisma.XOR<Prisma.TradeCreateWithoutPostInput, Prisma.TradeUncheckedCreateWithoutPostInput>
-  where?: Prisma.TradeWhereInput
+export type TradeCreateManyPostInputEnvelope = {
+  data: Prisma.TradeCreateManyPostInput | Prisma.TradeCreateManyPostInput[]
+  skipDuplicates?: boolean
 }
 
-export type TradeUpdateToOneWithWhereWithoutPostInput = {
-  where?: Prisma.TradeWhereInput
+export type TradeUpsertWithWhereUniqueWithoutPostInput = {
+  where: Prisma.TradeWhereUniqueInput
+  update: Prisma.XOR<Prisma.TradeUpdateWithoutPostInput, Prisma.TradeUncheckedUpdateWithoutPostInput>
+  create: Prisma.XOR<Prisma.TradeCreateWithoutPostInput, Prisma.TradeUncheckedCreateWithoutPostInput>
+}
+
+export type TradeUpdateWithWhereUniqueWithoutPostInput = {
+  where: Prisma.TradeWhereUniqueInput
   data: Prisma.XOR<Prisma.TradeUpdateWithoutPostInput, Prisma.TradeUncheckedUpdateWithoutPostInput>
 }
 
-export type TradeUpdateWithoutPostInput = {
-  ownerCompl?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  reqCompl?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  owner?: Prisma.UserUpdateOneRequiredWithoutOwnedTradesNestedInput
-  requester?: Prisma.UserUpdateOneRequiredWithoutReqTradesNestedInput
-  reviews?: Prisma.ReviewUpdateManyWithoutTradeNestedInput
-}
-
-export type TradeUncheckedUpdateWithoutPostInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  ownerId?: Prisma.IntFieldUpdateOperationsInput | number
-  requesterId?: Prisma.IntFieldUpdateOperationsInput | number
-  ownerCompl?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  reqCompl?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  reviews?: Prisma.ReviewUncheckedUpdateManyWithoutTradeNestedInput
+export type TradeUpdateManyWithWhereWithoutPostInput = {
+  where: Prisma.TradeScalarWhereInput
+  data: Prisma.XOR<Prisma.TradeUpdateManyMutationInput, Prisma.TradeUncheckedUpdateManyWithoutPostInput>
 }
 
 export type TradeCreateWithoutReviewsInput = {
@@ -764,7 +758,7 @@ export type TradeCreateWithoutReviewsInput = {
   reqCompl?: boolean
   status?: $Enums.Status
   createdAt?: Date | string
-  post: Prisma.PostCreateNestedOneWithoutTradeInput
+  post: Prisma.PostCreateNestedOneWithoutTradesInput
   owner: Prisma.UserCreateNestedOneWithoutOwnedTradesInput
   requester: Prisma.UserCreateNestedOneWithoutReqTradesInput
 }
@@ -801,7 +795,7 @@ export type TradeUpdateWithoutReviewsInput = {
   reqCompl?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  post?: Prisma.PostUpdateOneRequiredWithoutTradeNestedInput
+  post?: Prisma.PostUpdateOneRequiredWithoutTradesNestedInput
   owner?: Prisma.UserUpdateOneRequiredWithoutOwnedTradesNestedInput
   requester?: Prisma.UserUpdateOneRequiredWithoutReqTradesNestedInput
 }
@@ -842,7 +836,7 @@ export type TradeUpdateWithoutRequesterInput = {
   reqCompl?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  post?: Prisma.PostUpdateOneRequiredWithoutTradeNestedInput
+  post?: Prisma.PostUpdateOneRequiredWithoutTradesNestedInput
   owner?: Prisma.UserUpdateOneRequiredWithoutOwnedTradesNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutTradeNestedInput
 }
@@ -873,7 +867,7 @@ export type TradeUpdateWithoutOwnerInput = {
   reqCompl?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  post?: Prisma.PostUpdateOneRequiredWithoutTradeNestedInput
+  post?: Prisma.PostUpdateOneRequiredWithoutTradesNestedInput
   requester?: Prisma.UserUpdateOneRequiredWithoutReqTradesNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutTradeNestedInput
 }
@@ -892,6 +886,47 @@ export type TradeUncheckedUpdateWithoutOwnerInput = {
 export type TradeUncheckedUpdateManyWithoutOwnerInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   postId?: Prisma.IntFieldUpdateOperationsInput | number
+  requesterId?: Prisma.IntFieldUpdateOperationsInput | number
+  ownerCompl?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  reqCompl?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type TradeCreateManyPostInput = {
+  id?: number
+  ownerId: number
+  requesterId: number
+  ownerCompl?: boolean
+  reqCompl?: boolean
+  status?: $Enums.Status
+  createdAt?: Date | string
+}
+
+export type TradeUpdateWithoutPostInput = {
+  ownerCompl?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  reqCompl?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  owner?: Prisma.UserUpdateOneRequiredWithoutOwnedTradesNestedInput
+  requester?: Prisma.UserUpdateOneRequiredWithoutReqTradesNestedInput
+  reviews?: Prisma.ReviewUpdateManyWithoutTradeNestedInput
+}
+
+export type TradeUncheckedUpdateWithoutPostInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  ownerId?: Prisma.IntFieldUpdateOperationsInput | number
+  requesterId?: Prisma.IntFieldUpdateOperationsInput | number
+  ownerCompl?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  reqCompl?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumStatusFieldUpdateOperationsInput | $Enums.Status
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  reviews?: Prisma.ReviewUncheckedUpdateManyWithoutTradeNestedInput
+}
+
+export type TradeUncheckedUpdateManyWithoutPostInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  ownerId?: Prisma.IntFieldUpdateOperationsInput | number
   requesterId?: Prisma.IntFieldUpdateOperationsInput | number
   ownerCompl?: Prisma.BoolFieldUpdateOperationsInput | boolean
   reqCompl?: Prisma.BoolFieldUpdateOperationsInput | boolean

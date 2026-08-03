@@ -104,7 +104,7 @@ model Post {
   products Product[]
   services Service[]
   comments Comment[]
-  trade    Trade?
+  trades   Trade[]
 
   images      String[]
   status      Status       @default(OPEN)
@@ -139,7 +139,7 @@ enum Status {
 model Trade {
   id          Int  @id @default(autoincrement())
   post        Post @relation(fields: [postId], references: [id])
-  postId      Int  @unique
+  postId      Int  
   owner       User @relation("ownedTrades", fields: [ownerId], references: [id])
   ownerId     Int
   requester   User @relation("reqTrades", fields: [requesterId], references: [id])
@@ -150,6 +150,8 @@ model Trade {
   status     Status   @default(IN_PROGRESS)
   reviews    Review[]
   createdAt  DateTime @default(now())
+
+  @@index([postId])
 }
 
 model TradeOffer {

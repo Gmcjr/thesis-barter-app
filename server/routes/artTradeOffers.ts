@@ -70,7 +70,7 @@ artTradeOffers.get('/', requireAuth, async (req, res) => {
     const rawOffers = await prisma.tradeOffer.findMany({
       where: numericPostId ? {
         postId: numericPostId,
-        ...(post?.status === Status.OPEN ? { status: 'COMPLETED' } : { status: 'PENDING' }),
+        ...(post?.status === Status.OPEN ? { status: 'PENDING' } : { status: 'COMPLETED' }),
       } : {
         post: { userId, status: Status.OPEN },
         status: 'PENDING',
@@ -127,7 +127,7 @@ artTradeOffers.post('/', requireAuth, async (req, res) => {
     const { postId, message, previewMediaId, fullMediaId } = req.body;
 
     const post = await prisma.post.findUnique({ where: { id: Number(postId) } });
-    if (!post || post.status === Status.COMPLETED) {
+    if (!post || post.status !== Status.OPEN) {
       return res.status(400).json({ error: 'Post not found or trade already completed.' });
     }
 

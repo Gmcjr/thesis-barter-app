@@ -20,6 +20,8 @@ interface MediaItem {
 }
 
 interface TradeOfferItem {
+  offererId: number;
+  status: string;
   tradeOfferMedia?: MediaItem[];
   [key: string]: unknown;
 }
@@ -68,29 +70,41 @@ posts.get('/', async (req, res) => {
       ? await getBlockedRelationshipIds(getUserId(req))
       : [];
 
-    let userFilter = {};
-    if (profileUserId) {
-      userFilter = { userId: profileUserId };
-    } else if (blockedRelationshipIds.length) {
-      userFilter = { userId: { notIn: blockedRelationshipIds } };
-    }
+    // A user's "trading history" includes posts they authored, posts where they
+    // completed an art trade offer, and posts where they completed a generic
+    // trade as the requester - not just posts they own.
+    const ownedOrCompletedFilter = (userId: number) => ({
+      OR: [
+        { userId },
+        { tradeOffers: { some: { offererId: userId, status: 'COMPLETED' as const } } },
+        { trades: { some: { requesterId: userId, status: 'COMPLETED' as const } } },
+      ],
+    });
+
+    const searchFilter = search ? [{
+      OR: [
+        { title: { contains: search, mode: 'insensitive' as const } },
+        { message: { contains: search, mode: 'insensitive' as const } },
+      ],
+    }] : [];
+
+    const buildWhere = () => {
+      if (mine) return ownedOrCompletedFilter(getUserId(req));
+      if (profileUserId) {
+        return { AND: [{ isRemoved: false }, ownedOrCompletedFilter(profileUserId), ...searchFilter] };
+      }
+      return {
+        AND: [
+          { isRemoved: false },
+          { status: { not: 'COMPLETED' as const } },
+          ...(blockedRelationshipIds.length ? [{ userId: { notIn: blockedRelationshipIds } }] : []),
+          ...searchFilter,
+        ],
+      };
+    };
 
     const rawPosts = await prisma.post.findMany({
-      where: mine ? {
-        OR: [
-          { userId: getUserId(req) },
-          { tradeOffers: { some: { offererId: getUserId(req), status: 'COMPLETED' } } },
-        ],
-      } : {
-        isRemoved: false,
-        ...userFilter,
-        ...(search && {
-          OR: [
-            { title: { contains: search, mode: 'insensitive' } },
-            { message: { contains: search, mode: 'insensitive' } },
-          ],
-        }),
-      },
+      where: buildWhere(),
       take: mine || profileUserId ? undefined : 50,
       orderBy: { createdAt: 'desc' },
       include: {
@@ -98,14 +112,11 @@ posts.get('/', async (req, res) => {
         products: true,
         services: true,
         comments: true,
-        trade: {
+        trades: {
+          orderBy: { createdAt: 'desc' },
+          take: 1,
           select: {
-            id: true,
-            status: true,
-            ownerId: true,
-            requesterId: true,
-            ownerCompl: true,
-            reqCompl: true,
+            id: true, status: true, ownerId: true, requesterId: true, ownerCompl: true, reqCompl: true,
           },
         },
         postMedia: { include: { media: true } },
@@ -123,16 +134,31 @@ posts.get('/', async (req, res) => {
       },
     });
 
+    const viewerId = req.user?.id;
+
     const postsWithUrls = await Promise.all(rawPosts.map(async (post) => {
-      const postUrls = await getMediaUrls(post.postMedia);
-      const tradeOffers = await Promise.all(
-        (post.tradeOffers || []).map(async (offer: TradeOfferItem) => ({
-          ...offer,
-          ...(await getMediaUrls(offer.tradeOfferMedia)),
-        })),
+      const { trades, ...postRest } = post;
+      const isOwner = viewerId !== undefined && post.userId === viewerId;
+      const viewerCompletedOffer = (post.tradeOffers || []).find(
+        (o: TradeOfferItem) => o.offererId === viewerId && o.status === 'COMPLETED',
       );
 
-      return { ...post, ...postUrls, tradeOffers };
+      const postUrls = await getMediaUrls(post.postMedia, isOwner || Boolean(viewerCompletedOffer));
+
+      const tradeOffers = await Promise.all(
+        (post.tradeOffers || []).map(async (offer: TradeOfferItem) => {
+          const isOfferer = viewerId !== undefined && offer.offererId === viewerId;
+          const offerAllowFull = isOfferer || (isOwner && offer.status === 'COMPLETED');
+          return {
+            ...offer,
+            ...(await getMediaUrls(offer.tradeOfferMedia, offerAllowFull)),
+          };
+        }),
+      );
+
+      return {
+        ...postRest, trade: trades[0] ?? null, ...postUrls, tradeOffers,
+      };
     }));
 
     return res.json(postsWithUrls);

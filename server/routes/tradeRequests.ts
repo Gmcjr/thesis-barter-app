@@ -35,13 +35,13 @@ tradeRequests.post('/', requireAuth, async (req, res) => {
     }
 
     const existingRequest = await prisma.tradeRequest.findUnique({
-      where: { postId_requesterId: { postId, requesterId }},
+      where: { postId_requesterId: { postId, requesterId } },
     });
 
-    if (existingRequest && (
-      existingRequest.status === TradeRequestStatus.PENDING
-      || existingRequest.status === TradeRequestStatus.ACCEPTED
-    )) {
+    // Only a currently-open (PENDING) request counts as a duplicate. An ACCEPTED
+    // request whose trade was later cancelled shouldn't block a new one - if the
+    // trade were still active, post.status !== OPEN would already have blocked us above.
+    if (existingRequest && existingRequest.status === TradeRequestStatus.PENDING) {
       return res.status(400).json({ error: 'Duplicate trade request' });
     }
 
@@ -53,7 +53,7 @@ tradeRequests.post('/', requireAuth, async (req, res) => {
       update: {
         status: TradeRequestStatus.PENDING,
         message: trimmedMessage,
-        createdAt: new Date()
+        createdAt: new Date(),
       },
     });
 
