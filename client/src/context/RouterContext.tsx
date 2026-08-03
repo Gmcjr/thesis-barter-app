@@ -77,7 +77,7 @@ export interface RouteDef {
   path: string;
   component: ComponentType;
   requiresAuth?: boolean;
-  requiresRole?: 'MODERATOR' | 'ADMIN';
+  requiresRole?: ('MODERATOR' | 'ADMIN')[];
 }
 
 const ParamsContext = createContext<Record<string, string>>({});
@@ -98,6 +98,10 @@ function matchRoute(pattern: string, path: string): Record<string, string> | nul
   const params: Record<string, string> = {};
   paramNames.forEach((name, i) => { params[name] = decodeURIComponent(match[i + 1]); });
   return params;
+}
+
+function hasRole(userRole: 'USER' | 'MODERATOR' | 'ADMIN' | null, allowed: ('MODERATOR' | 'ADMIN')[]): boolean {
+  return allowed.some((role) => role === userRole);
 }
 
 export function Router({ routes, notFound: NotFound }: {
@@ -121,7 +125,9 @@ export function Router({ routes, notFound: NotFound }: {
   useEffect(() => {
     if (matchedRoute?.requiresAuth && !loading && !user) {
       navigate('/');
-    } else if (matchedRoute?.requiresRole && !loading && user?.role !== matchedRoute.requiresRole) {
+    } else if (matchedRoute?.requiresRole
+      && !loading
+      && !hasRole(user?.role ?? null, matchedRoute.requiresRole)) {
       navigate('/');
     }
   }, [matchedRoute, loading, user, navigate]);
@@ -133,7 +139,7 @@ export function Router({ routes, notFound: NotFound }: {
   }
   if (matchedRoute.requiresRole) {
     if (loading) return null;
-    if (!user || user.role !== matchedRoute.requiresRole) return null;
+    if (!hasRole(user?.role ?? null, matchedRoute.requiresRole)) return null;
   }
 
   const Component = matchedRoute.component;

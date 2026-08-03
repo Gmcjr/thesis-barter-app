@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
 import Typography from '@mui/material/Typography';
 import AppealsPanel from './AppealsPanel';
 import ReportsPanel from './ReportsPanel';
@@ -16,22 +17,16 @@ export default function ModQueue() {
         Moderation Queue
       </Typography>
 
-      <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
-        <Button
-          variant={view === 'reports' ? 'contained' : 'outlined'}
-          size="small"
-          onClick={() => setView('reports')}
-        >
-          Reports
-        </Button>
-        <Button
-          variant={view === 'appeals' ? 'contained' : 'outlined'}
-          size="small"
-          onClick={() => setView('appeals')}
-        >
-          Appeals
-        </Button>
-      </Box>
+      <Tabs
+        value={view}
+        onChange={(_, next: View) => setView(next)}
+        sx={{
+          borderBottom: 1, borderColor: 'divider', mb: 3, minHeight: 40,
+        }}
+      >
+        <Tab label="Reports" value="reports" sx={{ minHeight: 40, textTransform: 'none' }} />
+        <Tab label="Appeals" value="appeals" sx={{ minHeight: 40, textTransform: 'none' }} />
+      </Tabs>
 
       {view === 'reports' ? <ReportsPanel /> : <AppealsPanel />}
     </Box>

@@ -174,6 +174,7 @@ export default function Post({
             )}
             <PostActionsMenu
               onReport={onReport}
+              showReport={!isOwnPost}
               showBlock={!isOwnPost}
               blocked={isBlocked}
               onBlock={handleBlockToggle}

@@ -2,9 +2,8 @@
 /* eslint-disable max-len */
 import { Router, type Request } from 'express';
 import { prisma } from '../db/index.js';
-import { screenContent, decideAutoAction } from '../services/moderation.js';
+import { screenOrReject } from '../services/moderation.js';
 import requireAuth from '../middleware/requireAuth.js';
-import { ReportStatus } from '../db/generated/enums.js';
 import { getDownloadUrl } from '../services/s3.js';
 import { getBlockedRelationshipIds } from '../services/blocks.js';
 import { getIo } from '../middleware/socket.js';
@@ -177,11 +176,11 @@ posts.post('/', requireAuth, async (req, res) => {
       name, offerType, category, condition,
     } = req.body;
 
-    const screening = await screenContent(`${title}\n\n${message}`);
-    if (screening && decideAutoAction(screening)?.status === ReportStatus.REMOVED) {
+    const outcome = await screenOrReject(`${title}\n\n${message}`);
+    if (!outcome.ok) {
       return res.status(400).json({
         error: 'This post violates community guidelines and cannot be published.',
-        rationale: screening.rationale,
+        rationale: outcome.rationale,
       });
     }
 
@@ -216,25 +215,25 @@ posts.post('/', requireAuth, async (req, res) => {
           update: {},
         });
 
-        if (offerType === 'PRODUCT') {
-          await tx.product.create({
-            data: {
-              postId: post.id, userId, catId: cat.id, name, condition: condition || 'GOOD',
-            },
-          });
-        } else {
-          await tx.service.create({
-            data: {
-              postId: post.id, userId, catId: cat.id, name,
-            },
-          });
-        }
-      }
+    if (offerType === 'PRODUCT') {
+      await tx.product.create({
+        data: {
+          postId: post.id, userId, catId: cat.id, name, condition: condition || 'GOOD',
+        },
+      });
+    } else {
+      await tx.service.create({
+        data: {
+          postId: post.id, userId, catId: cat.id, name,
+        },
+      });
+    }
+  }
 
-      return post;
-    });
-    getIo().emit('posts:changed');
-    return res.status(201).json(newPost);
+  return post;
+});
+getIo().emit('posts:changed');
+return res.status(201).json({ ...newPost, screened: outcome.screened });
   } catch (error) {
     console.error('Failed to POST new post:', error);
     return res.status(500).json({ error: 'Unable to create post' });
@@ -246,6 +245,16 @@ posts.patch('/:id', requireAuth, async (req, res) => {
   try {
     const { title, message, isLocal = false, zipCode, radiusMiles } = req.body;
 
+    // This screens post edits when they're submitted
+    if (title || message) {
+      const outcome = await screenOrReject(`${title}\n\n${message}`);
+      if (!outcome.ok) {
+        return res.status(400).json({
+          error: 'This update violates community guidelines and cannot be saved.',
+          rationale: outcome.rationale,
+        });
+      }
+    }
     if (isLocal && (zipCode === undefined || zipCode === null || zipCode === '')) {
       return res.status(400).json({ error: 'zipCode is required when isLocal is true.' });
     }

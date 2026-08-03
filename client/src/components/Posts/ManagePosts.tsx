@@ -18,8 +18,8 @@ import Divider from '@mui/material/Divider';
 import DownloadIcon from '@mui/icons-material/Download';
 import CircularProgress from '@mui/material/CircularProgress';
 
-import WhyRemovedMenu from './WhyRemovedMenu';
 import { formatPostDate } from '../../utils/utils';
+import RemovedPostCard from './RemovedPostCard';
 
 export type PostStatus = 'OPEN' | 'ACCEPTED' | 'IN_PROGRESS' | 'WAITING_FOR_OTHER_USER' | 'COMPLETED' | 'CANCELLED';
 
@@ -336,6 +336,10 @@ export default function ManagePosts({
                 ? (completedOffer?.fullUrl || undefined)
                 : (post.fullUrl || undefined);
 
+              if (post.isRemoved) {
+                return <RemovedPostCard key={post.id} post={post} />;
+              }
+
               return (
                 <Card key={post.id} variant="outlined">
                   <CardContent>
@@ -417,7 +421,7 @@ export default function ManagePosts({
                       </>
                     )}
 
-                    {!readOnly && !post.isRemoved && (
+                    {!readOnly && (
                       <Box sx={{
                         display: 'flex', flexWrap: 'wrap', gap: 1, mt: 2,
                       }}

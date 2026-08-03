@@ -48,6 +48,13 @@ export const targetSnippet = (report: ReportRow) => {
   return `User: ${report.targetUser?.name ?? '(user not found)'}`;
 };
 
+// Collapsed-row label: post title where one exists, otherwise the content itself
+export const reportSummary = (report: ReportRow) => {
+  if (report.targetType === 'POST') return report.post?.title ?? '(post not found)';
+  if (report.targetType === 'MESSAGE') return report.message?.text ?? '(message not found)';
+  return report.targetUser?.name ?? '(user not found)';
+};
+
 export const appealTargetSnippet = (appeal: AppealRow) => {
   if (appeal.report.post) return appeal.report.post.message;
   if (appeal.report.message) return appeal.report.message.text;

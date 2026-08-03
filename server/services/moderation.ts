@@ -52,6 +52,9 @@ export interface ScreeningResult {
 }
 
 export async function screenContent(text: string): Promise<ScreeningResult | null> {
+  // Dev escape hatch for testing without running up requests
+  if (process.env.SKIP_SCREENING === 'true') return null;
+
   try {
     const response = await ai.models.generateContent({
       model: 'gemini-3.5-flash',
@@ -89,4 +92,21 @@ export function decideAutoAction(screening: ScreeningResult): AutoAction | null 
     return { status: ReportStatus.APPROVED, resolution: `Auto-dismissed: low-confidence (score ${screening.score.toFixed(2)})` };
   }
   return null; // Ambiguous/middle-confidence band, leave as 'PENDING' for human review
+}
+
+export type ScreenOutcome =
+    | { ok: true; screened: boolean }
+    | { ok: false; rationale: string };
+
+// Content moderation gate for all user-generated text (posts, offers, edits)
+export async function screenOrReject(text: string): Promise<ScreenOutcome> {
+  const screening = await screenContent(text);
+  if (!screening) return { ok: true, screened: false };
+
+  const action = decideAutoAction(screening);
+  if (action?.status === ReportStatus.REMOVED) {
+    return { ok: false, rationale: screening.rationale };
+  }
+
+  return { ok: true, screened: true };
 }

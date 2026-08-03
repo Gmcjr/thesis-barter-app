@@ -4,6 +4,8 @@ import { Router, type Request } from 'express';
 import { prisma } from '../db/index.js';
 import requireAuth from '../middleware/requireAuth.js';
 import { getDownloadUrl } from '../services/s3.js';
+import { screenOrReject } from '../services/moderation.js';
+import { getBlockedRelationshipIds, isBlocked } from '../services/blocks.js';
 import { Status } from '../db/generated/enums.js';
 
 const artTradeOffers = Router();
@@ -67,6 +69,9 @@ artTradeOffers.get('/', requireAuth, async (req, res) => {
       }
     }
 
+    const blockedIds = await getBlockedRelationshipIds(userId);
+    const notBlocked = blockedIds.length ? { offererId: { notIn: blockedIds } } : {};
+
     const rawOffers = await prisma.tradeOffer.findMany({
       where: numericPostId ? {
         postId: numericPostId,
@@ -74,6 +79,7 @@ artTradeOffers.get('/', requireAuth, async (req, res) => {
       } : {
         post: { userId, status: Status.OPEN },
         status: 'PENDING',
+        ...notBlocked,
       },
       orderBy: { createdAt: 'asc' },
       include: {
@@ -135,6 +141,25 @@ artTradeOffers.post('/', requireAuth, async (req, res) => {
       return res.status(400).json({ error: 'Cannot offer on your own post.' });
     }
 
+    // Blocking is mutual, reuses not-found message, response does not reveal that a block exists
+    if (await isBlocked(offererId, post.userId)) {
+      return res.status(400).json({ error: 'Post not found or trade already completed.' });
+    }
+
+    // Screens offer messages
+    let screened = false;
+
+    if (message) {
+      const outcome = await screenOrReject(message);
+      if (!outcome.ok) {
+        return res.status(400).json({
+          error: 'This offer violates community guidelines and cannot be sent.',
+          rationale: outcome.rationale,
+        });
+      }
+      screened = outcome.screened;
+    }
+
     const offer = await prisma.tradeOffer.create({
       data: {
         postId: Number(postId),
@@ -153,7 +178,7 @@ artTradeOffers.post('/', requireAuth, async (req, res) => {
       },
     });
 
-    return res.status(201).json(offer);
+    return res.status(201).json({ ...offer, screened });
   } catch (error) {
     console.error('Failed to submit trade offer:', error);
     return res.status(500).json({ error: 'Unable to submit trade offer.' });

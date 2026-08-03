@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { prisma } from '../db/index.js';
 import requireAuth from '../middleware/requireAuth.js';
+import { isBlocked } from '../services/blocks.js';
 
 const router = Router();
 
@@ -25,13 +26,13 @@ router.post('/', async (req, res) => {
         phone,
       },
     });
-    res.status(200).json(user);
+    return res.status(200).json(user);
   } catch (err) {
     console.error(err);
     if (typeof err === 'object' && err !== null && 'code' in err && err.code === 'P2002') {
       return res.status(409).json({ error: 'email in use already' });
     }
-    res.sendStatus(500);
+    return res.sendStatus(500);
   }
 });
 
@@ -44,12 +45,12 @@ router.get('/me', requireAuth, async (req, res) => {
       },
     });
     if (!user) {
-      res.status(404).json({ error: 'user not found' });
+      return res.status(404).json({ error: 'user not found' });
     }
-    res.status(200).json(user);
+    return res.status(200).json(user);
   } catch (err) {
     console.error(err);
-    res.sendStatus(500);
+    return res.sendStatus(500);
   }
 });
 
@@ -72,10 +73,10 @@ router.patch('/me', requireAuth, async (req, res) => {
         zipCode,
       },
     });
-    res.status(200).json(user);
+    return res.status(200).json(user);
   } catch (err) {
     console.error(err);
-    res.sendStatus(500);
+    return res.sendStatus(500);
   }
 });
 
@@ -85,6 +86,10 @@ router.get('/:id', async (req, res) => {
     return res.status(400).json({ error: 'invalid user id' });
   }
   try {
+    if (req.user && await isBlocked(req.user.id, id)) {
+      return res.status(404).json({ error: 'user not found' });
+    }
+
     const user = await prisma.user.findUnique({
       where: { id },
       include: {
@@ -96,10 +101,10 @@ router.get('/:id', async (req, res) => {
       return res.status(404).json({ error: 'user not found' });
     }
 
-    res.json(user);
+    return res.json(user);
   } catch (err) {
     console.error(err);
-    res.sendStatus(500);
+    return res.sendStatus(500);
   }
 });
 

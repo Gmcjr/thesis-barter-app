@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Typography from '@mui/material/Typography';
 import { useToast } from '../../context/ToastContext';
 import { APPEAL_STATUS_OPTIONS, EMPTY_FILTERS, toQueryParams } from './format';
@@ -71,22 +72,20 @@ export default function AppealsPanel() {
 
   return (
     <Box>
-      <Box sx={{ display: 'flex', gap: 1, mb: 3 }}>
-        <Button
-          variant={isPending ? 'contained' : 'outlined'}
-          size="small"
-          onClick={() => setScope('pending')}
-        >
+      <ToggleButtonGroup
+        exclusive
+        size="small"
+        value={scope}
+        onChange={(_, next: Scope | null) => next && setScope(next)}
+        sx={{ mb: 3 }}
+      >
+        <ToggleButton value="pending" sx={{ textTransform: 'none', px: 2 }}>
           Pending
-        </Button>
-        <Button
-          variant={isPending ? 'outlined' : 'contained'}
-          size="small"
-          onClick={() => setScope('history')}
-        >
+        </ToggleButton>
+        <ToggleButton value="history" sx={{ textTransform: 'none', px: 2 }}>
           History
-        </Button>
-      </Box>
+        </ToggleButton>
+      </ToggleButtonGroup>
 
       {!isPending && (
       <HistoryFilterBar
