@@ -23,7 +23,7 @@ const routes: RouteDef[] = [
     path: '/moderation',
     component: ModQueue,
     requiresAuth: true,
-    requiresRole: 'MODERATOR',
+    requiresRole: ['MODERATOR', 'ADMIN'],
   },
   { path: '/blocked-users', component: BlockedUsers, requiresAuth: true },
   { path: '/profile', component: Profile, requiresAuth: true },
