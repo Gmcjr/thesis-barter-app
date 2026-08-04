@@ -111,10 +111,10 @@ model Post {
   tradeOffers TradeOffer[]
   postMedia   PostMedia[]
 
-  title      String
-  message    String
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  title     String
+  message   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   isLocal     Boolean @default(false)
   zipCode     String?
@@ -139,7 +139,7 @@ enum Status {
 model Trade {
   id          Int  @id @default(autoincrement())
   post        Post @relation(fields: [postId], references: [id])
-  postId      Int  
+  postId      Int
   owner       User @relation("ownedTrades", fields: [ownerId], references: [id])
   ownerId     Int
   requester   User @relation("reqTrades", fields: [requesterId], references: [id])
@@ -161,6 +161,9 @@ model TradeOffer {
   offerer   User    @relation(fields: [offererId], references: [id], onDelete: Cascade)
   offererId Int
   message   String?
+
+  isPendingScreening  Boolean @default(false)
+  moderationRationale String?
 
   tradeOfferMedia TradeOfferMedia[]
 
@@ -258,7 +261,7 @@ model Cat {
   services Service[]
 
   type CatType
-  name String  
+  name String
 
   @@unique([name, type])
 }

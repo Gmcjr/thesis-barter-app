@@ -3,21 +3,26 @@ import React, {
 } from 'react';
 import Snackbar from '@mui/material/Snackbar';
 import Alert, { type AlertColor } from '@mui/material/Alert';
+import Button from '@mui/material/Button';
 
+interface ToastAction { label: string; onClick: () => void; }
 interface ToastContexValue {
-  showToast: (message: string, severity?: AlertColor) => void;
+  showToast: (message: string, severity?: AlertColor, action?: ToastAction) => void;
 }
 
 const ToastContext = createContext<ToastContexValue | undefined>(undefined);
 
 export function ToastProvider({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
+  const [action, setAction] = useState<ToastAction | undefined>(undefined);
   const [message, setMessage] = useState('');
   const [severity, setSeverity] = useState<AlertColor>('info');
 
-  const showToast = useCallback((msg: string, sev: AlertColor = 'info') => {
+  // eslint-disable-next-line default-param-last
+  const showToast = useCallback((msg: string, sev: AlertColor = 'info', act?: ToastAction) => {
     setMessage(msg);
     setSeverity(sev);
+    setAction(act);
     setOpen(true);
   }, []);
 
@@ -31,8 +36,17 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   return (
     <ToastContext.Provider value={value}>
       {children}
-      <Snackbar open={open} autoHideDuration={4000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity={severity} sx={{ width: '100%' }}>
+      <Snackbar open={open} autoHideDuration={7000} onClose={handleClose}>
+        <Alert
+          onClose={handleClose}
+          severity={severity}
+          sx={{ width: '100%' }}
+          action={action && (
+          <Button color="inherit" size="small" onClick={() => { action.onClick(); }}>
+            {action.label}
+          </Button>
+          )}
+        >
           {message}
         </Alert>
       </Snackbar>

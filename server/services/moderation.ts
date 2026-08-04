@@ -1,5 +1,8 @@
 import { GoogleGenAI, Type } from '@google/genai';
 import { ReportStatus } from '../db/generated/enums';
+import { prisma } from '../db/index.js';
+import { getIo } from '../middleware/socket.js';
+import { getDownloadUrl } from './s3.js';
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
@@ -51,14 +54,21 @@ export interface ScreeningResult {
   rationale: string;
 }
 
-export async function screenContent(text: string): Promise<ScreeningResult | null> {
+// Gemini takes text + images in one multimodal call
+export async function screenContent(
+  text: string,
+  images: { mimeType: string; data: string }[] = [],
+): Promise<ScreeningResult | null> {
   // Dev escape hatch for testing without running up requests
   if (process.env.SKIP_SCREENING === 'true') return null;
 
   try {
     const response = await ai.models.generateContent({
       model: 'gemini-3.5-flash',
-      contents: `Reported content:\n"""\n${text}\n"""`,
+      contents: [
+        { text: `Reported content:\n"""\n${text}\n"""` },
+        ...images.map((img) => ({ inlineData: img })),
+      ],
       config: {
         systemInstruction: POLICY,
         responseMimeType: 'application/json',
@@ -109,4 +119,52 @@ export async function screenOrReject(text: string): Promise<ScreenOutcome> {
   }
 
   return { ok: true, screened: true };
+}
+
+function guessMimeType(s3Key: string): string {
+  if (s3Key.endsWith('.png')) return 'image/png';
+  if (s3Key.endsWith('.webp')) return 'image/webp';
+  return 'image/jpeg';
+}
+
+async function fetchAsBase64(s3Key: string): Promise<{ mimeType: string; data: string }> {
+  const url = await getDownloadUrl(s3Key);
+  const res = await fetch(url);
+  const buf = Buffer.from(await res.arrayBuffer());
+  return { mimeType: guessMimeType(s3Key), data: buf.toString('base64') };
+}
+
+// Screens a submitted trade offer in the background, then updates it once resolved.
+export function queueOfferScreening(
+  offerId: number,
+  text: string,
+  imageKeys: string[],
+  offererId: number,
+) {
+  (async () => {
+    try {
+      const images = await Promise.all(imageKeys.map(fetchAsBase64));
+      const screening = await screenContent(text, images);
+      const action = screening ? decideAutoAction(screening) : null;
+
+      if (action?.status === ReportStatus.REMOVED) {
+        await prisma.tradeOffer.update({
+          where: { id: offerId },
+          data: { isPendingScreening: false, moderationRationale: screening!.rationale },
+        });
+        getIo().to(`user:${offererId}`).emit('offer:screened', {
+          offerId, ok: false, rationale: screening!.rationale,
+        });
+        return;
+      }
+
+      await prisma.tradeOffer.update({
+        where: { id: offerId },
+        data: { isPendingScreening: false },
+      });
+      getIo().to(`user:${offererId}`).emit('offer:screened', { offerId, ok: true });
+    } catch (err) {
+      console.error('Offer screening failed:', err);
+    }
+  })();
 }

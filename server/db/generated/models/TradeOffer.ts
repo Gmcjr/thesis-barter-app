@@ -43,6 +43,8 @@ export type TradeOfferMinAggregateOutputType = {
   postId: number | null
   offererId: number | null
   message: string | null
+  isPendingScreening: boolean | null
+  moderationRationale: string | null
   ownerApproved: boolean | null
   offererApproved: boolean | null
   status: $Enums.TradeOfferStatus | null
@@ -54,6 +56,8 @@ export type TradeOfferMaxAggregateOutputType = {
   postId: number | null
   offererId: number | null
   message: string | null
+  isPendingScreening: boolean | null
+  moderationRationale: string | null
   ownerApproved: boolean | null
   offererApproved: boolean | null
   status: $Enums.TradeOfferStatus | null
@@ -65,6 +69,8 @@ export type TradeOfferCountAggregateOutputType = {
   postId: number
   offererId: number
   message: number
+  isPendingScreening: number
+  moderationRationale: number
   ownerApproved: number
   offererApproved: number
   status: number
@@ -90,6 +96,8 @@ export type TradeOfferMinAggregateInputType = {
   postId?: true
   offererId?: true
   message?: true
+  isPendingScreening?: true
+  moderationRationale?: true
   ownerApproved?: true
   offererApproved?: true
   status?: true
@@ -101,6 +109,8 @@ export type TradeOfferMaxAggregateInputType = {
   postId?: true
   offererId?: true
   message?: true
+  isPendingScreening?: true
+  moderationRationale?: true
   ownerApproved?: true
   offererApproved?: true
   status?: true
@@ -112,6 +122,8 @@ export type TradeOfferCountAggregateInputType = {
   postId?: true
   offererId?: true
   message?: true
+  isPendingScreening?: true
+  moderationRationale?: true
   ownerApproved?: true
   offererApproved?: true
   status?: true
@@ -210,6 +222,8 @@ export type TradeOfferGroupByOutputType = {
   postId: number
   offererId: number
   message: string | null
+  isPendingScreening: boolean
+  moderationRationale: string | null
   ownerApproved: boolean
   offererApproved: boolean
   status: $Enums.TradeOfferStatus
@@ -244,6 +258,8 @@ export type TradeOfferWhereInput = {
   postId?: Prisma.IntFilter<"TradeOffer"> | number
   offererId?: Prisma.IntFilter<"TradeOffer"> | number
   message?: Prisma.StringNullableFilter<"TradeOffer"> | string | null
+  isPendingScreening?: Prisma.BoolFilter<"TradeOffer"> | boolean
+  moderationRationale?: Prisma.StringNullableFilter<"TradeOffer"> | string | null
   ownerApproved?: Prisma.BoolFilter<"TradeOffer"> | boolean
   offererApproved?: Prisma.BoolFilter<"TradeOffer"> | boolean
   status?: Prisma.EnumTradeOfferStatusFilter<"TradeOffer"> | $Enums.TradeOfferStatus
@@ -258,6 +274,8 @@ export type TradeOfferOrderByWithRelationInput = {
   postId?: Prisma.SortOrder
   offererId?: Prisma.SortOrder
   message?: Prisma.SortOrderInput | Prisma.SortOrder
+  isPendingScreening?: Prisma.SortOrder
+  moderationRationale?: Prisma.SortOrderInput | Prisma.SortOrder
   ownerApproved?: Prisma.SortOrder
   offererApproved?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -275,6 +293,8 @@ export type TradeOfferWhereUniqueInput = Prisma.AtLeast<{
   postId?: Prisma.IntFilter<"TradeOffer"> | number
   offererId?: Prisma.IntFilter<"TradeOffer"> | number
   message?: Prisma.StringNullableFilter<"TradeOffer"> | string | null
+  isPendingScreening?: Prisma.BoolFilter<"TradeOffer"> | boolean
+  moderationRationale?: Prisma.StringNullableFilter<"TradeOffer"> | string | null
   ownerApproved?: Prisma.BoolFilter<"TradeOffer"> | boolean
   offererApproved?: Prisma.BoolFilter<"TradeOffer"> | boolean
   status?: Prisma.EnumTradeOfferStatusFilter<"TradeOffer"> | $Enums.TradeOfferStatus
@@ -289,6 +309,8 @@ export type TradeOfferOrderByWithAggregationInput = {
   postId?: Prisma.SortOrder
   offererId?: Prisma.SortOrder
   message?: Prisma.SortOrderInput | Prisma.SortOrder
+  isPendingScreening?: Prisma.SortOrder
+  moderationRationale?: Prisma.SortOrderInput | Prisma.SortOrder
   ownerApproved?: Prisma.SortOrder
   offererApproved?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -308,6 +330,8 @@ export type TradeOfferScalarWhereWithAggregatesInput = {
   postId?: Prisma.IntWithAggregatesFilter<"TradeOffer"> | number
   offererId?: Prisma.IntWithAggregatesFilter<"TradeOffer"> | number
   message?: Prisma.StringNullableWithAggregatesFilter<"TradeOffer"> | string | null
+  isPendingScreening?: Prisma.BoolWithAggregatesFilter<"TradeOffer"> | boolean
+  moderationRationale?: Prisma.StringNullableWithAggregatesFilter<"TradeOffer"> | string | null
   ownerApproved?: Prisma.BoolWithAggregatesFilter<"TradeOffer"> | boolean
   offererApproved?: Prisma.BoolWithAggregatesFilter<"TradeOffer"> | boolean
   status?: Prisma.EnumTradeOfferStatusWithAggregatesFilter<"TradeOffer"> | $Enums.TradeOfferStatus
@@ -316,6 +340,8 @@ export type TradeOfferScalarWhereWithAggregatesInput = {
 
 export type TradeOfferCreateInput = {
   message?: string | null
+  isPendingScreening?: boolean
+  moderationRationale?: string | null
   ownerApproved?: boolean
   offererApproved?: boolean
   status?: $Enums.TradeOfferStatus
@@ -330,6 +356,8 @@ export type TradeOfferUncheckedCreateInput = {
   postId: number
   offererId: number
   message?: string | null
+  isPendingScreening?: boolean
+  moderationRationale?: string | null
   ownerApproved?: boolean
   offererApproved?: boolean
   status?: $Enums.TradeOfferStatus
@@ -339,6 +367,8 @@ export type TradeOfferUncheckedCreateInput = {
 
 export type TradeOfferUpdateInput = {
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  moderationRationale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ownerApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   offererApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumTradeOfferStatusFieldUpdateOperationsInput | $Enums.TradeOfferStatus
@@ -353,6 +383,8 @@ export type TradeOfferUncheckedUpdateInput = {
   postId?: Prisma.IntFieldUpdateOperationsInput | number
   offererId?: Prisma.IntFieldUpdateOperationsInput | number
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  moderationRationale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ownerApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   offererApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumTradeOfferStatusFieldUpdateOperationsInput | $Enums.TradeOfferStatus
@@ -365,6 +397,8 @@ export type TradeOfferCreateManyInput = {
   postId: number
   offererId: number
   message?: string | null
+  isPendingScreening?: boolean
+  moderationRationale?: string | null
   ownerApproved?: boolean
   offererApproved?: boolean
   status?: $Enums.TradeOfferStatus
@@ -373,6 +407,8 @@ export type TradeOfferCreateManyInput = {
 
 export type TradeOfferUpdateManyMutationInput = {
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  moderationRationale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ownerApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   offererApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumTradeOfferStatusFieldUpdateOperationsInput | $Enums.TradeOfferStatus
@@ -384,6 +420,8 @@ export type TradeOfferUncheckedUpdateManyInput = {
   postId?: Prisma.IntFieldUpdateOperationsInput | number
   offererId?: Prisma.IntFieldUpdateOperationsInput | number
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  moderationRationale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ownerApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   offererApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumTradeOfferStatusFieldUpdateOperationsInput | $Enums.TradeOfferStatus
@@ -405,6 +443,8 @@ export type TradeOfferCountOrderByAggregateInput = {
   postId?: Prisma.SortOrder
   offererId?: Prisma.SortOrder
   message?: Prisma.SortOrder
+  isPendingScreening?: Prisma.SortOrder
+  moderationRationale?: Prisma.SortOrder
   ownerApproved?: Prisma.SortOrder
   offererApproved?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -422,6 +462,8 @@ export type TradeOfferMaxOrderByAggregateInput = {
   postId?: Prisma.SortOrder
   offererId?: Prisma.SortOrder
   message?: Prisma.SortOrder
+  isPendingScreening?: Prisma.SortOrder
+  moderationRationale?: Prisma.SortOrder
   ownerApproved?: Prisma.SortOrder
   offererApproved?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -433,6 +475,8 @@ export type TradeOfferMinOrderByAggregateInput = {
   postId?: Prisma.SortOrder
   offererId?: Prisma.SortOrder
   message?: Prisma.SortOrder
+  isPendingScreening?: Prisma.SortOrder
+  moderationRationale?: Prisma.SortOrder
   ownerApproved?: Prisma.SortOrder
   offererApproved?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -554,6 +598,8 @@ export type TradeOfferUpdateOneRequiredWithoutTradeOfferMediaNestedInput = {
 
 export type TradeOfferCreateWithoutOffererInput = {
   message?: string | null
+  isPendingScreening?: boolean
+  moderationRationale?: string | null
   ownerApproved?: boolean
   offererApproved?: boolean
   status?: $Enums.TradeOfferStatus
@@ -566,6 +612,8 @@ export type TradeOfferUncheckedCreateWithoutOffererInput = {
   id?: number
   postId: number
   message?: string | null
+  isPendingScreening?: boolean
+  moderationRationale?: string | null
   ownerApproved?: boolean
   offererApproved?: boolean
   status?: $Enums.TradeOfferStatus
@@ -607,6 +655,8 @@ export type TradeOfferScalarWhereInput = {
   postId?: Prisma.IntFilter<"TradeOffer"> | number
   offererId?: Prisma.IntFilter<"TradeOffer"> | number
   message?: Prisma.StringNullableFilter<"TradeOffer"> | string | null
+  isPendingScreening?: Prisma.BoolFilter<"TradeOffer"> | boolean
+  moderationRationale?: Prisma.StringNullableFilter<"TradeOffer"> | string | null
   ownerApproved?: Prisma.BoolFilter<"TradeOffer"> | boolean
   offererApproved?: Prisma.BoolFilter<"TradeOffer"> | boolean
   status?: Prisma.EnumTradeOfferStatusFilter<"TradeOffer"> | $Enums.TradeOfferStatus
@@ -615,6 +665,8 @@ export type TradeOfferScalarWhereInput = {
 
 export type TradeOfferCreateWithoutPostInput = {
   message?: string | null
+  isPendingScreening?: boolean
+  moderationRationale?: string | null
   ownerApproved?: boolean
   offererApproved?: boolean
   status?: $Enums.TradeOfferStatus
@@ -627,6 +679,8 @@ export type TradeOfferUncheckedCreateWithoutPostInput = {
   id?: number
   offererId: number
   message?: string | null
+  isPendingScreening?: boolean
+  moderationRationale?: string | null
   ownerApproved?: boolean
   offererApproved?: boolean
   status?: $Enums.TradeOfferStatus
@@ -662,6 +716,8 @@ export type TradeOfferUpdateManyWithWhereWithoutPostInput = {
 
 export type TradeOfferCreateWithoutTradeOfferMediaInput = {
   message?: string | null
+  isPendingScreening?: boolean
+  moderationRationale?: string | null
   ownerApproved?: boolean
   offererApproved?: boolean
   status?: $Enums.TradeOfferStatus
@@ -675,6 +731,8 @@ export type TradeOfferUncheckedCreateWithoutTradeOfferMediaInput = {
   postId: number
   offererId: number
   message?: string | null
+  isPendingScreening?: boolean
+  moderationRationale?: string | null
   ownerApproved?: boolean
   offererApproved?: boolean
   status?: $Enums.TradeOfferStatus
@@ -699,6 +757,8 @@ export type TradeOfferUpdateToOneWithWhereWithoutTradeOfferMediaInput = {
 
 export type TradeOfferUpdateWithoutTradeOfferMediaInput = {
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  moderationRationale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ownerApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   offererApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumTradeOfferStatusFieldUpdateOperationsInput | $Enums.TradeOfferStatus
@@ -712,6 +772,8 @@ export type TradeOfferUncheckedUpdateWithoutTradeOfferMediaInput = {
   postId?: Prisma.IntFieldUpdateOperationsInput | number
   offererId?: Prisma.IntFieldUpdateOperationsInput | number
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  moderationRationale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ownerApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   offererApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumTradeOfferStatusFieldUpdateOperationsInput | $Enums.TradeOfferStatus
@@ -722,6 +784,8 @@ export type TradeOfferCreateManyOffererInput = {
   id?: number
   postId: number
   message?: string | null
+  isPendingScreening?: boolean
+  moderationRationale?: string | null
   ownerApproved?: boolean
   offererApproved?: boolean
   status?: $Enums.TradeOfferStatus
@@ -730,6 +794,8 @@ export type TradeOfferCreateManyOffererInput = {
 
 export type TradeOfferUpdateWithoutOffererInput = {
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  moderationRationale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ownerApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   offererApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumTradeOfferStatusFieldUpdateOperationsInput | $Enums.TradeOfferStatus
@@ -742,6 +808,8 @@ export type TradeOfferUncheckedUpdateWithoutOffererInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   postId?: Prisma.IntFieldUpdateOperationsInput | number
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  moderationRationale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ownerApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   offererApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumTradeOfferStatusFieldUpdateOperationsInput | $Enums.TradeOfferStatus
@@ -753,6 +821,8 @@ export type TradeOfferUncheckedUpdateManyWithoutOffererInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   postId?: Prisma.IntFieldUpdateOperationsInput | number
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  moderationRationale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ownerApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   offererApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumTradeOfferStatusFieldUpdateOperationsInput | $Enums.TradeOfferStatus
@@ -763,6 +833,8 @@ export type TradeOfferCreateManyPostInput = {
   id?: number
   offererId: number
   message?: string | null
+  isPendingScreening?: boolean
+  moderationRationale?: string | null
   ownerApproved?: boolean
   offererApproved?: boolean
   status?: $Enums.TradeOfferStatus
@@ -771,6 +843,8 @@ export type TradeOfferCreateManyPostInput = {
 
 export type TradeOfferUpdateWithoutPostInput = {
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  moderationRationale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ownerApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   offererApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumTradeOfferStatusFieldUpdateOperationsInput | $Enums.TradeOfferStatus
@@ -783,6 +857,8 @@ export type TradeOfferUncheckedUpdateWithoutPostInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   offererId?: Prisma.IntFieldUpdateOperationsInput | number
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  moderationRationale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ownerApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   offererApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumTradeOfferStatusFieldUpdateOperationsInput | $Enums.TradeOfferStatus
@@ -794,6 +870,8 @@ export type TradeOfferUncheckedUpdateManyWithoutPostInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   offererId?: Prisma.IntFieldUpdateOperationsInput | number
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  moderationRationale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ownerApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   offererApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumTradeOfferStatusFieldUpdateOperationsInput | $Enums.TradeOfferStatus
@@ -836,6 +914,8 @@ export type TradeOfferSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   postId?: boolean
   offererId?: boolean
   message?: boolean
+  isPendingScreening?: boolean
+  moderationRationale?: boolean
   ownerApproved?: boolean
   offererApproved?: boolean
   status?: boolean
@@ -851,6 +931,8 @@ export type TradeOfferSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   postId?: boolean
   offererId?: boolean
   message?: boolean
+  isPendingScreening?: boolean
+  moderationRationale?: boolean
   ownerApproved?: boolean
   offererApproved?: boolean
   status?: boolean
@@ -864,6 +946,8 @@ export type TradeOfferSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   postId?: boolean
   offererId?: boolean
   message?: boolean
+  isPendingScreening?: boolean
+  moderationRationale?: boolean
   ownerApproved?: boolean
   offererApproved?: boolean
   status?: boolean
@@ -877,13 +961,15 @@ export type TradeOfferSelectScalar = {
   postId?: boolean
   offererId?: boolean
   message?: boolean
+  isPendingScreening?: boolean
+  moderationRationale?: boolean
   ownerApproved?: boolean
   offererApproved?: boolean
   status?: boolean
   createdAt?: boolean
 }
 
-export type TradeOfferOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "postId" | "offererId" | "message" | "ownerApproved" | "offererApproved" | "status" | "createdAt", ExtArgs["result"]["tradeOffer"]>
+export type TradeOfferOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "postId" | "offererId" | "message" | "isPendingScreening" | "moderationRationale" | "ownerApproved" | "offererApproved" | "status" | "createdAt", ExtArgs["result"]["tradeOffer"]>
 export type TradeOfferInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   post?: boolean | Prisma.PostDefaultArgs<ExtArgs>
   offerer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -911,6 +997,8 @@ export type $TradeOfferPayload<ExtArgs extends runtime.Types.Extensions.Internal
     postId: number
     offererId: number
     message: string | null
+    isPendingScreening: boolean
+    moderationRationale: string | null
     ownerApproved: boolean
     offererApproved: boolean
     status: $Enums.TradeOfferStatus
@@ -1345,6 +1433,8 @@ export interface TradeOfferFieldRefs {
   readonly postId: Prisma.FieldRef<"TradeOffer", 'Int'>
   readonly offererId: Prisma.FieldRef<"TradeOffer", 'Int'>
   readonly message: Prisma.FieldRef<"TradeOffer", 'String'>
+  readonly isPendingScreening: Prisma.FieldRef<"TradeOffer", 'Boolean'>
+  readonly moderationRationale: Prisma.FieldRef<"TradeOffer", 'String'>
   readonly ownerApproved: Prisma.FieldRef<"TradeOffer", 'Boolean'>
   readonly offererApproved: Prisma.FieldRef<"TradeOffer", 'Boolean'>
   readonly status: Prisma.FieldRef<"TradeOffer", 'TradeOfferStatus'>

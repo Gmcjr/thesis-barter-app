@@ -177,6 +177,8 @@ export const TradeOfferScalarFieldEnum = {
   postId: 'postId',
   offererId: 'offererId',
   message: 'message',
+  isPendingScreening: 'isPendingScreening',
+  moderationRationale: 'moderationRationale',
   ownerApproved: 'ownerApproved',
   offererApproved: 'offererApproved',
   status: 'status',
