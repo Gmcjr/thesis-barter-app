@@ -369,7 +369,7 @@ export default function ManagePosts({
                               Art Sent:
                             </Typography>
                             <Box sx={{
-                              bgcolor: '#121212', borderRadius: 2, p: 1, textAlign: 'center', minHeight: 200, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                              bgcolor: 'surface.sunken', borderRadius: 2, p: 1, textAlign: 'center', minHeight: 200, display: 'flex', alignItems: 'center', justifyContent: 'center',
                             }}
                             >
                               {sentUrl ? (
@@ -390,7 +390,7 @@ export default function ManagePosts({
                               Art Received:
                             </Typography>
                             <Box sx={{
-                              bgcolor: '#121212', borderRadius: 2, p: 1, textAlign: 'center', minHeight: 200, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                              bgcolor: 'surface.sunken', borderRadius: 2, p: 1, textAlign: 'center', minHeight: 200, display: 'flex', alignItems: 'center', justifyContent: 'center',
                             }}
                             >
                               {receivedUrl ? (

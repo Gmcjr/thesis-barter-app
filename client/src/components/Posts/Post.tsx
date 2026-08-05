@@ -109,7 +109,7 @@ export default function Post({
   };
 
   return (
-    <Card variant="outlined" sx={{ borderRadius: 3, borderColor: '#e0e0e0' }}>
+    <Card variant="outlined" sx={{ borderRadius: 3, borderColor: 'border.default' }}>
       <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
         <Box sx={{
           display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, justifyContent: { xs: 'flex-start', sm: 'space-between' }, alignItems: { xs: 'stretch', sm: 'flex-start' }, mb: 2, gap: { xs: 1, sm: 2 },
@@ -210,7 +210,7 @@ export default function Post({
               <Box
                 key={comment.id}
                 sx={{
-                  display: 'flex', gap: 2, alignItems: 'flex-start', p: 1.5, bgcolor: '#f4f6f8', borderRadius: 2,
+                  display: 'flex', gap: 2, alignItems: 'flex-start', p: 1.5, bgcolor: 'surface.sunken', borderRadius: 2,
                 }}
               >
                 <Typography variant="body2" sx={{ flex: 1, color: 'black' }}>
@@ -247,7 +247,7 @@ export default function Post({
               Art Received:
             </Typography>
             <Box sx={{
-              bgcolor: '#121212', borderRadius: 2, p: 1, textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center',
+              bgcolor: 'surface.sunken', borderRadius: 2, p: 1, textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center',
             }}
             >
               <img

@@ -84,7 +84,7 @@ export default function IncomingTradeRequests({ postId, onAccepted }: IncomingTr
             <Box
               key={request.id}
               sx={{
-                display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 1.5, bgcolor: '#f4f6f8', borderRadius: 2, gap: 2,
+                display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 1.5, bgcolor: 'surface.sunken', borderRadius: 2, gap: 2,
               }}
             >
               <Box sx={{ minWidth: 0 }}>

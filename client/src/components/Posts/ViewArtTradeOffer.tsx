@@ -145,7 +145,7 @@ export const ViewArtTradeOffer: React.FC<ViewArtTradeOfferProps> = ({
                   image={offer.previewUrl}
                   alt="Offered Watermarked Art"
                   sx={{
-                    width: '100%', height: 'auto', maxHeight: '350px', objectFit: 'contain', bgcolor: '#121212',
+                    width: '100%', height: 'auto', maxHeight: '350px', objectFit: 'contain', bgcolor: 'surface.sunken',
                   }}
                 />
               )}

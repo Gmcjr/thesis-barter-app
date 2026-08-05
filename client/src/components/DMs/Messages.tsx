@@ -106,7 +106,7 @@ export default function Messages() {
       <Card
         variant="outlined"
         sx={{
-          width: 280, flexShrink: 0, borderRadius: 3, borderColor: '#e0e0e0', overflowY: 'auto',
+          width: 280, flexShrink: 0, borderRadius: 3, borderColor: 'border.default', overflowY: 'auto',
         }}
       >
         {loadingInbox && (
@@ -153,7 +153,7 @@ export default function Messages() {
       <Card
         variant="outlined"
         sx={{
-          flex: 1, borderRadius: 3, borderColor: '#e0e0e0', display: 'flex', flexDirection: 'column',
+          flex: 1, borderRadius: 3, borderColor: 'border.default', display: 'flex', flexDirection: 'column',
         }}
       >
         {!activeDmId && (
@@ -167,7 +167,7 @@ export default function Messages() {
 
         {activeDmId && (
           <>
-            <Box sx={{ p: 2, borderBottom: '1px solid #e0e0e0' }}>
+            <Box sx={{ p: 2, borderBottom: (theme) => `1px solid ${theme.palette.border.default}` }}>
               <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
                 {activeConversation?.otherUser.name ?? 'Conversation'}
               </Typography>
@@ -206,7 +206,7 @@ export default function Messages() {
             </Box>
 
             <Box sx={{
-              p: 1.5, borderTop: '1px solid #e0e0e0', display: 'flex', gap: 1,
+              p: 1.5, borderTop: (theme) => `1px solid ${theme.palette.border.default}`,
             }}
             >
               <TextField

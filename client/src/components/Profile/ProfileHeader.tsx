@@ -16,7 +16,7 @@ export default function ProfileHeader({
       variant="outlined"
       sx={{
         borderRadius: 3,
-        borderColor: '#e0e0e0',
+        borderColor: 'border.default',
         mb: 4,
         mx: { xs: 2, md: 0 },
         position: 'relative',
