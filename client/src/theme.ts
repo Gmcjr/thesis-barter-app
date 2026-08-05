@@ -2,6 +2,10 @@ import { createTheme, type Theme } from '@mui/material/styles';
 
 export type ThemeMode = 'light' | 'dark';
 
+export const radius = {
+  sm: '6px', md: '10px', lg: '16px', xl: '22px', pill: '9999px',
+};
+
 // Design tokens single source of truth for color/font values in app
 // Update values here and not at call sites
 const clay = {

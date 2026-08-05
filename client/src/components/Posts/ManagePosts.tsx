@@ -17,6 +17,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Divider from '@mui/material/Divider';
 import DownloadIcon from '@mui/icons-material/Download';
 import CircularProgress from '@mui/material/CircularProgress';
+import { radius } from '../../theme';
 
 import { formatPostDate } from '../../utils/utils';
 import RemovedPostCard from './RemovedPostCard';
@@ -369,7 +370,7 @@ export default function ManagePosts({
                               Art Sent:
                             </Typography>
                             <Box sx={{
-                              bgcolor: 'surface.sunken', borderRadius: 2, p: 1, textAlign: 'center', minHeight: 200, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                              bgcolor: 'surface.sunken', borderRadius: radius.sm, p: 1, textAlign: 'center', minHeight: 200, display: 'flex', alignItems: 'center', justifyContent: 'center',
                             }}
                             >
                               {sentUrl ? (
@@ -390,7 +391,7 @@ export default function ManagePosts({
                               Art Received:
                             </Typography>
                             <Box sx={{
-                              bgcolor: 'surface.sunken', borderRadius: 2, p: 1, textAlign: 'center', minHeight: 200, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                              bgcolor: 'surface.sunken', borderRadius: radius.md, p: 1, textAlign: 'center', minHeight: 200, display: 'flex', alignItems: 'center', justifyContent: 'center',
                             }}
                             >
                               {receivedUrl ? (
