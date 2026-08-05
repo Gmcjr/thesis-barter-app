@@ -2264,7 +2264,10 @@ export const UserScalarFieldEnum = {
   role: 'role',
   bio: 'bio',
   createdAt: 'createdAt',
-  zipCode: 'zipCode'
+  zipCode: 'zipCode',
+  isSystem: 'isSystem',
+  pendingBio: 'pendingBio',
+  isPendingScreening: 'isPendingScreening'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -2314,6 +2317,7 @@ export const PostScalarFieldEnum = {
   radiusMiles: 'radiusMiles',
   lat: 'lat',
   lng: 'lng',
+  isPendingScreening: 'isPendingScreening',
   isRemoved: 'isRemoved'
 } as const
 
@@ -2340,7 +2344,7 @@ export const TradeOfferScalarFieldEnum = {
   offererId: 'offererId',
   message: 'message',
   isPendingScreening: 'isPendingScreening',
-  moderationRationale: 'moderationRationale',
+  isRemoved: 'isRemoved',
   ownerApproved: 'ownerApproved',
   offererApproved: 'offererApproved',
   status: 'status',
@@ -2356,7 +2360,9 @@ export const TradeRequestScalarFieldEnum = {
   requesterId: 'requesterId',
   message: 'message',
   status: 'status',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  isPendingScreening: 'isPendingScreening',
+  isRemoved: 'isRemoved'
 } as const
 
 export type TradeRequestScalarFieldEnum = (typeof TradeRequestScalarFieldEnum)[keyof typeof TradeRequestScalarFieldEnum]
@@ -2415,7 +2421,9 @@ export const ReviewScalarFieldEnum = {
   revieweeId: 'revieweeId',
   rating: 'rating',
   comment: 'comment',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  isPendingScreening: 'isPendingScreening',
+  isRemoved: 'isRemoved'
 } as const
 
 export type ReviewScalarFieldEnum = (typeof ReviewScalarFieldEnum)[keyof typeof ReviewScalarFieldEnum]
@@ -2438,6 +2446,9 @@ export const ReportScalarFieldEnum = {
   postId: 'postId',
   targetUserId: 'targetUserId',
   messageId: 'messageId',
+  offerId: 'offerId',
+  reviewId: 'reviewId',
+  tradeRequestId: 'tradeRequestId',
   reason: 'reason',
   details: 'details',
   aiScore: 'aiScore',

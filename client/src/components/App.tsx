@@ -19,6 +19,7 @@ import BlockedUsers from './BlockedUsers/BlockedUsers';
 import NotFound from './NotFound/NotFound';
 import Messages from './DMs/Messages';
 import DmNotifications from './DMs/DmNotifications';
+import ScreeningNotifications from './DMs/ScreeningNotifications';
 
 const routes: RouteDef[] = [
   { path: '/', component: Posts },
@@ -48,6 +49,7 @@ function AppShell() {
             <RouterProvider>
               <NavBar />
               <DmNotifications />
+              <ScreeningNotifications />
               <Box
                 component="main"
                 sx={{

@@ -41,6 +41,10 @@ model User {
   createdAt DateTime @default(now())
   zipCode   String?
 
+  isSystem           Boolean @default(false)
+  pendingBio         String?
+  isPendingScreening Boolean @default(false)
+
   reportsFiled    Report[] @relation("reportsFiled")
   reportsAgainst  Report[] @relation("reportsAgainst")
   reportsResolved Report[] @relation("reportsResolved")
@@ -122,8 +126,10 @@ model Post {
   lat         Float?
   lng         Float?
 
-  reports       Report[]
-  isRemoved     Boolean        @default(false)
+  isPendingScreening Boolean  @default(false)
+  isRemoved          Boolean  @default(false)
+  reports            Report[]
+
   tradeRequests TradeRequest[]
 }
 
@@ -162,8 +168,9 @@ model TradeOffer {
   offererId Int
   message   String?
 
-  isPendingScreening  Boolean @default(false)
-  moderationRationale String?
+  isPendingScreening Boolean  @default(false)
+  isRemoved          Boolean  @default(false)
+  reports            Report[]
 
   tradeOfferMedia TradeOfferMedia[]
 
@@ -188,9 +195,12 @@ model TradeRequest {
   requester   User @relation(fields: [requesterId], references: [id], onDelete: Cascade)
   requesterId Int
 
-  message   String?
-  status    TradeRequestStatus @default(PENDING)
-  createdAt DateTime           @default(now())
+  message            String?
+  status             TradeRequestStatus @default(PENDING)
+  createdAt          DateTime           @default(now())
+  isPendingScreening Boolean            @default(false)
+  isRemoved          Boolean            @default(false)
+  reports            Report[]
 
   @@unique([postId, requesterId])
 }
@@ -285,6 +295,10 @@ model Review {
   comment   String?
   createdAt DateTime @default(now())
 
+  isPendingScreening Boolean  @default(false)
+  isRemoved          Boolean  @default(false)
+  reports            Report[]
+
   @@unique([tradeId, reviewerId])
 }
 
@@ -307,13 +321,19 @@ model Report {
   reporter   User @relation("reportsFiled", fields: [reporterId], references: [id])
   reporterId Int
 
-  targetType   TargetType
-  post         Post?      @relation(fields: [postId], references: [id])
-  postId       Int?
-  targetUser   User?      @relation("reportsAgainst", fields: [targetUserId], references: [id])
-  targetUserId Int?
-  message      Message?   @relation(fields: [messageId], references: [id])
-  messageId    Int?
+  targetType     TargetType
+  post           Post?         @relation(fields: [postId], references: [id])
+  postId         Int?
+  targetUser     User?         @relation("reportsAgainst", fields: [targetUserId], references: [id])
+  targetUserId   Int?
+  message        Message?      @relation(fields: [messageId], references: [id])
+  messageId      Int?
+  offer          TradeOffer?   @relation(fields: [offerId], references: [id])
+  offerId        Int?
+  review         Review?       @relation(fields: [reviewId], references: [id])
+  reviewId       Int?
+  tradeRequest   TradeRequest? @relation(fields: [tradeRequestId], references: [id])
+  tradeRequestId Int?
 
   reason  ReportReason
   details String?
@@ -367,6 +387,9 @@ enum TargetType {
   POST
   USER
   MESSAGE
+  TRADE_OFFER
+  REVIEW
+  TRADE_REQUEST
 }
 
 enum ReportReason {
@@ -374,6 +397,7 @@ enum ReportReason {
   INAPPROPRIATE_CONTENT
   ITEM_MISMATCH
   HARASSMENT
+  AUTO_SCREENING
   OTHER
 }
 
