@@ -54,32 +54,46 @@ export interface ScreeningResult {
   rationale: string;
 }
 
-// Gemini takes text + images in one multimodal call
+const MAX_ATTEMPTS = 3;
+const RETRY_DELAY_MS = 1000;
+const sleep = (ms: number) => new Promise((resolve) => { setTimeout(resolve, ms); });
+
+// Gemini takes text and images in one multimodal call
 export async function screenContent(
   text: string,
   images: { mimeType: string; data: string }[] = [],
 ): Promise<ScreeningResult | null> {
-  // Dev escape hatch for testing without running up requests
+  // For testing without running up requests
   if (process.env.SKIP_SCREENING === 'true') return null;
 
-  try {
-    const response = await ai.models.generateContent({
-      model: 'gemini-3.5-flash',
-      contents: [
-        { text: `Reported content:\n"""\n${text}\n"""` },
-        ...images.map((img) => ({ inlineData: img })),
-      ],
-      config: {
-        systemInstruction: POLICY,
-        responseMimeType: 'application/json',
-        responseSchema,
-      },
-    });
-    return JSON.parse(response.text ?? '') as ScreeningResult;
-  } catch (err) {
-    console.error('Gemini screening failed:', err);
-    return null;
+  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt += 1) {
+    try {
+      // eslint-disable-next-line no-await-in-loop
+      const response = await ai.models.generateContent({
+        model: 'gemini-3.5-flash',
+        contents: [
+          { text: `Reported content:\n"""\n${text}\n"""` },
+          ...images.map((img) => ({ inlineData: img })),
+        ],
+        config: {
+          systemInstruction: POLICY,
+          responseMimeType: 'application/json',
+          responseSchema,
+        },
+      });
+      return JSON.parse(response.text ?? '') as ScreeningResult;
+    } catch (err) {
+      console.error(
+        `Gemini screening failed (attempt ${attempt}/${MAX_ATTEMPTS}):`,
+        err,
+      );
+      // eslint-disable-next-line no-await-in-loop
+      if (attempt < MAX_ATTEMPTS) await sleep(RETRY_DELAY_MS * attempt);
+    }
   }
+  // Still fail-open after retries exhausted
+  // Unscreened content gets approved and the submitter gets a toast
+  return null;
 }
 
 export const AUTO_REMOVE_THRESHOLD = 0.85;
@@ -91,22 +105,33 @@ export interface AutoAction {
   resolution: string;
 }
 
-export function decideAutoAction(screening: ScreeningResult): AutoAction | null {
+export function decideAutoAction(
+  screening: ScreeningResult,
+): AutoAction | null {
   if (screening.categories.some((c) => ZERO_TOLERANCE_CATEGORIES.includes(c))) {
-    return { status: ReportStatus.REMOVED, resolution: `Auto-removed: zero-tolerance category (${screening.categories.join(',')})` };
+    return {
+      status: ReportStatus.REMOVED,
+      resolution: `Auto-removed: zero-tolerance category (${screening.categories.join(',')})`,
+    };
   }
   if (screening.score >= AUTO_REMOVE_THRESHOLD) {
-    return { status: ReportStatus.REMOVED, resolution: `Auto-removed: high-confidence violation (score ${screening.score.toFixed(2)})` };
+    return {
+      status: ReportStatus.REMOVED,
+      resolution: `Auto-removed: high-confidence violation (score ${screening.score.toFixed(2)})`,
+    };
   }
   if (screening.score <= AUTO_DISMISS_CATEGORIES) {
-    return { status: ReportStatus.APPROVED, resolution: `Auto-dismissed: low-confidence (score ${screening.score.toFixed(2)})` };
+    return {
+      status: ReportStatus.APPROVED,
+      resolution: `Auto-dismissed: low-confidence (score ${screening.score.toFixed(2)})`,
+    };
   }
   return null; // Ambiguous/middle-confidence band, leave as 'PENDING' for human review
 }
 
 export type ScreenOutcome =
-    | { ok: true; screened: boolean }
-    | { ok: false; rationale: string };
+  | { ok: true; screened: boolean }
+  | { ok: false; rationale: string };
 
 // Content moderation gate for all user-generated text (posts, offers, edits)
 export async function screenOrReject(text: string): Promise<ScreenOutcome> {
@@ -127,7 +152,9 @@ function guessMimeType(s3Key: string): string {
   return 'image/jpeg';
 }
 
-async function fetchAsBase64(s3Key: string): Promise<{ mimeType: string; data: string }> {
+async function fetchAsBase64(
+  s3Key: string,
+): Promise<{ mimeType: string; data: string }> {
   const url = await getDownloadUrl(s3Key);
   const res = await fetch(url);
   const buf = Buffer.from(await res.arrayBuffer());
@@ -137,7 +164,9 @@ async function fetchAsBase64(s3Key: string): Promise<{ mimeType: string; data: s
 let systemUserId: number | null = null;
 async function getSystemUserId(): Promise<number> {
   if (systemUserId) return systemUserId;
-  const sysUser = await prisma.user.findFirstOrThrow({ where: { isSystem: true } });
+  const sysUser = await prisma.user.findFirstOrThrow({
+    where: { isSystem: true },
+  });
   systemUserId = sysUser.id;
   return systemUserId;
 }
@@ -174,14 +203,14 @@ async function fileSystemReport(
 }
 
 export interface ScreenTarget {
-    targetType: keyof typeof REPORT_FK_FIELD;
-    targetId: number;
-    authorId: number;
-    text: string;
-    imageKeys?: string[];
-    onApproved: () => Promise<void>;
-    onRemoved: () => Promise<void>;
-  }
+  targetType: keyof typeof REPORT_FK_FIELD;
+  targetId: number;
+  authorId: number;
+  text: string;
+  imageKeys?: string[];
+  onApproved: () => Promise<void>;
+  onRemoved: () => Promise<void>;
+}
 
 // Generic async screening for any content type
 export function queueScreening(target: ScreenTarget) {
@@ -207,10 +236,15 @@ export function queueScreening(target: ScreenTarget) {
 
       await target.onApproved();
       getIo().to(`user:${target.authorId}`).emit('content:screened', {
-        targetType: target.targetType, targetId: target.targetId, ok: true,
+        targetType: target.targetType,
+        targetId: target.targetId,
+        ok: true,
       });
     } catch (err) {
-      console.error(`Screening failed for ${target.targetType}:${target.targetId}`, err);
+      console.error(
+        `Screening failed for ${target.targetType}:${target.targetId}`,
+        err,
+      );
     }
   })();
 }
