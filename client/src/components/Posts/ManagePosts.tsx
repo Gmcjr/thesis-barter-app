@@ -20,6 +20,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 import { formatPostDate } from '../../utils/utils';
 import RemovedPostCard from './RemovedPostCard';
+import WhyRemovedMenu from './WhyRemovedMenu';
 
 export type PostStatus = 'OPEN' | 'ACCEPTED' | 'IN_PROGRESS' | 'WAITING_FOR_OTHER_USER' | 'COMPLETED' | 'CANCELLED';
 

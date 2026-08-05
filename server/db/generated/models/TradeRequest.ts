@@ -45,6 +45,8 @@ export type TradeRequestMinAggregateOutputType = {
   message: string | null
   status: $Enums.TradeRequestStatus | null
   createdAt: Date | null
+  isPendingScreening: boolean | null
+  isRemoved: boolean | null
 }
 
 export type TradeRequestMaxAggregateOutputType = {
@@ -54,6 +56,8 @@ export type TradeRequestMaxAggregateOutputType = {
   message: string | null
   status: $Enums.TradeRequestStatus | null
   createdAt: Date | null
+  isPendingScreening: boolean | null
+  isRemoved: boolean | null
 }
 
 export type TradeRequestCountAggregateOutputType = {
@@ -63,6 +67,8 @@ export type TradeRequestCountAggregateOutputType = {
   message: number
   status: number
   createdAt: number
+  isPendingScreening: number
+  isRemoved: number
   _all: number
 }
 
@@ -86,6 +92,8 @@ export type TradeRequestMinAggregateInputType = {
   message?: true
   status?: true
   createdAt?: true
+  isPendingScreening?: true
+  isRemoved?: true
 }
 
 export type TradeRequestMaxAggregateInputType = {
@@ -95,6 +103,8 @@ export type TradeRequestMaxAggregateInputType = {
   message?: true
   status?: true
   createdAt?: true
+  isPendingScreening?: true
+  isRemoved?: true
 }
 
 export type TradeRequestCountAggregateInputType = {
@@ -104,6 +114,8 @@ export type TradeRequestCountAggregateInputType = {
   message?: true
   status?: true
   createdAt?: true
+  isPendingScreening?: true
+  isRemoved?: true
   _all?: true
 }
 
@@ -200,6 +212,8 @@ export type TradeRequestGroupByOutputType = {
   message: string | null
   status: $Enums.TradeRequestStatus
   createdAt: Date
+  isPendingScreening: boolean
+  isRemoved: boolean
   _count: TradeRequestCountAggregateOutputType | null
   _avg: TradeRequestAvgAggregateOutputType | null
   _sum: TradeRequestSumAggregateOutputType | null
@@ -232,8 +246,11 @@ export type TradeRequestWhereInput = {
   message?: Prisma.StringNullableFilter<"TradeRequest"> | string | null
   status?: Prisma.EnumTradeRequestStatusFilter<"TradeRequest"> | $Enums.TradeRequestStatus
   createdAt?: Prisma.DateTimeFilter<"TradeRequest"> | Date | string
+  isPendingScreening?: Prisma.BoolFilter<"TradeRequest"> | boolean
+  isRemoved?: Prisma.BoolFilter<"TradeRequest"> | boolean
   post?: Prisma.XOR<Prisma.PostScalarRelationFilter, Prisma.PostWhereInput>
   requester?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  reports?: Prisma.ReportListRelationFilter
 }
 
 export type TradeRequestOrderByWithRelationInput = {
@@ -243,8 +260,11 @@ export type TradeRequestOrderByWithRelationInput = {
   message?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  isPendingScreening?: Prisma.SortOrder
+  isRemoved?: Prisma.SortOrder
   post?: Prisma.PostOrderByWithRelationInput
   requester?: Prisma.UserOrderByWithRelationInput
+  reports?: Prisma.ReportOrderByRelationAggregateInput
 }
 
 export type TradeRequestWhereUniqueInput = Prisma.AtLeast<{
@@ -258,8 +278,11 @@ export type TradeRequestWhereUniqueInput = Prisma.AtLeast<{
   message?: Prisma.StringNullableFilter<"TradeRequest"> | string | null
   status?: Prisma.EnumTradeRequestStatusFilter<"TradeRequest"> | $Enums.TradeRequestStatus
   createdAt?: Prisma.DateTimeFilter<"TradeRequest"> | Date | string
+  isPendingScreening?: Prisma.BoolFilter<"TradeRequest"> | boolean
+  isRemoved?: Prisma.BoolFilter<"TradeRequest"> | boolean
   post?: Prisma.XOR<Prisma.PostScalarRelationFilter, Prisma.PostWhereInput>
   requester?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  reports?: Prisma.ReportListRelationFilter
 }, "id" | "postId_requesterId">
 
 export type TradeRequestOrderByWithAggregationInput = {
@@ -269,6 +292,8 @@ export type TradeRequestOrderByWithAggregationInput = {
   message?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  isPendingScreening?: Prisma.SortOrder
+  isRemoved?: Prisma.SortOrder
   _count?: Prisma.TradeRequestCountOrderByAggregateInput
   _avg?: Prisma.TradeRequestAvgOrderByAggregateInput
   _max?: Prisma.TradeRequestMaxOrderByAggregateInput
@@ -286,14 +311,19 @@ export type TradeRequestScalarWhereWithAggregatesInput = {
   message?: Prisma.StringNullableWithAggregatesFilter<"TradeRequest"> | string | null
   status?: Prisma.EnumTradeRequestStatusWithAggregatesFilter<"TradeRequest"> | $Enums.TradeRequestStatus
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"TradeRequest"> | Date | string
+  isPendingScreening?: Prisma.BoolWithAggregatesFilter<"TradeRequest"> | boolean
+  isRemoved?: Prisma.BoolWithAggregatesFilter<"TradeRequest"> | boolean
 }
 
 export type TradeRequestCreateInput = {
   message?: string | null
   status?: $Enums.TradeRequestStatus
   createdAt?: Date | string
+  isPendingScreening?: boolean
+  isRemoved?: boolean
   post: Prisma.PostCreateNestedOneWithoutTradeRequestsInput
   requester: Prisma.UserCreateNestedOneWithoutTradeRequestsInput
+  reports?: Prisma.ReportCreateNestedManyWithoutTradeRequestInput
 }
 
 export type TradeRequestUncheckedCreateInput = {
@@ -303,14 +333,20 @@ export type TradeRequestUncheckedCreateInput = {
   message?: string | null
   status?: $Enums.TradeRequestStatus
   createdAt?: Date | string
+  isPendingScreening?: boolean
+  isRemoved?: boolean
+  reports?: Prisma.ReportUncheckedCreateNestedManyWithoutTradeRequestInput
 }
 
 export type TradeRequestUpdateInput = {
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTradeRequestStatusFieldUpdateOperationsInput | $Enums.TradeRequestStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   post?: Prisma.PostUpdateOneRequiredWithoutTradeRequestsNestedInput
   requester?: Prisma.UserUpdateOneRequiredWithoutTradeRequestsNestedInput
+  reports?: Prisma.ReportUpdateManyWithoutTradeRequestNestedInput
 }
 
 export type TradeRequestUncheckedUpdateInput = {
@@ -320,6 +356,9 @@ export type TradeRequestUncheckedUpdateInput = {
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTradeRequestStatusFieldUpdateOperationsInput | $Enums.TradeRequestStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  reports?: Prisma.ReportUncheckedUpdateManyWithoutTradeRequestNestedInput
 }
 
 export type TradeRequestCreateManyInput = {
@@ -329,12 +368,16 @@ export type TradeRequestCreateManyInput = {
   message?: string | null
   status?: $Enums.TradeRequestStatus
   createdAt?: Date | string
+  isPendingScreening?: boolean
+  isRemoved?: boolean
 }
 
 export type TradeRequestUpdateManyMutationInput = {
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTradeRequestStatusFieldUpdateOperationsInput | $Enums.TradeRequestStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type TradeRequestUncheckedUpdateManyInput = {
@@ -344,6 +387,8 @@ export type TradeRequestUncheckedUpdateManyInput = {
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTradeRequestStatusFieldUpdateOperationsInput | $Enums.TradeRequestStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type TradeRequestListRelationFilter = {
@@ -368,6 +413,8 @@ export type TradeRequestCountOrderByAggregateInput = {
   message?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  isPendingScreening?: Prisma.SortOrder
+  isRemoved?: Prisma.SortOrder
 }
 
 export type TradeRequestAvgOrderByAggregateInput = {
@@ -383,6 +430,8 @@ export type TradeRequestMaxOrderByAggregateInput = {
   message?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  isPendingScreening?: Prisma.SortOrder
+  isRemoved?: Prisma.SortOrder
 }
 
 export type TradeRequestMinOrderByAggregateInput = {
@@ -392,12 +441,19 @@ export type TradeRequestMinOrderByAggregateInput = {
   message?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  isPendingScreening?: Prisma.SortOrder
+  isRemoved?: Prisma.SortOrder
 }
 
 export type TradeRequestSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
   postId?: Prisma.SortOrder
   requesterId?: Prisma.SortOrder
+}
+
+export type TradeRequestNullableScalarRelationFilter = {
+  is?: Prisma.TradeRequestWhereInput | null
+  isNot?: Prisma.TradeRequestWhereInput | null
 }
 
 export type TradeRequestCreateNestedManyWithoutRequesterInput = {
@@ -488,11 +544,30 @@ export type EnumTradeRequestStatusFieldUpdateOperationsInput = {
   set?: $Enums.TradeRequestStatus
 }
 
+export type TradeRequestCreateNestedOneWithoutReportsInput = {
+  create?: Prisma.XOR<Prisma.TradeRequestCreateWithoutReportsInput, Prisma.TradeRequestUncheckedCreateWithoutReportsInput>
+  connectOrCreate?: Prisma.TradeRequestCreateOrConnectWithoutReportsInput
+  connect?: Prisma.TradeRequestWhereUniqueInput
+}
+
+export type TradeRequestUpdateOneWithoutReportsNestedInput = {
+  create?: Prisma.XOR<Prisma.TradeRequestCreateWithoutReportsInput, Prisma.TradeRequestUncheckedCreateWithoutReportsInput>
+  connectOrCreate?: Prisma.TradeRequestCreateOrConnectWithoutReportsInput
+  upsert?: Prisma.TradeRequestUpsertWithoutReportsInput
+  disconnect?: Prisma.TradeRequestWhereInput | boolean
+  delete?: Prisma.TradeRequestWhereInput | boolean
+  connect?: Prisma.TradeRequestWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TradeRequestUpdateToOneWithWhereWithoutReportsInput, Prisma.TradeRequestUpdateWithoutReportsInput>, Prisma.TradeRequestUncheckedUpdateWithoutReportsInput>
+}
+
 export type TradeRequestCreateWithoutRequesterInput = {
   message?: string | null
   status?: $Enums.TradeRequestStatus
   createdAt?: Date | string
+  isPendingScreening?: boolean
+  isRemoved?: boolean
   post: Prisma.PostCreateNestedOneWithoutTradeRequestsInput
+  reports?: Prisma.ReportCreateNestedManyWithoutTradeRequestInput
 }
 
 export type TradeRequestUncheckedCreateWithoutRequesterInput = {
@@ -501,6 +576,9 @@ export type TradeRequestUncheckedCreateWithoutRequesterInput = {
   message?: string | null
   status?: $Enums.TradeRequestStatus
   createdAt?: Date | string
+  isPendingScreening?: boolean
+  isRemoved?: boolean
+  reports?: Prisma.ReportUncheckedCreateNestedManyWithoutTradeRequestInput
 }
 
 export type TradeRequestCreateOrConnectWithoutRequesterInput = {
@@ -539,13 +617,18 @@ export type TradeRequestScalarWhereInput = {
   message?: Prisma.StringNullableFilter<"TradeRequest"> | string | null
   status?: Prisma.EnumTradeRequestStatusFilter<"TradeRequest"> | $Enums.TradeRequestStatus
   createdAt?: Prisma.DateTimeFilter<"TradeRequest"> | Date | string
+  isPendingScreening?: Prisma.BoolFilter<"TradeRequest"> | boolean
+  isRemoved?: Prisma.BoolFilter<"TradeRequest"> | boolean
 }
 
 export type TradeRequestCreateWithoutPostInput = {
   message?: string | null
   status?: $Enums.TradeRequestStatus
   createdAt?: Date | string
+  isPendingScreening?: boolean
+  isRemoved?: boolean
   requester: Prisma.UserCreateNestedOneWithoutTradeRequestsInput
+  reports?: Prisma.ReportCreateNestedManyWithoutTradeRequestInput
 }
 
 export type TradeRequestUncheckedCreateWithoutPostInput = {
@@ -554,6 +637,9 @@ export type TradeRequestUncheckedCreateWithoutPostInput = {
   message?: string | null
   status?: $Enums.TradeRequestStatus
   createdAt?: Date | string
+  isPendingScreening?: boolean
+  isRemoved?: boolean
+  reports?: Prisma.ReportUncheckedCreateNestedManyWithoutTradeRequestInput
 }
 
 export type TradeRequestCreateOrConnectWithoutPostInput = {
@@ -582,19 +668,82 @@ export type TradeRequestUpdateManyWithWhereWithoutPostInput = {
   data: Prisma.XOR<Prisma.TradeRequestUpdateManyMutationInput, Prisma.TradeRequestUncheckedUpdateManyWithoutPostInput>
 }
 
+export type TradeRequestCreateWithoutReportsInput = {
+  message?: string | null
+  status?: $Enums.TradeRequestStatus
+  createdAt?: Date | string
+  isPendingScreening?: boolean
+  isRemoved?: boolean
+  post: Prisma.PostCreateNestedOneWithoutTradeRequestsInput
+  requester: Prisma.UserCreateNestedOneWithoutTradeRequestsInput
+}
+
+export type TradeRequestUncheckedCreateWithoutReportsInput = {
+  id?: number
+  postId: number
+  requesterId: number
+  message?: string | null
+  status?: $Enums.TradeRequestStatus
+  createdAt?: Date | string
+  isPendingScreening?: boolean
+  isRemoved?: boolean
+}
+
+export type TradeRequestCreateOrConnectWithoutReportsInput = {
+  where: Prisma.TradeRequestWhereUniqueInput
+  create: Prisma.XOR<Prisma.TradeRequestCreateWithoutReportsInput, Prisma.TradeRequestUncheckedCreateWithoutReportsInput>
+}
+
+export type TradeRequestUpsertWithoutReportsInput = {
+  update: Prisma.XOR<Prisma.TradeRequestUpdateWithoutReportsInput, Prisma.TradeRequestUncheckedUpdateWithoutReportsInput>
+  create: Prisma.XOR<Prisma.TradeRequestCreateWithoutReportsInput, Prisma.TradeRequestUncheckedCreateWithoutReportsInput>
+  where?: Prisma.TradeRequestWhereInput
+}
+
+export type TradeRequestUpdateToOneWithWhereWithoutReportsInput = {
+  where?: Prisma.TradeRequestWhereInput
+  data: Prisma.XOR<Prisma.TradeRequestUpdateWithoutReportsInput, Prisma.TradeRequestUncheckedUpdateWithoutReportsInput>
+}
+
+export type TradeRequestUpdateWithoutReportsInput = {
+  message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumTradeRequestStatusFieldUpdateOperationsInput | $Enums.TradeRequestStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  post?: Prisma.PostUpdateOneRequiredWithoutTradeRequestsNestedInput
+  requester?: Prisma.UserUpdateOneRequiredWithoutTradeRequestsNestedInput
+}
+
+export type TradeRequestUncheckedUpdateWithoutReportsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  postId?: Prisma.IntFieldUpdateOperationsInput | number
+  requesterId?: Prisma.IntFieldUpdateOperationsInput | number
+  message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumTradeRequestStatusFieldUpdateOperationsInput | $Enums.TradeRequestStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+}
+
 export type TradeRequestCreateManyRequesterInput = {
   id?: number
   postId: number
   message?: string | null
   status?: $Enums.TradeRequestStatus
   createdAt?: Date | string
+  isPendingScreening?: boolean
+  isRemoved?: boolean
 }
 
 export type TradeRequestUpdateWithoutRequesterInput = {
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTradeRequestStatusFieldUpdateOperationsInput | $Enums.TradeRequestStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   post?: Prisma.PostUpdateOneRequiredWithoutTradeRequestsNestedInput
+  reports?: Prisma.ReportUpdateManyWithoutTradeRequestNestedInput
 }
 
 export type TradeRequestUncheckedUpdateWithoutRequesterInput = {
@@ -603,6 +752,9 @@ export type TradeRequestUncheckedUpdateWithoutRequesterInput = {
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTradeRequestStatusFieldUpdateOperationsInput | $Enums.TradeRequestStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  reports?: Prisma.ReportUncheckedUpdateManyWithoutTradeRequestNestedInput
 }
 
 export type TradeRequestUncheckedUpdateManyWithoutRequesterInput = {
@@ -611,6 +763,8 @@ export type TradeRequestUncheckedUpdateManyWithoutRequesterInput = {
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTradeRequestStatusFieldUpdateOperationsInput | $Enums.TradeRequestStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type TradeRequestCreateManyPostInput = {
@@ -619,13 +773,18 @@ export type TradeRequestCreateManyPostInput = {
   message?: string | null
   status?: $Enums.TradeRequestStatus
   createdAt?: Date | string
+  isPendingScreening?: boolean
+  isRemoved?: boolean
 }
 
 export type TradeRequestUpdateWithoutPostInput = {
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTradeRequestStatusFieldUpdateOperationsInput | $Enums.TradeRequestStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   requester?: Prisma.UserUpdateOneRequiredWithoutTradeRequestsNestedInput
+  reports?: Prisma.ReportUpdateManyWithoutTradeRequestNestedInput
 }
 
 export type TradeRequestUncheckedUpdateWithoutPostInput = {
@@ -634,6 +793,9 @@ export type TradeRequestUncheckedUpdateWithoutPostInput = {
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTradeRequestStatusFieldUpdateOperationsInput | $Enums.TradeRequestStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  reports?: Prisma.ReportUncheckedUpdateManyWithoutTradeRequestNestedInput
 }
 
 export type TradeRequestUncheckedUpdateManyWithoutPostInput = {
@@ -642,8 +804,39 @@ export type TradeRequestUncheckedUpdateManyWithoutPostInput = {
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTradeRequestStatusFieldUpdateOperationsInput | $Enums.TradeRequestStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
+
+/**
+ * Count Type TradeRequestCountOutputType
+ */
+
+export type TradeRequestCountOutputType = {
+  reports: number
+}
+
+export type TradeRequestCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  reports?: boolean | TradeRequestCountOutputTypeCountReportsArgs
+}
+
+/**
+ * TradeRequestCountOutputType without action
+ */
+export type TradeRequestCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TradeRequestCountOutputType
+   */
+  select?: Prisma.TradeRequestCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * TradeRequestCountOutputType without action
+ */
+export type TradeRequestCountOutputTypeCountReportsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ReportWhereInput
+}
 
 
 export type TradeRequestSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -653,8 +846,12 @@ export type TradeRequestSelect<ExtArgs extends runtime.Types.Extensions.Internal
   message?: boolean
   status?: boolean
   createdAt?: boolean
+  isPendingScreening?: boolean
+  isRemoved?: boolean
   post?: boolean | Prisma.PostDefaultArgs<ExtArgs>
   requester?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  reports?: boolean | Prisma.TradeRequest$reportsArgs<ExtArgs>
+  _count?: boolean | Prisma.TradeRequestCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["tradeRequest"]>
 
 export type TradeRequestSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -664,6 +861,8 @@ export type TradeRequestSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   message?: boolean
   status?: boolean
   createdAt?: boolean
+  isPendingScreening?: boolean
+  isRemoved?: boolean
   post?: boolean | Prisma.PostDefaultArgs<ExtArgs>
   requester?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["tradeRequest"]>
@@ -675,6 +874,8 @@ export type TradeRequestSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   message?: boolean
   status?: boolean
   createdAt?: boolean
+  isPendingScreening?: boolean
+  isRemoved?: boolean
   post?: boolean | Prisma.PostDefaultArgs<ExtArgs>
   requester?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["tradeRequest"]>
@@ -686,12 +887,16 @@ export type TradeRequestSelectScalar = {
   message?: boolean
   status?: boolean
   createdAt?: boolean
+  isPendingScreening?: boolean
+  isRemoved?: boolean
 }
 
-export type TradeRequestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "postId" | "requesterId" | "message" | "status" | "createdAt", ExtArgs["result"]["tradeRequest"]>
+export type TradeRequestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "postId" | "requesterId" | "message" | "status" | "createdAt" | "isPendingScreening" | "isRemoved", ExtArgs["result"]["tradeRequest"]>
 export type TradeRequestInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   post?: boolean | Prisma.PostDefaultArgs<ExtArgs>
   requester?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  reports?: boolean | Prisma.TradeRequest$reportsArgs<ExtArgs>
+  _count?: boolean | Prisma.TradeRequestCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type TradeRequestIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   post?: boolean | Prisma.PostDefaultArgs<ExtArgs>
@@ -707,6 +912,7 @@ export type $TradeRequestPayload<ExtArgs extends runtime.Types.Extensions.Intern
   objects: {
     post: Prisma.$PostPayload<ExtArgs>
     requester: Prisma.$UserPayload<ExtArgs>
+    reports: Prisma.$ReportPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -715,6 +921,8 @@ export type $TradeRequestPayload<ExtArgs extends runtime.Types.Extensions.Intern
     message: string | null
     status: $Enums.TradeRequestStatus
     createdAt: Date
+    isPendingScreening: boolean
+    isRemoved: boolean
   }, ExtArgs["result"]["tradeRequest"]>
   composites: {}
 }
@@ -1111,6 +1319,7 @@ export interface Prisma__TradeRequestClient<T, Null = never, ExtArgs extends run
   readonly [Symbol.toStringTag]: "PrismaPromise"
   post<T extends Prisma.PostDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PostDefaultArgs<ExtArgs>>): Prisma.Prisma__PostClient<runtime.Types.Result.GetResult<Prisma.$PostPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   requester<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  reports<T extends Prisma.TradeRequest$reportsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TradeRequest$reportsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1146,6 +1355,8 @@ export interface TradeRequestFieldRefs {
   readonly message: Prisma.FieldRef<"TradeRequest", 'String'>
   readonly status: Prisma.FieldRef<"TradeRequest", 'TradeRequestStatus'>
   readonly createdAt: Prisma.FieldRef<"TradeRequest", 'DateTime'>
+  readonly isPendingScreening: Prisma.FieldRef<"TradeRequest", 'Boolean'>
+  readonly isRemoved: Prisma.FieldRef<"TradeRequest", 'Boolean'>
 }
     
 
@@ -1544,6 +1755,30 @@ export type TradeRequestDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.
    * Limit how many TradeRequests to delete.
    */
   limit?: number
+}
+
+/**
+ * TradeRequest.reports
+ */
+export type TradeRequest$reportsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Report
+   */
+  select?: Prisma.ReportSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Report
+   */
+  omit?: Prisma.ReportOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ReportInclude<ExtArgs> | null
+  where?: Prisma.ReportWhereInput
+  orderBy?: Prisma.ReportOrderByWithRelationInput | Prisma.ReportOrderByWithRelationInput[]
+  cursor?: Prisma.ReportWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ReportScalarFieldEnum | Prisma.ReportScalarFieldEnum[]
 }
 
 /**
