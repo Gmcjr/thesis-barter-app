@@ -1,5 +1,5 @@
 import { GoogleGenAI, Type } from '@google/genai';
-import { ReportStatus } from '../db/generated/enums';
+import { ReportStatus, TargetType, ReportReason } from '../db/generated/enums';
 import { prisma } from '../db/index.js';
 import { getIo } from '../middleware/socket.js';
 import { getDownloadUrl } from './s3.js';
@@ -134,37 +134,83 @@ async function fetchAsBase64(s3Key: string): Promise<{ mimeType: string; data: s
   return { mimeType: guessMimeType(s3Key), data: buf.toString('base64') };
 }
 
-// Screens a submitted trade offer in the background, then updates it once resolved.
-export function queueOfferScreening(
-  offerId: number,
-  text: string,
-  imageKeys: string[],
-  offererId: number,
+let systemUserId: number | null = null;
+async function getSystemUserId(): Promise<number> {
+  if (systemUserId) return systemUserId;
+  const sysUser = await prisma.user.findFirstOrThrow({ where: { isSystem: true } });
+  systemUserId = sysUser.id;
+  return systemUserId;
+}
+
+const REPORT_FK_FIELD: Record<string, string> = {
+  POST: 'postId',
+  USER: 'targetUserId',
+  MESSAGE: 'messageId',
+  TRADE_OFFER: 'offerId',
+  REVIEW: 'reviewId',
+  TRADE_REQUEST: 'tradeRequestId',
+};
+
+async function fileSystemReport(
+  targetType: keyof typeof REPORT_FK_FIELD,
+  targetId: number,
+  screening: ScreeningResult,
 ) {
+  const reporterId = await getSystemUserId();
+  await prisma.report.create({
+    data: {
+      reporterId,
+      targetType: targetType as TargetType,
+      [REPORT_FK_FIELD[targetType]]: targetId,
+      reason: ReportReason.AUTO_SCREENING,
+      aiScore: screening.score,
+      aiCategories: screening.categories,
+      aiRationale: screening.rationale,
+      status: ReportStatus.REMOVED,
+      resolution: `Auto-removed: ${screening.rationale}`,
+      resolvedAt: new Date(),
+    },
+  });
+}
+
+export interface ScreenTarget {
+    targetType: keyof typeof REPORT_FK_FIELD;
+    targetId: number;
+    authorId: number;
+    text: string;
+    imageKeys?: string[];
+    onApproved: () => Promise<void>;
+    onRemoved: () => Promise<void>;
+  }
+
+// Generic async screening for any content type
+export function queueScreening(target: ScreenTarget) {
   (async () => {
     try {
-      const images = await Promise.all(imageKeys.map(fetchAsBase64));
-      const screening = await screenContent(text, images);
+      const images = target.imageKeys?.length
+        ? await Promise.all(target.imageKeys.map(fetchAsBase64))
+        : [];
+      const screening = await screenContent(target.text, images);
       const action = screening ? decideAutoAction(screening) : null;
 
       if (action?.status === ReportStatus.REMOVED) {
-        await prisma.tradeOffer.update({
-          where: { id: offerId },
-          data: { isPendingScreening: false, moderationRationale: screening!.rationale },
-        });
-        getIo().to(`user:${offererId}`).emit('offer:screened', {
-          offerId, ok: false, rationale: screening!.rationale,
+        await fileSystemReport(target.targetType, target.targetId, screening!);
+        await target.onRemoved();
+        getIo().to(`user:${target.authorId}`).emit('content:screened', {
+          targetType: target.targetType,
+          targetId: target.targetId,
+          ok: false,
+          rationale: screening!.rationale,
         });
         return;
       }
 
-      await prisma.tradeOffer.update({
-        where: { id: offerId },
-        data: { isPendingScreening: false },
+      await target.onApproved();
+      getIo().to(`user:${target.authorId}`).emit('content:screened', {
+        targetType: target.targetType, targetId: target.targetId, ok: true,
       });
-      getIo().to(`user:${offererId}`).emit('offer:screened', { offerId, ok: true });
     } catch (err) {
-      console.error('Offer screening failed:', err);
+      console.error(`Screening failed for ${target.targetType}:${target.targetId}`, err);
     }
   })();
 }

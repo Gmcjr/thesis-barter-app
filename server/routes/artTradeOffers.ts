@@ -4,9 +4,9 @@ import { Router, type Request } from 'express';
 import { prisma } from '../db/index.js';
 import requireAuth from '../middleware/requireAuth.js';
 import { getDownloadUrl } from '../services/s3.js';
-import { queueOfferScreening } from '../services/moderation.js';
 import { getBlockedRelationshipIds, isBlocked } from '../services/blocks.js';
 import { Status } from '../db/generated/enums.js';
+import { queueScreening } from '../services/moderation.js';
 
 const artTradeOffers = Router();
 
@@ -76,11 +76,13 @@ artTradeOffers.get('/', requireAuth, async (req, res) => {
       where: numericPostId ? {
         postId: numericPostId,
         isPendingScreening: false,
+        isRemoved: false,
         ...(post?.status === Status.OPEN ? { status: 'PENDING' } : { status: 'COMPLETED' }),
       } : {
         post: { userId, status: Status.OPEN },
         status: 'PENDING',
         isPendingScreening: false,
+        isRemoved: false,
         ...notBlocked,
       },
       orderBy: { createdAt: 'asc' },
@@ -167,8 +169,22 @@ artTradeOffers.post('/', requireAuth, async (req, res) => {
       },
     });
 
-    const mediaKeys = offer.tradeOfferMedia.map((m) => m.media.s3Key);
-    queueOfferScreening(offer.id, message ?? '', mediaKeys, offererId);
+    queueScreening({
+      targetType: 'TRADE_OFFER',
+      targetId: offer.id,
+      authorId: offererId,
+      text: message ?? '',
+      imageKeys: offer.tradeOfferMedia.map((m) => m.media.s3Key),
+      onApproved: async () => {
+        await prisma.tradeOffer.update({ where: { id: offer.id }, data: { isPendingScreening: false } });
+      },
+      onRemoved: async () => {
+        await prisma.tradeOffer.update({
+          where: { id: offer.id },
+          data: { isPendingScreening: false, isRemoved: true },
+        });
+      },
+    });
 
     return res.status(201).json(offer);
   } catch (error) {

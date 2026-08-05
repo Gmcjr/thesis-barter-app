@@ -3,6 +3,7 @@ import { Router } from 'express';
 import { prisma } from '../db/index';
 import requireAuth from '../middleware/requireAuth';
 import { Status } from '../db/generated/client';
+import { queueScreening } from '../services/moderation';
 
 const reviews = Router();
 
@@ -60,8 +61,30 @@ reviews.post('/', requireAuth, async (req, res) => {
         revieweeId,
         rating,
         comment: comment ?? null,
+        isPendingScreening: !!comment,
       },
     });
+
+    if (comment) {
+      queueScreening({
+        targetType: 'REVIEW',
+        targetId: review.id,
+        authorId: reviewerId,
+        text: comment,
+        onApproved: async () => {
+          await prisma.review.update({
+            where: { id: review.id },
+            data: { isPendingScreening: false },
+          });
+        },
+        onRemoved: async () => {
+          await prisma.review.update({
+            where: { id: review.id },
+            data: { isPendingScreening: false, isRemoved: true },
+          });
+        },
+      });
+    }
 
     return res.status(201).json(review);
   } catch (err) {
@@ -117,6 +140,31 @@ reviews.patch('/:id', requireAuth, async (req, res) => {
       data,
     });
 
+    if (data.comment) {
+      await prisma.review.update({
+        where: { id: review.id },
+        data: { isPendingScreening: true },
+      });
+      queueScreening({
+        targetType: 'REVIEW',
+        targetId: review.id,
+        authorId: userId,
+        text: data.comment,
+        onApproved: async () => {
+          await prisma.review.update({
+            where: { id: review.id },
+            data: { isPendingScreening: false },
+          });
+        },
+        onRemoved: async () => {
+          await prisma.review.update({
+            where: { id: review.id },
+            data: { isPendingScreening: false, isRemoved: true },
+          });
+        },
+      });
+    }
+
     return res.json(updated);
   } catch (err) {
     console.error(err);
@@ -135,14 +183,14 @@ reviews.get('/user/:userId', async (req, res) => {
 
     const [reviewList, aggregate] = await Promise.all([
       prisma.review.findMany({
-        where: { revieweeId: userId },
+        where: { revieweeId: userId, isRemoved: false },
         include: {
           reviewer: { select: { id: true, name: true } },
         },
         orderBy: { createdAt: 'desc' },
       }),
       prisma.review.aggregate({
-        where: { revieweeId: userId },
+        where: { revieweeId: userId, isRemoved: false },
         _avg: { rating: true },
         _count: { rating: true },
       }),

@@ -1,8 +1,6 @@
-/* eslint-disable object-curly-newline */
-/* eslint-disable max-len */
 import { Router, type Request } from 'express';
 import { prisma } from '../db/index.js';
-import { screenOrReject } from '../services/moderation.js';
+import { queueScreening } from '../services/moderation.js';
 import requireAuth from '../middleware/requireAuth.js';
 import { getDownloadUrl } from '../services/s3.js';
 import { getBlockedRelationshipIds } from '../services/blocks.js';
@@ -37,7 +35,10 @@ const getOwnedOpenPostWhere = (req: Request) => ({
 });
 
 // fetch S3 URLs for preview and full media variants
-const getMediaUrls = async (mediaArray?: MediaItem[], allowFull: boolean = false) => {
+const getMediaUrls = async (
+  mediaArray?: MediaItem[],
+  allowFull: boolean = false,
+) => {
   if (!mediaArray) return { previewUrl: null, fullUrl: null };
 
   const fetchUrl = async (variant: string) => {
@@ -61,42 +62,64 @@ posts.get('/', async (req, res) => {
   try {
     const search = String(req.query.q ?? '').trim();
     const mine = req.query.mine === 'true';
-    const profileUserId = req.query.userId ? Number(req.query.userId) : undefined;
+    const profileUserId = req.query.userId
+      ? Number(req.query.userId)
+      : undefined;
 
     if (mine && !req.user) return res.status(401).json({ error: 'Unauthorized' });
 
-    const blockedRelationshipIds = (!mine && !profileUserId && req.user)
+    const blockedRelationshipIds = !mine && !profileUserId && req.user
       ? await getBlockedRelationshipIds(getUserId(req))
       : [];
 
-    // A user's "trading history" includes posts they authored, posts where they
+    // A user's 'trading history' includes posts they authored, posts where they
     // completed an art trade offer, and posts where they completed a generic
     // trade as the requester - not just posts they own.
     const ownedOrCompletedFilter = (userId: number) => ({
       OR: [
         { userId },
-        { tradeOffers: { some: { offererId: userId, status: 'COMPLETED' as const } } },
-        { trades: { some: { requesterId: userId, status: 'COMPLETED' as const } } },
+        {
+          tradeOffers: {
+            some: { offererId: userId, status: 'COMPLETED' as const },
+          },
+        },
+        {
+          trades: {
+            some: { requesterId: userId, status: 'COMPLETED' as const },
+          },
+        },
       ],
     });
 
-    const searchFilter = search ? [{
-      OR: [
-        { title: { contains: search, mode: 'insensitive' as const } },
-        { message: { contains: search, mode: 'insensitive' as const } },
-      ],
-    }] : [];
+    const searchFilter = search
+      ? [
+        {
+          OR: [
+            { title: { contains: search, mode: 'insensitive' as const } },
+            { message: { contains: search, mode: 'insensitive' as const } },
+          ],
+        },
+      ]
+      : [];
 
     const buildWhere = () => {
       if (mine) return ownedOrCompletedFilter(getUserId(req));
       if (profileUserId) {
-        return { AND: [{ isRemoved: false }, ownedOrCompletedFilter(profileUserId), ...searchFilter] };
+        return {
+          AND: [
+            { isRemoved: false, isPendingScreening: false },
+            ownedOrCompletedFilter(profileUserId),
+            ...searchFilter,
+          ],
+        };
       }
       return {
         AND: [
-          { isRemoved: false },
+          { isRemoved: false, isPendingScreening: false },
           { status: { not: 'COMPLETED' as const } },
-          ...(blockedRelationshipIds.length ? [{ userId: { notIn: blockedRelationshipIds } }] : []),
+          ...(blockedRelationshipIds.length
+            ? [{ userId: { notIn: blockedRelationshipIds } }]
+            : []),
           ...searchFilter,
         ],
       };
@@ -115,19 +138,30 @@ posts.get('/', async (req, res) => {
           orderBy: { createdAt: 'desc' },
           take: 1,
           select: {
-            id: true, status: true, ownerId: true, requesterId: true, ownerCompl: true, reqCompl: true,
+            id: true,
+            status: true,
+            ownerId: true,
+            requesterId: true,
+            ownerCompl: true,
+            reqCompl: true,
           },
         },
         postMedia: { include: { media: true } },
         tradeOffers: {
           where: mine ? undefined : { status: 'COMPLETED' },
-          include: { offerer: true, tradeOfferMedia: { include: { media: true } } },
+          include: {
+            offerer: true,
+            tradeOfferMedia: { include: { media: true } },
+          },
         },
         ...(mine && {
           reports: {
             orderBy: { createdAt: 'desc' },
             take: 1,
-            include: { resolver: { select: { id: true, name: true } }, appeal: true },
+            include: {
+              resolver: { select: { id: true, name: true } },
+              appeal: true,
+            },
           },
         }),
       },
@@ -135,30 +169,38 @@ posts.get('/', async (req, res) => {
 
     const viewerId = req.user?.id;
 
-    const postsWithUrls = await Promise.all(rawPosts.map(async (post) => {
-      const { trades, ...postRest } = post;
-      const isOwner = viewerId !== undefined && post.userId === viewerId;
-      const viewerCompletedOffer = (post.tradeOffers || []).find(
-        (o: TradeOfferItem) => o.offererId === viewerId && o.status === 'COMPLETED',
-      );
+    const postsWithUrls = await Promise.all(
+      rawPosts.map(async (post) => {
+        const { trades, ...postRest } = post;
+        const isOwner = viewerId !== undefined && post.userId === viewerId;
+        const viewerCompletedOffer = (post.tradeOffers || []).find(
+          (o: TradeOfferItem) => o.offererId === viewerId && o.status === 'COMPLETED',
+        );
 
-      const postUrls = await getMediaUrls(post.postMedia, isOwner || Boolean(viewerCompletedOffer));
+        const postUrls = await getMediaUrls(
+          post.postMedia,
+          isOwner || Boolean(viewerCompletedOffer),
+        );
 
-      const tradeOffers = await Promise.all(
-        (post.tradeOffers || []).map(async (offer: TradeOfferItem) => {
-          const isOfferer = viewerId !== undefined && offer.offererId === viewerId;
-          const offerAllowFull = isOfferer || (isOwner && offer.status === 'COMPLETED');
-          return {
-            ...offer,
-            ...(await getMediaUrls(offer.tradeOfferMedia, offerAllowFull)),
-          };
-        }),
-      );
+        const tradeOffers = await Promise.all(
+          (post.tradeOffers || []).map(async (offer: TradeOfferItem) => {
+            const isOfferer = viewerId !== undefined && offer.offererId === viewerId;
+            const offerAllowFull = isOfferer || (isOwner && offer.status === 'COMPLETED');
+            return {
+              ...offer,
+              ...(await getMediaUrls(offer.tradeOfferMedia, offerAllowFull)),
+            };
+          }),
+        );
 
-      return {
-        ...postRest, trade: trades[0] ?? null, ...postUrls, tradeOffers,
-      };
-    }));
+        return {
+          ...postRest,
+          trade: trades[0] ?? null,
+          ...postUrls,
+          tradeOffers,
+        };
+      }),
+    );
 
     return res.json(postsWithUrls);
   } catch (error) {
@@ -172,17 +214,18 @@ posts.get('/', async (req, res) => {
 posts.post('/', requireAuth, async (req, res) => {
   try {
     const {
-      title, message, isLocal = false, zipCode, radiusMiles, previewMediaId, fullMediaId,
-      name, offerType, category, condition,
+      title,
+      message,
+      isLocal = false,
+      zipCode,
+      radiusMiles,
+      previewMediaId,
+      fullMediaId,
+      name,
+      offerType,
+      category,
+      condition,
     } = req.body;
-
-    const outcome = await screenOrReject(`${title}\n\n${message}`);
-    if (!outcome.ok) {
-      return res.status(400).json({
-        error: 'This post violates community guidelines and cannot be published.',
-        rationale: outcome.rationale,
-      });
-    }
 
     const userId = getUserId(req);
     const trimmedCategory = typeof category === 'string' ? category.trim() : '';
@@ -196,7 +239,9 @@ posts.post('/', requireAuth, async (req, res) => {
           isLocal,
           zipCode: isLocal ? zipCode : null,
           radiusMiles: isLocal ? radiusMiles : null,
-          ...(previewMediaId && fullMediaId && {
+          isPendingScreening: true,
+          ...(previewMediaId
+            && fullMediaId && {
             postMedia: {
               create: [
                 { mediaId: Number(previewMediaId), sortOrder: 0 },
@@ -207,33 +252,79 @@ posts.post('/', requireAuth, async (req, res) => {
         },
       });
 
-      // DIGITAL offers have no Product/Service catalog entry — the post + attached media is the offering
-      if ((offerType === 'PRODUCT' || offerType === 'SERVICE') && trimmedCategory && name) {
+      // DIGITAL offers have no Product/Service catalog entry
+      // the post + attached media is the offering
+      if (
+        (offerType === 'PRODUCT' || offerType === 'SERVICE')
+        && trimmedCategory
+        && name
+      ) {
         const cat = await tx.cat.upsert({
           where: { name_type: { name: trimmedCategory, type: offerType } },
           create: { name: trimmedCategory, type: offerType },
           update: {},
         });
 
-    if (offerType === 'PRODUCT') {
-      await tx.product.create({
-        data: {
-          postId: post.id, userId, catId: cat.id, name, condition: condition || 'GOOD',
-        },
-      });
-    } else {
-      await tx.service.create({
-        data: {
-          postId: post.id, userId, catId: cat.id, name,
-        },
-      });
-    }
-  }
+        if (offerType === 'PRODUCT') {
+          await tx.product.create({
+            data: {
+              postId: post.id,
+              userId,
+              catId: cat.id,
+              name,
+              condition: condition || 'GOOD',
+            },
+          });
+        } else {
+          await tx.service.create({
+            data: {
+              postId: post.id,
+              userId,
+              catId: cat.id,
+              name,
+            },
+          });
+        }
+      }
 
-  return post;
-});
-getIo().emit('posts:changed');
-return res.status(201).json({ ...newPost, screened: outcome.screened });
+      return post;
+    });
+
+    const mediaKeys = previewMediaId && fullMediaId
+      ? (
+        await prisma.media.findMany({
+          where: {
+            id: { in: [Number(previewMediaId), Number(fullMediaId)] },
+          },
+          select: { s3Key: true },
+        })
+      ).map((m) => m.s3Key)
+      : [];
+
+    queueScreening({
+      targetType: 'POST',
+      targetId: newPost.id,
+      authorId: userId,
+      text: `${title}\n\n${message}`,
+      imageKeys: mediaKeys,
+      onApproved: async () => {
+        await prisma.post.update({
+          where: { id: newPost.id },
+          data: { isPendingScreening: false },
+        });
+        getIo().emit('posts:changed');
+      },
+      onRemoved: async () => {
+        await prisma.post.update({
+          where: { id: newPost.id },
+          data: { isPendingScreening: false, isRemoved: true },
+        });
+        getIo().emit('posts:changed');
+      },
+    });
+
+    getIo().emit('posts:changed');
+    return res.status(201).json(newPost);
   } catch (error) {
     console.error('Failed to POST new post:', error);
     return res.status(500).json({ error: 'Unable to create post' });
@@ -243,26 +334,26 @@ return res.status(201).json({ ...newPost, screened: outcome.screened });
 // PATCH: allows user to update an existing post
 posts.patch('/:id', requireAuth, async (req, res) => {
   try {
-    const { title, message, isLocal = false, zipCode, radiusMiles } = req.body;
+    const {
+      title, message, isLocal = false, zipCode, radiusMiles,
+    } = req.body;
 
     // This screens post edits when they're submitted
-    if (title || message) {
-      const outcome = await screenOrReject(`${title}\n\n${message}`);
-      if (!outcome.ok) {
-        return res.status(400).json({
-          error: 'This update violates community guidelines and cannot be saved.',
-          rationale: outcome.rationale,
-        });
-      }
-    }
-    if (isLocal && (zipCode === undefined || zipCode === null || zipCode === '')) {
-      return res.status(400).json({ error: 'zipCode is required when isLocal is true.' });
+    if (
+      isLocal
+      && (zipCode === undefined || zipCode === null || zipCode === '')
+    ) {
+      return res
+        .status(400)
+        .json({ error: 'zipCode is required when isLocal is true.' });
     }
 
     const parsedRadius = isLocal ? Number(radiusMiles) : null;
 
     if (isLocal && !Number.isFinite(parsedRadius)) {
-      return res.status(400).json({ error: 'radiusMiles must be a number when isLocal is true.' });
+      return res
+        .status(400)
+        .json({ error: 'radiusMiles must be a number when isLocal is true.' });
     }
 
     const { count } = await prisma.post.updateMany({
@@ -273,10 +364,38 @@ posts.patch('/:id', requireAuth, async (req, res) => {
         isLocal,
         zipCode: isLocal ? String(zipCode) : null,
         radiusMiles: parsedRadius,
+        ...(title || message ? { isPendingScreening: true } : {}),
       },
     });
 
-    if (!count) return res.status(404).json({ error: 'Post not found to PATCH as update.' });
+    if (!count) {
+      return res
+        .status(404)
+        .json({ error: 'Post not found to PATCH as update.' });
+    }
+    if (title || message) {
+      const postId = Number(req.params.id);
+      queueScreening({
+        targetType: 'POST',
+        targetId: postId,
+        authorId: getUserId(req),
+        text: `${title}\n\n${message}`,
+        onApproved: async () => {
+          await prisma.post.update({ where: { id: postId }, data: { isPendingScreening: false } });
+          getIo().emit('posts:changed');
+        },
+        onRemoved: async () => {
+          await prisma.post.update({
+            where: { id: postId },
+            data: {
+              isPendingScreening: false,
+              isRemoved: true,
+            },
+          });
+          getIo().emit('posts:changed');
+        },
+      });
+    }
     getIo().emit('posts:changed');
     return res.json({ success: true });
   } catch (error) {
@@ -292,7 +411,9 @@ posts.delete('/:id', requireAuth, async (req, res) => {
       where: getOwnedOpenPostWhere(req),
     });
 
-    if (!count) return res.status(404).json({ error: 'Post not found to DELETE.' });
+    if (!count) {
+      return res.status(404).json({ error: 'Post not found to DELETE.' });
+    }
     getIo().emit('posts:changed');
     return res.sendStatus(200);
   } catch (error) {
