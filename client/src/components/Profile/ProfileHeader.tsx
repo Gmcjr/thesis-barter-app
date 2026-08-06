@@ -5,11 +5,13 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
+import Rating from '@mui/material/Rating';
 import type { ProfileHeaderProps } from './types';
 import ProfileActionsMenu from './ProfileActionsMenu';
 
 export default function ProfileHeader({
   profile, isOwnProfile, onEditClick, onReport, onBlock, blocked,
+  averageRating, totalReviews, totalTrades, onToggleReviews,
 }: ProfileHeaderProps) {
   return (
     <Card
@@ -80,6 +82,33 @@ export default function ProfileHeader({
           <Typography variant="caption" color="text.secondary">
             {`User since ${new Date(profile.createdAt).toLocaleDateString()}`}
           </Typography>
+
+          <Box sx={{ mt: 0.5 }}>
+            <Box
+              onClick={onToggleReviews}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onToggleReviews(); }}
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 1,
+                width: 'fit-content',
+                cursor: 'pointer',
+                '&:hover': { textDecoration: 'underline' },
+              }}
+            >
+              <Rating value={averageRating ?? 0} precision={0.5} readOnly size="small" />
+              <Typography variant="body2" color="text.secondary">
+                {averageRating ? averageRating.toFixed(1) : 'No ratings'}
+                {totalReviews > 0 && ` (${totalReviews})`}
+              </Typography>
+            </Box>
+            <Typography variant="body2" color="text.secondary">
+              {`${totalTrades} completed trade${totalTrades === 1 ? '' : 's'}`}
+            </Typography>
+          </Box>
+
           <Typography variant="body2" sx={{ lineHeight: 1.6, mt: 1.5 }}>
             {profile.bio ?? ''}
           </Typography>
