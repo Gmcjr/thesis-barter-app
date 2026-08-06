@@ -374,7 +374,8 @@ export type MessageMediaScalarFieldEnum = (typeof MessageMediaScalarFieldEnum)[k
 export const UserMediaScalarFieldEnum = {
   id: 'id',
   mediaId: 'mediaId',
-  userId: 'userId'
+  userId: 'userId',
+  slot: 'slot'
 } as const
 
 export type UserMediaScalarFieldEnum = (typeof UserMediaScalarFieldEnum)[keyof typeof UserMediaScalarFieldEnum]

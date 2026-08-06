@@ -2,8 +2,35 @@ import { Router } from 'express';
 import { prisma } from '../db/index.js';
 import requireAuth from '../middleware/requireAuth.js';
 import { isBlocked } from '../services/blocks.js';
+import { buildKey, getUploadUrl, getDownloadUrl } from '../services/s3.js';
+import { UserMediaSlot } from '../db/generated/enums.js';
 
 const router = Router();
+
+const VALID_SLOTS = ['avatar', 'banner'] as const;
+type MediaSlotParam = typeof VALID_SLOTS[number];
+
+const toSlotEnum = (slot: MediaSlotParam): UserMediaSlot => (
+  slot === 'avatar' ? UserMediaSlot.AVATAR : UserMediaSlot.BANNER
+);
+
+const getUserMediaUrls = async (
+  userMedia?: { slot: string; media: { s3Key: string } }[],
+) => {
+  if (!userMedia) return { avatarUrl: null, bannerUrl: null };
+
+  const findUrl = async (slot: string) => {
+    const item = userMedia.find((m) => m.slot === slot);
+    if (!item) return null;
+    return getDownloadUrl(item.media.s3Key).catch((err) => {
+      console.error(`S3 error for user media slot ${slot}:`, err);
+      return null;
+    });
+  };
+
+  const [avatarUrl, bannerUrl] = await Promise.all([findUrl('AVATAR'), findUrl('BANNER')]);
+  return { avatarUrl, bannerUrl };
+};
 
 router.post('/', async (req, res) => {
   try {
@@ -42,12 +69,14 @@ router.get('/me', requireAuth, async (req, res) => {
       where: { id: req.user!.id },
       include: {
         posts: true,
+        userMedia: { include: { media: true } },
       },
     });
     if (!user) {
       return res.status(404).json({ error: 'user not found' });
     }
-    return res.status(200).json(user);
+    const { userMedia, ...userRest } = user;
+    return res.status(200).json({ ...userRest, ...(await getUserMediaUrls(userMedia)) });
   } catch (err) {
     console.error(err);
     return res.sendStatus(500);
@@ -94,6 +123,7 @@ router.get('/:id', async (req, res) => {
       where: { id },
       include: {
         posts: true,
+        userMedia: { include: { media: true } },
       },
     });
 
@@ -101,10 +131,107 @@ router.get('/:id', async (req, res) => {
       return res.status(404).json({ error: 'user not found' });
     }
 
-    return res.json(user);
+    const { userMedia, ...userRest } = user;
+    return res.status(200).json({ ...userRest, ...(await getUserMediaUrls(userMedia)) });
   } catch (err) {
     console.error(err);
     return res.sendStatus(500);
+  }
+});
+
+// Upload avatar/banner
+router.post('/me/media/:slot', requireAuth, async (req, res) => {
+  const slot = req.params.slot as MediaSlotParam;
+  if (!VALID_SLOTS.includes(slot)) {
+    return res.status(400).json({ error: 'Invalid media slot.' });
+  }
+
+  const { filename, contentType } = req.body ?? {};
+  if (!filename || !contentType) {
+    return res.status(400).json({ error: 'filename and contentType are required.' });
+  }
+  if (typeof contentType !== 'string' || !contentType.startsWith('image/')) {
+    return res.status(400).json({ error: 'Only image uploads are allowed.' });
+  }
+
+  try {
+    const key = buildKey(req.user!.id, filename, `${slot}s`);
+    const uploadUrl = await getUploadUrl(key, contentType);
+    return res.json({ uploadUrl, key });
+  } catch (err) {
+    console.error('Failed to generate upload URL:', err);
+    return res.status(500).json({ error: 'Unable to generate upload URL.' });
+  }
+});
+
+// Use uploaded avatar/banner
+router.put('/me/media/:slot', requireAuth, async (req, res) => {
+  const slot = req.params.slot as MediaSlotParam;
+  if (!VALID_SLOTS.includes(slot)) {
+    return res.status(400).json({ error: 'Invalid media slot.' });
+  }
+
+  const { s3Key } = req.body ?? {};
+  if (!s3Key) {
+    return res.status(400).json({ error: 's3Key is required.' });
+  }
+
+  const userId = req.user!.id;
+  const slotEnum = toSlotEnum(slot);
+
+  try {
+    const media = await prisma.$transaction(async (tx) => {
+      const existing = await tx.userMedia.findUnique({
+        where: { userId_slot: { userId, slot: slotEnum } },
+      });
+
+      const newMedia = await tx.media.create({
+        data: { s3Key, uploaderId: userId },
+      });
+
+      await tx.userMedia.upsert({
+        where: { userId_slot: { userId, slot: slotEnum } },
+        create: { userId, mediaId: newMedia.id, slot: slotEnum },
+        update: { mediaId: newMedia.id },
+      });
+
+      if (existing) {
+        await tx.media.delete({ where: { id: existing.mediaId } }).catch(() => {});
+      }
+
+      return newMedia;
+    });
+
+    const url = await getDownloadUrl(media.s3Key);
+    return res.json({ url });
+  } catch (err) {
+    console.error('Failed to save media:', err);
+    return res.status(500).json({ error: 'Unable to save media.' });
+  }
+});
+
+// Remove an avatar/banner
+router.delete('/me/media/:slot', requireAuth, async (req, res) => {
+  const slot = req.params.slot as MediaSlotParam;
+  if (!VALID_SLOTS.includes(slot)) {
+    return res.status(400).json({ error: 'Invalid media slot.' });
+  }
+
+  const userId = req.user!.id;
+  const slotEnum = toSlotEnum(slot);
+
+  try {
+    const existing = await prisma.userMedia.findUnique({
+      where: { userId_slot: { userId, slot: slotEnum } },
+    });
+    if (existing) {
+      await prisma.userMedia.delete({ where: { id: existing.id } });
+      await prisma.media.delete({ where: { id: existing.mediaId } }).catch(() => {});
+    }
+    return res.sendStatus(200);
+  } catch (err) {
+    console.error('Failed to remove media:', err);
+    return res.status(500).json({ error: 'Unable to remove media.' });
   }
 });
 

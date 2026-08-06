@@ -114,3 +114,11 @@ export const MediaVariant = {
 } as const
 
 export type MediaVariant = (typeof MediaVariant)[keyof typeof MediaVariant]
+
+
+export const UserMediaSlot = {
+  AVATAR: 'AVATAR',
+  BANNER: 'BANNER'
+} as const
+
+export type UserMediaSlot = (typeof UserMediaSlot)[keyof typeof UserMediaSlot]

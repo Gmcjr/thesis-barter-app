@@ -416,6 +416,23 @@ export type EnumMediaVariantNullableWithAggregatesFilter<$PrismaModel = never> =
   _max?: Prisma.NestedEnumMediaVariantNullableFilter<$PrismaModel>
 }
 
+export type EnumUserMediaSlotFilter<$PrismaModel = never> = {
+  equals?: $Enums.UserMediaSlot | Prisma.EnumUserMediaSlotFieldRefInput<$PrismaModel>
+  in?: $Enums.UserMediaSlot[] | Prisma.ListEnumUserMediaSlotFieldRefInput<$PrismaModel>
+  notIn?: $Enums.UserMediaSlot[] | Prisma.ListEnumUserMediaSlotFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumUserMediaSlotFilter<$PrismaModel> | $Enums.UserMediaSlot
+}
+
+export type EnumUserMediaSlotWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.UserMediaSlot | Prisma.EnumUserMediaSlotFieldRefInput<$PrismaModel>
+  in?: $Enums.UserMediaSlot[] | Prisma.ListEnumUserMediaSlotFieldRefInput<$PrismaModel>
+  notIn?: $Enums.UserMediaSlot[] | Prisma.ListEnumUserMediaSlotFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumUserMediaSlotWithAggregatesFilter<$PrismaModel> | $Enums.UserMediaSlot
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumUserMediaSlotFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumUserMediaSlotFilter<$PrismaModel>
+}
+
 export type NestedIntFilter<$PrismaModel = never> = {
   equals?: number | Prisma.IntFieldRefInput<$PrismaModel>
   in?: number[] | Prisma.ListIntFieldRefInput<$PrismaModel>
@@ -818,6 +835,23 @@ export type NestedEnumMediaVariantNullableWithAggregatesFilter<$PrismaModel = ne
   _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
   _min?: Prisma.NestedEnumMediaVariantNullableFilter<$PrismaModel>
   _max?: Prisma.NestedEnumMediaVariantNullableFilter<$PrismaModel>
+}
+
+export type NestedEnumUserMediaSlotFilter<$PrismaModel = never> = {
+  equals?: $Enums.UserMediaSlot | Prisma.EnumUserMediaSlotFieldRefInput<$PrismaModel>
+  in?: $Enums.UserMediaSlot[] | Prisma.ListEnumUserMediaSlotFieldRefInput<$PrismaModel>
+  notIn?: $Enums.UserMediaSlot[] | Prisma.ListEnumUserMediaSlotFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumUserMediaSlotFilter<$PrismaModel> | $Enums.UserMediaSlot
+}
+
+export type NestedEnumUserMediaSlotWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.UserMediaSlot | Prisma.EnumUserMediaSlotFieldRefInput<$PrismaModel>
+  in?: $Enums.UserMediaSlot[] | Prisma.ListEnumUserMediaSlotFieldRefInput<$PrismaModel>
+  notIn?: $Enums.UserMediaSlot[] | Prisma.ListEnumUserMediaSlotFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumUserMediaSlotWithAggregatesFilter<$PrismaModel> | $Enums.UserMediaSlot
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumUserMediaSlotFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumUserMediaSlotFilter<$PrismaModel>
 }
 
 
