@@ -1,11 +1,10 @@
 import React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Chip from '@mui/material/Chip';
 import type { ProfileTabsProps } from './types';
 
 export default function ProfileTabs({
-  activeTab, onTabChange, tradeCount, isOwnProfile, onDM,
+  activeTab, onTabChange, isOwnProfile, onDM,
 }: ProfileTabsProps) {
   return (
     <Box sx={{
@@ -43,15 +42,6 @@ export default function ProfileTabs({
           DM
         </Button>
       )}
-
-      <Box sx={{ ml: { md: 'auto' } }}>
-        <Chip
-          label={`${tradeCount} Trades`}
-          sx={{
-            bgcolor: 'text.primary', color: 'background.paper', fontWeight: 600,
-          }}
-        />
-      </Box>
     </Box>
   );
 }

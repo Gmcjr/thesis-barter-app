@@ -1,4 +1,5 @@
 import type { PostData } from '../Posts/ManagePosts';
+import type { ReceivedReview } from '../Reviews/ReviewsDetailPanel';
 
 export interface ProfileUser {
   id: number;
@@ -17,6 +18,10 @@ export interface ProfileHeaderProps {
   onReport: () => void;
   onBlock: () => void;
   blocked: boolean;
+  averageRating: number | null;
+  totalReviews: number;
+  totalTrades: number;
+  onToggleReviews: () => void;
 }
 
 export interface ProfileUpdateData {
@@ -45,4 +50,11 @@ export interface ProfileTabsProps {
   tradeCount: number;
   isOwnProfile: boolean;
   onDM: () => void;
+}
+
+export interface ReviewsSummary {
+  reviews: ReceivedReview[];
+  averageRating: number | null;
+  totalReviews: number;
+  totalTrades: number;
 }

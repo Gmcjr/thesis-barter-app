@@ -64,7 +64,7 @@ export const ViewArtTradeOffer: React.FC<ViewArtTradeOfferProps> = ({
           if (Array.isArray(rawData.offers)) {
             normalizedOffers = rawData.offers;
           }
-          if (rawData.isCompleted) {
+          if (rawData.status === 'COMPLETED') {
             setIsPostCompleted(true);
           }
         }

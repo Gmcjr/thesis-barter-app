@@ -314,6 +314,7 @@ export default function Posts() {
             onReport={() => setReportDialogPostId(post.id)}
             myTradeRequests={myTradeRequests.find((r) => r.postId === post.id) ?? null}
             onTradeActivity={handleTradeActivity}
+            onOfferSubmitted={handleTradeActivity}
           />
         ))}
       </Box>

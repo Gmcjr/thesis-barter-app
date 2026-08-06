@@ -172,6 +172,21 @@ reviews.patch('/:id', requireAuth, async (req, res) => {
   }
 });
 
+// Get all reviews written by self
+reviews.get('/mine', requireAuth, async (req, res) => {
+  try {
+    const reviewerId = (req.user as { id: number }).id;
+    const myReviews = await prisma.review.findMany({
+      where: { reviewerId },
+      orderBy: { createdAt: 'desc' },
+    });
+    return res.json(myReviews);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: 'Unable to retrieve your reviews.' });
+  }
+});
+
 // Get all reviews received by a user, plus their average rating (e.g. for a profile page)
 reviews.get('/user/:userId', async (req, res) => {
   try {
@@ -181,7 +196,9 @@ reviews.get('/user/:userId', async (req, res) => {
       return res.status(400).json({ error: 'Invalid user id.' });
     }
 
-    const [reviewList, aggregate] = await Promise.all([
+    const [
+      reviewList, aggregate, completedTradeCount, completedOfferCount, ownedCompletedOfferPostCount,
+    ] = await Promise.all([
       prisma.review.findMany({
         where: { revieweeId: userId, isRemoved: false },
         include: {
@@ -194,12 +211,18 @@ reviews.get('/user/:userId', async (req, res) => {
         _avg: { rating: true },
         _count: { rating: true },
       }),
+      prisma.trade.count({
+        where: { status: Status.COMPLETED, OR: [{ ownerId: userId }, { requesterId: userId }] },
+      }),
+      prisma.tradeOffer.count({ where: { status: 'COMPLETED', offererId: userId } }),
+      prisma.post.count({ where: { userId, tradeOffers: { some: { status: 'COMPLETED' } } } }),
     ]);
 
-    return res.json({
+    res.json({
       reviews: reviewList,
       averageRating: aggregate._avg.rating,
       totalReviews: aggregate._count.rating,
+      totalTrades: completedTradeCount + completedOfferCount + ownedCompletedOfferPostCount,
     });
   } catch (err) {
     console.error(err);
