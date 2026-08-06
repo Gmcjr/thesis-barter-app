@@ -32,7 +32,6 @@ app.use('/health', router.health);
 app.use('/user', router.user);
 app.use('/posts', router.posts);
 app.use('/reports', router.reports);
-app.use('/review', router.review);
 app.use('/appeals', router.appeals);
 app.use('/media', router.media);
 app.use('/artTradeOffers', router.artTradeOffers);
@@ -40,6 +39,7 @@ app.use('/blocks', router.blocks);
 app.use('/trades', router.trades);
 app.use('/trade-requests', router.tradeRequests);
 app.use('/dms', router.dms);
+app.use('/reviews', router.reviews);
 
 app.get(/.*/, (req, res) => {
   res.sendFile(path.join(process.cwd(), 'client', 'dist', 'index.html'));
