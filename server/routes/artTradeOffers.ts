@@ -4,9 +4,9 @@ import { Router, type Request } from 'express';
 import { prisma } from '../db/index.js';
 import requireAuth from '../middleware/requireAuth.js';
 import { getDownloadUrl } from '../services/s3.js';
-import { screenOrReject } from '../services/moderation.js';
 import { getBlockedRelationshipIds, isBlocked } from '../services/blocks.js';
 import { Status } from '../db/generated/enums.js';
+import { queueScreening } from '../services/moderation.js';
 
 const artTradeOffers = Router();
 
@@ -75,10 +75,14 @@ artTradeOffers.get('/', requireAuth, async (req, res) => {
     const rawOffers = await prisma.tradeOffer.findMany({
       where: numericPostId ? {
         postId: numericPostId,
+        isPendingScreening: false,
+        isRemoved: false,
         ...(post?.status === Status.OPEN ? { status: 'PENDING' } : { status: 'COMPLETED' }),
       } : {
         post: { userId, status: Status.OPEN },
         status: 'PENDING',
+        isPendingScreening: false,
+        isRemoved: false,
         ...notBlocked,
       },
       orderBy: { createdAt: 'asc' },
@@ -146,25 +150,12 @@ artTradeOffers.post('/', requireAuth, async (req, res) => {
       return res.status(400).json({ error: 'Post not found or trade already completed.' });
     }
 
-    // Screens offer messages
-    let screened = false;
-
-    if (message) {
-      const outcome = await screenOrReject(message);
-      if (!outcome.ok) {
-        return res.status(400).json({
-          error: 'This offer violates community guidelines and cannot be sent.',
-          rationale: outcome.rationale,
-        });
-      }
-      screened = outcome.screened;
-    }
-
     const offer = await prisma.tradeOffer.create({
       data: {
         postId: Number(postId),
         offererId,
         message,
+        isPendingScreening: true,
         tradeOfferMedia: {
           create: [
             { mediaId: Number(previewMediaId), sortOrder: 0 },
@@ -178,7 +169,24 @@ artTradeOffers.post('/', requireAuth, async (req, res) => {
       },
     });
 
-    return res.status(201).json({ ...offer, screened });
+    queueScreening({
+      targetType: 'TRADE_OFFER',
+      targetId: offer.id,
+      authorId: offererId,
+      text: message ?? '',
+      imageKeys: offer.tradeOfferMedia.map((m) => m.media.s3Key),
+      onApproved: async () => {
+        await prisma.tradeOffer.update({ where: { id: offer.id }, data: { isPendingScreening: false } });
+      },
+      onRemoved: async () => {
+        await prisma.tradeOffer.update({
+          where: { id: offer.id },
+          data: { isPendingScreening: false, isRemoved: true },
+        });
+      },
+    });
+
+    return res.status(201).json(offer);
   } catch (error) {
     console.error('Failed to submit trade offer:', error);
     return res.status(500).json({ error: 'Unable to submit trade offer.' });

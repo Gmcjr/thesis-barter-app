@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { prisma } from '../db/index.js';
 import requireAuth from '../middleware/requireAuth.js';
 import { isBlocked } from '../services/blocks.js';
+import { queueScreening } from '../services/moderation.js';
 
 const router = Router();
 
@@ -64,15 +65,42 @@ router.patch('/me', requireAuth, async (req, res) => {
   }
 
   try {
+    const bioChanged = bio !== undefined;
     const user = await prisma.user.update({
       where: { id: req.user!.id },
       data: {
         name: name !== undefined ? name.trim() : undefined,
-        bio,
         phone,
         zipCode,
+        ...(bioChanged ? { pendingBio: bio, isPendingScreening: true } : {}),
       },
     });
+
+    if (bioChanged && bio) {
+      queueScreening({
+        targetType: 'USER',
+        targetId: user.id,
+        authorId: user.id,
+        text: bio,
+        onApproved: async () => {
+          await prisma.user.update({
+            where: { id: user.id },
+            data: {
+              bio: user.pendingBio,
+              pendingBio: null,
+              isPendingScreening: false,
+            },
+          });
+        },
+        onRemoved: async () => {
+          await prisma.user.update({
+            where: { id: user.id },
+            data: { pendingBio: null, isPendingScreening: false },
+          });
+        },
+      });
+    }
+
     return res.status(200).json(user);
   } catch (err) {
     console.error(err);

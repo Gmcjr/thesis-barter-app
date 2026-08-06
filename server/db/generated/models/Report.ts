@@ -32,6 +32,9 @@ export type ReportAvgAggregateOutputType = {
   postId: number | null
   targetUserId: number | null
   messageId: number | null
+  offerId: number | null
+  reviewId: number | null
+  tradeRequestId: number | null
   aiScore: number | null
   resolverId: number | null
 }
@@ -42,6 +45,9 @@ export type ReportSumAggregateOutputType = {
   postId: number | null
   targetUserId: number | null
   messageId: number | null
+  offerId: number | null
+  reviewId: number | null
+  tradeRequestId: number | null
   aiScore: number | null
   resolverId: number | null
 }
@@ -53,6 +59,9 @@ export type ReportMinAggregateOutputType = {
   postId: number | null
   targetUserId: number | null
   messageId: number | null
+  offerId: number | null
+  reviewId: number | null
+  tradeRequestId: number | null
   reason: $Enums.ReportReason | null
   details: string | null
   aiScore: number | null
@@ -71,6 +80,9 @@ export type ReportMaxAggregateOutputType = {
   postId: number | null
   targetUserId: number | null
   messageId: number | null
+  offerId: number | null
+  reviewId: number | null
+  tradeRequestId: number | null
   reason: $Enums.ReportReason | null
   details: string | null
   aiScore: number | null
@@ -89,6 +101,9 @@ export type ReportCountAggregateOutputType = {
   postId: number
   targetUserId: number
   messageId: number
+  offerId: number
+  reviewId: number
+  tradeRequestId: number
   reason: number
   details: number
   aiScore: number
@@ -109,6 +124,9 @@ export type ReportAvgAggregateInputType = {
   postId?: true
   targetUserId?: true
   messageId?: true
+  offerId?: true
+  reviewId?: true
+  tradeRequestId?: true
   aiScore?: true
   resolverId?: true
 }
@@ -119,6 +137,9 @@ export type ReportSumAggregateInputType = {
   postId?: true
   targetUserId?: true
   messageId?: true
+  offerId?: true
+  reviewId?: true
+  tradeRequestId?: true
   aiScore?: true
   resolverId?: true
 }
@@ -130,6 +151,9 @@ export type ReportMinAggregateInputType = {
   postId?: true
   targetUserId?: true
   messageId?: true
+  offerId?: true
+  reviewId?: true
+  tradeRequestId?: true
   reason?: true
   details?: true
   aiScore?: true
@@ -148,6 +172,9 @@ export type ReportMaxAggregateInputType = {
   postId?: true
   targetUserId?: true
   messageId?: true
+  offerId?: true
+  reviewId?: true
+  tradeRequestId?: true
   reason?: true
   details?: true
   aiScore?: true
@@ -166,6 +193,9 @@ export type ReportCountAggregateInputType = {
   postId?: true
   targetUserId?: true
   messageId?: true
+  offerId?: true
+  reviewId?: true
+  tradeRequestId?: true
   reason?: true
   details?: true
   aiScore?: true
@@ -272,6 +302,9 @@ export type ReportGroupByOutputType = {
   postId: number | null
   targetUserId: number | null
   messageId: number | null
+  offerId: number | null
+  reviewId: number | null
+  tradeRequestId: number | null
   reason: $Enums.ReportReason
   details: string | null
   aiScore: number | null
@@ -314,6 +347,9 @@ export type ReportWhereInput = {
   postId?: Prisma.IntNullableFilter<"Report"> | number | null
   targetUserId?: Prisma.IntNullableFilter<"Report"> | number | null
   messageId?: Prisma.IntNullableFilter<"Report"> | number | null
+  offerId?: Prisma.IntNullableFilter<"Report"> | number | null
+  reviewId?: Prisma.IntNullableFilter<"Report"> | number | null
+  tradeRequestId?: Prisma.IntNullableFilter<"Report"> | number | null
   reason?: Prisma.EnumReportReasonFilter<"Report"> | $Enums.ReportReason
   details?: Prisma.StringNullableFilter<"Report"> | string | null
   aiScore?: Prisma.FloatNullableFilter<"Report"> | number | null
@@ -328,6 +364,9 @@ export type ReportWhereInput = {
   post?: Prisma.XOR<Prisma.PostNullableScalarRelationFilter, Prisma.PostWhereInput> | null
   targetUser?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   message?: Prisma.XOR<Prisma.MessageNullableScalarRelationFilter, Prisma.MessageWhereInput> | null
+  offer?: Prisma.XOR<Prisma.TradeOfferNullableScalarRelationFilter, Prisma.TradeOfferWhereInput> | null
+  review?: Prisma.XOR<Prisma.ReviewNullableScalarRelationFilter, Prisma.ReviewWhereInput> | null
+  tradeRequest?: Prisma.XOR<Prisma.TradeRequestNullableScalarRelationFilter, Prisma.TradeRequestWhereInput> | null
   resolver?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   appeal?: Prisma.XOR<Prisma.AppealNullableScalarRelationFilter, Prisma.AppealWhereInput> | null
 }
@@ -339,6 +378,9 @@ export type ReportOrderByWithRelationInput = {
   postId?: Prisma.SortOrderInput | Prisma.SortOrder
   targetUserId?: Prisma.SortOrderInput | Prisma.SortOrder
   messageId?: Prisma.SortOrderInput | Prisma.SortOrder
+  offerId?: Prisma.SortOrderInput | Prisma.SortOrder
+  reviewId?: Prisma.SortOrderInput | Prisma.SortOrder
+  tradeRequestId?: Prisma.SortOrderInput | Prisma.SortOrder
   reason?: Prisma.SortOrder
   details?: Prisma.SortOrderInput | Prisma.SortOrder
   aiScore?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -353,6 +395,9 @@ export type ReportOrderByWithRelationInput = {
   post?: Prisma.PostOrderByWithRelationInput
   targetUser?: Prisma.UserOrderByWithRelationInput
   message?: Prisma.MessageOrderByWithRelationInput
+  offer?: Prisma.TradeOfferOrderByWithRelationInput
+  review?: Prisma.ReviewOrderByWithRelationInput
+  tradeRequest?: Prisma.TradeRequestOrderByWithRelationInput
   resolver?: Prisma.UserOrderByWithRelationInput
   appeal?: Prisma.AppealOrderByWithRelationInput
 }
@@ -367,6 +412,9 @@ export type ReportWhereUniqueInput = Prisma.AtLeast<{
   postId?: Prisma.IntNullableFilter<"Report"> | number | null
   targetUserId?: Prisma.IntNullableFilter<"Report"> | number | null
   messageId?: Prisma.IntNullableFilter<"Report"> | number | null
+  offerId?: Prisma.IntNullableFilter<"Report"> | number | null
+  reviewId?: Prisma.IntNullableFilter<"Report"> | number | null
+  tradeRequestId?: Prisma.IntNullableFilter<"Report"> | number | null
   reason?: Prisma.EnumReportReasonFilter<"Report"> | $Enums.ReportReason
   details?: Prisma.StringNullableFilter<"Report"> | string | null
   aiScore?: Prisma.FloatNullableFilter<"Report"> | number | null
@@ -381,6 +429,9 @@ export type ReportWhereUniqueInput = Prisma.AtLeast<{
   post?: Prisma.XOR<Prisma.PostNullableScalarRelationFilter, Prisma.PostWhereInput> | null
   targetUser?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   message?: Prisma.XOR<Prisma.MessageNullableScalarRelationFilter, Prisma.MessageWhereInput> | null
+  offer?: Prisma.XOR<Prisma.TradeOfferNullableScalarRelationFilter, Prisma.TradeOfferWhereInput> | null
+  review?: Prisma.XOR<Prisma.ReviewNullableScalarRelationFilter, Prisma.ReviewWhereInput> | null
+  tradeRequest?: Prisma.XOR<Prisma.TradeRequestNullableScalarRelationFilter, Prisma.TradeRequestWhereInput> | null
   resolver?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   appeal?: Prisma.XOR<Prisma.AppealNullableScalarRelationFilter, Prisma.AppealWhereInput> | null
 }, "id">
@@ -392,6 +443,9 @@ export type ReportOrderByWithAggregationInput = {
   postId?: Prisma.SortOrderInput | Prisma.SortOrder
   targetUserId?: Prisma.SortOrderInput | Prisma.SortOrder
   messageId?: Prisma.SortOrderInput | Prisma.SortOrder
+  offerId?: Prisma.SortOrderInput | Prisma.SortOrder
+  reviewId?: Prisma.SortOrderInput | Prisma.SortOrder
+  tradeRequestId?: Prisma.SortOrderInput | Prisma.SortOrder
   reason?: Prisma.SortOrder
   details?: Prisma.SortOrderInput | Prisma.SortOrder
   aiScore?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -419,6 +473,9 @@ export type ReportScalarWhereWithAggregatesInput = {
   postId?: Prisma.IntNullableWithAggregatesFilter<"Report"> | number | null
   targetUserId?: Prisma.IntNullableWithAggregatesFilter<"Report"> | number | null
   messageId?: Prisma.IntNullableWithAggregatesFilter<"Report"> | number | null
+  offerId?: Prisma.IntNullableWithAggregatesFilter<"Report"> | number | null
+  reviewId?: Prisma.IntNullableWithAggregatesFilter<"Report"> | number | null
+  tradeRequestId?: Prisma.IntNullableWithAggregatesFilter<"Report"> | number | null
   reason?: Prisma.EnumReportReasonWithAggregatesFilter<"Report"> | $Enums.ReportReason
   details?: Prisma.StringNullableWithAggregatesFilter<"Report"> | string | null
   aiScore?: Prisma.FloatNullableWithAggregatesFilter<"Report"> | number | null
@@ -446,6 +503,9 @@ export type ReportCreateInput = {
   post?: Prisma.PostCreateNestedOneWithoutReportsInput
   targetUser?: Prisma.UserCreateNestedOneWithoutReportsAgainstInput
   message?: Prisma.MessageCreateNestedOneWithoutReportsInput
+  offer?: Prisma.TradeOfferCreateNestedOneWithoutReportsInput
+  review?: Prisma.ReviewCreateNestedOneWithoutReportsInput
+  tradeRequest?: Prisma.TradeRequestCreateNestedOneWithoutReportsInput
   resolver?: Prisma.UserCreateNestedOneWithoutReportsResolvedInput
   appeal?: Prisma.AppealCreateNestedOneWithoutReportInput
 }
@@ -457,6 +517,9 @@ export type ReportUncheckedCreateInput = {
   postId?: number | null
   targetUserId?: number | null
   messageId?: number | null
+  offerId?: number | null
+  reviewId?: number | null
+  tradeRequestId?: number | null
   reason: $Enums.ReportReason
   details?: string | null
   aiScore?: number | null
@@ -485,6 +548,9 @@ export type ReportUpdateInput = {
   post?: Prisma.PostUpdateOneWithoutReportsNestedInput
   targetUser?: Prisma.UserUpdateOneWithoutReportsAgainstNestedInput
   message?: Prisma.MessageUpdateOneWithoutReportsNestedInput
+  offer?: Prisma.TradeOfferUpdateOneWithoutReportsNestedInput
+  review?: Prisma.ReviewUpdateOneWithoutReportsNestedInput
+  tradeRequest?: Prisma.TradeRequestUpdateOneWithoutReportsNestedInput
   resolver?: Prisma.UserUpdateOneWithoutReportsResolvedNestedInput
   appeal?: Prisma.AppealUpdateOneWithoutReportNestedInput
 }
@@ -496,6 +562,9 @@ export type ReportUncheckedUpdateInput = {
   postId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   targetUserId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   messageId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  offerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  reviewId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  tradeRequestId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   reason?: Prisma.EnumReportReasonFieldUpdateOperationsInput | $Enums.ReportReason
   details?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aiScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -516,6 +585,9 @@ export type ReportCreateManyInput = {
   postId?: number | null
   targetUserId?: number | null
   messageId?: number | null
+  offerId?: number | null
+  reviewId?: number | null
+  tradeRequestId?: number | null
   reason: $Enums.ReportReason
   details?: string | null
   aiScore?: number | null
@@ -548,6 +620,9 @@ export type ReportUncheckedUpdateManyInput = {
   postId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   targetUserId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   messageId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  offerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  reviewId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  tradeRequestId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   reason?: Prisma.EnumReportReasonFieldUpdateOperationsInput | $Enums.ReportReason
   details?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aiScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -577,6 +652,9 @@ export type ReportCountOrderByAggregateInput = {
   postId?: Prisma.SortOrder
   targetUserId?: Prisma.SortOrder
   messageId?: Prisma.SortOrder
+  offerId?: Prisma.SortOrder
+  reviewId?: Prisma.SortOrder
+  tradeRequestId?: Prisma.SortOrder
   reason?: Prisma.SortOrder
   details?: Prisma.SortOrder
   aiScore?: Prisma.SortOrder
@@ -595,6 +673,9 @@ export type ReportAvgOrderByAggregateInput = {
   postId?: Prisma.SortOrder
   targetUserId?: Prisma.SortOrder
   messageId?: Prisma.SortOrder
+  offerId?: Prisma.SortOrder
+  reviewId?: Prisma.SortOrder
+  tradeRequestId?: Prisma.SortOrder
   aiScore?: Prisma.SortOrder
   resolverId?: Prisma.SortOrder
 }
@@ -606,6 +687,9 @@ export type ReportMaxOrderByAggregateInput = {
   postId?: Prisma.SortOrder
   targetUserId?: Prisma.SortOrder
   messageId?: Prisma.SortOrder
+  offerId?: Prisma.SortOrder
+  reviewId?: Prisma.SortOrder
+  tradeRequestId?: Prisma.SortOrder
   reason?: Prisma.SortOrder
   details?: Prisma.SortOrder
   aiScore?: Prisma.SortOrder
@@ -624,6 +708,9 @@ export type ReportMinOrderByAggregateInput = {
   postId?: Prisma.SortOrder
   targetUserId?: Prisma.SortOrder
   messageId?: Prisma.SortOrder
+  offerId?: Prisma.SortOrder
+  reviewId?: Prisma.SortOrder
+  tradeRequestId?: Prisma.SortOrder
   reason?: Prisma.SortOrder
   details?: Prisma.SortOrder
   aiScore?: Prisma.SortOrder
@@ -641,6 +728,9 @@ export type ReportSumOrderByAggregateInput = {
   postId?: Prisma.SortOrder
   targetUserId?: Prisma.SortOrder
   messageId?: Prisma.SortOrder
+  offerId?: Prisma.SortOrder
+  reviewId?: Prisma.SortOrder
+  tradeRequestId?: Prisma.SortOrder
   aiScore?: Prisma.SortOrder
   resolverId?: Prisma.SortOrder
 }
@@ -860,6 +950,132 @@ export type ReportUncheckedUpdateManyWithoutPostNestedInput = {
   deleteMany?: Prisma.ReportScalarWhereInput | Prisma.ReportScalarWhereInput[]
 }
 
+export type ReportCreateNestedManyWithoutOfferInput = {
+  create?: Prisma.XOR<Prisma.ReportCreateWithoutOfferInput, Prisma.ReportUncheckedCreateWithoutOfferInput> | Prisma.ReportCreateWithoutOfferInput[] | Prisma.ReportUncheckedCreateWithoutOfferInput[]
+  connectOrCreate?: Prisma.ReportCreateOrConnectWithoutOfferInput | Prisma.ReportCreateOrConnectWithoutOfferInput[]
+  createMany?: Prisma.ReportCreateManyOfferInputEnvelope
+  connect?: Prisma.ReportWhereUniqueInput | Prisma.ReportWhereUniqueInput[]
+}
+
+export type ReportUncheckedCreateNestedManyWithoutOfferInput = {
+  create?: Prisma.XOR<Prisma.ReportCreateWithoutOfferInput, Prisma.ReportUncheckedCreateWithoutOfferInput> | Prisma.ReportCreateWithoutOfferInput[] | Prisma.ReportUncheckedCreateWithoutOfferInput[]
+  connectOrCreate?: Prisma.ReportCreateOrConnectWithoutOfferInput | Prisma.ReportCreateOrConnectWithoutOfferInput[]
+  createMany?: Prisma.ReportCreateManyOfferInputEnvelope
+  connect?: Prisma.ReportWhereUniqueInput | Prisma.ReportWhereUniqueInput[]
+}
+
+export type ReportUpdateManyWithoutOfferNestedInput = {
+  create?: Prisma.XOR<Prisma.ReportCreateWithoutOfferInput, Prisma.ReportUncheckedCreateWithoutOfferInput> | Prisma.ReportCreateWithoutOfferInput[] | Prisma.ReportUncheckedCreateWithoutOfferInput[]
+  connectOrCreate?: Prisma.ReportCreateOrConnectWithoutOfferInput | Prisma.ReportCreateOrConnectWithoutOfferInput[]
+  upsert?: Prisma.ReportUpsertWithWhereUniqueWithoutOfferInput | Prisma.ReportUpsertWithWhereUniqueWithoutOfferInput[]
+  createMany?: Prisma.ReportCreateManyOfferInputEnvelope
+  set?: Prisma.ReportWhereUniqueInput | Prisma.ReportWhereUniqueInput[]
+  disconnect?: Prisma.ReportWhereUniqueInput | Prisma.ReportWhereUniqueInput[]
+  delete?: Prisma.ReportWhereUniqueInput | Prisma.ReportWhereUniqueInput[]
+  connect?: Prisma.ReportWhereUniqueInput | Prisma.ReportWhereUniqueInput[]
+  update?: Prisma.ReportUpdateWithWhereUniqueWithoutOfferInput | Prisma.ReportUpdateWithWhereUniqueWithoutOfferInput[]
+  updateMany?: Prisma.ReportUpdateManyWithWhereWithoutOfferInput | Prisma.ReportUpdateManyWithWhereWithoutOfferInput[]
+  deleteMany?: Prisma.ReportScalarWhereInput | Prisma.ReportScalarWhereInput[]
+}
+
+export type ReportUncheckedUpdateManyWithoutOfferNestedInput = {
+  create?: Prisma.XOR<Prisma.ReportCreateWithoutOfferInput, Prisma.ReportUncheckedCreateWithoutOfferInput> | Prisma.ReportCreateWithoutOfferInput[] | Prisma.ReportUncheckedCreateWithoutOfferInput[]
+  connectOrCreate?: Prisma.ReportCreateOrConnectWithoutOfferInput | Prisma.ReportCreateOrConnectWithoutOfferInput[]
+  upsert?: Prisma.ReportUpsertWithWhereUniqueWithoutOfferInput | Prisma.ReportUpsertWithWhereUniqueWithoutOfferInput[]
+  createMany?: Prisma.ReportCreateManyOfferInputEnvelope
+  set?: Prisma.ReportWhereUniqueInput | Prisma.ReportWhereUniqueInput[]
+  disconnect?: Prisma.ReportWhereUniqueInput | Prisma.ReportWhereUniqueInput[]
+  delete?: Prisma.ReportWhereUniqueInput | Prisma.ReportWhereUniqueInput[]
+  connect?: Prisma.ReportWhereUniqueInput | Prisma.ReportWhereUniqueInput[]
+  update?: Prisma.ReportUpdateWithWhereUniqueWithoutOfferInput | Prisma.ReportUpdateWithWhereUniqueWithoutOfferInput[]
+  updateMany?: Prisma.ReportUpdateManyWithWhereWithoutOfferInput | Prisma.ReportUpdateManyWithWhereWithoutOfferInput[]
+  deleteMany?: Prisma.ReportScalarWhereInput | Prisma.ReportScalarWhereInput[]
+}
+
+export type ReportCreateNestedManyWithoutTradeRequestInput = {
+  create?: Prisma.XOR<Prisma.ReportCreateWithoutTradeRequestInput, Prisma.ReportUncheckedCreateWithoutTradeRequestInput> | Prisma.ReportCreateWithoutTradeRequestInput[] | Prisma.ReportUncheckedCreateWithoutTradeRequestInput[]
+  connectOrCreate?: Prisma.ReportCreateOrConnectWithoutTradeRequestInput | Prisma.ReportCreateOrConnectWithoutTradeRequestInput[]
+  createMany?: Prisma.ReportCreateManyTradeRequestInputEnvelope
+  connect?: Prisma.ReportWhereUniqueInput | Prisma.ReportWhereUniqueInput[]
+}
+
+export type ReportUncheckedCreateNestedManyWithoutTradeRequestInput = {
+  create?: Prisma.XOR<Prisma.ReportCreateWithoutTradeRequestInput, Prisma.ReportUncheckedCreateWithoutTradeRequestInput> | Prisma.ReportCreateWithoutTradeRequestInput[] | Prisma.ReportUncheckedCreateWithoutTradeRequestInput[]
+  connectOrCreate?: Prisma.ReportCreateOrConnectWithoutTradeRequestInput | Prisma.ReportCreateOrConnectWithoutTradeRequestInput[]
+  createMany?: Prisma.ReportCreateManyTradeRequestInputEnvelope
+  connect?: Prisma.ReportWhereUniqueInput | Prisma.ReportWhereUniqueInput[]
+}
+
+export type ReportUpdateManyWithoutTradeRequestNestedInput = {
+  create?: Prisma.XOR<Prisma.ReportCreateWithoutTradeRequestInput, Prisma.ReportUncheckedCreateWithoutTradeRequestInput> | Prisma.ReportCreateWithoutTradeRequestInput[] | Prisma.ReportUncheckedCreateWithoutTradeRequestInput[]
+  connectOrCreate?: Prisma.ReportCreateOrConnectWithoutTradeRequestInput | Prisma.ReportCreateOrConnectWithoutTradeRequestInput[]
+  upsert?: Prisma.ReportUpsertWithWhereUniqueWithoutTradeRequestInput | Prisma.ReportUpsertWithWhereUniqueWithoutTradeRequestInput[]
+  createMany?: Prisma.ReportCreateManyTradeRequestInputEnvelope
+  set?: Prisma.ReportWhereUniqueInput | Prisma.ReportWhereUniqueInput[]
+  disconnect?: Prisma.ReportWhereUniqueInput | Prisma.ReportWhereUniqueInput[]
+  delete?: Prisma.ReportWhereUniqueInput | Prisma.ReportWhereUniqueInput[]
+  connect?: Prisma.ReportWhereUniqueInput | Prisma.ReportWhereUniqueInput[]
+  update?: Prisma.ReportUpdateWithWhereUniqueWithoutTradeRequestInput | Prisma.ReportUpdateWithWhereUniqueWithoutTradeRequestInput[]
+  updateMany?: Prisma.ReportUpdateManyWithWhereWithoutTradeRequestInput | Prisma.ReportUpdateManyWithWhereWithoutTradeRequestInput[]
+  deleteMany?: Prisma.ReportScalarWhereInput | Prisma.ReportScalarWhereInput[]
+}
+
+export type ReportUncheckedUpdateManyWithoutTradeRequestNestedInput = {
+  create?: Prisma.XOR<Prisma.ReportCreateWithoutTradeRequestInput, Prisma.ReportUncheckedCreateWithoutTradeRequestInput> | Prisma.ReportCreateWithoutTradeRequestInput[] | Prisma.ReportUncheckedCreateWithoutTradeRequestInput[]
+  connectOrCreate?: Prisma.ReportCreateOrConnectWithoutTradeRequestInput | Prisma.ReportCreateOrConnectWithoutTradeRequestInput[]
+  upsert?: Prisma.ReportUpsertWithWhereUniqueWithoutTradeRequestInput | Prisma.ReportUpsertWithWhereUniqueWithoutTradeRequestInput[]
+  createMany?: Prisma.ReportCreateManyTradeRequestInputEnvelope
+  set?: Prisma.ReportWhereUniqueInput | Prisma.ReportWhereUniqueInput[]
+  disconnect?: Prisma.ReportWhereUniqueInput | Prisma.ReportWhereUniqueInput[]
+  delete?: Prisma.ReportWhereUniqueInput | Prisma.ReportWhereUniqueInput[]
+  connect?: Prisma.ReportWhereUniqueInput | Prisma.ReportWhereUniqueInput[]
+  update?: Prisma.ReportUpdateWithWhereUniqueWithoutTradeRequestInput | Prisma.ReportUpdateWithWhereUniqueWithoutTradeRequestInput[]
+  updateMany?: Prisma.ReportUpdateManyWithWhereWithoutTradeRequestInput | Prisma.ReportUpdateManyWithWhereWithoutTradeRequestInput[]
+  deleteMany?: Prisma.ReportScalarWhereInput | Prisma.ReportScalarWhereInput[]
+}
+
+export type ReportCreateNestedManyWithoutReviewInput = {
+  create?: Prisma.XOR<Prisma.ReportCreateWithoutReviewInput, Prisma.ReportUncheckedCreateWithoutReviewInput> | Prisma.ReportCreateWithoutReviewInput[] | Prisma.ReportUncheckedCreateWithoutReviewInput[]
+  connectOrCreate?: Prisma.ReportCreateOrConnectWithoutReviewInput | Prisma.ReportCreateOrConnectWithoutReviewInput[]
+  createMany?: Prisma.ReportCreateManyReviewInputEnvelope
+  connect?: Prisma.ReportWhereUniqueInput | Prisma.ReportWhereUniqueInput[]
+}
+
+export type ReportUncheckedCreateNestedManyWithoutReviewInput = {
+  create?: Prisma.XOR<Prisma.ReportCreateWithoutReviewInput, Prisma.ReportUncheckedCreateWithoutReviewInput> | Prisma.ReportCreateWithoutReviewInput[] | Prisma.ReportUncheckedCreateWithoutReviewInput[]
+  connectOrCreate?: Prisma.ReportCreateOrConnectWithoutReviewInput | Prisma.ReportCreateOrConnectWithoutReviewInput[]
+  createMany?: Prisma.ReportCreateManyReviewInputEnvelope
+  connect?: Prisma.ReportWhereUniqueInput | Prisma.ReportWhereUniqueInput[]
+}
+
+export type ReportUpdateManyWithoutReviewNestedInput = {
+  create?: Prisma.XOR<Prisma.ReportCreateWithoutReviewInput, Prisma.ReportUncheckedCreateWithoutReviewInput> | Prisma.ReportCreateWithoutReviewInput[] | Prisma.ReportUncheckedCreateWithoutReviewInput[]
+  connectOrCreate?: Prisma.ReportCreateOrConnectWithoutReviewInput | Prisma.ReportCreateOrConnectWithoutReviewInput[]
+  upsert?: Prisma.ReportUpsertWithWhereUniqueWithoutReviewInput | Prisma.ReportUpsertWithWhereUniqueWithoutReviewInput[]
+  createMany?: Prisma.ReportCreateManyReviewInputEnvelope
+  set?: Prisma.ReportWhereUniqueInput | Prisma.ReportWhereUniqueInput[]
+  disconnect?: Prisma.ReportWhereUniqueInput | Prisma.ReportWhereUniqueInput[]
+  delete?: Prisma.ReportWhereUniqueInput | Prisma.ReportWhereUniqueInput[]
+  connect?: Prisma.ReportWhereUniqueInput | Prisma.ReportWhereUniqueInput[]
+  update?: Prisma.ReportUpdateWithWhereUniqueWithoutReviewInput | Prisma.ReportUpdateWithWhereUniqueWithoutReviewInput[]
+  updateMany?: Prisma.ReportUpdateManyWithWhereWithoutReviewInput | Prisma.ReportUpdateManyWithWhereWithoutReviewInput[]
+  deleteMany?: Prisma.ReportScalarWhereInput | Prisma.ReportScalarWhereInput[]
+}
+
+export type ReportUncheckedUpdateManyWithoutReviewNestedInput = {
+  create?: Prisma.XOR<Prisma.ReportCreateWithoutReviewInput, Prisma.ReportUncheckedCreateWithoutReviewInput> | Prisma.ReportCreateWithoutReviewInput[] | Prisma.ReportUncheckedCreateWithoutReviewInput[]
+  connectOrCreate?: Prisma.ReportCreateOrConnectWithoutReviewInput | Prisma.ReportCreateOrConnectWithoutReviewInput[]
+  upsert?: Prisma.ReportUpsertWithWhereUniqueWithoutReviewInput | Prisma.ReportUpsertWithWhereUniqueWithoutReviewInput[]
+  createMany?: Prisma.ReportCreateManyReviewInputEnvelope
+  set?: Prisma.ReportWhereUniqueInput | Prisma.ReportWhereUniqueInput[]
+  disconnect?: Prisma.ReportWhereUniqueInput | Prisma.ReportWhereUniqueInput[]
+  delete?: Prisma.ReportWhereUniqueInput | Prisma.ReportWhereUniqueInput[]
+  connect?: Prisma.ReportWhereUniqueInput | Prisma.ReportWhereUniqueInput[]
+  update?: Prisma.ReportUpdateWithWhereUniqueWithoutReviewInput | Prisma.ReportUpdateWithWhereUniqueWithoutReviewInput[]
+  updateMany?: Prisma.ReportUpdateManyWithWhereWithoutReviewInput | Prisma.ReportUpdateManyWithWhereWithoutReviewInput[]
+  deleteMany?: Prisma.ReportScalarWhereInput | Prisma.ReportScalarWhereInput[]
+}
+
 export type ReportCreateaiCategoriesInput = {
   set: string[]
 }
@@ -913,6 +1129,9 @@ export type ReportCreateWithoutReporterInput = {
   post?: Prisma.PostCreateNestedOneWithoutReportsInput
   targetUser?: Prisma.UserCreateNestedOneWithoutReportsAgainstInput
   message?: Prisma.MessageCreateNestedOneWithoutReportsInput
+  offer?: Prisma.TradeOfferCreateNestedOneWithoutReportsInput
+  review?: Prisma.ReviewCreateNestedOneWithoutReportsInput
+  tradeRequest?: Prisma.TradeRequestCreateNestedOneWithoutReportsInput
   resolver?: Prisma.UserCreateNestedOneWithoutReportsResolvedInput
   appeal?: Prisma.AppealCreateNestedOneWithoutReportInput
 }
@@ -923,6 +1142,9 @@ export type ReportUncheckedCreateWithoutReporterInput = {
   postId?: number | null
   targetUserId?: number | null
   messageId?: number | null
+  offerId?: number | null
+  reviewId?: number | null
+  tradeRequestId?: number | null
   reason: $Enums.ReportReason
   details?: string | null
   aiScore?: number | null
@@ -960,6 +1182,9 @@ export type ReportCreateWithoutTargetUserInput = {
   reporter: Prisma.UserCreateNestedOneWithoutReportsFiledInput
   post?: Prisma.PostCreateNestedOneWithoutReportsInput
   message?: Prisma.MessageCreateNestedOneWithoutReportsInput
+  offer?: Prisma.TradeOfferCreateNestedOneWithoutReportsInput
+  review?: Prisma.ReviewCreateNestedOneWithoutReportsInput
+  tradeRequest?: Prisma.TradeRequestCreateNestedOneWithoutReportsInput
   resolver?: Prisma.UserCreateNestedOneWithoutReportsResolvedInput
   appeal?: Prisma.AppealCreateNestedOneWithoutReportInput
 }
@@ -970,6 +1195,9 @@ export type ReportUncheckedCreateWithoutTargetUserInput = {
   targetType: $Enums.TargetType
   postId?: number | null
   messageId?: number | null
+  offerId?: number | null
+  reviewId?: number | null
+  tradeRequestId?: number | null
   reason: $Enums.ReportReason
   details?: string | null
   aiScore?: number | null
@@ -1008,6 +1236,9 @@ export type ReportCreateWithoutResolverInput = {
   post?: Prisma.PostCreateNestedOneWithoutReportsInput
   targetUser?: Prisma.UserCreateNestedOneWithoutReportsAgainstInput
   message?: Prisma.MessageCreateNestedOneWithoutReportsInput
+  offer?: Prisma.TradeOfferCreateNestedOneWithoutReportsInput
+  review?: Prisma.ReviewCreateNestedOneWithoutReportsInput
+  tradeRequest?: Prisma.TradeRequestCreateNestedOneWithoutReportsInput
   appeal?: Prisma.AppealCreateNestedOneWithoutReportInput
 }
 
@@ -1018,6 +1249,9 @@ export type ReportUncheckedCreateWithoutResolverInput = {
   postId?: number | null
   targetUserId?: number | null
   messageId?: number | null
+  offerId?: number | null
+  reviewId?: number | null
+  tradeRequestId?: number | null
   reason: $Enums.ReportReason
   details?: string | null
   aiScore?: number | null
@@ -1066,6 +1300,9 @@ export type ReportScalarWhereInput = {
   postId?: Prisma.IntNullableFilter<"Report"> | number | null
   targetUserId?: Prisma.IntNullableFilter<"Report"> | number | null
   messageId?: Prisma.IntNullableFilter<"Report"> | number | null
+  offerId?: Prisma.IntNullableFilter<"Report"> | number | null
+  reviewId?: Prisma.IntNullableFilter<"Report"> | number | null
+  tradeRequestId?: Prisma.IntNullableFilter<"Report"> | number | null
   reason?: Prisma.EnumReportReasonFilter<"Report"> | $Enums.ReportReason
   details?: Prisma.StringNullableFilter<"Report"> | string | null
   aiScore?: Prisma.FloatNullableFilter<"Report"> | number | null
@@ -1124,6 +1361,9 @@ export type ReportCreateWithoutMessageInput = {
   reporter: Prisma.UserCreateNestedOneWithoutReportsFiledInput
   post?: Prisma.PostCreateNestedOneWithoutReportsInput
   targetUser?: Prisma.UserCreateNestedOneWithoutReportsAgainstInput
+  offer?: Prisma.TradeOfferCreateNestedOneWithoutReportsInput
+  review?: Prisma.ReviewCreateNestedOneWithoutReportsInput
+  tradeRequest?: Prisma.TradeRequestCreateNestedOneWithoutReportsInput
   resolver?: Prisma.UserCreateNestedOneWithoutReportsResolvedInput
   appeal?: Prisma.AppealCreateNestedOneWithoutReportInput
 }
@@ -1134,6 +1374,9 @@ export type ReportUncheckedCreateWithoutMessageInput = {
   targetType: $Enums.TargetType
   postId?: number | null
   targetUserId?: number | null
+  offerId?: number | null
+  reviewId?: number | null
+  tradeRequestId?: number | null
   reason: $Enums.ReportReason
   details?: string | null
   aiScore?: number | null
@@ -1187,6 +1430,9 @@ export type ReportCreateWithoutPostInput = {
   reporter: Prisma.UserCreateNestedOneWithoutReportsFiledInput
   targetUser?: Prisma.UserCreateNestedOneWithoutReportsAgainstInput
   message?: Prisma.MessageCreateNestedOneWithoutReportsInput
+  offer?: Prisma.TradeOfferCreateNestedOneWithoutReportsInput
+  review?: Prisma.ReviewCreateNestedOneWithoutReportsInput
+  tradeRequest?: Prisma.TradeRequestCreateNestedOneWithoutReportsInput
   resolver?: Prisma.UserCreateNestedOneWithoutReportsResolvedInput
   appeal?: Prisma.AppealCreateNestedOneWithoutReportInput
 }
@@ -1197,6 +1443,9 @@ export type ReportUncheckedCreateWithoutPostInput = {
   targetType: $Enums.TargetType
   targetUserId?: number | null
   messageId?: number | null
+  offerId?: number | null
+  reviewId?: number | null
+  tradeRequestId?: number | null
   reason: $Enums.ReportReason
   details?: string | null
   aiScore?: number | null
@@ -1236,6 +1485,213 @@ export type ReportUpdateManyWithWhereWithoutPostInput = {
   data: Prisma.XOR<Prisma.ReportUpdateManyMutationInput, Prisma.ReportUncheckedUpdateManyWithoutPostInput>
 }
 
+export type ReportCreateWithoutOfferInput = {
+  targetType: $Enums.TargetType
+  reason: $Enums.ReportReason
+  details?: string | null
+  aiScore?: number | null
+  aiCategories?: Prisma.ReportCreateaiCategoriesInput | string[]
+  aiRationale?: string | null
+  status?: $Enums.ReportStatus
+  resolution?: string | null
+  createdAt?: Date | string
+  resolvedAt?: Date | string | null
+  reporter: Prisma.UserCreateNestedOneWithoutReportsFiledInput
+  post?: Prisma.PostCreateNestedOneWithoutReportsInput
+  targetUser?: Prisma.UserCreateNestedOneWithoutReportsAgainstInput
+  message?: Prisma.MessageCreateNestedOneWithoutReportsInput
+  review?: Prisma.ReviewCreateNestedOneWithoutReportsInput
+  tradeRequest?: Prisma.TradeRequestCreateNestedOneWithoutReportsInput
+  resolver?: Prisma.UserCreateNestedOneWithoutReportsResolvedInput
+  appeal?: Prisma.AppealCreateNestedOneWithoutReportInput
+}
+
+export type ReportUncheckedCreateWithoutOfferInput = {
+  id?: number
+  reporterId: number
+  targetType: $Enums.TargetType
+  postId?: number | null
+  targetUserId?: number | null
+  messageId?: number | null
+  reviewId?: number | null
+  tradeRequestId?: number | null
+  reason: $Enums.ReportReason
+  details?: string | null
+  aiScore?: number | null
+  aiCategories?: Prisma.ReportCreateaiCategoriesInput | string[]
+  aiRationale?: string | null
+  status?: $Enums.ReportStatus
+  resolution?: string | null
+  resolverId?: number | null
+  createdAt?: Date | string
+  resolvedAt?: Date | string | null
+  appeal?: Prisma.AppealUncheckedCreateNestedOneWithoutReportInput
+}
+
+export type ReportCreateOrConnectWithoutOfferInput = {
+  where: Prisma.ReportWhereUniqueInput
+  create: Prisma.XOR<Prisma.ReportCreateWithoutOfferInput, Prisma.ReportUncheckedCreateWithoutOfferInput>
+}
+
+export type ReportCreateManyOfferInputEnvelope = {
+  data: Prisma.ReportCreateManyOfferInput | Prisma.ReportCreateManyOfferInput[]
+  skipDuplicates?: boolean
+}
+
+export type ReportUpsertWithWhereUniqueWithoutOfferInput = {
+  where: Prisma.ReportWhereUniqueInput
+  update: Prisma.XOR<Prisma.ReportUpdateWithoutOfferInput, Prisma.ReportUncheckedUpdateWithoutOfferInput>
+  create: Prisma.XOR<Prisma.ReportCreateWithoutOfferInput, Prisma.ReportUncheckedCreateWithoutOfferInput>
+}
+
+export type ReportUpdateWithWhereUniqueWithoutOfferInput = {
+  where: Prisma.ReportWhereUniqueInput
+  data: Prisma.XOR<Prisma.ReportUpdateWithoutOfferInput, Prisma.ReportUncheckedUpdateWithoutOfferInput>
+}
+
+export type ReportUpdateManyWithWhereWithoutOfferInput = {
+  where: Prisma.ReportScalarWhereInput
+  data: Prisma.XOR<Prisma.ReportUpdateManyMutationInput, Prisma.ReportUncheckedUpdateManyWithoutOfferInput>
+}
+
+export type ReportCreateWithoutTradeRequestInput = {
+  targetType: $Enums.TargetType
+  reason: $Enums.ReportReason
+  details?: string | null
+  aiScore?: number | null
+  aiCategories?: Prisma.ReportCreateaiCategoriesInput | string[]
+  aiRationale?: string | null
+  status?: $Enums.ReportStatus
+  resolution?: string | null
+  createdAt?: Date | string
+  resolvedAt?: Date | string | null
+  reporter: Prisma.UserCreateNestedOneWithoutReportsFiledInput
+  post?: Prisma.PostCreateNestedOneWithoutReportsInput
+  targetUser?: Prisma.UserCreateNestedOneWithoutReportsAgainstInput
+  message?: Prisma.MessageCreateNestedOneWithoutReportsInput
+  offer?: Prisma.TradeOfferCreateNestedOneWithoutReportsInput
+  review?: Prisma.ReviewCreateNestedOneWithoutReportsInput
+  resolver?: Prisma.UserCreateNestedOneWithoutReportsResolvedInput
+  appeal?: Prisma.AppealCreateNestedOneWithoutReportInput
+}
+
+export type ReportUncheckedCreateWithoutTradeRequestInput = {
+  id?: number
+  reporterId: number
+  targetType: $Enums.TargetType
+  postId?: number | null
+  targetUserId?: number | null
+  messageId?: number | null
+  offerId?: number | null
+  reviewId?: number | null
+  reason: $Enums.ReportReason
+  details?: string | null
+  aiScore?: number | null
+  aiCategories?: Prisma.ReportCreateaiCategoriesInput | string[]
+  aiRationale?: string | null
+  status?: $Enums.ReportStatus
+  resolution?: string | null
+  resolverId?: number | null
+  createdAt?: Date | string
+  resolvedAt?: Date | string | null
+  appeal?: Prisma.AppealUncheckedCreateNestedOneWithoutReportInput
+}
+
+export type ReportCreateOrConnectWithoutTradeRequestInput = {
+  where: Prisma.ReportWhereUniqueInput
+  create: Prisma.XOR<Prisma.ReportCreateWithoutTradeRequestInput, Prisma.ReportUncheckedCreateWithoutTradeRequestInput>
+}
+
+export type ReportCreateManyTradeRequestInputEnvelope = {
+  data: Prisma.ReportCreateManyTradeRequestInput | Prisma.ReportCreateManyTradeRequestInput[]
+  skipDuplicates?: boolean
+}
+
+export type ReportUpsertWithWhereUniqueWithoutTradeRequestInput = {
+  where: Prisma.ReportWhereUniqueInput
+  update: Prisma.XOR<Prisma.ReportUpdateWithoutTradeRequestInput, Prisma.ReportUncheckedUpdateWithoutTradeRequestInput>
+  create: Prisma.XOR<Prisma.ReportCreateWithoutTradeRequestInput, Prisma.ReportUncheckedCreateWithoutTradeRequestInput>
+}
+
+export type ReportUpdateWithWhereUniqueWithoutTradeRequestInput = {
+  where: Prisma.ReportWhereUniqueInput
+  data: Prisma.XOR<Prisma.ReportUpdateWithoutTradeRequestInput, Prisma.ReportUncheckedUpdateWithoutTradeRequestInput>
+}
+
+export type ReportUpdateManyWithWhereWithoutTradeRequestInput = {
+  where: Prisma.ReportScalarWhereInput
+  data: Prisma.XOR<Prisma.ReportUpdateManyMutationInput, Prisma.ReportUncheckedUpdateManyWithoutTradeRequestInput>
+}
+
+export type ReportCreateWithoutReviewInput = {
+  targetType: $Enums.TargetType
+  reason: $Enums.ReportReason
+  details?: string | null
+  aiScore?: number | null
+  aiCategories?: Prisma.ReportCreateaiCategoriesInput | string[]
+  aiRationale?: string | null
+  status?: $Enums.ReportStatus
+  resolution?: string | null
+  createdAt?: Date | string
+  resolvedAt?: Date | string | null
+  reporter: Prisma.UserCreateNestedOneWithoutReportsFiledInput
+  post?: Prisma.PostCreateNestedOneWithoutReportsInput
+  targetUser?: Prisma.UserCreateNestedOneWithoutReportsAgainstInput
+  message?: Prisma.MessageCreateNestedOneWithoutReportsInput
+  offer?: Prisma.TradeOfferCreateNestedOneWithoutReportsInput
+  tradeRequest?: Prisma.TradeRequestCreateNestedOneWithoutReportsInput
+  resolver?: Prisma.UserCreateNestedOneWithoutReportsResolvedInput
+  appeal?: Prisma.AppealCreateNestedOneWithoutReportInput
+}
+
+export type ReportUncheckedCreateWithoutReviewInput = {
+  id?: number
+  reporterId: number
+  targetType: $Enums.TargetType
+  postId?: number | null
+  targetUserId?: number | null
+  messageId?: number | null
+  offerId?: number | null
+  tradeRequestId?: number | null
+  reason: $Enums.ReportReason
+  details?: string | null
+  aiScore?: number | null
+  aiCategories?: Prisma.ReportCreateaiCategoriesInput | string[]
+  aiRationale?: string | null
+  status?: $Enums.ReportStatus
+  resolution?: string | null
+  resolverId?: number | null
+  createdAt?: Date | string
+  resolvedAt?: Date | string | null
+  appeal?: Prisma.AppealUncheckedCreateNestedOneWithoutReportInput
+}
+
+export type ReportCreateOrConnectWithoutReviewInput = {
+  where: Prisma.ReportWhereUniqueInput
+  create: Prisma.XOR<Prisma.ReportCreateWithoutReviewInput, Prisma.ReportUncheckedCreateWithoutReviewInput>
+}
+
+export type ReportCreateManyReviewInputEnvelope = {
+  data: Prisma.ReportCreateManyReviewInput | Prisma.ReportCreateManyReviewInput[]
+  skipDuplicates?: boolean
+}
+
+export type ReportUpsertWithWhereUniqueWithoutReviewInput = {
+  where: Prisma.ReportWhereUniqueInput
+  update: Prisma.XOR<Prisma.ReportUpdateWithoutReviewInput, Prisma.ReportUncheckedUpdateWithoutReviewInput>
+  create: Prisma.XOR<Prisma.ReportCreateWithoutReviewInput, Prisma.ReportUncheckedCreateWithoutReviewInput>
+}
+
+export type ReportUpdateWithWhereUniqueWithoutReviewInput = {
+  where: Prisma.ReportWhereUniqueInput
+  data: Prisma.XOR<Prisma.ReportUpdateWithoutReviewInput, Prisma.ReportUncheckedUpdateWithoutReviewInput>
+}
+
+export type ReportUpdateManyWithWhereWithoutReviewInput = {
+  where: Prisma.ReportScalarWhereInput
+  data: Prisma.XOR<Prisma.ReportUpdateManyMutationInput, Prisma.ReportUncheckedUpdateManyWithoutReviewInput>
+}
+
 export type ReportCreateWithoutAppealInput = {
   targetType: $Enums.TargetType
   reason: $Enums.ReportReason
@@ -1251,6 +1707,9 @@ export type ReportCreateWithoutAppealInput = {
   post?: Prisma.PostCreateNestedOneWithoutReportsInput
   targetUser?: Prisma.UserCreateNestedOneWithoutReportsAgainstInput
   message?: Prisma.MessageCreateNestedOneWithoutReportsInput
+  offer?: Prisma.TradeOfferCreateNestedOneWithoutReportsInput
+  review?: Prisma.ReviewCreateNestedOneWithoutReportsInput
+  tradeRequest?: Prisma.TradeRequestCreateNestedOneWithoutReportsInput
   resolver?: Prisma.UserCreateNestedOneWithoutReportsResolvedInput
 }
 
@@ -1261,6 +1720,9 @@ export type ReportUncheckedCreateWithoutAppealInput = {
   postId?: number | null
   targetUserId?: number | null
   messageId?: number | null
+  offerId?: number | null
+  reviewId?: number | null
+  tradeRequestId?: number | null
   reason: $Enums.ReportReason
   details?: string | null
   aiScore?: number | null
@@ -1304,6 +1766,9 @@ export type ReportUpdateWithoutAppealInput = {
   post?: Prisma.PostUpdateOneWithoutReportsNestedInput
   targetUser?: Prisma.UserUpdateOneWithoutReportsAgainstNestedInput
   message?: Prisma.MessageUpdateOneWithoutReportsNestedInput
+  offer?: Prisma.TradeOfferUpdateOneWithoutReportsNestedInput
+  review?: Prisma.ReviewUpdateOneWithoutReportsNestedInput
+  tradeRequest?: Prisma.TradeRequestUpdateOneWithoutReportsNestedInput
   resolver?: Prisma.UserUpdateOneWithoutReportsResolvedNestedInput
 }
 
@@ -1314,6 +1779,9 @@ export type ReportUncheckedUpdateWithoutAppealInput = {
   postId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   targetUserId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   messageId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  offerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  reviewId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  tradeRequestId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   reason?: Prisma.EnumReportReasonFieldUpdateOperationsInput | $Enums.ReportReason
   details?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aiScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1332,6 +1800,9 @@ export type ReportCreateManyReporterInput = {
   postId?: number | null
   targetUserId?: number | null
   messageId?: number | null
+  offerId?: number | null
+  reviewId?: number | null
+  tradeRequestId?: number | null
   reason: $Enums.ReportReason
   details?: string | null
   aiScore?: number | null
@@ -1350,6 +1821,9 @@ export type ReportCreateManyTargetUserInput = {
   targetType: $Enums.TargetType
   postId?: number | null
   messageId?: number | null
+  offerId?: number | null
+  reviewId?: number | null
+  tradeRequestId?: number | null
   reason: $Enums.ReportReason
   details?: string | null
   aiScore?: number | null
@@ -1369,6 +1843,9 @@ export type ReportCreateManyResolverInput = {
   postId?: number | null
   targetUserId?: number | null
   messageId?: number | null
+  offerId?: number | null
+  reviewId?: number | null
+  tradeRequestId?: number | null
   reason: $Enums.ReportReason
   details?: string | null
   aiScore?: number | null
@@ -1394,6 +1871,9 @@ export type ReportUpdateWithoutReporterInput = {
   post?: Prisma.PostUpdateOneWithoutReportsNestedInput
   targetUser?: Prisma.UserUpdateOneWithoutReportsAgainstNestedInput
   message?: Prisma.MessageUpdateOneWithoutReportsNestedInput
+  offer?: Prisma.TradeOfferUpdateOneWithoutReportsNestedInput
+  review?: Prisma.ReviewUpdateOneWithoutReportsNestedInput
+  tradeRequest?: Prisma.TradeRequestUpdateOneWithoutReportsNestedInput
   resolver?: Prisma.UserUpdateOneWithoutReportsResolvedNestedInput
   appeal?: Prisma.AppealUpdateOneWithoutReportNestedInput
 }
@@ -1404,6 +1884,9 @@ export type ReportUncheckedUpdateWithoutReporterInput = {
   postId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   targetUserId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   messageId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  offerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  reviewId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  tradeRequestId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   reason?: Prisma.EnumReportReasonFieldUpdateOperationsInput | $Enums.ReportReason
   details?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aiScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1423,6 +1906,9 @@ export type ReportUncheckedUpdateManyWithoutReporterInput = {
   postId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   targetUserId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   messageId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  offerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  reviewId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  tradeRequestId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   reason?: Prisma.EnumReportReasonFieldUpdateOperationsInput | $Enums.ReportReason
   details?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aiScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1449,6 +1935,9 @@ export type ReportUpdateWithoutTargetUserInput = {
   reporter?: Prisma.UserUpdateOneRequiredWithoutReportsFiledNestedInput
   post?: Prisma.PostUpdateOneWithoutReportsNestedInput
   message?: Prisma.MessageUpdateOneWithoutReportsNestedInput
+  offer?: Prisma.TradeOfferUpdateOneWithoutReportsNestedInput
+  review?: Prisma.ReviewUpdateOneWithoutReportsNestedInput
+  tradeRequest?: Prisma.TradeRequestUpdateOneWithoutReportsNestedInput
   resolver?: Prisma.UserUpdateOneWithoutReportsResolvedNestedInput
   appeal?: Prisma.AppealUpdateOneWithoutReportNestedInput
 }
@@ -1459,6 +1948,9 @@ export type ReportUncheckedUpdateWithoutTargetUserInput = {
   targetType?: Prisma.EnumTargetTypeFieldUpdateOperationsInput | $Enums.TargetType
   postId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   messageId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  offerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  reviewId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  tradeRequestId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   reason?: Prisma.EnumReportReasonFieldUpdateOperationsInput | $Enums.ReportReason
   details?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aiScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1478,6 +1970,9 @@ export type ReportUncheckedUpdateManyWithoutTargetUserInput = {
   targetType?: Prisma.EnumTargetTypeFieldUpdateOperationsInput | $Enums.TargetType
   postId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   messageId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  offerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  reviewId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  tradeRequestId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   reason?: Prisma.EnumReportReasonFieldUpdateOperationsInput | $Enums.ReportReason
   details?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aiScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1505,6 +2000,9 @@ export type ReportUpdateWithoutResolverInput = {
   post?: Prisma.PostUpdateOneWithoutReportsNestedInput
   targetUser?: Prisma.UserUpdateOneWithoutReportsAgainstNestedInput
   message?: Prisma.MessageUpdateOneWithoutReportsNestedInput
+  offer?: Prisma.TradeOfferUpdateOneWithoutReportsNestedInput
+  review?: Prisma.ReviewUpdateOneWithoutReportsNestedInput
+  tradeRequest?: Prisma.TradeRequestUpdateOneWithoutReportsNestedInput
   appeal?: Prisma.AppealUpdateOneWithoutReportNestedInput
 }
 
@@ -1515,6 +2013,9 @@ export type ReportUncheckedUpdateWithoutResolverInput = {
   postId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   targetUserId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   messageId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  offerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  reviewId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  tradeRequestId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   reason?: Prisma.EnumReportReasonFieldUpdateOperationsInput | $Enums.ReportReason
   details?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aiScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1534,6 +2035,9 @@ export type ReportUncheckedUpdateManyWithoutResolverInput = {
   postId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   targetUserId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   messageId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  offerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  reviewId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  tradeRequestId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   reason?: Prisma.EnumReportReasonFieldUpdateOperationsInput | $Enums.ReportReason
   details?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aiScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1551,6 +2055,9 @@ export type ReportCreateManyMessageInput = {
   targetType: $Enums.TargetType
   postId?: number | null
   targetUserId?: number | null
+  offerId?: number | null
+  reviewId?: number | null
+  tradeRequestId?: number | null
   reason: $Enums.ReportReason
   details?: string | null
   aiScore?: number | null
@@ -1577,6 +2084,9 @@ export type ReportUpdateWithoutMessageInput = {
   reporter?: Prisma.UserUpdateOneRequiredWithoutReportsFiledNestedInput
   post?: Prisma.PostUpdateOneWithoutReportsNestedInput
   targetUser?: Prisma.UserUpdateOneWithoutReportsAgainstNestedInput
+  offer?: Prisma.TradeOfferUpdateOneWithoutReportsNestedInput
+  review?: Prisma.ReviewUpdateOneWithoutReportsNestedInput
+  tradeRequest?: Prisma.TradeRequestUpdateOneWithoutReportsNestedInput
   resolver?: Prisma.UserUpdateOneWithoutReportsResolvedNestedInput
   appeal?: Prisma.AppealUpdateOneWithoutReportNestedInput
 }
@@ -1587,6 +2097,9 @@ export type ReportUncheckedUpdateWithoutMessageInput = {
   targetType?: Prisma.EnumTargetTypeFieldUpdateOperationsInput | $Enums.TargetType
   postId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   targetUserId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  offerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  reviewId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  tradeRequestId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   reason?: Prisma.EnumReportReasonFieldUpdateOperationsInput | $Enums.ReportReason
   details?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aiScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1606,6 +2119,9 @@ export type ReportUncheckedUpdateManyWithoutMessageInput = {
   targetType?: Prisma.EnumTargetTypeFieldUpdateOperationsInput | $Enums.TargetType
   postId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   targetUserId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  offerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  reviewId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  tradeRequestId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   reason?: Prisma.EnumReportReasonFieldUpdateOperationsInput | $Enums.ReportReason
   details?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aiScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1624,6 +2140,9 @@ export type ReportCreateManyPostInput = {
   targetType: $Enums.TargetType
   targetUserId?: number | null
   messageId?: number | null
+  offerId?: number | null
+  reviewId?: number | null
+  tradeRequestId?: number | null
   reason: $Enums.ReportReason
   details?: string | null
   aiScore?: number | null
@@ -1650,6 +2169,9 @@ export type ReportUpdateWithoutPostInput = {
   reporter?: Prisma.UserUpdateOneRequiredWithoutReportsFiledNestedInput
   targetUser?: Prisma.UserUpdateOneWithoutReportsAgainstNestedInput
   message?: Prisma.MessageUpdateOneWithoutReportsNestedInput
+  offer?: Prisma.TradeOfferUpdateOneWithoutReportsNestedInput
+  review?: Prisma.ReviewUpdateOneWithoutReportsNestedInput
+  tradeRequest?: Prisma.TradeRequestUpdateOneWithoutReportsNestedInput
   resolver?: Prisma.UserUpdateOneWithoutReportsResolvedNestedInput
   appeal?: Prisma.AppealUpdateOneWithoutReportNestedInput
 }
@@ -1660,6 +2182,9 @@ export type ReportUncheckedUpdateWithoutPostInput = {
   targetType?: Prisma.EnumTargetTypeFieldUpdateOperationsInput | $Enums.TargetType
   targetUserId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   messageId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  offerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  reviewId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  tradeRequestId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   reason?: Prisma.EnumReportReasonFieldUpdateOperationsInput | $Enums.ReportReason
   details?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aiScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1679,6 +2204,264 @@ export type ReportUncheckedUpdateManyWithoutPostInput = {
   targetType?: Prisma.EnumTargetTypeFieldUpdateOperationsInput | $Enums.TargetType
   targetUserId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   messageId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  offerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  reviewId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  tradeRequestId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  reason?: Prisma.EnumReportReasonFieldUpdateOperationsInput | $Enums.ReportReason
+  details?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aiScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  aiCategories?: Prisma.ReportUpdateaiCategoriesInput | string[]
+  aiRationale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumReportStatusFieldUpdateOperationsInput | $Enums.ReportStatus
+  resolution?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resolverId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+}
+
+export type ReportCreateManyOfferInput = {
+  id?: number
+  reporterId: number
+  targetType: $Enums.TargetType
+  postId?: number | null
+  targetUserId?: number | null
+  messageId?: number | null
+  reviewId?: number | null
+  tradeRequestId?: number | null
+  reason: $Enums.ReportReason
+  details?: string | null
+  aiScore?: number | null
+  aiCategories?: Prisma.ReportCreateaiCategoriesInput | string[]
+  aiRationale?: string | null
+  status?: $Enums.ReportStatus
+  resolution?: string | null
+  resolverId?: number | null
+  createdAt?: Date | string
+  resolvedAt?: Date | string | null
+}
+
+export type ReportUpdateWithoutOfferInput = {
+  targetType?: Prisma.EnumTargetTypeFieldUpdateOperationsInput | $Enums.TargetType
+  reason?: Prisma.EnumReportReasonFieldUpdateOperationsInput | $Enums.ReportReason
+  details?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aiScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  aiCategories?: Prisma.ReportUpdateaiCategoriesInput | string[]
+  aiRationale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumReportStatusFieldUpdateOperationsInput | $Enums.ReportStatus
+  resolution?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reporter?: Prisma.UserUpdateOneRequiredWithoutReportsFiledNestedInput
+  post?: Prisma.PostUpdateOneWithoutReportsNestedInput
+  targetUser?: Prisma.UserUpdateOneWithoutReportsAgainstNestedInput
+  message?: Prisma.MessageUpdateOneWithoutReportsNestedInput
+  review?: Prisma.ReviewUpdateOneWithoutReportsNestedInput
+  tradeRequest?: Prisma.TradeRequestUpdateOneWithoutReportsNestedInput
+  resolver?: Prisma.UserUpdateOneWithoutReportsResolvedNestedInput
+  appeal?: Prisma.AppealUpdateOneWithoutReportNestedInput
+}
+
+export type ReportUncheckedUpdateWithoutOfferInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  reporterId?: Prisma.IntFieldUpdateOperationsInput | number
+  targetType?: Prisma.EnumTargetTypeFieldUpdateOperationsInput | $Enums.TargetType
+  postId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  targetUserId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  messageId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  reviewId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  tradeRequestId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  reason?: Prisma.EnumReportReasonFieldUpdateOperationsInput | $Enums.ReportReason
+  details?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aiScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  aiCategories?: Prisma.ReportUpdateaiCategoriesInput | string[]
+  aiRationale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumReportStatusFieldUpdateOperationsInput | $Enums.ReportStatus
+  resolution?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resolverId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  appeal?: Prisma.AppealUncheckedUpdateOneWithoutReportNestedInput
+}
+
+export type ReportUncheckedUpdateManyWithoutOfferInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  reporterId?: Prisma.IntFieldUpdateOperationsInput | number
+  targetType?: Prisma.EnumTargetTypeFieldUpdateOperationsInput | $Enums.TargetType
+  postId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  targetUserId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  messageId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  reviewId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  tradeRequestId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  reason?: Prisma.EnumReportReasonFieldUpdateOperationsInput | $Enums.ReportReason
+  details?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aiScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  aiCategories?: Prisma.ReportUpdateaiCategoriesInput | string[]
+  aiRationale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumReportStatusFieldUpdateOperationsInput | $Enums.ReportStatus
+  resolution?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resolverId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+}
+
+export type ReportCreateManyTradeRequestInput = {
+  id?: number
+  reporterId: number
+  targetType: $Enums.TargetType
+  postId?: number | null
+  targetUserId?: number | null
+  messageId?: number | null
+  offerId?: number | null
+  reviewId?: number | null
+  reason: $Enums.ReportReason
+  details?: string | null
+  aiScore?: number | null
+  aiCategories?: Prisma.ReportCreateaiCategoriesInput | string[]
+  aiRationale?: string | null
+  status?: $Enums.ReportStatus
+  resolution?: string | null
+  resolverId?: number | null
+  createdAt?: Date | string
+  resolvedAt?: Date | string | null
+}
+
+export type ReportUpdateWithoutTradeRequestInput = {
+  targetType?: Prisma.EnumTargetTypeFieldUpdateOperationsInput | $Enums.TargetType
+  reason?: Prisma.EnumReportReasonFieldUpdateOperationsInput | $Enums.ReportReason
+  details?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aiScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  aiCategories?: Prisma.ReportUpdateaiCategoriesInput | string[]
+  aiRationale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumReportStatusFieldUpdateOperationsInput | $Enums.ReportStatus
+  resolution?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reporter?: Prisma.UserUpdateOneRequiredWithoutReportsFiledNestedInput
+  post?: Prisma.PostUpdateOneWithoutReportsNestedInput
+  targetUser?: Prisma.UserUpdateOneWithoutReportsAgainstNestedInput
+  message?: Prisma.MessageUpdateOneWithoutReportsNestedInput
+  offer?: Prisma.TradeOfferUpdateOneWithoutReportsNestedInput
+  review?: Prisma.ReviewUpdateOneWithoutReportsNestedInput
+  resolver?: Prisma.UserUpdateOneWithoutReportsResolvedNestedInput
+  appeal?: Prisma.AppealUpdateOneWithoutReportNestedInput
+}
+
+export type ReportUncheckedUpdateWithoutTradeRequestInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  reporterId?: Prisma.IntFieldUpdateOperationsInput | number
+  targetType?: Prisma.EnumTargetTypeFieldUpdateOperationsInput | $Enums.TargetType
+  postId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  targetUserId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  messageId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  offerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  reviewId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  reason?: Prisma.EnumReportReasonFieldUpdateOperationsInput | $Enums.ReportReason
+  details?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aiScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  aiCategories?: Prisma.ReportUpdateaiCategoriesInput | string[]
+  aiRationale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumReportStatusFieldUpdateOperationsInput | $Enums.ReportStatus
+  resolution?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resolverId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  appeal?: Prisma.AppealUncheckedUpdateOneWithoutReportNestedInput
+}
+
+export type ReportUncheckedUpdateManyWithoutTradeRequestInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  reporterId?: Prisma.IntFieldUpdateOperationsInput | number
+  targetType?: Prisma.EnumTargetTypeFieldUpdateOperationsInput | $Enums.TargetType
+  postId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  targetUserId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  messageId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  offerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  reviewId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  reason?: Prisma.EnumReportReasonFieldUpdateOperationsInput | $Enums.ReportReason
+  details?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aiScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  aiCategories?: Prisma.ReportUpdateaiCategoriesInput | string[]
+  aiRationale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumReportStatusFieldUpdateOperationsInput | $Enums.ReportStatus
+  resolution?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resolverId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+}
+
+export type ReportCreateManyReviewInput = {
+  id?: number
+  reporterId: number
+  targetType: $Enums.TargetType
+  postId?: number | null
+  targetUserId?: number | null
+  messageId?: number | null
+  offerId?: number | null
+  tradeRequestId?: number | null
+  reason: $Enums.ReportReason
+  details?: string | null
+  aiScore?: number | null
+  aiCategories?: Prisma.ReportCreateaiCategoriesInput | string[]
+  aiRationale?: string | null
+  status?: $Enums.ReportStatus
+  resolution?: string | null
+  resolverId?: number | null
+  createdAt?: Date | string
+  resolvedAt?: Date | string | null
+}
+
+export type ReportUpdateWithoutReviewInput = {
+  targetType?: Prisma.EnumTargetTypeFieldUpdateOperationsInput | $Enums.TargetType
+  reason?: Prisma.EnumReportReasonFieldUpdateOperationsInput | $Enums.ReportReason
+  details?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aiScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  aiCategories?: Prisma.ReportUpdateaiCategoriesInput | string[]
+  aiRationale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumReportStatusFieldUpdateOperationsInput | $Enums.ReportStatus
+  resolution?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reporter?: Prisma.UserUpdateOneRequiredWithoutReportsFiledNestedInput
+  post?: Prisma.PostUpdateOneWithoutReportsNestedInput
+  targetUser?: Prisma.UserUpdateOneWithoutReportsAgainstNestedInput
+  message?: Prisma.MessageUpdateOneWithoutReportsNestedInput
+  offer?: Prisma.TradeOfferUpdateOneWithoutReportsNestedInput
+  tradeRequest?: Prisma.TradeRequestUpdateOneWithoutReportsNestedInput
+  resolver?: Prisma.UserUpdateOneWithoutReportsResolvedNestedInput
+  appeal?: Prisma.AppealUpdateOneWithoutReportNestedInput
+}
+
+export type ReportUncheckedUpdateWithoutReviewInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  reporterId?: Prisma.IntFieldUpdateOperationsInput | number
+  targetType?: Prisma.EnumTargetTypeFieldUpdateOperationsInput | $Enums.TargetType
+  postId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  targetUserId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  messageId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  offerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  tradeRequestId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  reason?: Prisma.EnumReportReasonFieldUpdateOperationsInput | $Enums.ReportReason
+  details?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aiScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  aiCategories?: Prisma.ReportUpdateaiCategoriesInput | string[]
+  aiRationale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumReportStatusFieldUpdateOperationsInput | $Enums.ReportStatus
+  resolution?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resolverId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  appeal?: Prisma.AppealUncheckedUpdateOneWithoutReportNestedInput
+}
+
+export type ReportUncheckedUpdateManyWithoutReviewInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  reporterId?: Prisma.IntFieldUpdateOperationsInput | number
+  targetType?: Prisma.EnumTargetTypeFieldUpdateOperationsInput | $Enums.TargetType
+  postId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  targetUserId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  messageId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  offerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  tradeRequestId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   reason?: Prisma.EnumReportReasonFieldUpdateOperationsInput | $Enums.ReportReason
   details?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aiScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1700,6 +2483,9 @@ export type ReportSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   postId?: boolean
   targetUserId?: boolean
   messageId?: boolean
+  offerId?: boolean
+  reviewId?: boolean
+  tradeRequestId?: boolean
   reason?: boolean
   details?: boolean
   aiScore?: boolean
@@ -1714,6 +2500,9 @@ export type ReportSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   post?: boolean | Prisma.Report$postArgs<ExtArgs>
   targetUser?: boolean | Prisma.Report$targetUserArgs<ExtArgs>
   message?: boolean | Prisma.Report$messageArgs<ExtArgs>
+  offer?: boolean | Prisma.Report$offerArgs<ExtArgs>
+  review?: boolean | Prisma.Report$reviewArgs<ExtArgs>
+  tradeRequest?: boolean | Prisma.Report$tradeRequestArgs<ExtArgs>
   resolver?: boolean | Prisma.Report$resolverArgs<ExtArgs>
   appeal?: boolean | Prisma.Report$appealArgs<ExtArgs>
 }, ExtArgs["result"]["report"]>
@@ -1725,6 +2514,9 @@ export type ReportSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   postId?: boolean
   targetUserId?: boolean
   messageId?: boolean
+  offerId?: boolean
+  reviewId?: boolean
+  tradeRequestId?: boolean
   reason?: boolean
   details?: boolean
   aiScore?: boolean
@@ -1739,6 +2531,9 @@ export type ReportSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   post?: boolean | Prisma.Report$postArgs<ExtArgs>
   targetUser?: boolean | Prisma.Report$targetUserArgs<ExtArgs>
   message?: boolean | Prisma.Report$messageArgs<ExtArgs>
+  offer?: boolean | Prisma.Report$offerArgs<ExtArgs>
+  review?: boolean | Prisma.Report$reviewArgs<ExtArgs>
+  tradeRequest?: boolean | Prisma.Report$tradeRequestArgs<ExtArgs>
   resolver?: boolean | Prisma.Report$resolverArgs<ExtArgs>
 }, ExtArgs["result"]["report"]>
 
@@ -1749,6 +2544,9 @@ export type ReportSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   postId?: boolean
   targetUserId?: boolean
   messageId?: boolean
+  offerId?: boolean
+  reviewId?: boolean
+  tradeRequestId?: boolean
   reason?: boolean
   details?: boolean
   aiScore?: boolean
@@ -1763,6 +2561,9 @@ export type ReportSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   post?: boolean | Prisma.Report$postArgs<ExtArgs>
   targetUser?: boolean | Prisma.Report$targetUserArgs<ExtArgs>
   message?: boolean | Prisma.Report$messageArgs<ExtArgs>
+  offer?: boolean | Prisma.Report$offerArgs<ExtArgs>
+  review?: boolean | Prisma.Report$reviewArgs<ExtArgs>
+  tradeRequest?: boolean | Prisma.Report$tradeRequestArgs<ExtArgs>
   resolver?: boolean | Prisma.Report$resolverArgs<ExtArgs>
 }, ExtArgs["result"]["report"]>
 
@@ -1773,6 +2574,9 @@ export type ReportSelectScalar = {
   postId?: boolean
   targetUserId?: boolean
   messageId?: boolean
+  offerId?: boolean
+  reviewId?: boolean
+  tradeRequestId?: boolean
   reason?: boolean
   details?: boolean
   aiScore?: boolean
@@ -1785,12 +2589,15 @@ export type ReportSelectScalar = {
   resolvedAt?: boolean
 }
 
-export type ReportOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "reporterId" | "targetType" | "postId" | "targetUserId" | "messageId" | "reason" | "details" | "aiScore" | "aiCategories" | "aiRationale" | "status" | "resolution" | "resolverId" | "createdAt" | "resolvedAt", ExtArgs["result"]["report"]>
+export type ReportOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "reporterId" | "targetType" | "postId" | "targetUserId" | "messageId" | "offerId" | "reviewId" | "tradeRequestId" | "reason" | "details" | "aiScore" | "aiCategories" | "aiRationale" | "status" | "resolution" | "resolverId" | "createdAt" | "resolvedAt", ExtArgs["result"]["report"]>
 export type ReportInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   reporter?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   post?: boolean | Prisma.Report$postArgs<ExtArgs>
   targetUser?: boolean | Prisma.Report$targetUserArgs<ExtArgs>
   message?: boolean | Prisma.Report$messageArgs<ExtArgs>
+  offer?: boolean | Prisma.Report$offerArgs<ExtArgs>
+  review?: boolean | Prisma.Report$reviewArgs<ExtArgs>
+  tradeRequest?: boolean | Prisma.Report$tradeRequestArgs<ExtArgs>
   resolver?: boolean | Prisma.Report$resolverArgs<ExtArgs>
   appeal?: boolean | Prisma.Report$appealArgs<ExtArgs>
 }
@@ -1799,6 +2606,9 @@ export type ReportIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   post?: boolean | Prisma.Report$postArgs<ExtArgs>
   targetUser?: boolean | Prisma.Report$targetUserArgs<ExtArgs>
   message?: boolean | Prisma.Report$messageArgs<ExtArgs>
+  offer?: boolean | Prisma.Report$offerArgs<ExtArgs>
+  review?: boolean | Prisma.Report$reviewArgs<ExtArgs>
+  tradeRequest?: boolean | Prisma.Report$tradeRequestArgs<ExtArgs>
   resolver?: boolean | Prisma.Report$resolverArgs<ExtArgs>
 }
 export type ReportIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1806,6 +2616,9 @@ export type ReportIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   post?: boolean | Prisma.Report$postArgs<ExtArgs>
   targetUser?: boolean | Prisma.Report$targetUserArgs<ExtArgs>
   message?: boolean | Prisma.Report$messageArgs<ExtArgs>
+  offer?: boolean | Prisma.Report$offerArgs<ExtArgs>
+  review?: boolean | Prisma.Report$reviewArgs<ExtArgs>
+  tradeRequest?: boolean | Prisma.Report$tradeRequestArgs<ExtArgs>
   resolver?: boolean | Prisma.Report$resolverArgs<ExtArgs>
 }
 
@@ -1816,6 +2629,9 @@ export type $ReportPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     post: Prisma.$PostPayload<ExtArgs> | null
     targetUser: Prisma.$UserPayload<ExtArgs> | null
     message: Prisma.$MessagePayload<ExtArgs> | null
+    offer: Prisma.$TradeOfferPayload<ExtArgs> | null
+    review: Prisma.$ReviewPayload<ExtArgs> | null
+    tradeRequest: Prisma.$TradeRequestPayload<ExtArgs> | null
     resolver: Prisma.$UserPayload<ExtArgs> | null
     appeal: Prisma.$AppealPayload<ExtArgs> | null
   }
@@ -1826,6 +2642,9 @@ export type $ReportPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     postId: number | null
     targetUserId: number | null
     messageId: number | null
+    offerId: number | null
+    reviewId: number | null
+    tradeRequestId: number | null
     reason: $Enums.ReportReason
     details: string | null
     aiScore: number | null
@@ -2234,6 +3053,9 @@ export interface Prisma__ReportClient<T, Null = never, ExtArgs extends runtime.T
   post<T extends Prisma.Report$postArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Report$postArgs<ExtArgs>>): Prisma.Prisma__PostClient<runtime.Types.Result.GetResult<Prisma.$PostPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   targetUser<T extends Prisma.Report$targetUserArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Report$targetUserArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   message<T extends Prisma.Report$messageArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Report$messageArgs<ExtArgs>>): Prisma.Prisma__MessageClient<runtime.Types.Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  offer<T extends Prisma.Report$offerArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Report$offerArgs<ExtArgs>>): Prisma.Prisma__TradeOfferClient<runtime.Types.Result.GetResult<Prisma.$TradeOfferPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  review<T extends Prisma.Report$reviewArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Report$reviewArgs<ExtArgs>>): Prisma.Prisma__ReviewClient<runtime.Types.Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  tradeRequest<T extends Prisma.Report$tradeRequestArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Report$tradeRequestArgs<ExtArgs>>): Prisma.Prisma__TradeRequestClient<runtime.Types.Result.GetResult<Prisma.$TradeRequestPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   resolver<T extends Prisma.Report$resolverArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Report$resolverArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   appeal<T extends Prisma.Report$appealArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Report$appealArgs<ExtArgs>>): Prisma.Prisma__AppealClient<runtime.Types.Result.GetResult<Prisma.$AppealPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
@@ -2271,6 +3093,9 @@ export interface ReportFieldRefs {
   readonly postId: Prisma.FieldRef<"Report", 'Int'>
   readonly targetUserId: Prisma.FieldRef<"Report", 'Int'>
   readonly messageId: Prisma.FieldRef<"Report", 'Int'>
+  readonly offerId: Prisma.FieldRef<"Report", 'Int'>
+  readonly reviewId: Prisma.FieldRef<"Report", 'Int'>
+  readonly tradeRequestId: Prisma.FieldRef<"Report", 'Int'>
   readonly reason: Prisma.FieldRef<"Report", 'ReportReason'>
   readonly details: Prisma.FieldRef<"Report", 'String'>
   readonly aiScore: Prisma.FieldRef<"Report", 'Float'>
@@ -2736,6 +3561,63 @@ export type Report$messageArgs<ExtArgs extends runtime.Types.Extensions.Internal
    */
   include?: Prisma.MessageInclude<ExtArgs> | null
   where?: Prisma.MessageWhereInput
+}
+
+/**
+ * Report.offer
+ */
+export type Report$offerArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TradeOffer
+   */
+  select?: Prisma.TradeOfferSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TradeOffer
+   */
+  omit?: Prisma.TradeOfferOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TradeOfferInclude<ExtArgs> | null
+  where?: Prisma.TradeOfferWhereInput
+}
+
+/**
+ * Report.review
+ */
+export type Report$reviewArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Review
+   */
+  select?: Prisma.ReviewSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Review
+   */
+  omit?: Prisma.ReviewOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ReviewInclude<ExtArgs> | null
+  where?: Prisma.ReviewWhereInput
+}
+
+/**
+ * Report.tradeRequest
+ */
+export type Report$tradeRequestArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TradeRequest
+   */
+  select?: Prisma.TradeRequestSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TradeRequest
+   */
+  omit?: Prisma.TradeRequestOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TradeRequestInclude<ExtArgs> | null
+  where?: Prisma.TradeRequestWhereInput
 }
 
 /**

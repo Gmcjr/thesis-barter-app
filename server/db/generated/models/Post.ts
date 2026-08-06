@@ -55,6 +55,7 @@ export type PostMinAggregateOutputType = {
   radiusMiles: number | null
   lat: number | null
   lng: number | null
+  isPendingScreening: boolean | null
   isRemoved: boolean | null
 }
 
@@ -71,6 +72,7 @@ export type PostMaxAggregateOutputType = {
   radiusMiles: number | null
   lat: number | null
   lng: number | null
+  isPendingScreening: boolean | null
   isRemoved: boolean | null
 }
 
@@ -88,6 +90,7 @@ export type PostCountAggregateOutputType = {
   radiusMiles: number
   lat: number
   lng: number
+  isPendingScreening: number
   isRemoved: number
   _all: number
 }
@@ -122,6 +125,7 @@ export type PostMinAggregateInputType = {
   radiusMiles?: true
   lat?: true
   lng?: true
+  isPendingScreening?: true
   isRemoved?: true
 }
 
@@ -138,6 +142,7 @@ export type PostMaxAggregateInputType = {
   radiusMiles?: true
   lat?: true
   lng?: true
+  isPendingScreening?: true
   isRemoved?: true
 }
 
@@ -155,6 +160,7 @@ export type PostCountAggregateInputType = {
   radiusMiles?: true
   lat?: true
   lng?: true
+  isPendingScreening?: true
   isRemoved?: true
   _all?: true
 }
@@ -259,6 +265,7 @@ export type PostGroupByOutputType = {
   radiusMiles: number | null
   lat: number | null
   lng: number | null
+  isPendingScreening: boolean
   isRemoved: boolean
   _count: PostCountAggregateOutputType | null
   _avg: PostAvgAggregateOutputType | null
@@ -299,6 +306,7 @@ export type PostWhereInput = {
   radiusMiles?: Prisma.IntNullableFilter<"Post"> | number | null
   lat?: Prisma.FloatNullableFilter<"Post"> | number | null
   lng?: Prisma.FloatNullableFilter<"Post"> | number | null
+  isPendingScreening?: Prisma.BoolFilter<"Post"> | boolean
   isRemoved?: Prisma.BoolFilter<"Post"> | boolean
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   products?: Prisma.ProductListRelationFilter
@@ -325,6 +333,7 @@ export type PostOrderByWithRelationInput = {
   radiusMiles?: Prisma.SortOrderInput | Prisma.SortOrder
   lat?: Prisma.SortOrderInput | Prisma.SortOrder
   lng?: Prisma.SortOrderInput | Prisma.SortOrder
+  isPendingScreening?: Prisma.SortOrder
   isRemoved?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
   products?: Prisma.ProductOrderByRelationAggregateInput
@@ -354,6 +363,7 @@ export type PostWhereUniqueInput = Prisma.AtLeast<{
   radiusMiles?: Prisma.IntNullableFilter<"Post"> | number | null
   lat?: Prisma.FloatNullableFilter<"Post"> | number | null
   lng?: Prisma.FloatNullableFilter<"Post"> | number | null
+  isPendingScreening?: Prisma.BoolFilter<"Post"> | boolean
   isRemoved?: Prisma.BoolFilter<"Post"> | boolean
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   products?: Prisma.ProductListRelationFilter
@@ -380,6 +390,7 @@ export type PostOrderByWithAggregationInput = {
   radiusMiles?: Prisma.SortOrderInput | Prisma.SortOrder
   lat?: Prisma.SortOrderInput | Prisma.SortOrder
   lng?: Prisma.SortOrderInput | Prisma.SortOrder
+  isPendingScreening?: Prisma.SortOrder
   isRemoved?: Prisma.SortOrder
   _count?: Prisma.PostCountOrderByAggregateInput
   _avg?: Prisma.PostAvgOrderByAggregateInput
@@ -405,6 +416,7 @@ export type PostScalarWhereWithAggregatesInput = {
   radiusMiles?: Prisma.IntNullableWithAggregatesFilter<"Post"> | number | null
   lat?: Prisma.FloatNullableWithAggregatesFilter<"Post"> | number | null
   lng?: Prisma.FloatNullableWithAggregatesFilter<"Post"> | number | null
+  isPendingScreening?: Prisma.BoolWithAggregatesFilter<"Post"> | boolean
   isRemoved?: Prisma.BoolWithAggregatesFilter<"Post"> | boolean
 }
 
@@ -420,6 +432,7 @@ export type PostCreateInput = {
   radiusMiles?: number | null
   lat?: number | null
   lng?: number | null
+  isPendingScreening?: boolean
   isRemoved?: boolean
   user: Prisma.UserCreateNestedOneWithoutPostsInput
   products?: Prisma.ProductCreateNestedManyWithoutPostInput
@@ -446,6 +459,7 @@ export type PostUncheckedCreateInput = {
   radiusMiles?: number | null
   lat?: number | null
   lng?: number | null
+  isPendingScreening?: boolean
   isRemoved?: boolean
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutPostInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutPostInput
@@ -469,6 +483,7 @@ export type PostUpdateInput = {
   radiusMiles?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   lat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   user?: Prisma.UserUpdateOneRequiredWithoutPostsNestedInput
   products?: Prisma.ProductUpdateManyWithoutPostNestedInput
@@ -495,6 +510,7 @@ export type PostUncheckedUpdateInput = {
   radiusMiles?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   lat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   products?: Prisma.ProductUncheckedUpdateManyWithoutPostNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutPostNestedInput
@@ -520,6 +536,7 @@ export type PostCreateManyInput = {
   radiusMiles?: number | null
   lat?: number | null
   lng?: number | null
+  isPendingScreening?: boolean
   isRemoved?: boolean
 }
 
@@ -535,6 +552,7 @@ export type PostUpdateManyMutationInput = {
   radiusMiles?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   lat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
@@ -552,6 +570,7 @@ export type PostUncheckedUpdateManyInput = {
   radiusMiles?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   lat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
@@ -587,6 +606,7 @@ export type PostCountOrderByAggregateInput = {
   radiusMiles?: Prisma.SortOrder
   lat?: Prisma.SortOrder
   lng?: Prisma.SortOrder
+  isPendingScreening?: Prisma.SortOrder
   isRemoved?: Prisma.SortOrder
 }
 
@@ -611,6 +631,7 @@ export type PostMaxOrderByAggregateInput = {
   radiusMiles?: Prisma.SortOrder
   lat?: Prisma.SortOrder
   lng?: Prisma.SortOrder
+  isPendingScreening?: Prisma.SortOrder
   isRemoved?: Prisma.SortOrder
 }
 
@@ -627,6 +648,7 @@ export type PostMinOrderByAggregateInput = {
   radiusMiles?: Prisma.SortOrder
   lat?: Prisma.SortOrder
   lng?: Prisma.SortOrder
+  isPendingScreening?: Prisma.SortOrder
   isRemoved?: Prisma.SortOrder
 }
 
@@ -845,6 +867,7 @@ export type PostCreateWithoutUserInput = {
   radiusMiles?: number | null
   lat?: number | null
   lng?: number | null
+  isPendingScreening?: boolean
   isRemoved?: boolean
   products?: Prisma.ProductCreateNestedManyWithoutPostInput
   services?: Prisma.ServiceCreateNestedManyWithoutPostInput
@@ -869,6 +892,7 @@ export type PostUncheckedCreateWithoutUserInput = {
   radiusMiles?: number | null
   lat?: number | null
   lng?: number | null
+  isPendingScreening?: boolean
   isRemoved?: boolean
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutPostInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutPostInput
@@ -923,6 +947,7 @@ export type PostScalarWhereInput = {
   radiusMiles?: Prisma.IntNullableFilter<"Post"> | number | null
   lat?: Prisma.FloatNullableFilter<"Post"> | number | null
   lng?: Prisma.FloatNullableFilter<"Post"> | number | null
+  isPendingScreening?: Prisma.BoolFilter<"Post"> | boolean
   isRemoved?: Prisma.BoolFilter<"Post"> | boolean
 }
 
@@ -938,6 +963,7 @@ export type PostCreateWithoutTradesInput = {
   radiusMiles?: number | null
   lat?: number | null
   lng?: number | null
+  isPendingScreening?: boolean
   isRemoved?: boolean
   user: Prisma.UserCreateNestedOneWithoutPostsInput
   products?: Prisma.ProductCreateNestedManyWithoutPostInput
@@ -963,6 +989,7 @@ export type PostUncheckedCreateWithoutTradesInput = {
   radiusMiles?: number | null
   lat?: number | null
   lng?: number | null
+  isPendingScreening?: boolean
   isRemoved?: boolean
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutPostInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutPostInput
@@ -1001,6 +1028,7 @@ export type PostUpdateWithoutTradesInput = {
   radiusMiles?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   lat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   user?: Prisma.UserUpdateOneRequiredWithoutPostsNestedInput
   products?: Prisma.ProductUpdateManyWithoutPostNestedInput
@@ -1026,6 +1054,7 @@ export type PostUncheckedUpdateWithoutTradesInput = {
   radiusMiles?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   lat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   products?: Prisma.ProductUncheckedUpdateManyWithoutPostNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutPostNestedInput
@@ -1048,6 +1077,7 @@ export type PostCreateWithoutTradeOffersInput = {
   radiusMiles?: number | null
   lat?: number | null
   lng?: number | null
+  isPendingScreening?: boolean
   isRemoved?: boolean
   user: Prisma.UserCreateNestedOneWithoutPostsInput
   products?: Prisma.ProductCreateNestedManyWithoutPostInput
@@ -1073,6 +1103,7 @@ export type PostUncheckedCreateWithoutTradeOffersInput = {
   radiusMiles?: number | null
   lat?: number | null
   lng?: number | null
+  isPendingScreening?: boolean
   isRemoved?: boolean
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutPostInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutPostInput
@@ -1111,6 +1142,7 @@ export type PostUpdateWithoutTradeOffersInput = {
   radiusMiles?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   lat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   user?: Prisma.UserUpdateOneRequiredWithoutPostsNestedInput
   products?: Prisma.ProductUpdateManyWithoutPostNestedInput
@@ -1136,6 +1168,7 @@ export type PostUncheckedUpdateWithoutTradeOffersInput = {
   radiusMiles?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   lat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   products?: Prisma.ProductUncheckedUpdateManyWithoutPostNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutPostNestedInput
@@ -1158,6 +1191,7 @@ export type PostCreateWithoutTradeRequestsInput = {
   radiusMiles?: number | null
   lat?: number | null
   lng?: number | null
+  isPendingScreening?: boolean
   isRemoved?: boolean
   user: Prisma.UserCreateNestedOneWithoutPostsInput
   products?: Prisma.ProductCreateNestedManyWithoutPostInput
@@ -1183,6 +1217,7 @@ export type PostUncheckedCreateWithoutTradeRequestsInput = {
   radiusMiles?: number | null
   lat?: number | null
   lng?: number | null
+  isPendingScreening?: boolean
   isRemoved?: boolean
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutPostInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutPostInput
@@ -1221,6 +1256,7 @@ export type PostUpdateWithoutTradeRequestsInput = {
   radiusMiles?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   lat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   user?: Prisma.UserUpdateOneRequiredWithoutPostsNestedInput
   products?: Prisma.ProductUpdateManyWithoutPostNestedInput
@@ -1246,6 +1282,7 @@ export type PostUncheckedUpdateWithoutTradeRequestsInput = {
   radiusMiles?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   lat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   products?: Prisma.ProductUncheckedUpdateManyWithoutPostNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutPostNestedInput
@@ -1268,6 +1305,7 @@ export type PostCreateWithoutCommentsInput = {
   radiusMiles?: number | null
   lat?: number | null
   lng?: number | null
+  isPendingScreening?: boolean
   isRemoved?: boolean
   user: Prisma.UserCreateNestedOneWithoutPostsInput
   products?: Prisma.ProductCreateNestedManyWithoutPostInput
@@ -1293,6 +1331,7 @@ export type PostUncheckedCreateWithoutCommentsInput = {
   radiusMiles?: number | null
   lat?: number | null
   lng?: number | null
+  isPendingScreening?: boolean
   isRemoved?: boolean
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutPostInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutPostInput
@@ -1331,6 +1370,7 @@ export type PostUpdateWithoutCommentsInput = {
   radiusMiles?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   lat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   user?: Prisma.UserUpdateOneRequiredWithoutPostsNestedInput
   products?: Prisma.ProductUpdateManyWithoutPostNestedInput
@@ -1356,6 +1396,7 @@ export type PostUncheckedUpdateWithoutCommentsInput = {
   radiusMiles?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   lat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   products?: Prisma.ProductUncheckedUpdateManyWithoutPostNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutPostNestedInput
@@ -1378,6 +1419,7 @@ export type PostCreateWithoutProductsInput = {
   radiusMiles?: number | null
   lat?: number | null
   lng?: number | null
+  isPendingScreening?: boolean
   isRemoved?: boolean
   user: Prisma.UserCreateNestedOneWithoutPostsInput
   services?: Prisma.ServiceCreateNestedManyWithoutPostInput
@@ -1403,6 +1445,7 @@ export type PostUncheckedCreateWithoutProductsInput = {
   radiusMiles?: number | null
   lat?: number | null
   lng?: number | null
+  isPendingScreening?: boolean
   isRemoved?: boolean
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutPostInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutPostInput
@@ -1441,6 +1484,7 @@ export type PostUpdateWithoutProductsInput = {
   radiusMiles?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   lat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   user?: Prisma.UserUpdateOneRequiredWithoutPostsNestedInput
   services?: Prisma.ServiceUpdateManyWithoutPostNestedInput
@@ -1466,6 +1510,7 @@ export type PostUncheckedUpdateWithoutProductsInput = {
   radiusMiles?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   lat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   services?: Prisma.ServiceUncheckedUpdateManyWithoutPostNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutPostNestedInput
@@ -1488,6 +1533,7 @@ export type PostCreateWithoutServicesInput = {
   radiusMiles?: number | null
   lat?: number | null
   lng?: number | null
+  isPendingScreening?: boolean
   isRemoved?: boolean
   user: Prisma.UserCreateNestedOneWithoutPostsInput
   products?: Prisma.ProductCreateNestedManyWithoutPostInput
@@ -1513,6 +1559,7 @@ export type PostUncheckedCreateWithoutServicesInput = {
   radiusMiles?: number | null
   lat?: number | null
   lng?: number | null
+  isPendingScreening?: boolean
   isRemoved?: boolean
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutPostInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutPostInput
@@ -1551,6 +1598,7 @@ export type PostUpdateWithoutServicesInput = {
   radiusMiles?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   lat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   user?: Prisma.UserUpdateOneRequiredWithoutPostsNestedInput
   products?: Prisma.ProductUpdateManyWithoutPostNestedInput
@@ -1576,6 +1624,7 @@ export type PostUncheckedUpdateWithoutServicesInput = {
   radiusMiles?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   lat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   products?: Prisma.ProductUncheckedUpdateManyWithoutPostNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutPostNestedInput
@@ -1598,6 +1647,7 @@ export type PostCreateWithoutReportsInput = {
   radiusMiles?: number | null
   lat?: number | null
   lng?: number | null
+  isPendingScreening?: boolean
   isRemoved?: boolean
   user: Prisma.UserCreateNestedOneWithoutPostsInput
   products?: Prisma.ProductCreateNestedManyWithoutPostInput
@@ -1623,6 +1673,7 @@ export type PostUncheckedCreateWithoutReportsInput = {
   radiusMiles?: number | null
   lat?: number | null
   lng?: number | null
+  isPendingScreening?: boolean
   isRemoved?: boolean
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutPostInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutPostInput
@@ -1661,6 +1712,7 @@ export type PostUpdateWithoutReportsInput = {
   radiusMiles?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   lat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   user?: Prisma.UserUpdateOneRequiredWithoutPostsNestedInput
   products?: Prisma.ProductUpdateManyWithoutPostNestedInput
@@ -1686,6 +1738,7 @@ export type PostUncheckedUpdateWithoutReportsInput = {
   radiusMiles?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   lat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   products?: Prisma.ProductUncheckedUpdateManyWithoutPostNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutPostNestedInput
@@ -1708,6 +1761,7 @@ export type PostCreateWithoutPostMediaInput = {
   radiusMiles?: number | null
   lat?: number | null
   lng?: number | null
+  isPendingScreening?: boolean
   isRemoved?: boolean
   user: Prisma.UserCreateNestedOneWithoutPostsInput
   products?: Prisma.ProductCreateNestedManyWithoutPostInput
@@ -1733,6 +1787,7 @@ export type PostUncheckedCreateWithoutPostMediaInput = {
   radiusMiles?: number | null
   lat?: number | null
   lng?: number | null
+  isPendingScreening?: boolean
   isRemoved?: boolean
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutPostInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutPostInput
@@ -1771,6 +1826,7 @@ export type PostUpdateWithoutPostMediaInput = {
   radiusMiles?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   lat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   user?: Prisma.UserUpdateOneRequiredWithoutPostsNestedInput
   products?: Prisma.ProductUpdateManyWithoutPostNestedInput
@@ -1796,6 +1852,7 @@ export type PostUncheckedUpdateWithoutPostMediaInput = {
   radiusMiles?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   lat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   products?: Prisma.ProductUncheckedUpdateManyWithoutPostNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutPostNestedInput
@@ -1819,6 +1876,7 @@ export type PostCreateManyUserInput = {
   radiusMiles?: number | null
   lat?: number | null
   lng?: number | null
+  isPendingScreening?: boolean
   isRemoved?: boolean
 }
 
@@ -1834,6 +1892,7 @@ export type PostUpdateWithoutUserInput = {
   radiusMiles?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   lat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   products?: Prisma.ProductUpdateManyWithoutPostNestedInput
   services?: Prisma.ServiceUpdateManyWithoutPostNestedInput
@@ -1858,6 +1917,7 @@ export type PostUncheckedUpdateWithoutUserInput = {
   radiusMiles?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   lat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   products?: Prisma.ProductUncheckedUpdateManyWithoutPostNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutPostNestedInput
@@ -1882,6 +1942,7 @@ export type PostUncheckedUpdateManyWithoutUserInput = {
   radiusMiles?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   lat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
@@ -1993,6 +2054,7 @@ export type PostSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   radiusMiles?: boolean
   lat?: boolean
   lng?: boolean
+  isPendingScreening?: boolean
   isRemoved?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   products?: boolean | Prisma.Post$productsArgs<ExtArgs>
@@ -2020,6 +2082,7 @@ export type PostSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   radiusMiles?: boolean
   lat?: boolean
   lng?: boolean
+  isPendingScreening?: boolean
   isRemoved?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["post"]>
@@ -2038,6 +2101,7 @@ export type PostSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   radiusMiles?: boolean
   lat?: boolean
   lng?: boolean
+  isPendingScreening?: boolean
   isRemoved?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["post"]>
@@ -2056,10 +2120,11 @@ export type PostSelectScalar = {
   radiusMiles?: boolean
   lat?: boolean
   lng?: boolean
+  isPendingScreening?: boolean
   isRemoved?: boolean
 }
 
-export type PostOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "images" | "status" | "title" | "message" | "createdAt" | "updatedAt" | "isLocal" | "zipCode" | "radiusMiles" | "lat" | "lng" | "isRemoved", ExtArgs["result"]["post"]>
+export type PostOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "images" | "status" | "title" | "message" | "createdAt" | "updatedAt" | "isLocal" | "zipCode" | "radiusMiles" | "lat" | "lng" | "isPendingScreening" | "isRemoved", ExtArgs["result"]["post"]>
 export type PostInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   products?: boolean | Prisma.Post$productsArgs<ExtArgs>
@@ -2106,6 +2171,7 @@ export type $PostPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     radiusMiles: number | null
     lat: number | null
     lng: number | null
+    isPendingScreening: boolean
     isRemoved: boolean
   }, ExtArgs["result"]["post"]>
   composites: {}
@@ -2552,6 +2618,7 @@ export interface PostFieldRefs {
   readonly radiusMiles: Prisma.FieldRef<"Post", 'Int'>
   readonly lat: Prisma.FieldRef<"Post", 'Float'>
   readonly lng: Prisma.FieldRef<"Post", 'Float'>
+  readonly isPendingScreening: Prisma.FieldRef<"Post", 'Boolean'>
   readonly isRemoved: Prisma.FieldRef<"Post", 'Boolean'>
 }
     
