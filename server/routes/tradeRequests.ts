@@ -157,6 +157,62 @@ tradeRequests.get('/for-post/:postId', requireAuth, async (req, res) => {
   }
 });
 
+// Trade requests received across ALL posts
+tradeRequests.get('/received', requireAuth, async (req, res) => {
+  try {
+    res.set('Cache-Control', 'no-store');
+
+    const ownerId = (req.user as { id: number }).id;
+
+    const openPosts = await prisma.post.findMany({
+      where: {
+        userId: ownerId,
+        status: Status.OPEN,
+        isRemoved: false,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    const openPostIds = openPosts.map((post) => post.id);
+
+    if (openPostIds.length === 0) {
+      return res.json([]);
+    }
+
+    const receivedRequests = await prisma.tradeRequest.findMany({
+      where: {
+        postId: {
+          in: openPostIds,
+        },
+        status: TradeRequestStatus.PENDING,
+        isRemoved: false,
+      },
+      include: {
+        requester: {
+          select: {
+            id: true, name: true, email: true,
+          },
+        },
+        post: {
+          select: {
+            id: true, title: true, status: true, userId: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    return res.json(receivedRequests);
+  } catch (err) {
+    console.error(err);
+    return res.sendStatus(500);
+  }
+});
+
 // Owner accepts one trade request (reject others)
 tradeRequests.patch('/:id/accept', requireAuth, async (req, res) => {
   try {
