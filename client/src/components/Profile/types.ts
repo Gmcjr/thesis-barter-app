@@ -45,8 +45,8 @@ export interface ProfileTradesProps {
 }
 
 export interface ProfileTabsProps {
-  activeTab: 'current' | 'history';
-  onTabChange: (tab: 'current' | 'history') => void;
+  activeTab: 'current' | 'history' | 'offers';
+  onTabChange: (tab: 'current' | 'history' | 'offers') => void;
   tradeCount: number;
   isOwnProfile: boolean;
   onDM: () => void;
@@ -57,4 +57,70 @@ export interface ReviewsSummary {
   averageRating: number | null;
   totalReviews: number;
   totalTrades: number;
+}
+
+export interface TradeData {
+  id: number;
+  status: 'IN_PROGRESS' | 'WAITING_FOR_OTHER_USER' | 'COMPLETED' | 'CANCELLED';
+  ownerId: number;
+  requesterId: number;
+  ownerCompl: boolean;
+  reqCompl: boolean;
+  createdAt: string;
+  post: {
+    id: number;
+    title: string;
+  };
+  owner: {
+    id: number;
+    name: string | null;
+  };
+  requester: {
+    id: number;
+    name: string | null;
+  };
+}
+
+export interface PendingTradeOffersProps {
+  onTradeActivity: () => Promise<unknown>;
+}
+
+export interface NormalTradeOffer {
+  id: number;
+  message: string | null;
+  status: 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'CANCELLED';
+  createdAt: string;
+  requester: {
+    id: number;
+    name: string | null;
+    email: string;
+  };
+  post: {
+    id: number;
+    title: string;
+    status: string;
+    userId: number;
+  };
+}
+
+export interface ArtTradeOfferData {
+  id: number;
+  message: string | null;
+  createdAt: string;
+  status: 'PENDING' | 'ACCEPTED' | 'COMPLETED' | 'REJECTED';
+  previewUrl?: string | null;
+  fullUrl?: string | null;
+  offerer: {
+    id: number;
+    name: string;
+    email: string;
+  };
+  post: {
+    id: number;
+    title: string;
+  };
+}
+
+export interface TradeOffersReceivedViewProps {
+  onOfferAccepted: () => Promise<unknown>;
 }
