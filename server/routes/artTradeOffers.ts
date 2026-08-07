@@ -204,7 +204,7 @@ artTradeOffers.patch('/:offerId/approve', requireAuth, async (req, res) => {
       include: { post: true },
     });
 
-    if (!offer || offer.post.status === Status.COMPLETED) {
+    if (!offer || offer.post.status !== Status.OPEN) {
       return res.status(400).json({ error: 'Trade offer unavailable or already completed.' });
     }
 
@@ -219,28 +219,62 @@ artTradeOffers.patch('/:offerId/approve', requireAuth, async (req, res) => {
     const newOffererApproved = isOfferer ? true : offer.offererApproved;
     const isBothApproved = newOwnerApproved && newOffererApproved;
 
-    const updatedOffer = await prisma.tradeOffer.update({
-      where: { id: offerId },
-      data: {
-        ownerApproved: newOwnerApproved,
-        offererApproved: newOffererApproved,
-        status: isBothApproved ? 'COMPLETED' : 'PENDING',
-      },
-    });
-
-    if (isBothApproved) {
-      await prisma.post.update({
-        where: { id: offer.postId },
-        data: { status: Status.COMPLETED },
-      });
-
-      await prisma.tradeOffer.deleteMany({
-        where: {
-          postId: offer.postId,
-          id: { not: offerId },
+    const updatedOffer = await prisma.$transaction(async (tx) => {
+      const updated = await tx.tradeOffer.update({
+        where: { id: offerId },
+        data: {
+          ownerApproved: newOwnerApproved,
+          offererApproved: newOffererApproved,
+          status: isBothApproved ? 'COMPLETED' : 'PENDING',
         },
       });
-    }
+
+      if (isBothApproved) {
+        const existingTrade = await tx.trade.findFirst({
+          where: {
+            postId: offer.postId,
+            ownerId: offer.post.userId,
+            requesterId: offer.offererId,
+          },
+        });
+
+        if (existingTrade) {
+          await tx.trade.update({
+            where: { id: existingTrade.id },
+            data: {
+              ownerCompl: true,
+              reqCompl: true,
+              status: Status.COMPLETED,
+            },
+          });
+        } else {
+          await tx.trade.create({
+            data: {
+              postId: offer.postId,
+              ownerId: offer.post.userId,
+              requesterId: offer.offererId,
+              ownerCompl: true,
+              reqCompl: true,
+              status: Status.COMPLETED,
+            },
+          });
+        }
+
+        await tx.post.update({
+          where: { id: offer.postId },
+          data: { status: Status.COMPLETED },
+        });
+
+        await tx.tradeOffer.deleteMany({
+          where: {
+            postId: offer.postId,
+            id: { not: offerId },
+          },
+        });
+      }
+
+      return updated;
+    });
 
     return res.json({
       success: true,
@@ -268,28 +302,61 @@ artTradeOffers.patch('/:offerId/accept', requireAuth, async (req, res) => {
       return res.status(403).json({ error: 'Unauthorized. Only post owner can accept.' });
     }
 
-    if (offer.post.status === Status.COMPLETED) {
+    if (offer.post.status !== Status.OPEN) {
       return res.status(400).json({ error: 'Trade is already completed.' });
     }
 
-    await prisma.post.update({
-      where: { id: offer.postId },
-      data: { status: Status.COMPLETED },
-    });
+    await prisma.$transaction(async (tx) => {
+      const existingTrade = await tx.trade.findFirst({
+        where: {
+          postId: offer.postId,
+          ownerId: offer.post.userId,
+          requesterId: offer.offererId,
+        },
+      });
 
-    await prisma.tradeOffer.update({
-      where: { id: offerId },
-      data: {
-        status: 'COMPLETED',
-        ownerApproved: true,
-      },
-    });
+      if (existingTrade) {
+        await tx.trade.update({
+          where: { id: existingTrade.id },
+          data: {
+            ownerCompl: true,
+            reqCompl: true,
+            status: Status.COMPLETED,
+          },
+        });
+      } else {
+        await tx.trade.create({
+          data: {
+            postId: offer.postId,
+            ownerId: offer.post.userId,
+            requesterId: offer.offererId,
+            ownerCompl: true,
+            reqCompl: true,
+            status: Status.COMPLETED,
+          },
+        });
+      }
 
-    await prisma.tradeOffer.deleteMany({
-      where: {
-        postId: offer.postId,
-        id: { not: offerId },
-      },
+      await tx.post.update({
+        where: { id: offer.postId },
+        data: { status: Status.COMPLETED },
+      });
+
+      await tx.tradeOffer.update({
+        where: { id: offerId },
+        data: {
+          status: 'COMPLETED',
+          ownerApproved: true,
+          offererApproved: true,
+        },
+      });
+
+      await tx.tradeOffer.deleteMany({
+        where: {
+          postId: offer.postId,
+          id: { not: offerId },
+        },
+      });
     });
 
     return res.json({ success: true });
