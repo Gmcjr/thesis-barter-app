@@ -9,8 +9,6 @@ import AddIcon from '@mui/icons-material/Add';
 
 import NewPost, { type PostFormData } from './NewPost';
 import ManagePosts, { type PostData, type PostUpdateData } from './ManagePosts';
-import ViewArtTradeOffer from './ViewArtTradeOffer';
-import MyTrades from '../Trades/MyTrades';
 import type { TradeRequestData } from '../Trades/RequestTradeButton';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
@@ -26,9 +24,6 @@ export default function Posts() {
 
   const [modalOpen, setModalOpen] = useState(false);
   const [manageOpen, setManageOpen] = useState(false);
-  const [viewArtOffersOpen, setViewArtOffersOpen] = useState(false);
-  const [artOffersRefreshKey, setArtOffersRefreshKey] = useState(0);
-  const [myTradesOpen, setMyTradesOpen] = useState(false);
 
   const [posts, setPosts] = useState<PostData[]>([]);
   const [ownedPosts, setOwnedPosts] = useState<PostData[]>([]);
@@ -207,11 +202,6 @@ export default function Posts() {
     setManageOpen(true);
   };
 
-  const handleOpenViewArtOffers = () => {
-    setArtOffersRefreshKey((prev) => prev + 1);
-    setViewArtOffersOpen(true);
-  };
-
   const manageablePosts = ownedPosts.filter(
     (post) => post.status !== 'COMPLETED',
   );
@@ -229,32 +219,9 @@ export default function Posts() {
       {/* all of the Buttons underneath Search and their lovely formatting */}
       <Box
         sx={{
-          display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(4, minmax(0, 1fr)) auto' }, alignItems: 'center', gap: { xs: 1, sm: 1.5 }, mb: 3, px: { xs: 2, md: 0 },
+          display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, minmax(0, 1fr)) auto' }, alignItems: 'center', gap: { xs: 1, sm: 1.5 }, mb: 3, px: { xs: 2, md: 0 },
         }}
       >
-        {/* View Art Offers Button */}
-        <Button
-          variant="contained"
-          disabled={!user}
-          onClick={handleOpenViewArtOffers}
-          sx={{
-            width: '100%', borderRadius: 8, textTransform: 'none', fontWeight: 'bold', px: 3,
-          }}
-        >
-          View Art Offers
-        </Button>
-
-        {/* My Trades button */}
-        <Button
-          variant="contained"
-          disabled={!user}
-          onClick={() => setMyTradesOpen(true)}
-          sx={{
-            width: '100%', borderRadius: 8, textTransform: 'none', fontWeight: 'bold', px: 3,
-          }}
-        >
-          My Trades
-        </Button>
 
         {/* Manage Posts button */}
         <Button
@@ -326,34 +293,14 @@ export default function Posts() {
         onSubmit={handleCreatePost}
       />
 
-      {/* View Art Trade Offers Modal */}
-      <ViewArtTradeOffer
-        key={artOffersRefreshKey}
-        open={viewArtOffersOpen}
-        onClose={() => setViewArtOffersOpen(false)}
-        onAccept={() => {
-          setViewArtOffersOpen(false);
-          loadOwnedPosts();
-          loadPosts(search);
-          showToast('Trade Accepted!', 'success');
-        }}
-      />
-
       {/* Manage Posts Modal */}
       <ManagePosts
         open={manageOpen}
         onClose={() => setManageOpen(false)}
         posts={manageablePosts}
-        currentUserId={user?.id}
         onUpdate={handleUpdatePost}
         onDelete={handleDeletePost}
         onComplete={handleCompleteTrade}
-      />
-
-      {/* My Trades Modal */}
-      <MyTrades
-        open={myTradesOpen}
-        onClose={() => setMyTradesOpen(false)}
       />
 
       <ReportDialog
