@@ -21,18 +21,18 @@ export interface ReceivedReview {
 interface ReviewsDetailPanelProps {
   reviews: ReceivedReview[];
   isOwnProfile: boolean;
-  pendingTrades: MyCompletedTrade[];
+  PendingTradeOffers: MyCompletedTrade[];
   myReviews: ReviewData[];
   currentUserId?: number;
   onReviewSaved: (review: ReviewData) => void;
 }
 
 export default function ReviewsDetailPanel({
-  reviews, isOwnProfile, pendingTrades, myReviews, currentUserId, onReviewSaved,
+  reviews, isOwnProfile, PendingTradeOffers, myReviews, currentUserId, onReviewSaved,
 }: ReviewsDetailPanelProps) {
   const [queueOpen, setQueueOpen] = useState(false);
   const reviewedTradeIds = new Set(myReviews.map((r) => r.tradeId));
-  const unreviewed = pendingTrades.filter((t) => !reviewedTradeIds.has(t.id));
+  const unreviewed = PendingTradeOffers.filter((t) => !reviewedTradeIds.has(t.id));
 
   return (
     <>
