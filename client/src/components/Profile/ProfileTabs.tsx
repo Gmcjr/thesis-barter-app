@@ -33,6 +33,17 @@ export default function ProfileTabs({
         Trade History
       </Button>
 
+      {isOwnProfile && (
+        <Button
+          variant={activeTab === 'offers' ? 'contained' : 'outlined'}
+          disableElevation
+          onClick={() => onTabChange('offers')}
+          sx={{ borderRadius: 8, textTransform: 'none', fontWeight: 600 }}
+        >
+          Offers Received
+        </Button>
+      )}
+
       {!isOwnProfile && (
         <Button
           variant="outlined"
