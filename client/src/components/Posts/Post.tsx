@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable react/jsx-one-expression-per-line */
 import React, { useState } from 'react';
 import axios from 'axios';
@@ -48,10 +49,30 @@ export default function Post({
   const isBlocked = blockedUserIds.includes(post.userId);
   const [downloadingFull, setDownloadingFull] = useState(false);
 
+  const isArtTrade = Boolean(post.previewUrl || post.fullUrl);
+
   const completedOffer = post.tradeOffers?.find((o) => o.status === 'COMPLETED');
-  const receivedUrl = isOwnPost
-    ? (completedOffer?.fullUrl ?? undefined)
-    : (post.fullUrl ?? undefined);
+
+  // determine whether the current user participated in the completed trade
+  const isOfferer = user?.id !== undefined
+  && completedOffer?.offererId === user.id;
+
+  const isParticipant = isOwnPost || isOfferer;
+
+  // the offerer sent the offer art;
+  // everyone else sees the original post art as the sent art
+  const sentUrl = isOfferer
+    ? completedOffer?.previewUrl ?? undefined
+    : post.previewUrl ?? undefined;
+
+  // third parties see only the offer preview
+  let receivedUrl = completedOffer?.previewUrl ?? undefined;
+
+  if (isOwnPost) {
+    receivedUrl = completedOffer?.fullUrl ?? undefined;
+  } else if (isOfferer) {
+    receivedUrl = post.fullUrl ?? undefined;
+  }
 
   const handleDownloadFull = async (imageUrl: string) => {
     try {
@@ -122,7 +143,6 @@ export default function Post({
               display: 'flex', alignItems: 'baseline', flexWrap: 'wrap', gap: 1.5,
             }}
             >
-
               <Typography variant="h5" sx={{ fontWeight: 'bold', wordBreak: 'break-word' }}>
                 {post.title}
               </Typography>
@@ -187,7 +207,7 @@ export default function Post({
           <Box sx={{ mb: 2 }}>
             <img
               src={post.previewUrl}
-              alt="Art Preview"
+              alt="Post Preview"
               style={{
                 maxWidth: '100%', borderRadius: radius.sm, maxHeight: '350px', objectFit: 'contain',
               }}
@@ -239,39 +259,90 @@ export default function Post({
           </Button>
         </Box>
 
-        {post.status === 'COMPLETED' && receivedUrl && (
+        {/* Layout for Completed Trades (support for local and digital trades) */}
+        {post.status === 'COMPLETED' && completedOffer && (
           <Box sx={{
             mt: 2, pt: 2, borderTop: '1px solid', borderColor: 'divider',
           }}
           >
-            <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 'bold' }}>
-              Art Received:
-            </Typography>
-            <Box sx={{
-              bgcolor: 'surface.sunken', borderRadius: radius.sm, p: 1, textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center',
-            }}
-            >
-              <img
-                src={receivedUrl}
-                alt="Received Art"
-                style={{ maxWidth: '100%', maxHeight: 300, objectFit: 'contain' }}
-              />
-            </Box>
-            <Button
-              variant="contained"
-              color="success"
-              size="small"
-              startIcon={downloadingFull ? <CircularProgress size={16} color="inherit" /> : <DownloadIcon />}
-              onClick={() => handleDownloadFull(receivedUrl)}
-              disabled={downloadingFull}
-              sx={{ mt: 1.5 }}
-            >
-              {downloadingFull ? 'Saving File...' : 'Download Art Received'}
-            </Button>
+            {isArtTrade ? (
+              <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: 2 }}>
+                {/* Art Sent */}
+                <Box sx={{ flex: 1 }}>
+                  <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 'bold' }}>
+                    Art Sent:
+                  </Typography>
+                  <Box sx={{
+                    bgcolor: '#121212', borderRadius: 2, p: 1, textAlign: 'center', minHeight: 200, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  }}
+                  >
+                    {sentUrl ? (
+                      <img
+                        src={sentUrl}
+                        alt="Traded Away"
+                        style={{ maxWidth: '100%', maxHeight: 200, objectFit: 'contain' }}
+                      />
+                    ) : (
+                      <Typography variant="caption" color="text.secondary">No image available</Typography>
+                    )}
+                  </Box>
+                </Box>
+
+                {/* Art Received */}
+                <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+                  <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 'bold' }}>
+                    Art Received:
+                  </Typography>
+                  <Box sx={{
+                    bgcolor: '#121212', borderRadius: 2, p: 1, textAlign: 'center', minHeight: 200, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  }}
+                  >
+                    {receivedUrl ? (
+                      <img
+                        src={receivedUrl}
+                        alt="Received Art"
+                        style={{ maxWidth: '100%', maxHeight: 200, objectFit: 'contain' }}
+                      />
+                    ) : (
+                      <Typography variant="caption" color="text.secondary">No image available</Typography>
+                    )}
+                  </Box>
+
+                  {/* Only render download button for the poster and the user they trade with */}
+                  {receivedUrl && isParticipant && (
+                    <Button
+                      variant="contained"
+                      color="success"
+                      size="small"
+                      startIcon={downloadingFull ? <CircularProgress size={16} color="inherit" /> : <DownloadIcon />}
+                      onClick={() => handleDownloadFull(receivedUrl)}
+                      disabled={downloadingFull}
+                      sx={{ mt: 1.5, alignSelf: 'flex-start' }}
+                    >
+                      {downloadingFull ? 'Saving File...' : 'Download Art Received'}
+                    </Button>
+                  )}
+                </Box>
+              </Box>
+            ) : (
+              <Box>
+                <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 'bold' }}>
+                  Trade Details & Summary:
+                </Typography>
+                <Box sx={{
+                  bgcolor: '#f8f9fa', borderRadius: 2, p: 2, textAlign: 'left',
+                }}
+                >
+                  <Typography variant="body2" color="text.primary">
+                    {(completedOffer as { message?: string })?.message || post.message || 'Trade successfully completed between users.'}
+                  </Typography>
+                </Box>
+              </Box>
+            )}
           </Box>
         )}
 
-        {/* Request to Trade + Offer Art buttons */}
+        {/* Request to Trade + Offer buttons */}
         {!isOwnPost && post.status === 'OPEN' && (
           <Box sx={{
             mt: 2,
@@ -287,7 +358,13 @@ export default function Post({
               myRequest={myTradeRequests}
               onRequestChanged={onTradeActivity}
             />
-            <ArtTradeOffer postId={post.id} onSuccess={onOfferSubmitted} />
+            {isArtTrade ? (
+              <ArtTradeOffer postId={post.id} onSuccess={onOfferSubmitted} />
+            ) : (
+              <Button variant="contained" onClick={onOfferSubmitted} sx={{ borderRadius: 8, textTransform: 'none' }}>
+                Make Offer
+              </Button>
+            )}
           </Box>
         )}
 

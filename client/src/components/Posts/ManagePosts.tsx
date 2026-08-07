@@ -14,10 +14,6 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import Divider from '@mui/material/Divider';
-import DownloadIcon from '@mui/icons-material/Download';
-import CircularProgress from '@mui/material/CircularProgress';
-import { radius } from '../../theme';
 
 import { formatPostDate } from '../../utils/utils';
 import RemovedPostCard from './RemovedPostCard';
@@ -91,7 +87,6 @@ interface ManagePostsProps {
   posts: PostData[];
   title?: string;
   readOnly?: boolean;
-  currentUserId?: number;
   onUpdate?: (postId: number, postData: PostUpdateData) => Promise<void>;
   onDelete?: (postId: number) => Promise<void>;
   onComplete?: (tradeId: number) => Promise<void>;
@@ -103,7 +98,6 @@ export default function ManagePosts({
   posts,
   title = 'Manage Posts',
   readOnly = false,
-  currentUserId,
   onUpdate,
   onDelete,
   onComplete,
@@ -205,33 +199,6 @@ export default function ManagePosts({
     }
   };
 
-  // file download handler
-  const handleDownloadToPC = async (imageUrl: string, postId: number, postTitle: string) => {
-    try {
-      setDownloadingId(postId);
-      const response = await fetch(imageUrl);
-      const blob = await response.blob();
-
-      const blobUrl = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = blobUrl;
-
-      const safeTitle = postTitle.replace(/[^a-zA-Z0-9_-]/g, '_');
-      link.download = `Art_Received_${safeTitle}.jpg`;
-
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-
-      window.URL.revokeObjectURL(blobUrl);
-    } catch (error) {
-      console.error('Failed to save file:', error);
-      window.open(imageUrl, '_blank');
-    } finally {
-      setDownloadingId(null);
-    }
-  };
-
   const isInvalid = (!formData || !formData.title.trim() || !formData.message.trim() || (formData.isLocal && (!formData.zipCode?.trim() || !formData.radiusMiles || formData.radiusMiles <= 0)));
 
   return (
@@ -329,15 +296,6 @@ export default function ManagePosts({
             )}
 
             {posts.map((post) => {
-              const completedOffer = post.tradeOffers?.find((o) => o.status === 'COMPLETED');
-              const sentUrl = post.userId === currentUserId
-                ? (post.previewUrl || undefined)
-                : (completedOffer?.previewUrl || undefined);
-
-              const receivedUrl = post.userId === currentUserId
-                ? (completedOffer?.fullUrl || undefined)
-                : (post.fullUrl || undefined);
-
               if (post.isRemoved) {
                 return <RemovedPostCard key={post.id} post={post} />;
               }
@@ -358,70 +316,6 @@ export default function ManagePosts({
                         ? `Updated on ${formatPostDate(post.updatedAt)}`
                         : `Posted on ${formatPostDate(post.createdAt)}`}
                     </Typography>
-
-                    {/* Digital Art Layout for Completed Trades */}
-                    {readOnly && post.tradeOffers && completedOffer && (
-                      <>
-                        <Divider sx={{ my: 2 }} />
-                        <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: 2 }}>
-                          {/* Art Sent */}
-                          <Box sx={{ flex: 1 }}>
-                            <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 'bold' }}>
-                              Art Sent:
-                            </Typography>
-                            <Box sx={{
-                              bgcolor: 'surface.sunken', borderRadius: radius.sm, p: 1, textAlign: 'center', minHeight: 200, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            }}
-                            >
-                              {sentUrl ? (
-                                <img
-                                  src={sentUrl}
-                                  alt="Traded Away"
-                                  style={{ maxWidth: '100%', maxHeight: 200, objectFit: 'contain' }}
-                                />
-                              ) : (
-                                <Typography variant="caption" color="text.secondary">No image available</Typography>
-                              )}
-                            </Box>
-                          </Box>
-
-                          {/* Art Received */}
-                          <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-                            <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 'bold' }}>
-                              Art Received:
-                            </Typography>
-                            <Box sx={{
-                              bgcolor: 'surface.sunken', borderRadius: radius.md, p: 1, textAlign: 'center', minHeight: 200, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            }}
-                            >
-                              {receivedUrl ? (
-                                <img
-                                  src={receivedUrl}
-                                  alt="Received Art"
-                                  style={{ maxWidth: '100%', maxHeight: 200, objectFit: 'contain' }}
-                                />
-                              ) : (
-                                <Typography variant="caption" color="text.secondary">No image available</Typography>
-                              )}
-                            </Box>
-
-                            {receivedUrl && (
-                              <Button
-                                variant="contained"
-                                color="success"
-                                size="small"
-                                startIcon={downloadingId === post.id ? <CircularProgress size={16} color="inherit" /> : <DownloadIcon />}
-                                disabled={actionInProgress}
-                                onClick={() => handleDownloadToPC(receivedUrl, post.id, post.title)}
-                                sx={{ mt: 1.5, alignSelf: 'flex-start' }}
-                              >
-                                {downloadingId === post.id ? 'Saving File...' : 'Download Art Received'}
-                              </Button>
-                            )}
-                          </Box>
-                        </Box>
-                      </>
-                    )}
 
                     {!readOnly && (
                       <Box sx={{
