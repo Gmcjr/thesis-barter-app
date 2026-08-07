@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import React, { useCallback, useEffect, useState } from 'react';
 import axios from 'axios';
 import Box from '@mui/material/Box';
@@ -15,6 +16,7 @@ import ReportDialog from '../Posts/ReportDialog';
 import ProfileHeader from './ProfileHeader';
 import ProfileTabs from './ProfileTabs';
 import EditProfileModal from './EditProfileModal';
+import TradeOffersReceivedView from './TradeOffersReceivedView';
 import ReviewsDetailPanel from '../Reviews/ReviewsDetailPanel';
 import NeedsReviewBanner from '../Reviews/NeedsReviewBanner';
 import type { MyCompletedTrade } from '../Reviews/ReviewQueueModal';
@@ -25,7 +27,7 @@ export default function Profile() {
   const { id } = useParams();
   const isOwnProfile = !id;
 
-  const [activeTab, setActiveTab] = useState<'current' | 'history'>('current');
+  const [activeTab, setActiveTab] = useState<'current' | 'history' | 'offers'>('current');
   const [profile, setProfile] = useState<ProfileUser | null>(null);
   const [posts, setPosts] = useState<PostData[]>([]);
   const [loading, setLoading] = useState(true);
@@ -172,7 +174,7 @@ export default function Profile() {
   }, [loadMyReviewStatus]);
 
   const handleTradeActivity = async () => {
-    await Promise.all([loadPosts(), loadMyTradeRequests()]);
+    await Promise.all([loadPosts(), loadMyTradeRequests(), loadReviewsSummary(), loadMyReviewStatus()]);
   };
 
   const handleReviewSaved = (review: ReviewData) => {
@@ -196,7 +198,7 @@ export default function Profile() {
   }
 
   const visiblePosts = posts.filter((post) => (
-    activeTab === 'current' ? post.status !== 'COMPLETED' : post.status === 'COMPLETED'
+    activeTab === 'history' ? post.status === 'COMPLETED' : post.status !== 'COMPLETED'
   ));
 
   return (
@@ -219,7 +221,7 @@ export default function Profile() {
           <ReviewsDetailPanel
             reviews={reviewsSummary?.reviews ?? []}
             isOwnProfile={isOwnProfile}
-            pendingTrades={myCompletedTrades}
+            PendingTradeOffers={myCompletedTrades}
             myReviews={myReviews}
             currentUserId={user?.id}
             onReviewSaved={handleReviewSaved}
@@ -246,25 +248,29 @@ export default function Profile() {
         onDM={handleOpenDM}
       />
 
-      <Box sx={{
-        display: 'flex', flexDirection: 'column', gap: 3, px: { xs: 2, md: 0 },
-      }}
-      >
-        {visiblePosts.length === 0 && (
-          <Typography color="text.secondary">No trades found.</Typography>
-        )}
+      {isOwnProfile && activeTab === 'offers' ? (
+        <TradeOffersReceivedView onOfferAccepted={handleTradeActivity} />
+      ) : (
+        <Box sx={{
+          display: 'flex', flexDirection: 'column', gap: 3, px: { xs: 2, md: 0 },
+        }}
+        >
+          {visiblePosts.length === 0 && (
+            <Typography color="text.secondary">No trades found.</Typography>
+          )}
 
-        {visiblePosts.map((post) => (
-          <Post
-            key={post.id}
-            post={post}
-            onReport={() => setReportDialogPostId(post.id)}
-            myTradeRequests={myTradeRequests.find((r) => r.postId === post.id) ?? null}
-            onTradeActivity={handleTradeActivity}
-            onOfferSubmitted={handleTradeActivity}
-          />
-        ))}
-      </Box>
+          {visiblePosts.map((post) => (
+            <Post
+              key={post.id}
+              post={post}
+              onReport={() => setReportDialogPostId(post.id)}
+              myTradeRequests={myTradeRequests.find((r) => r.postId === post.id) ?? null}
+              onTradeActivity={handleTradeActivity}
+              onOfferSubmitted={handleTradeActivity}
+            />
+          ))}
+        </Box>
+      )}
 
       {isOwnProfile && (
         <EditProfileModal
