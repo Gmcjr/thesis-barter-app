@@ -118,3 +118,18 @@ export const MediaVariant = {
 } as const
 
 export type MediaVariant = (typeof MediaVariant)[keyof typeof MediaVariant]
+
+
+export const NotificationType = {
+  DM_MESSAGE: 'DM_MESSAGE',
+  TRADE_OFFER_RECEIVED: 'TRADE_OFFER_RECEIVED',
+  TRADE_OFFER_ACCEPTED: 'TRADE_OFFER_ACCEPTED',
+  TRADE_REQUEST_RECEIVED: 'TRADE_REQUEST_RECEIVED',
+  TRADE_REQUEST_ACCEPTED: 'TRADE_REQUEST_ACCEPTED',
+  REVIEW_RECEIVED: 'REVIEW_RECEIVED',
+  CONTENT_SCREENED: 'CONTENT_SCREENED',
+  REPORT_RESOLVED: 'REPORT_RESOLVED',
+  APPEAL_RESOLVED: 'APPEAL_RESOLVED'
+} as const
+
+export type NotificationType = (typeof NotificationType)[keyof typeof NotificationType]

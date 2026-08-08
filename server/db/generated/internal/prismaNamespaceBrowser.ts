@@ -74,7 +74,8 @@ export const ModelName = {
   ServiceMedia: 'ServiceMedia',
   CommentMedia: 'CommentMedia',
   MessageMedia: 'MessageMedia',
-  UserMedia: 'UserMedia'
+  UserMedia: 'UserMedia',
+  Notification: 'Notification'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -391,6 +392,22 @@ export const UserMediaScalarFieldEnum = {
 } as const
 
 export type UserMediaScalarFieldEnum = (typeof UserMediaScalarFieldEnum)[keyof typeof UserMediaScalarFieldEnum]
+
+
+export const NotificationScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  type: 'type',
+  title: 'title',
+  body: 'body',
+  link: 'link',
+  entityType: 'entityType',
+  entityId: 'entityId',
+  readAt: 'readAt',
+  createdAt: 'createdAt'
+} as const
+
+export type NotificationScalarFieldEnum = (typeof NotificationScalarFieldEnum)[keyof typeof NotificationScalarFieldEnum]
 
 
 export const SortOrder = {
