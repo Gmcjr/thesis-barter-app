@@ -2,6 +2,7 @@ import React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import type { ProfileTabsProps } from './types';
+import { radius } from '../../theme';
 
 export default function ProfileTabs({
   activeTab, onTabChange, isOwnProfile, onDM,
@@ -20,7 +21,7 @@ export default function ProfileTabs({
         variant={activeTab === 'current' ? 'contained' : 'outlined'}
         disableElevation
         onClick={() => onTabChange('current')}
-        sx={{ borderRadius: 8, textTransform: 'none', fontWeight: 600 }}
+        sx={{ borderRadius: radius.md, textTransform: 'none', fontWeight: 600 }}
       >
         Current Trades
       </Button>
@@ -28,7 +29,7 @@ export default function ProfileTabs({
         variant={activeTab === 'history' ? 'contained' : 'outlined'}
         disableElevation
         onClick={() => onTabChange('history')}
-        sx={{ borderRadius: 8, textTransform: 'none', fontWeight: 600 }}
+        sx={{ borderRadius: radius.md, textTransform: 'none', fontWeight: 600 }}
       >
         Trade History
       </Button>
@@ -38,7 +39,7 @@ export default function ProfileTabs({
           variant={activeTab === 'offers' ? 'contained' : 'outlined'}
           disableElevation
           onClick={() => onTabChange('offers')}
-          sx={{ borderRadius: 8, textTransform: 'none', fontWeight: 600 }}
+          sx={{ borderRadius: radius.pill, textTransform: 'none', fontWeight: 600 }}
         >
           Offers Received
         </Button>
@@ -48,7 +49,7 @@ export default function ProfileTabs({
         <Button
           variant="outlined"
           onClick={onDM}
-          sx={{ borderRadius: 8, textTransform: 'none' }}
+          sx={{ borderRadius: radius.md, textTransform: 'none' }}
         >
           DM
         </Button>

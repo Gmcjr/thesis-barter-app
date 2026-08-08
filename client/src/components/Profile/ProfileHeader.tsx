@@ -8,6 +8,7 @@ import Avatar from '@mui/material/Avatar';
 import Rating from '@mui/material/Rating';
 import type { ProfileHeaderProps } from './types';
 import ProfileActionsMenu from './ProfileActionsMenu';
+import { radius } from '../../theme';
 
 export default function ProfileHeader({
   profile, isOwnProfile, onEditClick, onReport, onBlock, blocked,
@@ -17,8 +18,8 @@ export default function ProfileHeader({
     <Card
       variant="outlined"
       sx={{
-        borderRadius: 3,
-        borderColor: '#e0e0e0',
+        borderRadius: radius.md,
+        borderColor: 'border.default',
         mb: 4,
         mx: { xs: 2, md: 0 },
         position: 'relative',
@@ -57,7 +58,7 @@ export default function ProfileHeader({
               variant="outlined"
               size="small"
               onClick={onEditClick}
-              sx={{ borderRadius: 4, textTransform: 'none' }}
+              sx={{ borderRadius: radius.md, textTransform: 'none' }}
             >
               Edit Profile
             </Button>
@@ -65,7 +66,7 @@ export default function ProfileHeader({
             <Button
               variant="outlined"
               size="small"
-              sx={{ borderRadius: 4, textTransform: 'none' }}
+              sx={{ borderRadius: radius.md, textTransform: 'none' }}
             >
               Follow
             </Button>

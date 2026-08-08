@@ -8,6 +8,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
+import { radius } from '../../theme';
 
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
@@ -123,7 +124,7 @@ export default function PendingTradeOffers({
       display: 'flex', flexDirection: 'column', gap: 2,
     }}
     >
-      <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+      <Typography variant="h6">
         Trades in Progress:
       </Typography>
 
@@ -145,9 +146,9 @@ export default function PendingTradeOffers({
           : 'Cancel Trade';
 
         return (
-          <Card key={trade.id} variant="outlined" sx={{ borderRadius: 3 }}>
+          <Card key={trade.id} variant="outlined" sx={{ borderRadius: radius.lg }}>
             <CardContent>
-              <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
+              <Typography variant="subtitle1">
                 {trade.post.title}
               </Typography>
 

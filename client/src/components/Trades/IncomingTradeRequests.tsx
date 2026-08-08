@@ -4,6 +4,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
+import { radius } from '../../theme';
 import { useToast } from '../../context/ToastContext';
 
 interface IncomingRequest {
@@ -65,7 +66,7 @@ export default function IncomingTradeRequests({ postId, onAccepted }: IncomingTr
 
   return (
     <Box sx={{ mt: 2, pt: 2 }}>
-      <Button size="small" variant="outlined" onClick={handleToggle} sx={{ borderRadius: 8, textTransform: 'none' }}>
+      <Button size="small" variant="outlined" onClick={handleToggle} sx={{ borderRadius: radius.md, textTransform: 'none' }}>
         {open ? 'Hide Trade Requests' : 'View Trade Requests'}
       </Button>
 
@@ -84,15 +85,15 @@ export default function IncomingTradeRequests({ postId, onAccepted }: IncomingTr
             <Box
               key={request.id}
               sx={{
-                display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 1.5, bgcolor: '#f4f6f8', borderRadius: 2, gap: 2,
+                display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 1.5, bgcolor: 'surface.sunken', borderRadius: radius.md, gap: 2,
               }}
             >
               <Box sx={{ minWidth: 0 }}>
-                <Typography variant="body2" sx={{ fontWeight: 600, color: 'black' }}>
+                <Typography variant="body2" sx={{ fontWeight: 600, color: 'text.primary' }}>
                   {request.requester.name ?? request.requester.email}
                 </Typography>
                 {request.message && (
-                  <Typography variant="body2" sx={{ color: 'black' }}>{request.message}</Typography>
+                  <Typography variant="body2" sx={{ color: 'text.primary' }}>{request.message}</Typography>
                 )}
               </Box>
               <Button size="small" variant="contained" color="success" disabled={acceptingId !== null} onClick={() => handleAccept(request.id)}>

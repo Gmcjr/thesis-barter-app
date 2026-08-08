@@ -26,6 +26,7 @@ import IncomingTradeRequests from '../Trades/IncomingTradeRequests';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import { useRouter } from '../../context/RouterContext';
+import { radius } from '../../theme';
 
 interface PostProps {
   post: PostData;
@@ -130,7 +131,7 @@ export default function Post({
   };
 
   return (
-    <Card variant="outlined" sx={{ borderRadius: 3, borderColor: '#e0e0e0' }}>
+    <Card variant="outlined" sx={{ borderRadius: radius.md, borderColor: 'border.default' }}>
       <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
         <Box sx={{
           display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, justifyContent: { xs: 'flex-start', sm: 'space-between' }, alignItems: { xs: 'stretch', sm: 'flex-start' }, mb: 2, gap: { xs: 1, sm: 2 },
@@ -142,7 +143,7 @@ export default function Post({
               display: 'flex', alignItems: 'baseline', flexWrap: 'wrap', gap: 1.5,
             }}
             >
-              <Typography variant="h5" sx={{ fontWeight: 'bold', wordBreak: 'break-word' }}>
+              <Typography variant="h5" sx={{ wordBreak: 'break-word' }}>
                 {post.title}
               </Typography>
 
@@ -183,12 +184,12 @@ export default function Post({
               >
                 {postUser.charAt(0).toUpperCase()}
               </Avatar>
-              <Typography variant="subtitle2" className="post-username" sx={{ fontWeight: 600 }}>
+              <Typography variant="subtitle2" className="post-username">
                 {postUser}
               </Typography>
             </Box>
             {!isOwnPost && (
-              <Button size="small" variant="outlined" onClick={handleOpenDM} sx={{ borderRadius: 4, textTransform: 'none' }}>
+              <Button size="small" variant="outlined" onClick={handleOpenDM} sx={{ borderRadius: radius.md, textTransform: 'none' }}>
                 Open DM
               </Button>
             )}
@@ -208,7 +209,7 @@ export default function Post({
               src={post.previewUrl}
               alt="Post Preview"
               style={{
-                maxWidth: '100%', borderRadius: 8, maxHeight: '350px', objectFit: 'contain',
+                maxWidth: '100%', borderRadius: radius.sm, maxHeight: '350px', objectFit: 'contain',
               }}
             />
           </Box>
@@ -220,7 +221,7 @@ export default function Post({
 
         <Divider sx={{ mb: 2 }} />
 
-        <Typography variant="subtitle2" sx={{ mb: 1.5, fontWeight: '600', color: 'text.secondary' }}>
+        <Typography variant="subtitle2" sx={{ mb: 1.5, color: 'text.secondary' }}>
           Comments
         </Typography>
 
@@ -230,10 +231,10 @@ export default function Post({
               <Box
                 key={comment.id}
                 sx={{
-                  display: 'flex', gap: 2, alignItems: 'flex-start', p: 1.5, bgcolor: '#f4f6f8', borderRadius: 2,
+                  display: 'flex', gap: 2, alignItems: 'flex-start', p: 1.5, bgcolor: 'surface.sunken', borderRadius: radius.md,
                 }}
               >
-                <Typography variant="body2" sx={{ flex: 1, color: 'black' }}>
+                <Typography variant="body2" sx={{ flex: 1, color: 'text.primary' }}>
                   {comment.text}
                 </Typography>
               </Box>
@@ -251,9 +252,9 @@ export default function Post({
             fullWidth
             placeholder="Add a comment..."
             variant="outlined"
-            sx={{ '& .MuiOutlinedInput-root': { borderRadius: 8 } }}
+            sx={{ '& .MuiOutlinedInput-root': { borderRadius: radius.md } }}
           />
-          <Button variant="contained" disableElevation sx={{ borderRadius: 8, textTransform: 'none' }}>
+          <Button variant="contained" disableElevation sx={{ borderRadius: radius.md, textTransform: 'none' }}>
             Send
           </Button>
         </Box>
@@ -272,7 +273,7 @@ export default function Post({
                     Art Sent:
                   </Typography>
                   <Box sx={{
-                    bgcolor: '#121212', borderRadius: 2, p: 1, textAlign: 'center', minHeight: 200, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    bgcolor: 'surface.sunken', borderRadius: radius.lg, p: 1, textAlign: 'center', minHeight: 200, display: 'flex', alignItems: 'center', justifyContent: 'center',
                   }}
                   >
                     {sentUrl ? (
@@ -293,7 +294,7 @@ export default function Post({
                     Art Received:
                   </Typography>
                   <Box sx={{
-                    bgcolor: '#121212', borderRadius: 2, p: 1, textAlign: 'center', minHeight: 200, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    bgcolor: 'surface.sunken', borderRadius: radius.lg, p: 1, textAlign: 'center', minHeight: 200, display: 'flex', alignItems: 'center', justifyContent: 'center',
                   }}
                   >
                     {receivedUrl ? (
@@ -329,7 +330,7 @@ export default function Post({
                   Trade Details & Summary:
                 </Typography>
                 <Box sx={{
-                  bgcolor: '#f8f9fa', borderRadius: 2, p: 2, textAlign: 'left',
+                  bgcolor: 'surface.sunken', borderRadius: radius.lg, p: 2, textAlign: 'left',
                 }}
                 >
                   <Typography variant="body2" color="text.primary">
@@ -360,7 +361,7 @@ export default function Post({
             {isArtTrade ? (
               <ArtTradeOffer postId={post.id} onSuccess={onOfferSubmitted} />
             ) : (
-              <Button variant="contained" onClick={onOfferSubmitted} sx={{ borderRadius: 8, textTransform: 'none' }}>
+              <Button variant="contained" onClick={onOfferSubmitted} sx={{ borderRadius: radius.pill, textTransform: 'none' }}>
                 Make Offer
               </Button>
             )}

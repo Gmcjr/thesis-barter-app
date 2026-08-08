@@ -7,6 +7,7 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Rating from '@mui/material/Rating';
+import { radius } from '../../theme';
 
 import ReviewFormModal, { type ReviewData } from './ReviewFormModal';
 
@@ -40,7 +41,7 @@ export default function ReviewQueueModal({
   return (
     <>
       <Dialog open={open} onClose={onClose} maxWidth="xs" fullWidth>
-        <DialogTitle sx={{ fontWeight: 'bold' }}>Trades Ready for Review</DialogTitle>
+        <DialogTitle>Trades Ready for Review</DialogTitle>
         <DialogContent dividers>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
             {trades.map((trade) => {
@@ -53,7 +54,7 @@ export default function ReviewQueueModal({
                 <Box
                   key={trade.id}
                   sx={{
-                    display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 1.5, bgcolor: 'action.hover', borderRadius: 2, gap: 1,
+                    display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 1.5, bgcolor: 'action.hover', borderRadius: radius.lg, gap: 1,
                   }}
                 >
                   <Box>
