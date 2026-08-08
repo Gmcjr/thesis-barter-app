@@ -203,7 +203,7 @@ export default function ManagePosts({
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
-      <DialogTitle sx={{ fontWeight: 'bold' }}>{title}</DialogTitle>
+      <DialogTitle>{title}</DialogTitle>
 
       <DialogContent dividers>
         {editingPost && formData ? (
@@ -303,7 +303,7 @@ export default function ManagePosts({
               return (
                 <Card key={post.id} variant="outlined">
                   <CardContent>
-                    <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+                    <Typography variant="h6">
                       {post.title}
                     </Typography>
 

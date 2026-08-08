@@ -11,6 +11,7 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
+import { radius } from '../../theme';
 
 import { useToast } from '../../context/ToastContext';
 import PendingTradeOffers from './PendingTradeOffers';
@@ -148,7 +149,7 @@ export default function TradeOffersReceivedView({
             <Card
               key={offer.id}
               variant="outlined"
-              sx={{ borderRadius: 2, flexShrink: 0 }}
+              sx={{ borderRadius: radius.lg, flexShrink: 0 }}
             >
               <CardContent>
                 <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>
@@ -181,7 +182,7 @@ export default function TradeOffersReceivedView({
 
       {!loading && !error && artOffers.length > 0 && (
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-          <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+          <Typography variant="h6">
             Digital Trade Offers:
           </Typography>
 
@@ -189,7 +190,7 @@ export default function TradeOffersReceivedView({
             <Card
               key={offer.id}
               variant="outlined"
-              sx={{ borderRadius: 2, flexShrink: 0 }}
+              sx={{ borderRadius: radius.lg, flexShrink: 0 }}
             >
               {offer.previewUrl && (
                 <CardMedia
@@ -197,7 +198,7 @@ export default function TradeOffersReceivedView({
                   image={offer.previewUrl}
                   alt="Offered Watermarked Art"
                   sx={{
-                    width: '100%', height: 'auto', maxHeight: '350px', objectFit: 'contain', bgcolor: '#121212',
+                    width: '100%', height: 'auto', maxHeight: '350px', objectFit: 'contain', bgcolor: 'surface.sunken',
                   }}
                 />
               )}

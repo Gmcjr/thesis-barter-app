@@ -30,7 +30,7 @@ export default function RemovedPostCard({ post }: { post: PostData }) {
         sx={{ minHeight: 0, '& .MuiAccordionSummary-content': { my: 1 } }}
       >
         <Box sx={{ minWidth: 0 }}>
-          <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }} noWrap>
+          <Typography variant="subtitle2" sx={{ fontWeight: 600 }} noWrap>
             {post.title}
           </Typography>
           <Typography variant="caption" color="error">

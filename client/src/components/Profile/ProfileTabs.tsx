@@ -39,7 +39,7 @@ export default function ProfileTabs({
           variant={activeTab === 'offers' ? 'contained' : 'outlined'}
           disableElevation
           onClick={() => onTabChange('offers')}
-          sx={{ borderRadius: 8, textTransform: 'none', fontWeight: 600 }}
+          sx={{ borderRadius: radius.pill, textTransform: 'none', fontWeight: 600 }}
         >
           Offers Received
         </Button>

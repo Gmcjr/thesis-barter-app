@@ -230,7 +230,7 @@ export default function Posts() {
           disabled={!user}
           onClick={() => handleOpenManagePosts()}
           sx={{
-            width: '100%', borderRadius: radius.md, textTransform: 'none', fontWeight: 'bold', px: 3,
+            width: '100%', borderRadius: radius.md, textTransform: 'none', px: 3,
           }}
         >
           Manage Posts
@@ -244,7 +244,7 @@ export default function Posts() {
             disabled={!user}
             onClick={() => setModalOpen(true)}
             sx={{
-              width: { xs: '100%', sm: 'auto' }, borderRadius: radius.md, textTransform: 'none', fontWeight: 'bold', whiteSpace: 'nowrap', px: 3,
+              width: { xs: '100%', sm: 'auto' }, borderRadius: radius.md, textTransform: 'none', whiteSpace: 'nowrap', px: 3,
             }}
           >
             New Post

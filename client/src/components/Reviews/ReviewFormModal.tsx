@@ -80,7 +80,7 @@ export default function ReviewFormModal({
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="xs" fullWidth>
-      <DialogTitle sx={{ fontWeight: 'bold' }}>
+      <DialogTitle>
         {isEditing ? 'Edit Your Review' : 'Leave a Review'}
       </DialogTitle>
 

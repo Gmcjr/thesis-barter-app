@@ -37,8 +37,8 @@ const routes: RouteDef[] = [
 ];
 
 function AppShell() {
-  const { mode } = useSettings();
-  const theme = useMemo(() => getTheme(mode), [mode]);
+  const { mode, contrast } = useSettings();
+  const theme = useMemo(() => getTheme(mode, contrast), [mode, contrast]);
 
   return (
     <ThemeProvider theme={theme}>

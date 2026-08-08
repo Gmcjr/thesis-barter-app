@@ -5,6 +5,7 @@ import Rating from '@mui/material/Rating';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
+import { radius } from '../../theme';
 
 import { formatPostDate } from '../../utils/utils';
 import ReviewQueueModal, { type MyCompletedTrade } from './ReviewQueueModal';
@@ -39,7 +40,7 @@ export default function ReviewsDetailPanel({
       {isOwnProfile && unreviewed.length > 0 && (
         <>
           <Box sx={{
-            display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 1.5, bgcolor: 'action.hover', borderRadius: 2, mb: 2,
+            display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 1.5, bgcolor: 'action.hover', borderRadius: radius.lg, mb: 2,
           }}
           >
             <Typography variant="body2">
@@ -69,7 +70,7 @@ export default function ReviewsDetailPanel({
               </Avatar>
               <Box sx={{ flex: 1 }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>{review.reviewer.name ?? 'Unknown'}</Typography>
+                  <Typography variant="subtitle2">{review.reviewer.name ?? 'Unknown'}</Typography>
                   <Rating value={review.rating} readOnly size="small" />
                 </Box>
                 <Typography variant="caption" color="text.secondary">{formatPostDate(review.createdAt)}</Typography>

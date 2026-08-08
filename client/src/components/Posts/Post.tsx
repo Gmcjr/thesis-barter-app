@@ -143,7 +143,7 @@ export default function Post({
               display: 'flex', alignItems: 'baseline', flexWrap: 'wrap', gap: 1.5,
             }}
             >
-              <Typography variant="h5" sx={{ fontWeight: 'bold', wordBreak: 'break-word' }}>
+              <Typography variant="h5" sx={{ wordBreak: 'break-word' }}>
                 {post.title}
               </Typography>
 
@@ -184,7 +184,7 @@ export default function Post({
               >
                 {postUser.charAt(0).toUpperCase()}
               </Avatar>
-              <Typography variant="subtitle2" className="post-username" sx={{ fontWeight: 600 }}>
+              <Typography variant="subtitle2" className="post-username">
                 {postUser}
               </Typography>
             </Box>
@@ -221,7 +221,7 @@ export default function Post({
 
         <Divider sx={{ mb: 2 }} />
 
-        <Typography variant="subtitle2" sx={{ mb: 1.5, fontWeight: '600', color: 'text.secondary' }}>
+        <Typography variant="subtitle2" sx={{ mb: 1.5, color: 'text.secondary' }}>
           Comments
         </Typography>
 
@@ -273,7 +273,7 @@ export default function Post({
                     Art Sent:
                   </Typography>
                   <Box sx={{
-                    bgcolor: '#121212', borderRadius: 2, p: 1, textAlign: 'center', minHeight: 200, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    bgcolor: 'surface.sunken', borderRadius: radius.lg, p: 1, textAlign: 'center', minHeight: 200, display: 'flex', alignItems: 'center', justifyContent: 'center',
                   }}
                   >
                     {sentUrl ? (
@@ -294,7 +294,7 @@ export default function Post({
                     Art Received:
                   </Typography>
                   <Box sx={{
-                    bgcolor: '#121212', borderRadius: 2, p: 1, textAlign: 'center', minHeight: 200, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    bgcolor: 'surface.sunken', borderRadius: radius.lg, p: 1, textAlign: 'center', minHeight: 200, display: 'flex', alignItems: 'center', justifyContent: 'center',
                   }}
                   >
                     {receivedUrl ? (
@@ -330,7 +330,7 @@ export default function Post({
                   Trade Details & Summary:
                 </Typography>
                 <Box sx={{
-                  bgcolor: '#f8f9fa', borderRadius: 2, p: 2, textAlign: 'left',
+                  bgcolor: 'surface.sunken', borderRadius: radius.lg, p: 2, textAlign: 'left',
                 }}
                 >
                   <Typography variant="body2" color="text.primary">
@@ -361,7 +361,7 @@ export default function Post({
             {isArtTrade ? (
               <ArtTradeOffer postId={post.id} onSuccess={onOfferSubmitted} />
             ) : (
-              <Button variant="contained" onClick={onOfferSubmitted} sx={{ borderRadius: 8, textTransform: 'none' }}>
+              <Button variant="contained" onClick={onOfferSubmitted} sx={{ borderRadius: radius.pill, textTransform: 'none' }}>
                 Make Offer
               </Button>
             )}
