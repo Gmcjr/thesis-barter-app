@@ -36,7 +36,7 @@ async function claimNextJob(): Promise<JobRecord | null> {
   UPDATE "Job" SET status = 'PROCESSING'::"JobStatus", "updatedAt" = now()
   WHERE id = (
     SELECT id FROM "Job"
-    WHERE status = 'PENDING'::"JobStatus" AND "nextAttemptAt" <= now()
+    WHERE status = 'PENDING'::"JobStatus" AND (attempts = 0 OR "nextAttemptAt" <= now())
     ORDER BY "createdAt" ASC
     FOR UPDATE SKIP LOCKED
     LIMIT 1
