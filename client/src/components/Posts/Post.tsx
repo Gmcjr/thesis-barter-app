@@ -16,7 +16,7 @@ import DownloadIcon from '@mui/icons-material/Download';
 import CircularProgress from '@mui/material/CircularProgress';
 
 import { formatPostDate } from '../../utils/utils';
-import type { PostData } from './ManagePosts';
+import type { PostData, PostUpdateData } from './ManagePosts';
 
 import PostActionsMenu from './PostActionsMenu';
 import ArtTradeOffer from './ArtTradeOffer';
@@ -34,10 +34,14 @@ interface PostProps {
   myTradeRequests: TradeRequestData | null;
   onTradeActivity: () => void | Promise<void>;
   onOfferSubmitted?: () => void;
+  onUpdate?: (postId: number, postData: PostUpdateData) => Promise<void>;
+  onDelete?: (postId: number) => Promise<void>;
+  onComplete?: (tradeId: number) => Promise<void>;
 }
 
 export default function Post({
   post, onReport, myTradeRequests, onTradeActivity, onOfferSubmitted,
+  onUpdate, onDelete, onComplete,
 }: PostProps) {
   const postUser = post.user.name ?? post.user.email;
   const {
@@ -199,6 +203,11 @@ export default function Post({
               showBlock={!isOwnPost}
               blocked={isBlocked}
               onBlock={handleBlockToggle}
+              showManage={isOwnPost}
+              managePosts={[post]}
+              onUpdate={onUpdate}
+              onDelete={onDelete}
+              onComplete={onComplete}
             />
           </Box>
         </Box>
