@@ -552,10 +552,10 @@ model Job {
   status        JobStatus @default(PENDING)
   attempts      Int       @default(0)
   maxAttempts   Int       @default(3)
-  nextAttemptAt DateTime  @default(now())
+  nextAttemptAt DateTime  @default(now()) @db.Timestamptz
   lastError     String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  createdAt     DateTime  @default(now()) @db.Timestamptz
+  updatedAt     DateTime  @updatedAt @db.Timestamptz
 
   @@index([status, nextAttemptAt])
 }

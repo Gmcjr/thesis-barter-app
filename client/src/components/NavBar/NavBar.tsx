@@ -9,6 +9,7 @@ import Avatar from '@mui/material/Avatar';
 
 import { Link, useRouter } from '../../context/RouterContext';
 import SettingsMenu from './SettingsMenu';
+import NotificationBell from './NotificationBell';
 import { useAuth } from '../../context/AuthContext';
 
 function NavBar() {
@@ -87,6 +88,8 @@ function NavBar() {
               );
             })}
           </Box>
+
+          {user && <NotificationBell />}
 
           <SettingsMenu />
 
