@@ -533,3 +533,29 @@ model Notification {
 
   @@index([userId, readAt, createdAt])
 }
+
+enum JobType {
+  SEND_NOTIFICATION
+}
+
+enum JobStatus {
+  PENDING
+  PROCESSING
+  FAILED
+  COMPLETED
+}
+
+model Job {
+  id            Int       @id @default(autoincrement())
+  type          JobType
+  payload       Json
+  status        JobStatus @default(PENDING)
+  attempts      Int       @default(0)
+  maxAttempts   Int       @default(3)
+  nextAttemptAt DateTime  @default(now())
+  lastError     String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([status, nextAttemptAt])
+}

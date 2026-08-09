@@ -133,3 +133,20 @@ export const NotificationType = {
 } as const
 
 export type NotificationType = (typeof NotificationType)[keyof typeof NotificationType]
+
+
+export const JobType = {
+  SEND_NOTIFICATION: 'SEND_NOTIFICATION'
+} as const
+
+export type JobType = (typeof JobType)[keyof typeof JobType]
+
+
+export const JobStatus = {
+  PENDING: 'PENDING',
+  PROCESSING: 'PROCESSING',
+  FAILED: 'FAILED',
+  COMPLETED: 'COMPLETED'
+} as const
+
+export type JobStatus = (typeof JobStatus)[keyof typeof JobStatus]

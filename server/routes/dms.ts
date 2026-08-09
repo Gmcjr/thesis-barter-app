@@ -3,6 +3,7 @@ import { prisma } from '../db/index.js';
 import requireAuth from '../middleware/requireAuth.js';
 import { isBlocked } from '../services/blocks.js';
 import { getIo } from '../middleware/socket';
+import { enqueueJob } from '../services/jobs.js';
 
 const dms = Router();
 
@@ -119,16 +120,29 @@ dms.post('/:id/messages', async (req, res) => {
     if (await isBlocked(userId, recieverId)) {
       return res.status(403).json({ error: 'Blocked' });
     }
-
-    const message = await prisma.message.create({
-      data: {
-        dmId, senderId: userId, recieverId, text,
-      },
-    });
-
     const sender = await prisma.user.findUnique({
       where: { id: userId },
       select: { name: true, email: true },
+    });
+
+    const message = await prisma.$transaction(async (tx) => {
+      const created = await tx.message.create({
+        data: {
+          dmId, senderId: userId, recieverId, text,
+        },
+      });
+
+      await enqueueJob(tx, 'SEND_NOTIFICATION', {
+        userId: recieverId,
+        type: 'DM_MESSAGE',
+        title: sender?.name ?? sender?.email ?? 'New message',
+        body: text.length > 80 ? `${text.slice(0, 80)}...` : text,
+        link: `/messages/${dmId}`,
+        entityType: 'DM',
+        entityId: dmId,
+      });
+
+      return created;
     });
 
     getIo().to(`user:${userId}`).to(`user:${recieverId}`).emit('dm:message', {

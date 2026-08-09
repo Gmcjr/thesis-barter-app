@@ -4,6 +4,7 @@ import { prisma } from '../db/index';
 import requireAuth from '../middleware/requireAuth';
 import { Status } from '../db/generated/client';
 import { queueScreening } from '../services/moderation';
+import { enqueueJob } from '../services/jobs.js';
 
 const reviews = Router();
 
@@ -54,18 +55,19 @@ reviews.post('/', requireAuth, async (req, res) => {
 
     const revieweeId = reviewerId === trade.ownerId ? trade.requesterId : trade.ownerId;
 
-    const review = await prisma.review.create({
-      data: {
-        tradeId: trade.id,
-        reviewerId,
-        revieweeId,
-        rating,
-        comment: comment ?? null,
-        isPendingScreening: !!comment,
-      },
-    });
-
+    let review: Awaited<ReturnType<typeof prisma.review.create>>;
     if (comment) {
+      review = await prisma.review.create({
+        data: {
+          tradeId: trade.id,
+          reviewerId,
+          revieweeId,
+          rating,
+          comment,
+          isPendingScreening: true,
+        },
+      });
+
       queueScreening({
         targetType: 'REVIEW',
         targetId: review.id,
@@ -76,6 +78,15 @@ reviews.post('/', requireAuth, async (req, res) => {
             where: { id: review.id },
             data: { isPendingScreening: false },
           });
+          await enqueueJob(prisma, 'SEND_NOTIFICATION', {
+            userId: revieweeId,
+            type: 'REVIEW_RECEIVED',
+            title: 'You received a new review',
+            body: `${rating}\u2605 - "${comment.length > 60 ? `${comment.slice(0, 60)}...` : comment}"`,
+            link: '/profile',
+            entityType: 'REVIEW',
+            entityId: review.id,
+          });
         },
         onRemoved: async () => {
           await prisma.review.update({
@@ -83,6 +94,31 @@ reviews.post('/', requireAuth, async (req, res) => {
             data: { isPendingScreening: false, isRemoved: true },
           });
         },
+      });
+    } else {
+      review = await prisma.$transaction(async (tx) => {
+        const created = await tx.review.create({
+          data: {
+            tradeId: trade.id,
+            reviewerId,
+            revieweeId,
+            rating,
+            comment: null,
+            isPendingScreening: false,
+          },
+        });
+
+        await enqueueJob(tx, 'SEND_NOTIFICATION', {
+          userId: revieweeId,
+          type: 'REVIEW_RECEIVED',
+          title: 'You received a new review',
+          body: `${rating}\u2605`,
+          link: '/profile',
+          entityType: 'REVIEW',
+          entityId: created.id,
+        });
+
+        return created;
       });
     }
 
@@ -218,7 +254,7 @@ reviews.get('/user/:userId', async (req, res) => {
       prisma.post.count({ where: { userId, tradeOffers: { some: { status: 'COMPLETED' } } } }),
     ]);
 
-    res.json({
+    return res.json({
       reviews: reviewList,
       averageRating: aggregate._avg.rating,
       totalReviews: aggregate._count.rating,

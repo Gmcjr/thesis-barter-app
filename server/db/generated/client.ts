@@ -166,3 +166,8 @@ export type UserMedia = Prisma.UserMediaModel
  * 
  */
 export type Notification = Prisma.NotificationModel
+/**
+ * Model Job
+ * 
+ */
+export type Job = Prisma.JobModel
