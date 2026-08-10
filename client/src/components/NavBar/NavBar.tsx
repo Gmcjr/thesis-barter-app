@@ -1,24 +1,67 @@
+/* eslint-disable max-len */
 /* eslint-disable no-nested-ternary */
-import React from 'react';
+import React, { useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import AddIcon from '@mui/icons-material/Add';
+import MessageIcon from '@mui/icons-material/Message';
+import SettingsIcon from '@mui/icons-material/Settings';
+import axios from 'axios';
 
 import { Link, useRouter } from '../../context/RouterContext';
 import SettingsMenu from './SettingsMenu';
-import NotificationBell from './NotificationBell';
+// import NotificationBell from './NotificationBell';
 import { useAuth } from '../../context/AuthContext';
+import { useToast } from '../../context/ToastContext';
+import NewPost, { type PostFormData } from '../Posts/NewPost';
 
 function NavBar() {
   const { path, navigate } = useRouter();
   const { user, loading, logout } = useAuth();
+  const { showToast } = useToast();
+
+  const [modalOpen, setModalOpen] = useState(false);
+  const [userMenuTarget, setUserMenuTarget] = useState<null | HTMLElement>(null);
 
   const navLinks = [
-    { to: '/messages', label: 'Messages' },
+    { to: '/messages', label: 'Messages', icon: <MessageIcon /> },
   ];
+
+  // create a post
+  const handleCreatePost = async (formData: PostFormData) => {
+    showToast('Post submitted - running automatic screening...', 'info');
+    try {
+      await axios.post('/posts', {
+        title: formData.title,
+        name: formData.name,
+        offerType: formData.offerType,
+        category: formData.category,
+        message: formData.description,
+        condition: formData.condition,
+        isLocal: formData.isLocal,
+        zipCode: formData.zipCode,
+        radiusMiles: formData.radiusMiles,
+        previewMediaId: formData.previewMediaId,
+        fullMediaId: formData.fullMediaId,
+      });
+
+      showToast('Screening complete. Your post is live', 'success');
+    // Adds in 'violates community guidelines' message for a rejected post during pre-screen
+    } catch (requestError) {
+      console.error('Failed to create post:', requestError);
+      const message = axios.isAxiosError(requestError) && requestError.response?.data?.error
+        ? requestError.response.data.error
+        : 'Could not create post - check your connection and try, try again.';
+      showToast(message, 'error');
+      throw requestError;
+    }
+  };
 
   return (
     <AppBar position="fixed" elevation={2} sx={{ bgcolor: 'background.paper', color: 'text.primary' }}>
@@ -30,6 +73,9 @@ function NavBar() {
         px: { xs: 1.5, sm: 3, md: 4 },
         gap: { xs: 1, sm: 2 },
         flexWrap: { xs: 'wrap', md: 'nowrap' },
+        maxWidth: 'md',
+        width: '100%',
+        mx: 'auto',
       }}
       >
 
@@ -63,37 +109,49 @@ function NavBar() {
             gap: { xs: 0.5, sm: 1 },
           }}
           >
-            {navLinks.map(({ to, label }) => {
+            {navLinks.map(({ to, label, icon }) => {
               const active = to === '/'
                 ? path === '/'
                 : path.startsWith(to);
               return (
-                <Link key={to} to={to}>
-                  <Button
-                    variant="text"
-                    color="inherit"
-                    size="small"
-                    sx={{
-                      minWidth: 'auto',
-                      px: {
-                        xs: '0.75rem',
-                        sm: '0.875rem',
-                      },
-                      fontWeight: active ? 700 : 400,
-                    }}
-                  >
-                    {label}
-                  </Button>
-                </Link>
+                <Button
+                  key={to}
+                  variant="contained"
+                  size="small"
+                  startIcon={icon}
+                  disabled={!user}
+                  onClick={() => navigate(to)}
+                  sx={{
+                    textTransform: 'none',
+                    whiteSpace: 'nowrap',
+                    px: 2,
+                    fontWeight: active ? 700 : 600,
+                  }}
+                >
+                  {label}
+                </Button>
               );
             })}
+
+            {/* New Post Button */}
+            <Button
+              variant="contained"
+              size="small"
+              startIcon={<AddIcon />}
+              disabled={!user}
+              onClick={() => setModalOpen(true)}
+              sx={{
+                textTransform: 'none',
+                whiteSpace: 'nowrap',
+                px: 2,
+                fontWeight: 600,
+              }}
+            >
+              New Post
+            </Button>
           </Box>
 
-          {user && <NotificationBell />}
-
-          <SettingsMenu />
-
-          {/* Username + Avatar + Google Login / Logout */}
+          {/* Username + Avatar + modal with: Google Login / Logout + Accessibility Settins + Profile link */}
           <Box sx={{
             display: 'flex',
             alignItems: 'center',
@@ -106,43 +164,104 @@ function NavBar() {
           >
             {loading ? (
               <Typography variant="caption" color="text.secondary">Loading…</Typography>
-            ) : user ? (
-              <>
-                <Avatar
-                  sx={{
-                    width: 28,
-                    height: 28,
-                    bgcolor: 'primary.main',
-                    fontSize: '0.75rem',
-                    cursor: 'pointer',
-                  }}
-                  onClick={() => navigate('/profile')}
-                >
-                  {(user.name ?? user.email).charAt(0).toUpperCase()}
-                </Avatar>
-                <Typography
-                  variant="subtitle2"
-                  sx={{
-                    fontWeight: 600,
-                    fontSize: { xs: '0.75rem', sm: '0.875rem' },
-                    cursor: 'pointer',
-                  }}
-                  onClick={() => navigate('/profile')}
-                >
-                  {user.name ?? user.email}
-                </Typography>
-                <Button size="small" color="inherit" onClick={() => logout()} sx={{ fontSize: '0.75rem' }}>
-                  Log out
-                </Button>
-              </>
             ) : (
-              <Typography variant="subtitle2" sx={{ fontWeight: 600, fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>
-                <a href="/oauth2/login">Sign in with Google</a>
-              </Typography>
+              <>
+                <Box
+                  onClick={(e) => setUserMenuTarget(e.currentTarget)}
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 1,
+                    cursor: 'pointer',
+                  }}
+                >
+                  <Avatar
+                    sx={{
+                      width: 28,
+                      height: 28,
+                      bgcolor: 'primary.main',
+                      fontSize: '0.75rem',
+                    }}
+                  >
+                    {user ? (user.name ?? user.email).charAt(0).toUpperCase() : 'G'}
+                  </Avatar>
+                  <Typography
+                    variant="subtitle2"
+                    sx={{
+                      fontWeight: 600,
+                      fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                    }}
+                  >
+                    {user ? (user.name ?? user.email) : 'Guest User'}
+                  </Typography>
+                </Box>
+                <Menu
+                  anchorEl={userMenuTarget}
+                  open={Boolean(userMenuTarget)}
+                  onClose={() => setUserMenuTarget(null)}
+                  anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                  transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                >
+                  {/* Profile only visible when logged in */}
+                  {user && (
+                    <MenuItem onClick={() => { setUserMenuTarget(null); navigate('/profile'); }}>
+                      Profile
+                    </MenuItem>
+                  )}
+
+                  {/* Settings Item */}
+                  <MenuItem
+                    disableRipple
+                    sx={{
+                      p: 0,
+                      position: 'relative',
+                      '& button, & .MuiIconButton-root': {
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        height: '100%',
+                        opacity: 0,
+                        zIndex: 2,
+                        cursor: 'pointer',
+                      },
+                    }}
+                  >
+                    <Box sx={{
+                      display: 'flex', alignItems: 'center', gap: 1, px: 2, py: 1, width: '100%',
+                    }}
+                    >
+                      <SettingsIcon sx={{ fontSize: '1.25rem' }} />
+                      <Typography variant="body2" sx={{ fontWeight: 600, pointerEvents: 'none', zIndex: 1 }}>
+                        Settings
+                      </Typography>
+                      <SettingsMenu />
+                    </Box>
+                  </MenuItem>
+
+                  {/* Log out when logged in / Sign in with Google when logged out */}
+                  {user ? (
+                    <MenuItem onClick={() => { setUserMenuTarget(null); logout(); }}>
+                      Log out
+                    </MenuItem>
+                  ) : (
+                    <MenuItem onClick={() => { setUserMenuTarget(null); window.location.href = '/oauth2/login'; }}>
+                      Sign in with Google
+                    </MenuItem>
+                  )}
+                </Menu>
+              </>
             )}
           </Box>
         </Box>
       </Toolbar>
+
+      {/* NewPost Modal */}
+      <NewPost
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        onSubmit={handleCreatePost}
+      />
     </AppBar>
   );
 }

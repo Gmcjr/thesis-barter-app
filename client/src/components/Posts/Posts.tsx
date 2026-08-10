@@ -4,30 +4,20 @@ import axios from 'axios';
 
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import AddIcon from '@mui/icons-material/Add';
 
-import NewPost, { type PostFormData } from './NewPost';
-import ManagePosts, { type PostData, type PostUpdateData } from './ManagePosts';
+import { type PostData, type PostUpdateData } from './ManagePosts';
 import type { TradeRequestData } from '../Trades/RequestTradeButton';
 import { useAuth } from '../../context/AuthContext';
-import { useToast } from '../../context/ToastContext';
 import Post from './Post';
 import ReportDialog from './ReportDialog';
 import SearchPosts from './SearchPosts';
 import { useSocket } from '../../context/SocketContext';
-import { radius } from '../../theme';
 
 export default function Posts() {
   const { user, blockedUserIds } = useAuth();
-  const { showToast } = useToast();
   const socket = useSocket();
 
-  const [modalOpen, setModalOpen] = useState(false);
-  const [manageOpen, setManageOpen] = useState(false);
-
   const [posts, setPosts] = useState<PostData[]>([]);
-  const [ownedPosts, setOwnedPosts] = useState<PostData[]>([]);
   const [myTradeRequests, setMyTradeRequests] = useState<TradeRequestData[]>([]);
 
   const [search, setSearch] = useState('');
@@ -51,21 +41,6 @@ export default function Posts() {
     }
   }, []);
 
-  // get all posts belonging to the logged-in user (this is a specific search)
-  const loadOwnedPosts = useCallback(async () => {
-    if (!user) {
-      setOwnedPosts([]);
-      return;
-    }
-    try {
-      const response = await axios.get<PostData[]>('/posts', { params: { mine: true } });
-      setOwnedPosts(response.data);
-    } catch (requestError) {
-      console.error('Failed to get user posts:', requestError);
-      setError('Failed to get your posts');
-    }
-  }, [user]);
-
   useEffect(() => {
     loadPosts(search);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -88,60 +63,24 @@ export default function Posts() {
   }, [loadMyTradeRequests]);
 
   const handleTradeActivity = async () => {
-    await Promise.all([loadPosts(search), loadOwnedPosts(), loadMyTradeRequests()]);
+    await Promise.all([loadPosts(search), loadMyTradeRequests()]);
   };
 
   useEffect(() => {
     if (!socket) return undefined;
     const handleChange = () => {
       loadPosts(search);
-      loadOwnedPosts();
     };
     socket.on('posts:changed', handleChange);
     return () => {
       socket.off('posts:changed', handleChange);
     };
-  }, [socket, search, loadPosts, loadOwnedPosts]);
+  }, [socket, search, loadPosts]);
 
   // search posts
   const handleSearch = (event: React.SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
     loadPosts(search);
-  };
-
-  // create a post
-  const handleCreatePost = async (formData: PostFormData) => {
-    showToast('Post submitted - running automatic screening...', 'info');
-    try {
-      await axios.post('/posts', {
-        title: formData.title,
-        name: formData.name,
-        offerType: formData.offerType,
-        category: formData.category,
-        message: formData.description,
-        condition: formData.condition,
-        isLocal: formData.isLocal,
-        zipCode: formData.zipCode,
-        radiusMiles: formData.radiusMiles,
-        previewMediaId: formData.previewMediaId,
-        fullMediaId: formData.fullMediaId,
-      });
-
-      showToast('Screening complete. Your post is live', 'success');
-
-      await Promise.all([
-        loadPosts(search),
-        loadOwnedPosts(),
-      ]);
-    // Adds in 'violates community guidelines' message for a rejected post during pre-screen
-    } catch (requestError) {
-      console.error('Failed to create post:', requestError);
-      const message = axios.isAxiosError(requestError) && requestError.response?.data?.error
-        ? requestError.response.data.error
-        : 'Could not create post - check your connection and try, try again.';
-      showToast(message, 'error');
-      throw requestError;
-    }
   };
 
   // update a post
@@ -151,13 +90,8 @@ export default function Posts() {
   ) => {
     try {
       setError('');
-
       await axios.patch(`/posts/${postId}`, postData);
-
-      await Promise.all([
-        loadPosts(search),
-        loadOwnedPosts(),
-      ]);
+      await loadPosts(search);
     } catch (requestError) {
       console.error('Failed to update post:', requestError);
       setError('Failed to update post');
@@ -168,13 +102,8 @@ export default function Posts() {
   const handleDeletePost = async (postId: number) => {
     try {
       setError('');
-
       await axios.delete(`/posts/${postId}`);
-
-      await Promise.all([
-        loadPosts(search),
-        loadOwnedPosts(),
-      ]);
+      await loadPosts(search);
     } catch (requestError) {
       console.error('Failed to delete post:', requestError);
       setError('Failed to delete post');
@@ -185,27 +114,13 @@ export default function Posts() {
   const handleCompleteTrade = async (tradeId: number) => {
     try {
       setError('');
-
       await axios.patch(`/trades/${tradeId}/complete`);
-
-      await Promise.all([
-        loadPosts(search),
-        loadOwnedPosts(),
-      ]);
+      await loadPosts(search);
     } catch (requestError) {
       console.error('Failed to complete trade:', requestError);
       setError('Failed to complete trade');
     }
   };
-
-  const handleOpenManagePosts = async () => {
-    await loadOwnedPosts();
-    setManageOpen(true);
-  };
-
-  const manageablePosts = ownedPosts.filter(
-    (post) => post.status !== 'COMPLETED',
-  );
 
   return (
     <Box sx={{ width: '100%', mt: -4 }}>
@@ -216,41 +131,6 @@ export default function Posts() {
         onSearchChange={setSearch}
         onSubmit={handleSearch}
       />
-
-      {/* all of the Buttons underneath Search and their lovely formatting */}
-      <Box
-        sx={{
-          display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, minmax(0, 1fr)) auto' }, alignItems: 'center', gap: { xs: 1, sm: 1.5 }, mb: 3, px: { xs: 2, md: 0 },
-        }}
-      >
-
-        {/* Manage Posts button */}
-        <Button
-          variant="contained"
-          disabled={!user}
-          onClick={() => handleOpenManagePosts()}
-          sx={{
-            width: '100%', borderRadius: radius.md, textTransform: 'none', px: 3,
-          }}
-        >
-          Manage Posts
-        </Button>
-
-        {/* New Post Button */}
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <Button
-            variant="contained"
-            startIcon={<AddIcon />}
-            disabled={!user}
-            onClick={() => setModalOpen(true)}
-            sx={{
-              width: { xs: '100%', sm: 'auto' }, borderRadius: radius.md, textTransform: 'none', whiteSpace: 'nowrap', px: 3,
-            }}
-          >
-            New Post
-          </Button>
-        </Box>
-      </Box>
 
       {error && (
         <Typography
@@ -283,26 +163,12 @@ export default function Posts() {
             myTradeRequests={myTradeRequests.find((r) => r.postId === post.id) ?? null}
             onTradeActivity={handleTradeActivity}
             onOfferSubmitted={handleTradeActivity}
+            onUpdate={handleUpdatePost}
+            onDelete={handleDeletePost}
+            onComplete={handleCompleteTrade}
           />
         ))}
       </Box>
-
-      {/* NewPost Modal */}
-      <NewPost
-        open={modalOpen}
-        onClose={() => setModalOpen(false)}
-        onSubmit={handleCreatePost}
-      />
-
-      {/* Manage Posts Modal */}
-      <ManagePosts
-        open={manageOpen}
-        onClose={() => setManageOpen(false)}
-        posts={manageablePosts}
-        onUpdate={handleUpdatePost}
-        onDelete={handleDeletePost}
-        onComplete={handleCompleteTrade}
-      />
 
       <ReportDialog
         open={reportDialogPostId !== null}
