@@ -4,6 +4,7 @@ import { Prisma } from '../db/generated/client.js';
 import requireAuth from '../middleware/requireAuth';
 import requireModerator from '../middleware/requireModerator';
 import { ReportStatus, AppealStatus, ReportReason } from '../db/generated/enums';
+import { enqueueJob } from '../services/jobs.js';
 
 const appeals = Router();
 const QUEUE_PAGE_SIZE = 50;
@@ -149,44 +150,57 @@ appeals.patch('/:id', requireModerator, async (req, res) => {
     const isGrant = action === 'grant';
     const resolverId = (req.user as { id: number }).id;
 
-    const appealUpdate = prisma.appeal.update({
-      where: { id },
-      data: {
-        status: isGrant ? 'GRANTED' : 'DENIED',
-        resolution: isGrant ? 'Appeal granted' : 'Appeal denied',
-        resolverId,
-        resolvedAt: new Date(),
-      },
-    });
-
-    const extraUpdates = [];
-    if (isGrant) {
-      // Reinstate the content and flip the original report back to Allowed
-      // Same as a moderator directly clicking 'Allow' on the report itself
-      extraUpdates.push(prisma.report.update({
-        where: { id: appeal.reportId },
+    const resolved = await prisma.$transaction(async (tx) => {
+      const updatedAppeal = await tx.appeal.update({
+        where: { id },
         data: {
-          status: ReportStatus.APPROVED,
-          resolution: 'Reinstated via granted appeal',
+          status: isGrant ? 'GRANTED' : 'DENIED',
+          resolution: isGrant ? 'Appeal granted' : 'Appeal denied',
           resolverId,
           resolvedAt: new Date(),
         },
-      }));
-      if (appeal.report.postId) {
-        extraUpdates.push(prisma.post.update({
-          where: { id: appeal.report.postId },
-          data: { isRemoved: false },
-        }));
-      }
-      if (appeal.report.messageId) {
-        extraUpdates.push(prisma.message.update({
-          where: { id: appeal.report.messageId },
-          data: { isRemoved: false },
-        }));
-      }
-    }
+      });
 
-    const [resolved] = await prisma.$transaction([appealUpdate, ...extraUpdates]);
+      if (isGrant) {
+        // Reinstate the content and flip the original report back to Allowed
+        // Same as a moderator directly clicking 'Allow' on the report itself
+        await tx.report.update({
+          where: { id: appeal.reportId },
+          data: {
+            status: ReportStatus.APPROVED,
+            resolution: 'Reinstated via granted appeal',
+            resolverId,
+            resolvedAt: new Date(),
+          },
+        });
+
+        if (appeal.report.postId) {
+          await tx.post.update({
+            where: { id: appeal.report.postId },
+            data: { isRemoved: false },
+          });
+        }
+        if (appeal.report.messageId) {
+          await tx.message.update({
+            where: { id: appeal.report.messageId },
+            data: { isRemoved: false },
+          });
+        }
+      }
+
+      await enqueueJob(tx, 'SEND_NOTIFICATION', {
+        userId: appeal.appellantId,
+        type: 'APPEAL_RESOLVED',
+        title: isGrant ? 'Your appeal was granted' : 'Your appeal was denied',
+        body: isGrant ? 'Your content has been reinstated.' : 'A moderator reviewed your appeal and upheld the original decision.',
+        link: '/profile?mine=true',
+        entityType: 'APPEAL',
+        entityId: appeal.id,
+      });
+
+      return updatedAppeal;
+    });
+
     res.json(resolved);
   } catch (err) {
     console.error('Failed to PATCH appeal:', err);

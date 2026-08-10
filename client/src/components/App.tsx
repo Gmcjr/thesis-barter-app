@@ -9,6 +9,7 @@ import { ToastProvider } from '../context/ToastContext';
 import { SettingsProvider, useSettings } from '../context/SettingsContext';
 import { RouterProvider, Router, type RouteDef } from '../context/RouterContext';
 import { SocketProvider } from '../context/SocketContext';
+import { NotificationProvider } from '../context/NotificationContext';
 
 // component imports
 import NavBar from './NavBar/NavBar';
@@ -18,8 +19,6 @@ import ModQueue from './Moderation/ModQueue';
 import BlockedUsers from './BlockedUsers/BlockedUsers';
 import NotFound from './NotFound/NotFound';
 import Messages from './DMs/Messages';
-import DmNotifications from './DMs/DmNotifications';
-import ScreeningNotifications from './DMs/ScreeningNotifications';
 
 const routes: RouteDef[] = [
   { path: '/', component: Posts },
@@ -46,21 +45,22 @@ function AppShell() {
       <ToastProvider>
         <AuthProvider>
           <SocketProvider>
-            <RouterProvider>
-              <NavBar />
-              <DmNotifications />
-              <ScreeningNotifications />
-              <Box
-                component="main"
-                sx={{
-                  pt: 16, pb: 8, backgroundColor: 'background.default', minHeight: '100vh',
-                }}
-              >
-                <Container maxWidth="md">
-                  <Router routes={routes} notFound={NotFound} />
-                </Container>
-              </Box>
-            </RouterProvider>
+            <NotificationProvider>
+              <RouterProvider>
+                <NavBar />
+
+                <Box
+                  component="main"
+                  sx={{
+                    pt: 16, pb: 8, backgroundColor: 'background.default', minHeight: '100vh',
+                  }}
+                >
+                  <Container maxWidth="md">
+                    <Router routes={routes} notFound={NotFound} />
+                  </Container>
+                </Box>
+              </RouterProvider>
+            </NotificationProvider>
           </SocketProvider>
         </AuthProvider>
       </ToastProvider>

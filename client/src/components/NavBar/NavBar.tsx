@@ -16,6 +16,7 @@ import axios from 'axios';
 
 import { Link, useRouter } from '../../context/RouterContext';
 import SettingsMenu from './SettingsMenu';
+// import NotificationBell from './NotificationBell';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import NewPost, { type PostFormData } from '../Posts/NewPost';

@@ -6,6 +6,7 @@ import session from 'express-session';
 import http from 'http';
 import router from './routes/router.js';
 import { initSocket } from './middleware/socket.js';
+import { startJobWorker } from './services/jobs.js';
 
 dotenv.config({ path: path.join('config', '.env') });
 
@@ -40,6 +41,7 @@ app.use('/trades', router.trades);
 app.use('/trade-requests', router.tradeRequests);
 app.use('/dms', router.dms);
 app.use('/reviews', router.reviews);
+app.use('/notifications', router.notifications);
 
 app.get(/.*/, (req, res) => {
   res.sendFile(path.join(process.cwd(), 'client', 'dist', 'index.html'));
@@ -47,5 +49,6 @@ app.get(/.*/, (req, res) => {
 
 const httpServer = http.createServer(app);
 initSocket(httpServer, sessionMiddleware);
+startJobWorker();
 
 httpServer.listen(port, () => console.info(`Listening on ${process.env.CLIENT_URL}`));

@@ -29,7 +29,7 @@ export function RouterProvider({ children }: { children: ReactNode }) {
   const navigate = useCallback((to: string) => {
     if (to === window.location.pathname) return;
     window.history.pushState({}, '', to);
-    setPath(to);
+    setPath(to.split('?')[0]);
   }, []);
 
   const value = useMemo(() => ({ path, navigate }), [path, navigate]);

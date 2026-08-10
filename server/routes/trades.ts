@@ -3,6 +3,7 @@ import { prisma } from '../db/index';
 import requireAuth from '../middleware/requireAuth';
 import { Status } from '../db/generated/client';
 import { getIo } from '../middleware/socket';
+import { enqueueJob } from '../services/jobs';
 
 const trades = Router();
 
@@ -95,6 +96,7 @@ trades.get('/mine', requireAuth, async (req, res) => {
 });
 
 // Get a trade by its id
+// eslint-disable-next-line consistent-return
 trades.get('/:id', requireAuth, async (req, res) => {
   const userId = (req.user as { id: number }).id;
 
@@ -133,7 +135,7 @@ trades.get('/:id', requireAuth, async (req, res) => {
       return res.sendStatus(403);
     }
 
-    res.json(trade);
+    return res.json(trade);
   } catch (err) {
     console.error(err);
     res.sendStatus(500);
@@ -141,6 +143,7 @@ trades.get('/:id', requireAuth, async (req, res) => {
 });
 
 // One party marks trade to be completed. If second, update post status too
+// eslint-disable-next-line consistent-return
 trades.patch('/:id/complete', requireAuth, async (req, res) => {
   const userId = (req.user as { id: number }).id;
 
@@ -199,6 +202,35 @@ trades.patch('/:id/complete', requireAuth, async (req, res) => {
           data: { status: Status.COMPLETED },
         });
         getIo().emit('posts:changed');
+        await enqueueJob(tx, 'SEND_NOTIFICATION', {
+          userId: trade.ownerId,
+          type: 'TRADE_COMPLETED',
+          title: 'Trade completed',
+          body: 'Your trade is complete - leave a review!',
+          link: '/profile',
+          entityType: 'TRADE',
+          entityId: trade.id,
+        });
+        await enqueueJob(tx, 'SEND_NOTIFICATION', {
+          userId: trade.requesterId,
+          type: 'TRADE_COMPLETED',
+          title: 'Trade completed',
+          body: 'Your trade is complete - leave a review!',
+          link: '/profile',
+          entityType: 'TRADE',
+          entityId: trade.id,
+        });
+      } else {
+        const otherUserId = userId === trade.ownerId ? trade.requesterId : trade.ownerId;
+        await enqueueJob(tx, 'SEND_NOTIFICATION', {
+          userId: otherUserId,
+          type: 'TRADE_PARTNER_COMPLETED',
+          title: 'Your trade partner marked their side complete',
+          body: 'Mark your side complete to finish the trade.',
+          link: '/profile',
+          entityType: 'TRADE',
+          entityId: trade.id,
+        });
       }
     });
 
@@ -210,6 +242,7 @@ trades.patch('/:id/complete', requireAuth, async (req, res) => {
 });
 
 // cancel a trade
+// eslint-disable-next-line consistent-return
 trades.patch('/:id/cancel', requireAuth, async (req, res) => {
   const userId = (req.user as { id: number }).id;
 

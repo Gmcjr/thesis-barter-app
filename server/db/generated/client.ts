@@ -161,3 +161,13 @@ export type MessageMedia = Prisma.MessageMediaModel
  * 
  */
 export type UserMedia = Prisma.UserMediaModel
+/**
+ * Model Notification
+ * 
+ */
+export type Notification = Prisma.NotificationModel
+/**
+ * Model Job
+ * 
+ */
+export type Job = Prisma.JobModel
