@@ -123,7 +123,7 @@ const schemes: Record<ThemeMode, Record<ContrastMode, SourceScheme>> = {
     normal: {
       primary: '#b05e12',
       secondary: '#FFB596',
-      tertiary: '#b3c989',
+      tertiary: '#7d8c4f',
       error: '#FFB4AB',
       background: '#2a2826',
       surface: '#2f2e31',
