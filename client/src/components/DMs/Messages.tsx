@@ -10,6 +10,7 @@ import IconButton from '@mui/material/IconButton';
 import Avatar from '@mui/material/Avatar';
 import CircularProgress from '@mui/material/CircularProgress';
 import SendIcon from '@mui/icons-material/Send';
+import { radius } from '../../theme';
 
 import { useParams, useRouter } from '../../context/RouterContext';
 import { useAuth } from '../../context/AuthContext';
@@ -106,7 +107,7 @@ export default function Messages() {
       <Card
         variant="outlined"
         sx={{
-          width: 280, flexShrink: 0, borderRadius: 3, borderColor: '#e0e0e0', overflowY: 'auto',
+          width: 280, flexShrink: 0, borderRadius: radius.md, borderColor: 'border.default', overflowY: 'auto',
         }}
       >
         {loadingInbox && (
@@ -153,7 +154,7 @@ export default function Messages() {
       <Card
         variant="outlined"
         sx={{
-          flex: 1, borderRadius: 3, borderColor: '#e0e0e0', display: 'flex', flexDirection: 'column',
+          flex: 1, borderRadius: radius.md, borderColor: 'border.default', display: 'flex', flexDirection: 'column',
         }}
       >
         {!activeDmId && (
@@ -167,7 +168,7 @@ export default function Messages() {
 
         {activeDmId && (
           <>
-            <Box sx={{ p: 2, borderBottom: '1px solid #e0e0e0' }}>
+            <Box sx={{ p: 2, borderBottom: (theme) => `1px solid ${theme.palette.border.default}` }}>
               <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
                 {activeConversation?.otherUser.name ?? 'Conversation'}
               </Typography>
@@ -190,9 +191,9 @@ export default function Messages() {
                     key={message.id}
                     sx={{
                       alignSelf: isMine ? 'flex-end' : 'flex-start',
-                      bgcolor: isMine ? 'primary.main' : 'black',
+                      bgcolor: isMine ? 'primary.main' : 'surface.sunken',
                       color: 'primary.contrastText',
-                      borderRadius: 3,
+                      borderRadius: radius.lg,
                       px: 1.5,
                       py: 0.75,
                       maxWidth: '70%',
@@ -206,7 +207,7 @@ export default function Messages() {
             </Box>
 
             <Box sx={{
-              p: 1.5, borderTop: '1px solid #e0e0e0', display: 'flex', gap: 1,
+              p: 1.5, borderTop: (theme) => `1px solid ${theme.palette.border.default}`,
             }}
             >
               <TextField

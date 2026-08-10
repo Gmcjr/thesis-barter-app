@@ -82,7 +82,10 @@ export type AppealStatus = (typeof AppealStatus)[keyof typeof AppealStatus]
 export const TargetType = {
   POST: 'POST',
   USER: 'USER',
-  MESSAGE: 'MESSAGE'
+  MESSAGE: 'MESSAGE',
+  TRADE_OFFER: 'TRADE_OFFER',
+  REVIEW: 'REVIEW',
+  TRADE_REQUEST: 'TRADE_REQUEST'
 } as const
 
 export type TargetType = (typeof TargetType)[keyof typeof TargetType]
@@ -93,6 +96,7 @@ export const ReportReason = {
   INAPPROPRIATE_CONTENT: 'INAPPROPRIATE_CONTENT',
   ITEM_MISMATCH: 'ITEM_MISMATCH',
   HARASSMENT: 'HARASSMENT',
+  AUTO_SCREENING: 'AUTO_SCREENING',
   OTHER: 'OTHER'
 } as const
 

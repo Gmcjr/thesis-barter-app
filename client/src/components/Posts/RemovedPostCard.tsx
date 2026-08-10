@@ -5,6 +5,7 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { radius } from '../../theme';
 
 import WhyRemovedMenu from './WhyRemovedMenu';
 import { formatPostDate } from '../../utils/utils';
@@ -20,7 +21,7 @@ export default function RemovedPostCard({ post }: { post: PostData }) {
       sx={{
         border: '1px solid',
         borderColor: 'error.main',
-        borderRadius: 2,
+        borderRadius: radius.md,
         '&:before': { display: 'none' },
       }}
     >
@@ -29,7 +30,7 @@ export default function RemovedPostCard({ post }: { post: PostData }) {
         sx={{ minHeight: 0, '& .MuiAccordionSummary-content': { my: 1 } }}
       >
         <Box sx={{ minWidth: 0 }}>
-          <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }} noWrap>
+          <Typography variant="subtitle2" sx={{ fontWeight: 600 }} noWrap>
             {post.title}
           </Typography>
           <Typography variant="caption" color="error">

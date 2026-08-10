@@ -44,6 +44,9 @@ export type UserMinAggregateOutputType = {
   bio: string | null
   createdAt: Date | null
   zipCode: string | null
+  isSystem: boolean | null
+  pendingBio: string | null
+  isPendingScreening: boolean | null
 }
 
 export type UserMaxAggregateOutputType = {
@@ -56,6 +59,9 @@ export type UserMaxAggregateOutputType = {
   bio: string | null
   createdAt: Date | null
   zipCode: string | null
+  isSystem: boolean | null
+  pendingBio: string | null
+  isPendingScreening: boolean | null
 }
 
 export type UserCountAggregateOutputType = {
@@ -68,6 +74,9 @@ export type UserCountAggregateOutputType = {
   bio: number
   createdAt: number
   zipCode: number
+  isSystem: number
+  pendingBio: number
+  isPendingScreening: number
   _all: number
 }
 
@@ -90,6 +99,9 @@ export type UserMinAggregateInputType = {
   bio?: true
   createdAt?: true
   zipCode?: true
+  isSystem?: true
+  pendingBio?: true
+  isPendingScreening?: true
 }
 
 export type UserMaxAggregateInputType = {
@@ -102,6 +114,9 @@ export type UserMaxAggregateInputType = {
   bio?: true
   createdAt?: true
   zipCode?: true
+  isSystem?: true
+  pendingBio?: true
+  isPendingScreening?: true
 }
 
 export type UserCountAggregateInputType = {
@@ -114,6 +129,9 @@ export type UserCountAggregateInputType = {
   bio?: true
   createdAt?: true
   zipCode?: true
+  isSystem?: true
+  pendingBio?: true
+  isPendingScreening?: true
   _all?: true
 }
 
@@ -213,6 +231,9 @@ export type UserGroupByOutputType = {
   bio: string | null
   createdAt: Date
   zipCode: string | null
+  isSystem: boolean
+  pendingBio: string | null
+  isPendingScreening: boolean
   _count: UserCountAggregateOutputType | null
   _avg: UserAvgAggregateOutputType | null
   _sum: UserSumAggregateOutputType | null
@@ -248,6 +269,9 @@ export type UserWhereInput = {
   bio?: Prisma.StringNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   zipCode?: Prisma.StringNullableFilter<"User"> | string | null
+  isSystem?: Prisma.BoolFilter<"User"> | boolean
+  pendingBio?: Prisma.StringNullableFilter<"User"> | string | null
+  isPendingScreening?: Prisma.BoolFilter<"User"> | boolean
   posts?: Prisma.PostListRelationFilter
   reqTrades?: Prisma.TradeListRelationFilter
   ownedTrades?: Prisma.TradeListRelationFilter
@@ -284,6 +308,9 @@ export type UserOrderByWithRelationInput = {
   bio?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   zipCode?: Prisma.SortOrderInput | Prisma.SortOrder
+  isSystem?: Prisma.SortOrder
+  pendingBio?: Prisma.SortOrderInput | Prisma.SortOrder
+  isPendingScreening?: Prisma.SortOrder
   posts?: Prisma.PostOrderByRelationAggregateInput
   reqTrades?: Prisma.TradeOrderByRelationAggregateInput
   ownedTrades?: Prisma.TradeOrderByRelationAggregateInput
@@ -323,6 +350,9 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   bio?: Prisma.StringNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   zipCode?: Prisma.StringNullableFilter<"User"> | string | null
+  isSystem?: Prisma.BoolFilter<"User"> | boolean
+  pendingBio?: Prisma.StringNullableFilter<"User"> | string | null
+  isPendingScreening?: Prisma.BoolFilter<"User"> | boolean
   posts?: Prisma.PostListRelationFilter
   reqTrades?: Prisma.TradeListRelationFilter
   ownedTrades?: Prisma.TradeListRelationFilter
@@ -359,6 +389,9 @@ export type UserOrderByWithAggregationInput = {
   bio?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   zipCode?: Prisma.SortOrderInput | Prisma.SortOrder
+  isSystem?: Prisma.SortOrder
+  pendingBio?: Prisma.SortOrderInput | Prisma.SortOrder
+  isPendingScreening?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
   _avg?: Prisma.UserAvgOrderByAggregateInput
   _max?: Prisma.UserMaxOrderByAggregateInput
@@ -379,6 +412,9 @@ export type UserScalarWhereWithAggregatesInput = {
   bio?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   zipCode?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  isSystem?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
+  pendingBio?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  isPendingScreening?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
 }
 
 export type UserCreateInput = {
@@ -390,6 +426,9 @@ export type UserCreateInput = {
   bio?: string | null
   createdAt?: Date | string
   zipCode?: string | null
+  isSystem?: boolean
+  pendingBio?: string | null
+  isPendingScreening?: boolean
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
   reqTrades?: Prisma.TradeCreateNestedManyWithoutRequesterInput
   ownedTrades?: Prisma.TradeCreateNestedManyWithoutOwnerInput
@@ -426,6 +465,9 @@ export type UserUncheckedCreateInput = {
   bio?: string | null
   createdAt?: Date | string
   zipCode?: string | null
+  isSystem?: boolean
+  pendingBio?: string | null
+  isPendingScreening?: boolean
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
   reqTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutRequesterInput
   ownedTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutOwnerInput
@@ -461,6 +503,9 @@ export type UserUpdateInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
   reqTrades?: Prisma.TradeUpdateManyWithoutRequesterNestedInput
   ownedTrades?: Prisma.TradeUpdateManyWithoutOwnerNestedInput
@@ -497,6 +542,9 @@ export type UserUncheckedUpdateInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
   reqTrades?: Prisma.TradeUncheckedUpdateManyWithoutRequesterNestedInput
   ownedTrades?: Prisma.TradeUncheckedUpdateManyWithoutOwnerNestedInput
@@ -533,6 +581,9 @@ export type UserCreateManyInput = {
   bio?: string | null
   createdAt?: Date | string
   zipCode?: string | null
+  isSystem?: boolean
+  pendingBio?: string | null
+  isPendingScreening?: boolean
 }
 
 export type UserUpdateManyMutationInput = {
@@ -544,6 +595,9 @@ export type UserUpdateManyMutationInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type UserUncheckedUpdateManyInput = {
@@ -556,6 +610,9 @@ export type UserUncheckedUpdateManyInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type UserCountOrderByAggregateInput = {
@@ -568,6 +625,9 @@ export type UserCountOrderByAggregateInput = {
   bio?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   zipCode?: Prisma.SortOrder
+  isSystem?: Prisma.SortOrder
+  pendingBio?: Prisma.SortOrder
+  isPendingScreening?: Prisma.SortOrder
 }
 
 export type UserAvgOrderByAggregateInput = {
@@ -584,6 +644,9 @@ export type UserMaxOrderByAggregateInput = {
   bio?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   zipCode?: Prisma.SortOrder
+  isSystem?: Prisma.SortOrder
+  pendingBio?: Prisma.SortOrder
+  isPendingScreening?: Prisma.SortOrder
 }
 
 export type UserMinOrderByAggregateInput = {
@@ -596,6 +659,9 @@ export type UserMinOrderByAggregateInput = {
   bio?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   zipCode?: Prisma.SortOrder
+  isSystem?: Prisma.SortOrder
+  pendingBio?: Prisma.SortOrder
+  isPendingScreening?: Prisma.SortOrder
 }
 
 export type UserSumOrderByAggregateInput = {
@@ -626,6 +692,10 @@ export type NullableEnumRoleFieldUpdateOperationsInput = {
 
 export type DateTimeFieldUpdateOperationsInput = {
   set?: Date | string
+}
+
+export type BoolFieldUpdateOperationsInput = {
+  set?: boolean
 }
 
 export type IntFieldUpdateOperationsInput = {
@@ -987,6 +1057,9 @@ export type UserCreateWithoutInitiatedDMsInput = {
   bio?: string | null
   createdAt?: Date | string
   zipCode?: string | null
+  isSystem?: boolean
+  pendingBio?: string | null
+  isPendingScreening?: boolean
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
   reqTrades?: Prisma.TradeCreateNestedManyWithoutRequesterInput
   ownedTrades?: Prisma.TradeCreateNestedManyWithoutOwnerInput
@@ -1022,6 +1095,9 @@ export type UserUncheckedCreateWithoutInitiatedDMsInput = {
   bio?: string | null
   createdAt?: Date | string
   zipCode?: string | null
+  isSystem?: boolean
+  pendingBio?: string | null
+  isPendingScreening?: boolean
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
   reqTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutRequesterInput
   ownedTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutOwnerInput
@@ -1061,6 +1137,9 @@ export type UserCreateWithoutRecievedDMsInput = {
   bio?: string | null
   createdAt?: Date | string
   zipCode?: string | null
+  isSystem?: boolean
+  pendingBio?: string | null
+  isPendingScreening?: boolean
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
   reqTrades?: Prisma.TradeCreateNestedManyWithoutRequesterInput
   ownedTrades?: Prisma.TradeCreateNestedManyWithoutOwnerInput
@@ -1096,6 +1175,9 @@ export type UserUncheckedCreateWithoutRecievedDMsInput = {
   bio?: string | null
   createdAt?: Date | string
   zipCode?: string | null
+  isSystem?: boolean
+  pendingBio?: string | null
+  isPendingScreening?: boolean
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
   reqTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutRequesterInput
   ownedTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutOwnerInput
@@ -1146,6 +1228,9 @@ export type UserUpdateWithoutInitiatedDMsInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
   reqTrades?: Prisma.TradeUpdateManyWithoutRequesterNestedInput
   ownedTrades?: Prisma.TradeUpdateManyWithoutOwnerNestedInput
@@ -1181,6 +1266,9 @@ export type UserUncheckedUpdateWithoutInitiatedDMsInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
   reqTrades?: Prisma.TradeUncheckedUpdateManyWithoutRequesterNestedInput
   ownedTrades?: Prisma.TradeUncheckedUpdateManyWithoutOwnerNestedInput
@@ -1226,6 +1314,9 @@ export type UserUpdateWithoutRecievedDMsInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
   reqTrades?: Prisma.TradeUpdateManyWithoutRequesterNestedInput
   ownedTrades?: Prisma.TradeUpdateManyWithoutOwnerNestedInput
@@ -1261,6 +1352,9 @@ export type UserUncheckedUpdateWithoutRecievedDMsInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
   reqTrades?: Prisma.TradeUncheckedUpdateManyWithoutRequesterNestedInput
   ownedTrades?: Prisma.TradeUncheckedUpdateManyWithoutOwnerNestedInput
@@ -1295,6 +1389,9 @@ export type UserCreateWithoutSMessagesInput = {
   bio?: string | null
   createdAt?: Date | string
   zipCode?: string | null
+  isSystem?: boolean
+  pendingBio?: string | null
+  isPendingScreening?: boolean
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
   reqTrades?: Prisma.TradeCreateNestedManyWithoutRequesterInput
   ownedTrades?: Prisma.TradeCreateNestedManyWithoutOwnerInput
@@ -1330,6 +1427,9 @@ export type UserUncheckedCreateWithoutSMessagesInput = {
   bio?: string | null
   createdAt?: Date | string
   zipCode?: string | null
+  isSystem?: boolean
+  pendingBio?: string | null
+  isPendingScreening?: boolean
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
   reqTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutRequesterInput
   ownedTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutOwnerInput
@@ -1369,6 +1469,9 @@ export type UserCreateWithoutRMessagesInput = {
   bio?: string | null
   createdAt?: Date | string
   zipCode?: string | null
+  isSystem?: boolean
+  pendingBio?: string | null
+  isPendingScreening?: boolean
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
   reqTrades?: Prisma.TradeCreateNestedManyWithoutRequesterInput
   ownedTrades?: Prisma.TradeCreateNestedManyWithoutOwnerInput
@@ -1404,6 +1507,9 @@ export type UserUncheckedCreateWithoutRMessagesInput = {
   bio?: string | null
   createdAt?: Date | string
   zipCode?: string | null
+  isSystem?: boolean
+  pendingBio?: string | null
+  isPendingScreening?: boolean
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
   reqTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutRequesterInput
   ownedTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutOwnerInput
@@ -1454,6 +1560,9 @@ export type UserUpdateWithoutSMessagesInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
   reqTrades?: Prisma.TradeUpdateManyWithoutRequesterNestedInput
   ownedTrades?: Prisma.TradeUpdateManyWithoutOwnerNestedInput
@@ -1489,6 +1598,9 @@ export type UserUncheckedUpdateWithoutSMessagesInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
   reqTrades?: Prisma.TradeUncheckedUpdateManyWithoutRequesterNestedInput
   ownedTrades?: Prisma.TradeUncheckedUpdateManyWithoutOwnerNestedInput
@@ -1534,6 +1646,9 @@ export type UserUpdateWithoutRMessagesInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
   reqTrades?: Prisma.TradeUpdateManyWithoutRequesterNestedInput
   ownedTrades?: Prisma.TradeUpdateManyWithoutOwnerNestedInput
@@ -1569,6 +1684,9 @@ export type UserUncheckedUpdateWithoutRMessagesInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
   reqTrades?: Prisma.TradeUncheckedUpdateManyWithoutRequesterNestedInput
   ownedTrades?: Prisma.TradeUncheckedUpdateManyWithoutOwnerNestedInput
@@ -1603,6 +1721,9 @@ export type UserCreateWithoutLogsInput = {
   bio?: string | null
   createdAt?: Date | string
   zipCode?: string | null
+  isSystem?: boolean
+  pendingBio?: string | null
+  isPendingScreening?: boolean
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
   reqTrades?: Prisma.TradeCreateNestedManyWithoutRequesterInput
   ownedTrades?: Prisma.TradeCreateNestedManyWithoutOwnerInput
@@ -1638,6 +1759,9 @@ export type UserUncheckedCreateWithoutLogsInput = {
   bio?: string | null
   createdAt?: Date | string
   zipCode?: string | null
+  isSystem?: boolean
+  pendingBio?: string | null
+  isPendingScreening?: boolean
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
   reqTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutRequesterInput
   ownedTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutOwnerInput
@@ -1688,6 +1812,9 @@ export type UserUpdateWithoutLogsInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
   reqTrades?: Prisma.TradeUpdateManyWithoutRequesterNestedInput
   ownedTrades?: Prisma.TradeUpdateManyWithoutOwnerNestedInput
@@ -1723,6 +1850,9 @@ export type UserUncheckedUpdateWithoutLogsInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
   reqTrades?: Prisma.TradeUncheckedUpdateManyWithoutRequesterNestedInput
   ownedTrades?: Prisma.TradeUncheckedUpdateManyWithoutOwnerNestedInput
@@ -1757,6 +1887,9 @@ export type UserCreateWithoutPostsInput = {
   bio?: string | null
   createdAt?: Date | string
   zipCode?: string | null
+  isSystem?: boolean
+  pendingBio?: string | null
+  isPendingScreening?: boolean
   reqTrades?: Prisma.TradeCreateNestedManyWithoutRequesterInput
   ownedTrades?: Prisma.TradeCreateNestedManyWithoutOwnerInput
   comments?: Prisma.CommentCreateNestedManyWithoutUserInput
@@ -1792,6 +1925,9 @@ export type UserUncheckedCreateWithoutPostsInput = {
   bio?: string | null
   createdAt?: Date | string
   zipCode?: string | null
+  isSystem?: boolean
+  pendingBio?: string | null
+  isPendingScreening?: boolean
   reqTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutRequesterInput
   ownedTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutOwnerInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
@@ -1842,6 +1978,9 @@ export type UserUpdateWithoutPostsInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   reqTrades?: Prisma.TradeUpdateManyWithoutRequesterNestedInput
   ownedTrades?: Prisma.TradeUpdateManyWithoutOwnerNestedInput
   comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
@@ -1877,6 +2016,9 @@ export type UserUncheckedUpdateWithoutPostsInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   reqTrades?: Prisma.TradeUncheckedUpdateManyWithoutRequesterNestedInput
   ownedTrades?: Prisma.TradeUncheckedUpdateManyWithoutOwnerNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
@@ -1911,6 +2053,9 @@ export type UserCreateWithoutOwnedTradesInput = {
   bio?: string | null
   createdAt?: Date | string
   zipCode?: string | null
+  isSystem?: boolean
+  pendingBio?: string | null
+  isPendingScreening?: boolean
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
   reqTrades?: Prisma.TradeCreateNestedManyWithoutRequesterInput
   comments?: Prisma.CommentCreateNestedManyWithoutUserInput
@@ -1946,6 +2091,9 @@ export type UserUncheckedCreateWithoutOwnedTradesInput = {
   bio?: string | null
   createdAt?: Date | string
   zipCode?: string | null
+  isSystem?: boolean
+  pendingBio?: string | null
+  isPendingScreening?: boolean
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
   reqTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutRequesterInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
@@ -1985,6 +2133,9 @@ export type UserCreateWithoutReqTradesInput = {
   bio?: string | null
   createdAt?: Date | string
   zipCode?: string | null
+  isSystem?: boolean
+  pendingBio?: string | null
+  isPendingScreening?: boolean
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
   ownedTrades?: Prisma.TradeCreateNestedManyWithoutOwnerInput
   comments?: Prisma.CommentCreateNestedManyWithoutUserInput
@@ -2020,6 +2171,9 @@ export type UserUncheckedCreateWithoutReqTradesInput = {
   bio?: string | null
   createdAt?: Date | string
   zipCode?: string | null
+  isSystem?: boolean
+  pendingBio?: string | null
+  isPendingScreening?: boolean
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
   ownedTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutOwnerInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
@@ -2070,6 +2224,9 @@ export type UserUpdateWithoutOwnedTradesInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
   reqTrades?: Prisma.TradeUpdateManyWithoutRequesterNestedInput
   comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
@@ -2105,6 +2262,9 @@ export type UserUncheckedUpdateWithoutOwnedTradesInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
   reqTrades?: Prisma.TradeUncheckedUpdateManyWithoutRequesterNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
@@ -2150,6 +2310,9 @@ export type UserUpdateWithoutReqTradesInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
   ownedTrades?: Prisma.TradeUpdateManyWithoutOwnerNestedInput
   comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
@@ -2185,6 +2348,9 @@ export type UserUncheckedUpdateWithoutReqTradesInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
   ownedTrades?: Prisma.TradeUncheckedUpdateManyWithoutOwnerNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
@@ -2219,6 +2385,9 @@ export type UserCreateWithoutTradeOffersInput = {
   bio?: string | null
   createdAt?: Date | string
   zipCode?: string | null
+  isSystem?: boolean
+  pendingBio?: string | null
+  isPendingScreening?: boolean
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
   reqTrades?: Prisma.TradeCreateNestedManyWithoutRequesterInput
   ownedTrades?: Prisma.TradeCreateNestedManyWithoutOwnerInput
@@ -2254,6 +2423,9 @@ export type UserUncheckedCreateWithoutTradeOffersInput = {
   bio?: string | null
   createdAt?: Date | string
   zipCode?: string | null
+  isSystem?: boolean
+  pendingBio?: string | null
+  isPendingScreening?: boolean
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
   reqTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutRequesterInput
   ownedTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutOwnerInput
@@ -2304,6 +2476,9 @@ export type UserUpdateWithoutTradeOffersInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
   reqTrades?: Prisma.TradeUpdateManyWithoutRequesterNestedInput
   ownedTrades?: Prisma.TradeUpdateManyWithoutOwnerNestedInput
@@ -2339,6 +2514,9 @@ export type UserUncheckedUpdateWithoutTradeOffersInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
   reqTrades?: Prisma.TradeUncheckedUpdateManyWithoutRequesterNestedInput
   ownedTrades?: Prisma.TradeUncheckedUpdateManyWithoutOwnerNestedInput
@@ -2373,6 +2551,9 @@ export type UserCreateWithoutTradeRequestsInput = {
   bio?: string | null
   createdAt?: Date | string
   zipCode?: string | null
+  isSystem?: boolean
+  pendingBio?: string | null
+  isPendingScreening?: boolean
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
   reqTrades?: Prisma.TradeCreateNestedManyWithoutRequesterInput
   ownedTrades?: Prisma.TradeCreateNestedManyWithoutOwnerInput
@@ -2408,6 +2589,9 @@ export type UserUncheckedCreateWithoutTradeRequestsInput = {
   bio?: string | null
   createdAt?: Date | string
   zipCode?: string | null
+  isSystem?: boolean
+  pendingBio?: string | null
+  isPendingScreening?: boolean
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
   reqTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutRequesterInput
   ownedTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutOwnerInput
@@ -2458,6 +2642,9 @@ export type UserUpdateWithoutTradeRequestsInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
   reqTrades?: Prisma.TradeUpdateManyWithoutRequesterNestedInput
   ownedTrades?: Prisma.TradeUpdateManyWithoutOwnerNestedInput
@@ -2493,6 +2680,9 @@ export type UserUncheckedUpdateWithoutTradeRequestsInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
   reqTrades?: Prisma.TradeUncheckedUpdateManyWithoutRequesterNestedInput
   ownedTrades?: Prisma.TradeUncheckedUpdateManyWithoutOwnerNestedInput
@@ -2527,6 +2717,9 @@ export type UserCreateWithoutCommentsInput = {
   bio?: string | null
   createdAt?: Date | string
   zipCode?: string | null
+  isSystem?: boolean
+  pendingBio?: string | null
+  isPendingScreening?: boolean
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
   reqTrades?: Prisma.TradeCreateNestedManyWithoutRequesterInput
   ownedTrades?: Prisma.TradeCreateNestedManyWithoutOwnerInput
@@ -2562,6 +2755,9 @@ export type UserUncheckedCreateWithoutCommentsInput = {
   bio?: string | null
   createdAt?: Date | string
   zipCode?: string | null
+  isSystem?: boolean
+  pendingBio?: string | null
+  isPendingScreening?: boolean
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
   reqTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutRequesterInput
   ownedTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutOwnerInput
@@ -2612,6 +2808,9 @@ export type UserUpdateWithoutCommentsInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
   reqTrades?: Prisma.TradeUpdateManyWithoutRequesterNestedInput
   ownedTrades?: Prisma.TradeUpdateManyWithoutOwnerNestedInput
@@ -2647,6 +2846,9 @@ export type UserUncheckedUpdateWithoutCommentsInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
   reqTrades?: Prisma.TradeUncheckedUpdateManyWithoutRequesterNestedInput
   ownedTrades?: Prisma.TradeUncheckedUpdateManyWithoutOwnerNestedInput
@@ -2681,6 +2883,9 @@ export type UserCreateWithoutProductsInput = {
   bio?: string | null
   createdAt?: Date | string
   zipCode?: string | null
+  isSystem?: boolean
+  pendingBio?: string | null
+  isPendingScreening?: boolean
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
   reqTrades?: Prisma.TradeCreateNestedManyWithoutRequesterInput
   ownedTrades?: Prisma.TradeCreateNestedManyWithoutOwnerInput
@@ -2716,6 +2921,9 @@ export type UserUncheckedCreateWithoutProductsInput = {
   bio?: string | null
   createdAt?: Date | string
   zipCode?: string | null
+  isSystem?: boolean
+  pendingBio?: string | null
+  isPendingScreening?: boolean
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
   reqTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutRequesterInput
   ownedTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutOwnerInput
@@ -2766,6 +2974,9 @@ export type UserUpdateWithoutProductsInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
   reqTrades?: Prisma.TradeUpdateManyWithoutRequesterNestedInput
   ownedTrades?: Prisma.TradeUpdateManyWithoutOwnerNestedInput
@@ -2801,6 +3012,9 @@ export type UserUncheckedUpdateWithoutProductsInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
   reqTrades?: Prisma.TradeUncheckedUpdateManyWithoutRequesterNestedInput
   ownedTrades?: Prisma.TradeUncheckedUpdateManyWithoutOwnerNestedInput
@@ -2835,6 +3049,9 @@ export type UserCreateWithoutServicesInput = {
   bio?: string | null
   createdAt?: Date | string
   zipCode?: string | null
+  isSystem?: boolean
+  pendingBio?: string | null
+  isPendingScreening?: boolean
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
   reqTrades?: Prisma.TradeCreateNestedManyWithoutRequesterInput
   ownedTrades?: Prisma.TradeCreateNestedManyWithoutOwnerInput
@@ -2870,6 +3087,9 @@ export type UserUncheckedCreateWithoutServicesInput = {
   bio?: string | null
   createdAt?: Date | string
   zipCode?: string | null
+  isSystem?: boolean
+  pendingBio?: string | null
+  isPendingScreening?: boolean
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
   reqTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutRequesterInput
   ownedTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutOwnerInput
@@ -2920,6 +3140,9 @@ export type UserUpdateWithoutServicesInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
   reqTrades?: Prisma.TradeUpdateManyWithoutRequesterNestedInput
   ownedTrades?: Prisma.TradeUpdateManyWithoutOwnerNestedInput
@@ -2955,6 +3178,9 @@ export type UserUncheckedUpdateWithoutServicesInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
   reqTrades?: Prisma.TradeUncheckedUpdateManyWithoutRequesterNestedInput
   ownedTrades?: Prisma.TradeUncheckedUpdateManyWithoutOwnerNestedInput
@@ -2989,6 +3215,9 @@ export type UserCreateWithoutSReviewsInput = {
   bio?: string | null
   createdAt?: Date | string
   zipCode?: string | null
+  isSystem?: boolean
+  pendingBio?: string | null
+  isPendingScreening?: boolean
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
   reqTrades?: Prisma.TradeCreateNestedManyWithoutRequesterInput
   ownedTrades?: Prisma.TradeCreateNestedManyWithoutOwnerInput
@@ -3024,6 +3253,9 @@ export type UserUncheckedCreateWithoutSReviewsInput = {
   bio?: string | null
   createdAt?: Date | string
   zipCode?: string | null
+  isSystem?: boolean
+  pendingBio?: string | null
+  isPendingScreening?: boolean
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
   reqTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutRequesterInput
   ownedTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutOwnerInput
@@ -3063,6 +3295,9 @@ export type UserCreateWithoutRReviewsInput = {
   bio?: string | null
   createdAt?: Date | string
   zipCode?: string | null
+  isSystem?: boolean
+  pendingBio?: string | null
+  isPendingScreening?: boolean
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
   reqTrades?: Prisma.TradeCreateNestedManyWithoutRequesterInput
   ownedTrades?: Prisma.TradeCreateNestedManyWithoutOwnerInput
@@ -3098,6 +3333,9 @@ export type UserUncheckedCreateWithoutRReviewsInput = {
   bio?: string | null
   createdAt?: Date | string
   zipCode?: string | null
+  isSystem?: boolean
+  pendingBio?: string | null
+  isPendingScreening?: boolean
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
   reqTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutRequesterInput
   ownedTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutOwnerInput
@@ -3148,6 +3386,9 @@ export type UserUpdateWithoutSReviewsInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
   reqTrades?: Prisma.TradeUpdateManyWithoutRequesterNestedInput
   ownedTrades?: Prisma.TradeUpdateManyWithoutOwnerNestedInput
@@ -3183,6 +3424,9 @@ export type UserUncheckedUpdateWithoutSReviewsInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
   reqTrades?: Prisma.TradeUncheckedUpdateManyWithoutRequesterNestedInput
   ownedTrades?: Prisma.TradeUncheckedUpdateManyWithoutOwnerNestedInput
@@ -3228,6 +3472,9 @@ export type UserUpdateWithoutRReviewsInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
   reqTrades?: Prisma.TradeUpdateManyWithoutRequesterNestedInput
   ownedTrades?: Prisma.TradeUpdateManyWithoutOwnerNestedInput
@@ -3263,6 +3510,9 @@ export type UserUncheckedUpdateWithoutRReviewsInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
   reqTrades?: Prisma.TradeUncheckedUpdateManyWithoutRequesterNestedInput
   ownedTrades?: Prisma.TradeUncheckedUpdateManyWithoutOwnerNestedInput
@@ -3297,6 +3547,9 @@ export type UserCreateWithoutBlocksInitiatedInput = {
   bio?: string | null
   createdAt?: Date | string
   zipCode?: string | null
+  isSystem?: boolean
+  pendingBio?: string | null
+  isPendingScreening?: boolean
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
   reqTrades?: Prisma.TradeCreateNestedManyWithoutRequesterInput
   ownedTrades?: Prisma.TradeCreateNestedManyWithoutOwnerInput
@@ -3332,6 +3585,9 @@ export type UserUncheckedCreateWithoutBlocksInitiatedInput = {
   bio?: string | null
   createdAt?: Date | string
   zipCode?: string | null
+  isSystem?: boolean
+  pendingBio?: string | null
+  isPendingScreening?: boolean
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
   reqTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutRequesterInput
   ownedTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutOwnerInput
@@ -3371,6 +3627,9 @@ export type UserCreateWithoutBlocksReceivedInput = {
   bio?: string | null
   createdAt?: Date | string
   zipCode?: string | null
+  isSystem?: boolean
+  pendingBio?: string | null
+  isPendingScreening?: boolean
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
   reqTrades?: Prisma.TradeCreateNestedManyWithoutRequesterInput
   ownedTrades?: Prisma.TradeCreateNestedManyWithoutOwnerInput
@@ -3406,6 +3665,9 @@ export type UserUncheckedCreateWithoutBlocksReceivedInput = {
   bio?: string | null
   createdAt?: Date | string
   zipCode?: string | null
+  isSystem?: boolean
+  pendingBio?: string | null
+  isPendingScreening?: boolean
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
   reqTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutRequesterInput
   ownedTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutOwnerInput
@@ -3456,6 +3718,9 @@ export type UserUpdateWithoutBlocksInitiatedInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
   reqTrades?: Prisma.TradeUpdateManyWithoutRequesterNestedInput
   ownedTrades?: Prisma.TradeUpdateManyWithoutOwnerNestedInput
@@ -3491,6 +3756,9 @@ export type UserUncheckedUpdateWithoutBlocksInitiatedInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
   reqTrades?: Prisma.TradeUncheckedUpdateManyWithoutRequesterNestedInput
   ownedTrades?: Prisma.TradeUncheckedUpdateManyWithoutOwnerNestedInput
@@ -3536,6 +3804,9 @@ export type UserUpdateWithoutBlocksReceivedInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
   reqTrades?: Prisma.TradeUpdateManyWithoutRequesterNestedInput
   ownedTrades?: Prisma.TradeUpdateManyWithoutOwnerNestedInput
@@ -3571,6 +3842,9 @@ export type UserUncheckedUpdateWithoutBlocksReceivedInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
   reqTrades?: Prisma.TradeUncheckedUpdateManyWithoutRequesterNestedInput
   ownedTrades?: Prisma.TradeUncheckedUpdateManyWithoutOwnerNestedInput
@@ -3605,6 +3879,9 @@ export type UserCreateWithoutReportsFiledInput = {
   bio?: string | null
   createdAt?: Date | string
   zipCode?: string | null
+  isSystem?: boolean
+  pendingBio?: string | null
+  isPendingScreening?: boolean
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
   reqTrades?: Prisma.TradeCreateNestedManyWithoutRequesterInput
   ownedTrades?: Prisma.TradeCreateNestedManyWithoutOwnerInput
@@ -3640,6 +3917,9 @@ export type UserUncheckedCreateWithoutReportsFiledInput = {
   bio?: string | null
   createdAt?: Date | string
   zipCode?: string | null
+  isSystem?: boolean
+  pendingBio?: string | null
+  isPendingScreening?: boolean
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
   reqTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutRequesterInput
   ownedTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutOwnerInput
@@ -3679,6 +3959,9 @@ export type UserCreateWithoutReportsAgainstInput = {
   bio?: string | null
   createdAt?: Date | string
   zipCode?: string | null
+  isSystem?: boolean
+  pendingBio?: string | null
+  isPendingScreening?: boolean
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
   reqTrades?: Prisma.TradeCreateNestedManyWithoutRequesterInput
   ownedTrades?: Prisma.TradeCreateNestedManyWithoutOwnerInput
@@ -3714,6 +3997,9 @@ export type UserUncheckedCreateWithoutReportsAgainstInput = {
   bio?: string | null
   createdAt?: Date | string
   zipCode?: string | null
+  isSystem?: boolean
+  pendingBio?: string | null
+  isPendingScreening?: boolean
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
   reqTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutRequesterInput
   ownedTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutOwnerInput
@@ -3753,6 +4039,9 @@ export type UserCreateWithoutReportsResolvedInput = {
   bio?: string | null
   createdAt?: Date | string
   zipCode?: string | null
+  isSystem?: boolean
+  pendingBio?: string | null
+  isPendingScreening?: boolean
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
   reqTrades?: Prisma.TradeCreateNestedManyWithoutRequesterInput
   ownedTrades?: Prisma.TradeCreateNestedManyWithoutOwnerInput
@@ -3788,6 +4077,9 @@ export type UserUncheckedCreateWithoutReportsResolvedInput = {
   bio?: string | null
   createdAt?: Date | string
   zipCode?: string | null
+  isSystem?: boolean
+  pendingBio?: string | null
+  isPendingScreening?: boolean
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
   reqTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutRequesterInput
   ownedTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutOwnerInput
@@ -3838,6 +4130,9 @@ export type UserUpdateWithoutReportsFiledInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
   reqTrades?: Prisma.TradeUpdateManyWithoutRequesterNestedInput
   ownedTrades?: Prisma.TradeUpdateManyWithoutOwnerNestedInput
@@ -3873,6 +4168,9 @@ export type UserUncheckedUpdateWithoutReportsFiledInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
   reqTrades?: Prisma.TradeUncheckedUpdateManyWithoutRequesterNestedInput
   ownedTrades?: Prisma.TradeUncheckedUpdateManyWithoutOwnerNestedInput
@@ -3918,6 +4216,9 @@ export type UserUpdateWithoutReportsAgainstInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
   reqTrades?: Prisma.TradeUpdateManyWithoutRequesterNestedInput
   ownedTrades?: Prisma.TradeUpdateManyWithoutOwnerNestedInput
@@ -3953,6 +4254,9 @@ export type UserUncheckedUpdateWithoutReportsAgainstInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
   reqTrades?: Prisma.TradeUncheckedUpdateManyWithoutRequesterNestedInput
   ownedTrades?: Prisma.TradeUncheckedUpdateManyWithoutOwnerNestedInput
@@ -3998,6 +4302,9 @@ export type UserUpdateWithoutReportsResolvedInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
   reqTrades?: Prisma.TradeUpdateManyWithoutRequesterNestedInput
   ownedTrades?: Prisma.TradeUpdateManyWithoutOwnerNestedInput
@@ -4033,6 +4340,9 @@ export type UserUncheckedUpdateWithoutReportsResolvedInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
   reqTrades?: Prisma.TradeUncheckedUpdateManyWithoutRequesterNestedInput
   ownedTrades?: Prisma.TradeUncheckedUpdateManyWithoutOwnerNestedInput
@@ -4067,6 +4377,9 @@ export type UserCreateWithoutAppealsFiledInput = {
   bio?: string | null
   createdAt?: Date | string
   zipCode?: string | null
+  isSystem?: boolean
+  pendingBio?: string | null
+  isPendingScreening?: boolean
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
   reqTrades?: Prisma.TradeCreateNestedManyWithoutRequesterInput
   ownedTrades?: Prisma.TradeCreateNestedManyWithoutOwnerInput
@@ -4102,6 +4415,9 @@ export type UserUncheckedCreateWithoutAppealsFiledInput = {
   bio?: string | null
   createdAt?: Date | string
   zipCode?: string | null
+  isSystem?: boolean
+  pendingBio?: string | null
+  isPendingScreening?: boolean
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
   reqTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutRequesterInput
   ownedTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutOwnerInput
@@ -4141,6 +4457,9 @@ export type UserCreateWithoutAppealsResolvedInput = {
   bio?: string | null
   createdAt?: Date | string
   zipCode?: string | null
+  isSystem?: boolean
+  pendingBio?: string | null
+  isPendingScreening?: boolean
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
   reqTrades?: Prisma.TradeCreateNestedManyWithoutRequesterInput
   ownedTrades?: Prisma.TradeCreateNestedManyWithoutOwnerInput
@@ -4176,6 +4495,9 @@ export type UserUncheckedCreateWithoutAppealsResolvedInput = {
   bio?: string | null
   createdAt?: Date | string
   zipCode?: string | null
+  isSystem?: boolean
+  pendingBio?: string | null
+  isPendingScreening?: boolean
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
   reqTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutRequesterInput
   ownedTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutOwnerInput
@@ -4226,6 +4548,9 @@ export type UserUpdateWithoutAppealsFiledInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
   reqTrades?: Prisma.TradeUpdateManyWithoutRequesterNestedInput
   ownedTrades?: Prisma.TradeUpdateManyWithoutOwnerNestedInput
@@ -4261,6 +4586,9 @@ export type UserUncheckedUpdateWithoutAppealsFiledInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
   reqTrades?: Prisma.TradeUncheckedUpdateManyWithoutRequesterNestedInput
   ownedTrades?: Prisma.TradeUncheckedUpdateManyWithoutOwnerNestedInput
@@ -4306,6 +4634,9 @@ export type UserUpdateWithoutAppealsResolvedInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
   reqTrades?: Prisma.TradeUpdateManyWithoutRequesterNestedInput
   ownedTrades?: Prisma.TradeUpdateManyWithoutOwnerNestedInput
@@ -4341,6 +4672,9 @@ export type UserUncheckedUpdateWithoutAppealsResolvedInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
   reqTrades?: Prisma.TradeUncheckedUpdateManyWithoutRequesterNestedInput
   ownedTrades?: Prisma.TradeUncheckedUpdateManyWithoutOwnerNestedInput
@@ -4375,6 +4709,9 @@ export type UserCreateWithoutMediaInput = {
   bio?: string | null
   createdAt?: Date | string
   zipCode?: string | null
+  isSystem?: boolean
+  pendingBio?: string | null
+  isPendingScreening?: boolean
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
   reqTrades?: Prisma.TradeCreateNestedManyWithoutRequesterInput
   ownedTrades?: Prisma.TradeCreateNestedManyWithoutOwnerInput
@@ -4410,6 +4747,9 @@ export type UserUncheckedCreateWithoutMediaInput = {
   bio?: string | null
   createdAt?: Date | string
   zipCode?: string | null
+  isSystem?: boolean
+  pendingBio?: string | null
+  isPendingScreening?: boolean
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
   reqTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutRequesterInput
   ownedTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutOwnerInput
@@ -4460,6 +4800,9 @@ export type UserUpdateWithoutMediaInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
   reqTrades?: Prisma.TradeUpdateManyWithoutRequesterNestedInput
   ownedTrades?: Prisma.TradeUpdateManyWithoutOwnerNestedInput
@@ -4495,6 +4838,9 @@ export type UserUncheckedUpdateWithoutMediaInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
   reqTrades?: Prisma.TradeUncheckedUpdateManyWithoutRequesterNestedInput
   ownedTrades?: Prisma.TradeUncheckedUpdateManyWithoutOwnerNestedInput
@@ -4529,6 +4875,9 @@ export type UserCreateWithoutUserMediaInput = {
   bio?: string | null
   createdAt?: Date | string
   zipCode?: string | null
+  isSystem?: boolean
+  pendingBio?: string | null
+  isPendingScreening?: boolean
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
   reqTrades?: Prisma.TradeCreateNestedManyWithoutRequesterInput
   ownedTrades?: Prisma.TradeCreateNestedManyWithoutOwnerInput
@@ -4564,6 +4913,9 @@ export type UserUncheckedCreateWithoutUserMediaInput = {
   bio?: string | null
   createdAt?: Date | string
   zipCode?: string | null
+  isSystem?: boolean
+  pendingBio?: string | null
+  isPendingScreening?: boolean
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
   reqTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutRequesterInput
   ownedTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutOwnerInput
@@ -4614,6 +4966,9 @@ export type UserUpdateWithoutUserMediaInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
   reqTrades?: Prisma.TradeUpdateManyWithoutRequesterNestedInput
   ownedTrades?: Prisma.TradeUpdateManyWithoutOwnerNestedInput
@@ -4649,6 +5004,9 @@ export type UserUncheckedUpdateWithoutUserMediaInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
   reqTrades?: Prisma.TradeUncheckedUpdateManyWithoutRequesterNestedInput
   ownedTrades?: Prisma.TradeUncheckedUpdateManyWithoutOwnerNestedInput
@@ -4922,6 +5280,9 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   bio?: boolean
   createdAt?: boolean
   zipCode?: boolean
+  isSystem?: boolean
+  pendingBio?: boolean
+  isPendingScreening?: boolean
   posts?: boolean | Prisma.User$postsArgs<ExtArgs>
   reqTrades?: boolean | Prisma.User$reqTradesArgs<ExtArgs>
   ownedTrades?: boolean | Prisma.User$ownedTradesArgs<ExtArgs>
@@ -4959,6 +5320,9 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   bio?: boolean
   createdAt?: boolean
   zipCode?: boolean
+  isSystem?: boolean
+  pendingBio?: boolean
+  isPendingScreening?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -4971,6 +5335,9 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   bio?: boolean
   createdAt?: boolean
   zipCode?: boolean
+  isSystem?: boolean
+  pendingBio?: boolean
+  isPendingScreening?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectScalar = {
@@ -4983,9 +5350,12 @@ export type UserSelectScalar = {
   bio?: boolean
   createdAt?: boolean
   zipCode?: boolean
+  isSystem?: boolean
+  pendingBio?: boolean
+  isPendingScreening?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "googleId" | "name" | "email" | "phone" | "role" | "bio" | "createdAt" | "zipCode", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "googleId" | "name" | "email" | "phone" | "role" | "bio" | "createdAt" | "zipCode" | "isSystem" | "pendingBio" | "isPendingScreening", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   posts?: boolean | Prisma.User$postsArgs<ExtArgs>
   reqTrades?: boolean | Prisma.User$reqTradesArgs<ExtArgs>
@@ -5054,6 +5424,9 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     bio: string | null
     createdAt: Date
     zipCode: string | null
+    isSystem: boolean
+    pendingBio: string | null
+    isPendingScreening: boolean
   }, ExtArgs["result"]["user"]>
   composites: {}
 }
@@ -5510,6 +5883,9 @@ export interface UserFieldRefs {
   readonly bio: Prisma.FieldRef<"User", 'String'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly zipCode: Prisma.FieldRef<"User", 'String'>
+  readonly isSystem: Prisma.FieldRef<"User", 'Boolean'>
+  readonly pendingBio: Prisma.FieldRef<"User", 'String'>
+  readonly isPendingScreening: Prisma.FieldRef<"User", 'Boolean'>
 }
     
 

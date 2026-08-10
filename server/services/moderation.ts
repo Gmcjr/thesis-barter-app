@@ -1,5 +1,8 @@
 import { GoogleGenAI, Type } from '@google/genai';
-import { ReportStatus } from '../db/generated/enums';
+import { ReportStatus, TargetType, ReportReason } from '../db/generated/enums';
+import { prisma } from '../db/index.js';
+import { getIo } from '../middleware/socket.js';
+import { getDownloadUrl } from './s3.js';
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
@@ -51,25 +54,46 @@ export interface ScreeningResult {
   rationale: string;
 }
 
-export async function screenContent(text: string): Promise<ScreeningResult | null> {
-  // Dev escape hatch for testing without running up requests
+const MAX_ATTEMPTS = 3;
+const RETRY_DELAY_MS = 1000;
+const sleep = (ms: number) => new Promise((resolve) => { setTimeout(resolve, ms); });
+
+// Gemini takes text and images in one multimodal call
+export async function screenContent(
+  text: string,
+  images: { mimeType: string; data: string }[] = [],
+): Promise<ScreeningResult | null> {
+  // For testing without running up requests
   if (process.env.SKIP_SCREENING === 'true') return null;
 
-  try {
-    const response = await ai.models.generateContent({
-      model: 'gemini-3.5-flash',
-      contents: `Reported content:\n"""\n${text}\n"""`,
-      config: {
-        systemInstruction: POLICY,
-        responseMimeType: 'application/json',
-        responseSchema,
-      },
-    });
-    return JSON.parse(response.text ?? '') as ScreeningResult;
-  } catch (err) {
-    console.error('Gemini screening failed:', err);
-    return null;
+  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt += 1) {
+    try {
+      // eslint-disable-next-line no-await-in-loop
+      const response = await ai.models.generateContent({
+        model: 'gemini-3.5-flash',
+        contents: [
+          { text: `Reported content:\n"""\n${text}\n"""` },
+          ...images.map((img) => ({ inlineData: img })),
+        ],
+        config: {
+          systemInstruction: POLICY,
+          responseMimeType: 'application/json',
+          responseSchema,
+        },
+      });
+      return JSON.parse(response.text ?? '') as ScreeningResult;
+    } catch (err) {
+      console.error(
+        `Gemini screening failed (attempt ${attempt}/${MAX_ATTEMPTS}):`,
+        err,
+      );
+      // eslint-disable-next-line no-await-in-loop
+      if (attempt < MAX_ATTEMPTS) await sleep(RETRY_DELAY_MS * attempt);
+    }
   }
+  // Still fail-open after retries exhausted
+  // Unscreened content gets approved and the submitter gets a toast
+  return null;
 }
 
 export const AUTO_REMOVE_THRESHOLD = 0.85;
@@ -81,22 +105,33 @@ export interface AutoAction {
   resolution: string;
 }
 
-export function decideAutoAction(screening: ScreeningResult): AutoAction | null {
+export function decideAutoAction(
+  screening: ScreeningResult,
+): AutoAction | null {
   if (screening.categories.some((c) => ZERO_TOLERANCE_CATEGORIES.includes(c))) {
-    return { status: ReportStatus.REMOVED, resolution: `Auto-removed: zero-tolerance category (${screening.categories.join(',')})` };
+    return {
+      status: ReportStatus.REMOVED,
+      resolution: `Auto-removed: zero-tolerance category (${screening.categories.join(',')})`,
+    };
   }
   if (screening.score >= AUTO_REMOVE_THRESHOLD) {
-    return { status: ReportStatus.REMOVED, resolution: `Auto-removed: high-confidence violation (score ${screening.score.toFixed(2)})` };
+    return {
+      status: ReportStatus.REMOVED,
+      resolution: `Auto-removed: high-confidence violation (score ${screening.score.toFixed(2)})`,
+    };
   }
   if (screening.score <= AUTO_DISMISS_CATEGORIES) {
-    return { status: ReportStatus.APPROVED, resolution: `Auto-dismissed: low-confidence (score ${screening.score.toFixed(2)})` };
+    return {
+      status: ReportStatus.APPROVED,
+      resolution: `Auto-dismissed: low-confidence (score ${screening.score.toFixed(2)})`,
+    };
   }
   return null; // Ambiguous/middle-confidence band, leave as 'PENDING' for human review
 }
 
 export type ScreenOutcome =
-    | { ok: true; screened: boolean }
-    | { ok: false; rationale: string };
+  | { ok: true; screened: boolean }
+  | { ok: false; rationale: string };
 
 // Content moderation gate for all user-generated text (posts, offers, edits)
 export async function screenOrReject(text: string): Promise<ScreenOutcome> {
@@ -109,4 +144,107 @@ export async function screenOrReject(text: string): Promise<ScreenOutcome> {
   }
 
   return { ok: true, screened: true };
+}
+
+function guessMimeType(s3Key: string): string {
+  if (s3Key.endsWith('.png')) return 'image/png';
+  if (s3Key.endsWith('.webp')) return 'image/webp';
+  return 'image/jpeg';
+}
+
+async function fetchAsBase64(
+  s3Key: string,
+): Promise<{ mimeType: string; data: string }> {
+  const url = await getDownloadUrl(s3Key);
+  const res = await fetch(url);
+  const buf = Buffer.from(await res.arrayBuffer());
+  return { mimeType: guessMimeType(s3Key), data: buf.toString('base64') };
+}
+
+let systemUserId: number | null = null;
+async function getSystemUserId(): Promise<number> {
+  if (systemUserId) return systemUserId;
+  const sysUser = await prisma.user.findFirstOrThrow({
+    where: { isSystem: true },
+  });
+  systemUserId = sysUser.id;
+  return systemUserId;
+}
+
+const REPORT_FK_FIELD: Record<string, string> = {
+  POST: 'postId',
+  USER: 'targetUserId',
+  MESSAGE: 'messageId',
+  TRADE_OFFER: 'offerId',
+  REVIEW: 'reviewId',
+  TRADE_REQUEST: 'tradeRequestId',
+};
+
+async function fileSystemReport(
+  targetType: keyof typeof REPORT_FK_FIELD,
+  targetId: number,
+  screening: ScreeningResult,
+) {
+  const reporterId = await getSystemUserId();
+  await prisma.report.create({
+    data: {
+      reporterId,
+      targetType: targetType as TargetType,
+      [REPORT_FK_FIELD[targetType]]: targetId,
+      reason: ReportReason.AUTO_SCREENING,
+      aiScore: screening.score,
+      aiCategories: screening.categories,
+      aiRationale: screening.rationale,
+      status: ReportStatus.REMOVED,
+      resolution: `Auto-removed: ${screening.rationale}`,
+      resolvedAt: new Date(),
+    },
+  });
+}
+
+export interface ScreenTarget {
+  targetType: keyof typeof REPORT_FK_FIELD;
+  targetId: number;
+  authorId: number;
+  text: string;
+  imageKeys?: string[];
+  onApproved: () => Promise<void>;
+  onRemoved: () => Promise<void>;
+}
+
+// Generic async screening for any content type
+export function queueScreening(target: ScreenTarget) {
+  (async () => {
+    try {
+      const images = target.imageKeys?.length
+        ? await Promise.all(target.imageKeys.map(fetchAsBase64))
+        : [];
+      const screening = await screenContent(target.text, images);
+      const action = screening ? decideAutoAction(screening) : null;
+
+      if (action?.status === ReportStatus.REMOVED) {
+        await fileSystemReport(target.targetType, target.targetId, screening!);
+        await target.onRemoved();
+        getIo().to(`user:${target.authorId}`).emit('content:screened', {
+          targetType: target.targetType,
+          targetId: target.targetId,
+          ok: false,
+          rationale: screening!.rationale,
+        });
+        return;
+      }
+
+      await target.onApproved();
+      getIo().to(`user:${target.authorId}`).emit('content:screened', {
+        targetType: target.targetType,
+        targetId: target.targetId,
+        ok: true,
+      });
+    } catch (err) {
+      console.error(
+        `Screening failed for ${target.targetType}:${target.targetId}`,
+        err,
+      );
+    }
+  })();
 }

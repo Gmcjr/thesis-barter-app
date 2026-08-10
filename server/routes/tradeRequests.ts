@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { prisma } from '../db/index.js';
 import requireAuth from '../middleware/requireAuth.js';
 import { Status, TradeRequestStatus } from '../db/generated/enums.js';
+import { queueScreening } from '../services/moderation.js';
 
 const tradeRequests = Router();
 
@@ -49,13 +50,40 @@ tradeRequests.post('/', requireAuth, async (req, res) => {
 
     const tradeRequest = await prisma.tradeRequest.upsert({
       where: { postId_requesterId: { postId, requesterId } },
-      create: { postId, requesterId, message: trimmedMessage },
+      create: {
+        postId,
+        requesterId,
+        message: trimmedMessage,
+        isPendingScreening: !!trimmedMessage,
+      },
       update: {
         status: TradeRequestStatus.PENDING,
         message: trimmedMessage,
         createdAt: new Date(),
+        isPendingScreening: !!trimmedMessage,
       },
     });
+
+    if (trimmedMessage) {
+      queueScreening({
+        targetType: 'TRADE_REQUEST',
+        targetId: tradeRequest.id,
+        authorId: requesterId,
+        text: trimmedMessage,
+        onApproved: async () => {
+          await prisma.tradeRequest.update({
+            where: { id: tradeRequest.id },
+            data: { isPendingScreening: false },
+          });
+        },
+        onRemoved: async () => {
+          await prisma.tradeRequest.update({
+            where: { id: tradeRequest.id },
+            data: { isPendingScreening: false, isRemoved: true },
+          });
+        },
+      });
+    }
 
     return res.status(201).json(tradeRequest);
   } catch (err) {
@@ -73,7 +101,7 @@ tradeRequests.get('/mine', requireAuth, async (req, res) => {
     const requesterId = (req.user as { id: number }).id;
 
     const myRequests = await prisma.tradeRequest.findMany({
-      where: { requesterId },
+      where: { requesterId, isRemoved: false },
       include: {
         post: {
           select: {
@@ -102,7 +130,7 @@ tradeRequests.get('/for-post/:postId', requireAuth, async (req, res) => {
     }
 
     const post = await prisma.post.findUnique({
-      where: { id: postId },
+      where: { id: postId, isRemoved: false },
       select: { id: true, userId: true },
     });
 
@@ -115,7 +143,7 @@ tradeRequests.get('/for-post/:postId', requireAuth, async (req, res) => {
     }
 
     const requestsForPost = await prisma.tradeRequest.findMany({
-      where: { postId },
+      where: { postId, isRemoved: false },
       include: {
         requester: { select: { id: true, name: true, email: true } },
       },
@@ -123,6 +151,62 @@ tradeRequests.get('/for-post/:postId', requireAuth, async (req, res) => {
     });
 
     return res.json(requestsForPost);
+  } catch (err) {
+    console.error(err);
+    return res.sendStatus(500);
+  }
+});
+
+// Trade requests received across ALL posts
+tradeRequests.get('/received', requireAuth, async (req, res) => {
+  try {
+    res.set('Cache-Control', 'no-store');
+
+    const ownerId = (req.user as { id: number }).id;
+
+    const openPosts = await prisma.post.findMany({
+      where: {
+        userId: ownerId,
+        status: Status.OPEN,
+        isRemoved: false,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    const openPostIds = openPosts.map((post) => post.id);
+
+    if (openPostIds.length === 0) {
+      return res.json([]);
+    }
+
+    const receivedRequests = await prisma.tradeRequest.findMany({
+      where: {
+        postId: {
+          in: openPostIds,
+        },
+        status: TradeRequestStatus.PENDING,
+        isRemoved: false,
+      },
+      include: {
+        requester: {
+          select: {
+            id: true, name: true, email: true,
+          },
+        },
+        post: {
+          select: {
+            id: true, title: true, status: true, userId: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    return res.json(receivedRequests);
   } catch (err) {
     console.error(err);
     return res.sendStatus(500);

@@ -7,6 +7,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import TextField from '@mui/material/TextField';
 import CircularProgress from '@mui/material/CircularProgress';
+import { radius } from '../../theme';
 import { useToast } from '../../context/ToastContext';
 
 export type TradeRequestStatusValue = 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'CANCELLED';
@@ -79,7 +80,7 @@ export default function RequestTradeButton({
 
   if (isPending) {
     return (
-      <Button size="small" variant="outlined" color="inherit" disabled={submitting} onClick={handleWithdraw} sx={{ borderRadius: 8, textTransform: 'none' }}>
+      <Button size="small" variant="outlined" color="inherit" disabled={submitting} onClick={handleWithdraw} sx={{ borderRadius: radius.md, textTransform: 'none' }}>
         {submitting ? 'Withdrawing...' : 'Withdraw Request'}
       </Button>
     );
@@ -87,7 +88,7 @@ export default function RequestTradeButton({
 
   return (
     <>
-      <Button variant="contained" onClick={() => setOpen(true)} sx={{ borderRadius: 8, textTransform: 'none' }}>
+      <Button variant="contained" onClick={() => setOpen(true)} sx={{ borderRadius: radius.md, textTransform: 'none' }}>
         Request to Trade
       </Button>
 

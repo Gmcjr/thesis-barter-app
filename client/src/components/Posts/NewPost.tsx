@@ -237,7 +237,7 @@ export default function CreatePostModal({
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
-      <DialogTitle sx={{ fontWeight: 'bold' }}>Create New Trade Post</DialogTitle>
+      <DialogTitle>Create New Trade Post</DialogTitle>
 
       <form onSubmit={handleSubmit}>
         <DialogContent dividers>

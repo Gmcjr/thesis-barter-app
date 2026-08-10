@@ -19,6 +19,7 @@ import BlockedUsers from './BlockedUsers/BlockedUsers';
 import NotFound from './NotFound/NotFound';
 import Messages from './DMs/Messages';
 import DmNotifications from './DMs/DmNotifications';
+import ScreeningNotifications from './DMs/ScreeningNotifications';
 
 const routes: RouteDef[] = [
   { path: '/', component: Posts },
@@ -36,8 +37,8 @@ const routes: RouteDef[] = [
 ];
 
 function AppShell() {
-  const { mode } = useSettings();
-  const theme = useMemo(() => getTheme(mode), [mode]);
+  const { mode, contrast } = useSettings();
+  const theme = useMemo(() => getTheme(mode, contrast), [mode, contrast]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -48,6 +49,7 @@ function AppShell() {
             <RouterProvider>
               <NavBar />
               <DmNotifications />
+              <ScreeningNotifications />
               <Box
                 component="main"
                 sx={{

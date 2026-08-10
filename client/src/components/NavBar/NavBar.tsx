@@ -20,7 +20,7 @@ function NavBar() {
   ];
 
   return (
-    <AppBar position="fixed" elevation={1} sx={{ bgcolor: 'background.paper', color: 'text.primary' }}>
+    <AppBar position="fixed" elevation={2} sx={{ bgcolor: 'background.paper', color: 'text.primary' }}>
       <Toolbar sx={{
         display: 'flex',
         justifyContent: 'space-between',
@@ -35,16 +35,15 @@ function NavBar() {
         {/* App Name (maybe logo later?) */}
         <Link to="/">
           <Typography
-            variant="h6"
+            variant="h3"
             color="primary.main"
             sx={{
               cursor: 'pointer',
-              fontWeight: 700,
-              fontSize: { xs: '1.1rem', sm: '1.25rem' },
+              fontSize: { xs: '1.4rem', sm: '1.75rem' },
               flexShrink: 0,
             }}
           >
-            BARTA
+            Barta
           </Typography>
         </Link>
 

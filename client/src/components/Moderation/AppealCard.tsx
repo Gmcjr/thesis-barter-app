@@ -8,6 +8,7 @@ import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import Chip from '@mui/material/Chip';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { radius } from '../../theme';
 import { appealTargetSnippet, humanizeReason, humanizeStatus } from './format';
 import type { AppealRow } from './types';
 
@@ -31,7 +32,7 @@ export default function AppealCard({
       sx={{
         border: '1px solid',
         borderColor: 'divider',
-        borderRadius: 2,
+        borderRadius: radius.md,
         '&:before': { display: 'none' },
       }}
     >

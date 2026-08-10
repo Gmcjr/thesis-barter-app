@@ -8,6 +8,7 @@ import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import Chip from '@mui/material/Chip';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { radius } from '../../theme';
 import { humanizeReason, reportSummary, targetSnippet } from './format';
 import type { ReportRow } from './types';
 
@@ -29,7 +30,7 @@ export default function ReportCard({
       sx={{
         border: '1px solid',
         borderColor: 'divider',
-        borderRadius: 2,
+        borderRadius: radius.md,
         '&:before': { display: 'none' },
       }}
     >

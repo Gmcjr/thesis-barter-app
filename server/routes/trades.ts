@@ -97,6 +97,11 @@ trades.get('/mine', requireAuth, async (req, res) => {
 // Get a trade by its id
 trades.get('/:id', requireAuth, async (req, res) => {
   const userId = (req.user as { id: number }).id;
+
+  if (Number.isNaN(Number(req.params.id))) {
+    return res.sendStatus(400);
+  }
+
   try {
     const trade = await prisma.trade.findUnique({
       where: {
@@ -138,6 +143,10 @@ trades.get('/:id', requireAuth, async (req, res) => {
 // One party marks trade to be completed. If second, update post status too
 trades.patch('/:id/complete', requireAuth, async (req, res) => {
   const userId = (req.user as { id: number }).id;
+
+  if (Number.isNaN(Number(req.params.id))) {
+    return res.sendStatus(400);
+  }
 
   try {
     const trade = await prisma.trade.findUnique({
@@ -203,6 +212,11 @@ trades.patch('/:id/complete', requireAuth, async (req, res) => {
 // cancel a trade
 trades.patch('/:id/cancel', requireAuth, async (req, res) => {
   const userId = (req.user as { id: number }).id;
+
+  if (Number.isNaN(Number(req.params.id))) {
+    return res.sendStatus(400);
+  }
+
   try {
     const trade = await prisma.trade.findUnique({
       where: {

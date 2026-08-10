@@ -56,7 +56,7 @@ export default function WhyRemovedMenu({ report }: { report: ReportInfo }) {
         <Box sx={{ px: 2, py: 1.5, width: 320 }}>
           {view === 'info' ? (
             <>
-              <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 0.5 }}>
+              <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
                 {report.reason.replace(/_/g, ' ')}
               </Typography>
               {report.aiRationale && (
@@ -83,7 +83,7 @@ export default function WhyRemovedMenu({ report }: { report: ReportInfo }) {
             </>
           ) : (
             <>
-              <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
+              <Typography variant="subtitle2" sx={{ mb: 1 }}>
                 Explain why this should be reinstated
               </Typography>
               <TextField

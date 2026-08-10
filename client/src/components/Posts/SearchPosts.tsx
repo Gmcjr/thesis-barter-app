@@ -42,7 +42,7 @@ export default function SearchPosts({
       <Button
         type="submit"
         variant="contained"
-        sx={{ textTransform: 'none', fontWeight: 'bold' }}
+        sx={{ textTransform: 'none' }}
       >
         Search
       </Button>

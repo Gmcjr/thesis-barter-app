@@ -39,7 +39,7 @@ export default function EditProfileModal({
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
-      <DialogTitle sx={{ fontWeight: 'bold' }}>Edit Profile</DialogTitle>
+      <DialogTitle>Edit Profile</DialogTitle>
       <DialogContent dividers>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
           <TextField
