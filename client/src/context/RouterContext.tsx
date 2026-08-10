@@ -47,21 +47,23 @@ export function useRouter() {
   return ctx;
 }
 
-interface LinkProps {
-  to: string;
-  children: ReactNode;
-  className?: string;
-  onClick?: () => void;
-}
+export interface LinkProps {
+    to: string;
+    children: ReactNode;
+    className?: string;
+    onClick?: () => void;
+    style?: React.CSSProperties;
+  }
 
 export function Link({
-  to, children, className, onClick,
+  to, children, className, onClick, style,
 }: LinkProps) {
   const { navigate } = useRouter();
   return (
     <a
       href={to}
       className={className}
+      style={style}
       onClick={(e) => {
         e.preventDefault();
         onClick?.();
