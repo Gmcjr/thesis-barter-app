@@ -3,6 +3,7 @@ import { prisma } from '../db/index.js';
 import requireAuth from '../middleware/requireAuth.js';
 import { Status, TradeRequestStatus } from '../db/generated/enums.js';
 import { queueScreening } from '../services/moderation.js';
+import { enqueueJob } from '../services/jobs.js';
 
 const tradeRequests = Router();
 
@@ -75,6 +76,16 @@ tradeRequests.post('/', requireAuth, async (req, res) => {
             where: { id: tradeRequest.id },
             data: { isPendingScreening: false },
           });
+          const preview = trimmedMessage.length > 80 ? `${trimmedMessage.slice(0, 80)}...` : trimmedMessage;
+          await enqueueJob(prisma, 'SEND_NOTIFICATION', {
+            userId: post.userId,
+            type: 'TRADE_REQUEST_RECEIVED',
+            title: 'New trade request on your post',
+            body: preview,
+            link: `/profile?postId=${postId}`,
+            entityType: 'TRADE_REQUEST',
+            entityId: tradeRequest.id,
+          });
         },
         onRemoved: async () => {
           await prisma.tradeRequest.update({
@@ -82,6 +93,15 @@ tradeRequests.post('/', requireAuth, async (req, res) => {
             data: { isPendingScreening: false, isRemoved: true },
           });
         },
+      });
+    } else {
+      await enqueueJob(prisma, 'SEND_NOTIFICATION', {
+        userId: post.userId,
+        type: 'TRADE_REQUEST_RECEIVED',
+        title: 'New trade request on your post',
+        link: `/profile?postId=${postId}`,
+        entityType: 'TRADE_REQUEST',
+        entityId: tradeRequest.id,
       });
     }
 
@@ -266,6 +286,15 @@ tradeRequests.patch('/:id/accept', requireAuth, async (req, res) => {
           postId: tradeRequest.postId,
           status: TradeRequestStatus.PENDING,
         },
+      });
+
+      await enqueueJob(tx, 'SEND_NOTIFICATION', {
+        userId: tradeRequest.requesterId,
+        type: 'TRADE_REQUEST_ACCEPTED',
+        title: 'Your trade request was accepted',
+        link: '/profile?mine=true',
+        entityType: 'TRADE_REQUEST',
+        entityId: tradeRequest.id,
       });
 
       return newTrade;

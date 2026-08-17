@@ -24,7 +24,7 @@ const getUserMediaUrls = async (
     const item = userMedia.find((m) => m.slot === slot);
     if (!item) return null;
     return getDownloadUrl(item.media.s3Key).catch((err) => {
-      console.error(`S3 error for user media slot ${slot}:`, err);
+      console.error(`S3 error for user media slot ${slot}: `, err);
       return null;
     });
   };

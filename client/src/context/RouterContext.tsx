@@ -29,7 +29,7 @@ export function RouterProvider({ children }: { children: ReactNode }) {
   const navigate = useCallback((to: string) => {
     if (to === window.location.pathname) return;
     window.history.pushState({}, '', to);
-    setPath(to);
+    setPath(to.split('?')[0]);
   }, []);
 
   const value = useMemo(() => ({ path, navigate }), [path, navigate]);
@@ -47,21 +47,23 @@ export function useRouter() {
   return ctx;
 }
 
-interface LinkProps {
-  to: string;
-  children: ReactNode;
-  className?: string;
-  onClick?: () => void;
-}
+export interface LinkProps {
+    to: string;
+    children: ReactNode;
+    className?: string;
+    onClick?: () => void;
+    style?: React.CSSProperties;
+  }
 
 export function Link({
-  to, children, className, onClick,
+  to, children, className, onClick, style,
 }: LinkProps) {
   const { navigate } = useRouter();
   return (
     <a
       href={to}
       className={className}
+      style={style}
       onClick={(e) => {
         e.preventDefault();
         onClick?.();

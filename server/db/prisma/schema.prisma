@@ -16,22 +16,23 @@ model User {
   id       Int     @id @default(autoincrement())
   googleId String? @unique
 
-  posts        Post[]
-  reqTrades    Trade[]      @relation("reqTrades")
-  ownedTrades  Trade[]      @relation("ownedTrades")
-  comments     Comment[]
-  logs         Log[]
-  products     Product[]
-  services     Service[]
-  initiatedDMs DM[]         @relation("initiatedDMs")
-  recievedDMs  DM[]         @relation("recievedDMs")
-  sMessages    Message[]    @relation("sMessages")
-  rMessages    Message[]    @relation("rMessages")
-  sReviews     Review[]     @relation("sReviews")
-  rReviews     Review[]     @relation("rReviews")
-  tradeOffers  TradeOffer[]
-  media        Media[]
-  userMedia    UserMedia[]
+  posts         Post[]
+  reqTrades     Trade[]        @relation("reqTrades")
+  ownedTrades   Trade[]        @relation("ownedTrades")
+  comments      Comment[]
+  logs          Log[]
+  products      Product[]
+  services      Service[]
+  initiatedDMs  DM[]           @relation("initiatedDMs")
+  recievedDMs   DM[]           @relation("recievedDMs")
+  sMessages     Message[]      @relation("sMessages")
+  rMessages     Message[]      @relation("rMessages")
+  sReviews      Review[]       @relation("sReviews")
+  rReviews      Review[]       @relation("rReviews")
+  tradeOffers   TradeOffer[]
+  media         Media[]
+  userMedia     UserMedia[]
+  notifications Notification[]
 
   name      String
   email     String   @unique
@@ -508,4 +509,62 @@ model UserMedia {
 enum UserMediaSlot {
   AVATAR
   BANNER
+}
+
+enum NotificationType {
+  DM_MESSAGE
+  TRADE_OFFER_RECEIVED
+  TRADE_OFFER_ACCEPTED
+  TRADE_REQUEST_RECEIVED
+  TRADE_REQUEST_ACCEPTED
+  TRADE_PARTNER_COMPLETED
+  TRADE_COMPLETED
+  REVIEW_RECEIVED
+  CONTENT_SCREENED
+  REPORT_RESOLVED
+  APPEAL_RESOLVED
+}
+
+model Notification {
+  id     Int              @id @default(autoincrement())
+  user   User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int
+  type   NotificationType
+  title  String
+  body   String?
+  link   String?
+
+  entityType String?
+  entityId   Int?
+
+  readAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId, readAt, createdAt])
+}
+
+enum JobType {
+  SEND_NOTIFICATION
+}
+
+enum JobStatus {
+  PENDING
+  PROCESSING
+  FAILED
+  COMPLETED
+}
+
+model Job {
+  id            Int       @id @default(autoincrement())
+  type          JobType
+  payload       Json
+  status        JobStatus @default(PENDING)
+  attempts      Int       @default(0)
+  maxAttempts   Int       @default(3)
+  nextAttemptAt DateTime  @default(now()) @db.Timestamptz
+  lastError     String?
+  createdAt     DateTime  @default(now()) @db.Timestamptz
+  updatedAt     DateTime  @updatedAt @db.Timestamptz
+
+  @@index([status, nextAttemptAt])
 }

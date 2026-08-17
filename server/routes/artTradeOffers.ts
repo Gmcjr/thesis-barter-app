@@ -7,6 +7,7 @@ import { getDownloadUrl } from '../services/s3.js';
 import { getBlockedRelationshipIds, isBlocked } from '../services/blocks.js';
 import { Status } from '../db/generated/enums.js';
 import { queueScreening } from '../services/moderation.js';
+import { enqueueJob } from '../services/jobs.js';
 
 const artTradeOffers = Router();
 
@@ -175,9 +176,21 @@ artTradeOffers.post('/', requireAuth, async (req, res) => {
       authorId: offererId,
       text: message ?? '',
       imageKeys: offer.tradeOfferMedia.map((m) => m.media.s3Key),
+
       onApproved: async () => {
         await prisma.tradeOffer.update({ where: { id: offer.id }, data: { isPendingScreening: false } });
+        const preview = message && message.length > 80 ? `${message.slice(0, 80)}...` : message;
+        await enqueueJob(prisma, 'SEND_NOTIFICATION', {
+          userId: post.userId,
+          type: 'TRADE_OFFER_RECEIVED',
+          title: 'New trade offer on your post',
+          body: preview || undefined,
+          link: `/profile?postId=${postId}`,
+          entityType: 'TRADE_OFFER',
+          entityId: offer.id,
+        });
       },
+
       onRemoved: async () => {
         await prisma.tradeOffer.update({
           where: { id: offer.id },
@@ -271,6 +284,25 @@ artTradeOffers.patch('/:offerId/approve', requireAuth, async (req, res) => {
             id: { not: offerId },
           },
         });
+
+        await enqueueJob(tx, 'SEND_NOTIFICATION', {
+          userId: offer.post.userId,
+          type: 'TRADE_OFFER_ACCEPTED',
+          title: 'Trade completed',
+          body: 'Your trade offer was fully approved and marked complete.',
+          link: '/profile?mine=true',
+          entityType: 'TRADE_OFFER',
+          entityId: offerId,
+        });
+        await enqueueJob(tx, 'SEND_NOTIFICATION', {
+          userId: offer.offererId,
+          type: 'TRADE_OFFER_ACCEPTED',
+          title: 'Trade completed',
+          body: 'Your trade offer was fully approved and marked complete.',
+          link: '/profile?mine=true',
+          entityType: 'TRADE_OFFER',
+          entityId: offerId,
+        });
       }
 
       return updated;
@@ -356,6 +388,16 @@ artTradeOffers.patch('/:offerId/accept', requireAuth, async (req, res) => {
           postId: offer.postId,
           id: { not: offerId },
         },
+      });
+
+      await enqueueJob(tx, 'SEND_NOTIFICATION', {
+        userId: offer.offererId,
+        type: 'TRADE_OFFER_ACCEPTED',
+        title: 'Your trade offer was accepted',
+        body: 'The post owner accepted your offer and marked the trade complete.',
+        link: '/profile?mine=true',
+        entityType: 'TRADE_OFFER',
+        entityId: offerId,
       });
     });
 

@@ -288,6 +288,7 @@ export type UserWhereInput = {
   tradeOffers?: Prisma.TradeOfferListRelationFilter
   media?: Prisma.MediaListRelationFilter
   userMedia?: Prisma.UserMediaListRelationFilter
+  notifications?: Prisma.NotificationListRelationFilter
   reportsFiled?: Prisma.ReportListRelationFilter
   reportsAgainst?: Prisma.ReportListRelationFilter
   reportsResolved?: Prisma.ReportListRelationFilter
@@ -327,6 +328,7 @@ export type UserOrderByWithRelationInput = {
   tradeOffers?: Prisma.TradeOfferOrderByRelationAggregateInput
   media?: Prisma.MediaOrderByRelationAggregateInput
   userMedia?: Prisma.UserMediaOrderByRelationAggregateInput
+  notifications?: Prisma.NotificationOrderByRelationAggregateInput
   reportsFiled?: Prisma.ReportOrderByRelationAggregateInput
   reportsAgainst?: Prisma.ReportOrderByRelationAggregateInput
   reportsResolved?: Prisma.ReportOrderByRelationAggregateInput
@@ -369,6 +371,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   tradeOffers?: Prisma.TradeOfferListRelationFilter
   media?: Prisma.MediaListRelationFilter
   userMedia?: Prisma.UserMediaListRelationFilter
+  notifications?: Prisma.NotificationListRelationFilter
   reportsFiled?: Prisma.ReportListRelationFilter
   reportsAgainst?: Prisma.ReportListRelationFilter
   reportsResolved?: Prisma.ReportListRelationFilter
@@ -445,6 +448,7 @@ export type UserCreateInput = {
   tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
   media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
   userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportCreateNestedManyWithoutResolverInput
@@ -484,6 +488,7 @@ export type UserUncheckedCreateInput = {
   tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
   media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
   userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportUncheckedCreateNestedManyWithoutResolverInput
@@ -522,6 +527,7 @@ export type UserUpdateInput = {
   tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
   media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
   userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUpdateManyWithoutResolverNestedInput
@@ -561,6 +567,7 @@ export type UserUncheckedUpdateInput = {
   tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
   media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
   userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUncheckedUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUncheckedUpdateManyWithoutResolverNestedInput
@@ -1048,6 +1055,20 @@ export type UserUpdateOneRequiredWithoutUserMediaNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutUserMediaInput, Prisma.UserUpdateWithoutUserMediaInput>, Prisma.UserUncheckedUpdateWithoutUserMediaInput>
 }
 
+export type UserCreateNestedOneWithoutNotificationsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutNotificationsInput, Prisma.UserUncheckedCreateWithoutNotificationsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutNotificationsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutNotificationsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutNotificationsInput, Prisma.UserUncheckedCreateWithoutNotificationsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutNotificationsInput
+  upsert?: Prisma.UserUpsertWithoutNotificationsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutNotificationsInput, Prisma.UserUpdateWithoutNotificationsInput>, Prisma.UserUncheckedUpdateWithoutNotificationsInput>
+}
+
 export type UserCreateWithoutInitiatedDMsInput = {
   googleId?: string | null
   name: string
@@ -1075,6 +1096,7 @@ export type UserCreateWithoutInitiatedDMsInput = {
   tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
   media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
   userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportCreateNestedManyWithoutResolverInput
@@ -1113,6 +1135,7 @@ export type UserUncheckedCreateWithoutInitiatedDMsInput = {
   tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
   media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
   userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportUncheckedCreateNestedManyWithoutResolverInput
@@ -1155,6 +1178,7 @@ export type UserCreateWithoutRecievedDMsInput = {
   tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
   media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
   userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportCreateNestedManyWithoutResolverInput
@@ -1193,6 +1217,7 @@ export type UserUncheckedCreateWithoutRecievedDMsInput = {
   tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
   media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
   userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportUncheckedCreateNestedManyWithoutResolverInput
@@ -1246,6 +1271,7 @@ export type UserUpdateWithoutInitiatedDMsInput = {
   tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
   media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
   userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUpdateManyWithoutResolverNestedInput
@@ -1284,6 +1310,7 @@ export type UserUncheckedUpdateWithoutInitiatedDMsInput = {
   tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
   media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
   userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUncheckedUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUncheckedUpdateManyWithoutResolverNestedInput
@@ -1332,6 +1359,7 @@ export type UserUpdateWithoutRecievedDMsInput = {
   tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
   media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
   userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUpdateManyWithoutResolverNestedInput
@@ -1370,6 +1398,7 @@ export type UserUncheckedUpdateWithoutRecievedDMsInput = {
   tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
   media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
   userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUncheckedUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUncheckedUpdateManyWithoutResolverNestedInput
@@ -1407,6 +1436,7 @@ export type UserCreateWithoutSMessagesInput = {
   tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
   media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
   userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportCreateNestedManyWithoutResolverInput
@@ -1445,6 +1475,7 @@ export type UserUncheckedCreateWithoutSMessagesInput = {
   tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
   media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
   userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportUncheckedCreateNestedManyWithoutResolverInput
@@ -1487,6 +1518,7 @@ export type UserCreateWithoutRMessagesInput = {
   tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
   media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
   userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportCreateNestedManyWithoutResolverInput
@@ -1525,6 +1557,7 @@ export type UserUncheckedCreateWithoutRMessagesInput = {
   tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
   media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
   userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportUncheckedCreateNestedManyWithoutResolverInput
@@ -1578,6 +1611,7 @@ export type UserUpdateWithoutSMessagesInput = {
   tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
   media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
   userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUpdateManyWithoutResolverNestedInput
@@ -1616,6 +1650,7 @@ export type UserUncheckedUpdateWithoutSMessagesInput = {
   tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
   media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
   userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUncheckedUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUncheckedUpdateManyWithoutResolverNestedInput
@@ -1664,6 +1699,7 @@ export type UserUpdateWithoutRMessagesInput = {
   tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
   media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
   userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUpdateManyWithoutResolverNestedInput
@@ -1702,6 +1738,7 @@ export type UserUncheckedUpdateWithoutRMessagesInput = {
   tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
   media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
   userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUncheckedUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUncheckedUpdateManyWithoutResolverNestedInput
@@ -1739,6 +1776,7 @@ export type UserCreateWithoutLogsInput = {
   tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
   media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
   userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportCreateNestedManyWithoutResolverInput
@@ -1777,6 +1815,7 @@ export type UserUncheckedCreateWithoutLogsInput = {
   tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
   media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
   userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportUncheckedCreateNestedManyWithoutResolverInput
@@ -1830,6 +1869,7 @@ export type UserUpdateWithoutLogsInput = {
   tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
   media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
   userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUpdateManyWithoutResolverNestedInput
@@ -1868,6 +1908,7 @@ export type UserUncheckedUpdateWithoutLogsInput = {
   tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
   media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
   userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUncheckedUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUncheckedUpdateManyWithoutResolverNestedInput
@@ -1905,6 +1946,7 @@ export type UserCreateWithoutPostsInput = {
   tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
   media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
   userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportCreateNestedManyWithoutResolverInput
@@ -1943,6 +1985,7 @@ export type UserUncheckedCreateWithoutPostsInput = {
   tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
   media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
   userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportUncheckedCreateNestedManyWithoutResolverInput
@@ -1996,6 +2039,7 @@ export type UserUpdateWithoutPostsInput = {
   tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
   media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
   userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUpdateManyWithoutResolverNestedInput
@@ -2034,6 +2078,7 @@ export type UserUncheckedUpdateWithoutPostsInput = {
   tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
   media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
   userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUncheckedUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUncheckedUpdateManyWithoutResolverNestedInput
@@ -2071,6 +2116,7 @@ export type UserCreateWithoutOwnedTradesInput = {
   tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
   media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
   userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportCreateNestedManyWithoutResolverInput
@@ -2109,6 +2155,7 @@ export type UserUncheckedCreateWithoutOwnedTradesInput = {
   tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
   media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
   userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportUncheckedCreateNestedManyWithoutResolverInput
@@ -2151,6 +2198,7 @@ export type UserCreateWithoutReqTradesInput = {
   tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
   media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
   userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportCreateNestedManyWithoutResolverInput
@@ -2189,6 +2237,7 @@ export type UserUncheckedCreateWithoutReqTradesInput = {
   tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
   media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
   userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportUncheckedCreateNestedManyWithoutResolverInput
@@ -2242,6 +2291,7 @@ export type UserUpdateWithoutOwnedTradesInput = {
   tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
   media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
   userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUpdateManyWithoutResolverNestedInput
@@ -2280,6 +2330,7 @@ export type UserUncheckedUpdateWithoutOwnedTradesInput = {
   tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
   media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
   userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUncheckedUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUncheckedUpdateManyWithoutResolverNestedInput
@@ -2328,6 +2379,7 @@ export type UserUpdateWithoutReqTradesInput = {
   tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
   media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
   userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUpdateManyWithoutResolverNestedInput
@@ -2366,6 +2418,7 @@ export type UserUncheckedUpdateWithoutReqTradesInput = {
   tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
   media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
   userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUncheckedUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUncheckedUpdateManyWithoutResolverNestedInput
@@ -2403,6 +2456,7 @@ export type UserCreateWithoutTradeOffersInput = {
   rReviews?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
   media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
   userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportCreateNestedManyWithoutResolverInput
@@ -2441,6 +2495,7 @@ export type UserUncheckedCreateWithoutTradeOffersInput = {
   rReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
   media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
   userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportUncheckedCreateNestedManyWithoutResolverInput
@@ -2494,6 +2549,7 @@ export type UserUpdateWithoutTradeOffersInput = {
   rReviews?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
   media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
   userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUpdateManyWithoutResolverNestedInput
@@ -2532,6 +2588,7 @@ export type UserUncheckedUpdateWithoutTradeOffersInput = {
   rReviews?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
   media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
   userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUncheckedUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUncheckedUpdateManyWithoutResolverNestedInput
@@ -2570,6 +2627,7 @@ export type UserCreateWithoutTradeRequestsInput = {
   tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
   media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
   userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportCreateNestedManyWithoutResolverInput
@@ -2608,6 +2666,7 @@ export type UserUncheckedCreateWithoutTradeRequestsInput = {
   tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
   media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
   userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportUncheckedCreateNestedManyWithoutResolverInput
@@ -2661,6 +2720,7 @@ export type UserUpdateWithoutTradeRequestsInput = {
   tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
   media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
   userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUpdateManyWithoutResolverNestedInput
@@ -2699,6 +2759,7 @@ export type UserUncheckedUpdateWithoutTradeRequestsInput = {
   tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
   media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
   userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUncheckedUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUncheckedUpdateManyWithoutResolverNestedInput
@@ -2735,6 +2796,7 @@ export type UserCreateWithoutCommentsInput = {
   tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
   media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
   userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportCreateNestedManyWithoutResolverInput
@@ -2773,6 +2835,7 @@ export type UserUncheckedCreateWithoutCommentsInput = {
   tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
   media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
   userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportUncheckedCreateNestedManyWithoutResolverInput
@@ -2826,6 +2889,7 @@ export type UserUpdateWithoutCommentsInput = {
   tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
   media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
   userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUpdateManyWithoutResolverNestedInput
@@ -2864,6 +2928,7 @@ export type UserUncheckedUpdateWithoutCommentsInput = {
   tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
   media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
   userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUncheckedUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUncheckedUpdateManyWithoutResolverNestedInput
@@ -2901,6 +2966,7 @@ export type UserCreateWithoutProductsInput = {
   tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
   media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
   userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportCreateNestedManyWithoutResolverInput
@@ -2939,6 +3005,7 @@ export type UserUncheckedCreateWithoutProductsInput = {
   tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
   media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
   userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportUncheckedCreateNestedManyWithoutResolverInput
@@ -2992,6 +3059,7 @@ export type UserUpdateWithoutProductsInput = {
   tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
   media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
   userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUpdateManyWithoutResolverNestedInput
@@ -3030,6 +3098,7 @@ export type UserUncheckedUpdateWithoutProductsInput = {
   tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
   media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
   userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUncheckedUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUncheckedUpdateManyWithoutResolverNestedInput
@@ -3067,6 +3136,7 @@ export type UserCreateWithoutServicesInput = {
   tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
   media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
   userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportCreateNestedManyWithoutResolverInput
@@ -3105,6 +3175,7 @@ export type UserUncheckedCreateWithoutServicesInput = {
   tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
   media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
   userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportUncheckedCreateNestedManyWithoutResolverInput
@@ -3158,6 +3229,7 @@ export type UserUpdateWithoutServicesInput = {
   tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
   media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
   userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUpdateManyWithoutResolverNestedInput
@@ -3196,6 +3268,7 @@ export type UserUncheckedUpdateWithoutServicesInput = {
   tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
   media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
   userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUncheckedUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUncheckedUpdateManyWithoutResolverNestedInput
@@ -3233,6 +3306,7 @@ export type UserCreateWithoutSReviewsInput = {
   tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
   media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
   userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportCreateNestedManyWithoutResolverInput
@@ -3271,6 +3345,7 @@ export type UserUncheckedCreateWithoutSReviewsInput = {
   tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
   media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
   userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportUncheckedCreateNestedManyWithoutResolverInput
@@ -3313,6 +3388,7 @@ export type UserCreateWithoutRReviewsInput = {
   tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
   media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
   userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportCreateNestedManyWithoutResolverInput
@@ -3351,6 +3427,7 @@ export type UserUncheckedCreateWithoutRReviewsInput = {
   tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
   media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
   userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportUncheckedCreateNestedManyWithoutResolverInput
@@ -3404,6 +3481,7 @@ export type UserUpdateWithoutSReviewsInput = {
   tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
   media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
   userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUpdateManyWithoutResolverNestedInput
@@ -3442,6 +3520,7 @@ export type UserUncheckedUpdateWithoutSReviewsInput = {
   tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
   media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
   userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUncheckedUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUncheckedUpdateManyWithoutResolverNestedInput
@@ -3490,6 +3569,7 @@ export type UserUpdateWithoutRReviewsInput = {
   tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
   media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
   userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUpdateManyWithoutResolverNestedInput
@@ -3528,6 +3608,7 @@ export type UserUncheckedUpdateWithoutRReviewsInput = {
   tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
   media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
   userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUncheckedUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUncheckedUpdateManyWithoutResolverNestedInput
@@ -3566,6 +3647,7 @@ export type UserCreateWithoutBlocksInitiatedInput = {
   tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
   media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
   userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportCreateNestedManyWithoutResolverInput
@@ -3604,6 +3686,7 @@ export type UserUncheckedCreateWithoutBlocksInitiatedInput = {
   tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
   media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
   userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportUncheckedCreateNestedManyWithoutResolverInput
@@ -3646,6 +3729,7 @@ export type UserCreateWithoutBlocksReceivedInput = {
   tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
   media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
   userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportCreateNestedManyWithoutResolverInput
@@ -3684,6 +3768,7 @@ export type UserUncheckedCreateWithoutBlocksReceivedInput = {
   tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
   media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
   userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportUncheckedCreateNestedManyWithoutResolverInput
@@ -3737,6 +3822,7 @@ export type UserUpdateWithoutBlocksInitiatedInput = {
   tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
   media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
   userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUpdateManyWithoutResolverNestedInput
@@ -3775,6 +3861,7 @@ export type UserUncheckedUpdateWithoutBlocksInitiatedInput = {
   tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
   media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
   userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUncheckedUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUncheckedUpdateManyWithoutResolverNestedInput
@@ -3823,6 +3910,7 @@ export type UserUpdateWithoutBlocksReceivedInput = {
   tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
   media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
   userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUpdateManyWithoutResolverNestedInput
@@ -3861,6 +3949,7 @@ export type UserUncheckedUpdateWithoutBlocksReceivedInput = {
   tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
   media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
   userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUncheckedUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUncheckedUpdateManyWithoutResolverNestedInput
@@ -3898,6 +3987,7 @@ export type UserCreateWithoutReportsFiledInput = {
   tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
   media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
   userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   reportsAgainst?: Prisma.ReportCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportCreateNestedManyWithoutResolverInput
   appealsFiled?: Prisma.AppealCreateNestedManyWithoutAppellantInput
@@ -3936,6 +4026,7 @@ export type UserUncheckedCreateWithoutReportsFiledInput = {
   tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
   media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
   userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   reportsAgainst?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportUncheckedCreateNestedManyWithoutResolverInput
   appealsFiled?: Prisma.AppealUncheckedCreateNestedManyWithoutAppellantInput
@@ -3978,6 +4069,7 @@ export type UserCreateWithoutReportsAgainstInput = {
   tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
   media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
   userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportCreateNestedManyWithoutReporterInput
   reportsResolved?: Prisma.ReportCreateNestedManyWithoutResolverInput
   appealsFiled?: Prisma.AppealCreateNestedManyWithoutAppellantInput
@@ -4016,6 +4108,7 @@ export type UserUncheckedCreateWithoutReportsAgainstInput = {
   tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
   media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
   userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
   reportsResolved?: Prisma.ReportUncheckedCreateNestedManyWithoutResolverInput
   appealsFiled?: Prisma.AppealUncheckedCreateNestedManyWithoutAppellantInput
@@ -4058,6 +4151,7 @@ export type UserCreateWithoutReportsResolvedInput = {
   tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
   media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
   userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportCreateNestedManyWithoutTargetUserInput
   appealsFiled?: Prisma.AppealCreateNestedManyWithoutAppellantInput
@@ -4096,6 +4190,7 @@ export type UserUncheckedCreateWithoutReportsResolvedInput = {
   tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
   media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
   userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetUserInput
   appealsFiled?: Prisma.AppealUncheckedCreateNestedManyWithoutAppellantInput
@@ -4149,6 +4244,7 @@ export type UserUpdateWithoutReportsFiledInput = {
   tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
   media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
   userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   reportsAgainst?: Prisma.ReportUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUpdateManyWithoutResolverNestedInput
   appealsFiled?: Prisma.AppealUpdateManyWithoutAppellantNestedInput
@@ -4187,6 +4283,7 @@ export type UserUncheckedUpdateWithoutReportsFiledInput = {
   tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
   media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
   userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   reportsAgainst?: Prisma.ReportUncheckedUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUncheckedUpdateManyWithoutResolverNestedInput
   appealsFiled?: Prisma.AppealUncheckedUpdateManyWithoutAppellantNestedInput
@@ -4235,6 +4332,7 @@ export type UserUpdateWithoutReportsAgainstInput = {
   tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
   media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
   userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUpdateManyWithoutReporterNestedInput
   reportsResolved?: Prisma.ReportUpdateManyWithoutResolverNestedInput
   appealsFiled?: Prisma.AppealUpdateManyWithoutAppellantNestedInput
@@ -4273,6 +4371,7 @@ export type UserUncheckedUpdateWithoutReportsAgainstInput = {
   tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
   media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
   userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
   reportsResolved?: Prisma.ReportUncheckedUpdateManyWithoutResolverNestedInput
   appealsFiled?: Prisma.AppealUncheckedUpdateManyWithoutAppellantNestedInput
@@ -4321,6 +4420,7 @@ export type UserUpdateWithoutReportsResolvedInput = {
   tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
   media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
   userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUpdateManyWithoutTargetUserNestedInput
   appealsFiled?: Prisma.AppealUpdateManyWithoutAppellantNestedInput
@@ -4359,6 +4459,7 @@ export type UserUncheckedUpdateWithoutReportsResolvedInput = {
   tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
   media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
   userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUncheckedUpdateManyWithoutTargetUserNestedInput
   appealsFiled?: Prisma.AppealUncheckedUpdateManyWithoutAppellantNestedInput
@@ -4396,6 +4497,7 @@ export type UserCreateWithoutAppealsFiledInput = {
   tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
   media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
   userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportCreateNestedManyWithoutResolverInput
@@ -4434,6 +4536,7 @@ export type UserUncheckedCreateWithoutAppealsFiledInput = {
   tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
   media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
   userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportUncheckedCreateNestedManyWithoutResolverInput
@@ -4476,6 +4579,7 @@ export type UserCreateWithoutAppealsResolvedInput = {
   tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
   media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
   userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportCreateNestedManyWithoutResolverInput
@@ -4514,6 +4618,7 @@ export type UserUncheckedCreateWithoutAppealsResolvedInput = {
   tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
   media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
   userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportUncheckedCreateNestedManyWithoutResolverInput
@@ -4567,6 +4672,7 @@ export type UserUpdateWithoutAppealsFiledInput = {
   tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
   media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
   userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUpdateManyWithoutResolverNestedInput
@@ -4605,6 +4711,7 @@ export type UserUncheckedUpdateWithoutAppealsFiledInput = {
   tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
   media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
   userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUncheckedUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUncheckedUpdateManyWithoutResolverNestedInput
@@ -4653,6 +4760,7 @@ export type UserUpdateWithoutAppealsResolvedInput = {
   tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
   media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
   userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUpdateManyWithoutResolverNestedInput
@@ -4691,6 +4799,7 @@ export type UserUncheckedUpdateWithoutAppealsResolvedInput = {
   tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
   media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
   userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUncheckedUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUncheckedUpdateManyWithoutResolverNestedInput
@@ -4727,6 +4836,7 @@ export type UserCreateWithoutMediaInput = {
   rReviews?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
   tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
   userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportCreateNestedManyWithoutResolverInput
@@ -4765,6 +4875,7 @@ export type UserUncheckedCreateWithoutMediaInput = {
   rReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
   tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
   userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportUncheckedCreateNestedManyWithoutResolverInput
@@ -4818,6 +4929,7 @@ export type UserUpdateWithoutMediaInput = {
   rReviews?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
   tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
   userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUpdateManyWithoutResolverNestedInput
@@ -4856,6 +4968,7 @@ export type UserUncheckedUpdateWithoutMediaInput = {
   rReviews?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
   tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
   userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUncheckedUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUncheckedUpdateManyWithoutResolverNestedInput
@@ -4893,6 +5006,7 @@ export type UserCreateWithoutUserMediaInput = {
   rReviews?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
   tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
   media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportCreateNestedManyWithoutResolverInput
@@ -4931,6 +5045,7 @@ export type UserUncheckedCreateWithoutUserMediaInput = {
   rReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
   tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
   media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   reportsFiled?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
   reportsAgainst?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetUserInput
   reportsResolved?: Prisma.ReportUncheckedCreateNestedManyWithoutResolverInput
@@ -4984,6 +5099,7 @@ export type UserUpdateWithoutUserMediaInput = {
   rReviews?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
   tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
   media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUpdateManyWithoutResolverNestedInput
@@ -5022,6 +5138,177 @@ export type UserUncheckedUpdateWithoutUserMediaInput = {
   rReviews?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
   tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
   media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  reportsFiled?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
+  reportsAgainst?: Prisma.ReportUncheckedUpdateManyWithoutTargetUserNestedInput
+  reportsResolved?: Prisma.ReportUncheckedUpdateManyWithoutResolverNestedInput
+  appealsFiled?: Prisma.AppealUncheckedUpdateManyWithoutAppellantNestedInput
+  appealsResolved?: Prisma.AppealUncheckedUpdateManyWithoutResolverNestedInput
+  blocksInitiated?: Prisma.BlockUncheckedUpdateManyWithoutBlockerNestedInput
+  blocksReceived?: Prisma.BlockUncheckedUpdateManyWithoutBlockedNestedInput
+  tradeRequests?: Prisma.TradeRequestUncheckedUpdateManyWithoutRequesterNestedInput
+}
+
+export type UserCreateWithoutNotificationsInput = {
+  googleId?: string | null
+  name: string
+  email: string
+  phone?: string | null
+  role?: $Enums.Role | null
+  bio?: string | null
+  createdAt?: Date | string
+  zipCode?: string | null
+  isSystem?: boolean
+  pendingBio?: string | null
+  isPendingScreening?: boolean
+  posts?: Prisma.PostCreateNestedManyWithoutUserInput
+  reqTrades?: Prisma.TradeCreateNestedManyWithoutRequesterInput
+  ownedTrades?: Prisma.TradeCreateNestedManyWithoutOwnerInput
+  comments?: Prisma.CommentCreateNestedManyWithoutUserInput
+  logs?: Prisma.LogCreateNestedManyWithoutUserInput
+  products?: Prisma.ProductCreateNestedManyWithoutUserInput
+  services?: Prisma.ServiceCreateNestedManyWithoutUserInput
+  initiatedDMs?: Prisma.DMCreateNestedManyWithoutUser1Input
+  recievedDMs?: Prisma.DMCreateNestedManyWithoutUser2Input
+  sMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  rMessages?: Prisma.MessageCreateNestedManyWithoutRecieverInput
+  sReviews?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
+  rReviews?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
+  tradeOffers?: Prisma.TradeOfferCreateNestedManyWithoutOffererInput
+  media?: Prisma.MediaCreateNestedManyWithoutUploaderInput
+  userMedia?: Prisma.UserMediaCreateNestedManyWithoutUserInput
+  reportsFiled?: Prisma.ReportCreateNestedManyWithoutReporterInput
+  reportsAgainst?: Prisma.ReportCreateNestedManyWithoutTargetUserInput
+  reportsResolved?: Prisma.ReportCreateNestedManyWithoutResolverInput
+  appealsFiled?: Prisma.AppealCreateNestedManyWithoutAppellantInput
+  appealsResolved?: Prisma.AppealCreateNestedManyWithoutResolverInput
+  blocksInitiated?: Prisma.BlockCreateNestedManyWithoutBlockerInput
+  blocksReceived?: Prisma.BlockCreateNestedManyWithoutBlockedInput
+  tradeRequests?: Prisma.TradeRequestCreateNestedManyWithoutRequesterInput
+}
+
+export type UserUncheckedCreateWithoutNotificationsInput = {
+  id?: number
+  googleId?: string | null
+  name: string
+  email: string
+  phone?: string | null
+  role?: $Enums.Role | null
+  bio?: string | null
+  createdAt?: Date | string
+  zipCode?: string | null
+  isSystem?: boolean
+  pendingBio?: string | null
+  isPendingScreening?: boolean
+  posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
+  reqTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutRequesterInput
+  ownedTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutOwnerInput
+  comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
+  logs?: Prisma.LogUncheckedCreateNestedManyWithoutUserInput
+  products?: Prisma.ProductUncheckedCreateNestedManyWithoutUserInput
+  services?: Prisma.ServiceUncheckedCreateNestedManyWithoutUserInput
+  initiatedDMs?: Prisma.DMUncheckedCreateNestedManyWithoutUser1Input
+  recievedDMs?: Prisma.DMUncheckedCreateNestedManyWithoutUser2Input
+  sMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  rMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutRecieverInput
+  sReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
+  rReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
+  tradeOffers?: Prisma.TradeOfferUncheckedCreateNestedManyWithoutOffererInput
+  media?: Prisma.MediaUncheckedCreateNestedManyWithoutUploaderInput
+  userMedia?: Prisma.UserMediaUncheckedCreateNestedManyWithoutUserInput
+  reportsFiled?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
+  reportsAgainst?: Prisma.ReportUncheckedCreateNestedManyWithoutTargetUserInput
+  reportsResolved?: Prisma.ReportUncheckedCreateNestedManyWithoutResolverInput
+  appealsFiled?: Prisma.AppealUncheckedCreateNestedManyWithoutAppellantInput
+  appealsResolved?: Prisma.AppealUncheckedCreateNestedManyWithoutResolverInput
+  blocksInitiated?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockerInput
+  blocksReceived?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockedInput
+  tradeRequests?: Prisma.TradeRequestUncheckedCreateNestedManyWithoutRequesterInput
+}
+
+export type UserCreateOrConnectWithoutNotificationsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutNotificationsInput, Prisma.UserUncheckedCreateWithoutNotificationsInput>
+}
+
+export type UserUpsertWithoutNotificationsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutNotificationsInput, Prisma.UserUncheckedUpdateWithoutNotificationsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutNotificationsInput, Prisma.UserUncheckedCreateWithoutNotificationsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutNotificationsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutNotificationsInput, Prisma.UserUncheckedUpdateWithoutNotificationsInput>
+}
+
+export type UserUpdateWithoutNotificationsInput = {
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.NullableEnumRoleFieldUpdateOperationsInput | $Enums.Role | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  posts?: Prisma.PostUpdateManyWithoutUserNestedInput
+  reqTrades?: Prisma.TradeUpdateManyWithoutRequesterNestedInput
+  ownedTrades?: Prisma.TradeUpdateManyWithoutOwnerNestedInput
+  comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
+  logs?: Prisma.LogUpdateManyWithoutUserNestedInput
+  products?: Prisma.ProductUpdateManyWithoutUserNestedInput
+  services?: Prisma.ServiceUpdateManyWithoutUserNestedInput
+  initiatedDMs?: Prisma.DMUpdateManyWithoutUser1NestedInput
+  recievedDMs?: Prisma.DMUpdateManyWithoutUser2NestedInput
+  sMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  rMessages?: Prisma.MessageUpdateManyWithoutRecieverNestedInput
+  sReviews?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
+  rReviews?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
+  tradeOffers?: Prisma.TradeOfferUpdateManyWithoutOffererNestedInput
+  media?: Prisma.MediaUpdateManyWithoutUploaderNestedInput
+  userMedia?: Prisma.UserMediaUpdateManyWithoutUserNestedInput
+  reportsFiled?: Prisma.ReportUpdateManyWithoutReporterNestedInput
+  reportsAgainst?: Prisma.ReportUpdateManyWithoutTargetUserNestedInput
+  reportsResolved?: Prisma.ReportUpdateManyWithoutResolverNestedInput
+  appealsFiled?: Prisma.AppealUpdateManyWithoutAppellantNestedInput
+  appealsResolved?: Prisma.AppealUpdateManyWithoutResolverNestedInput
+  blocksInitiated?: Prisma.BlockUpdateManyWithoutBlockerNestedInput
+  blocksReceived?: Prisma.BlockUpdateManyWithoutBlockedNestedInput
+  tradeRequests?: Prisma.TradeRequestUpdateManyWithoutRequesterNestedInput
+}
+
+export type UserUncheckedUpdateWithoutNotificationsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.NullableEnumRoleFieldUpdateOperationsInput | $Enums.Role | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
+  reqTrades?: Prisma.TradeUncheckedUpdateManyWithoutRequesterNestedInput
+  ownedTrades?: Prisma.TradeUncheckedUpdateManyWithoutOwnerNestedInput
+  comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
+  logs?: Prisma.LogUncheckedUpdateManyWithoutUserNestedInput
+  products?: Prisma.ProductUncheckedUpdateManyWithoutUserNestedInput
+  services?: Prisma.ServiceUncheckedUpdateManyWithoutUserNestedInput
+  initiatedDMs?: Prisma.DMUncheckedUpdateManyWithoutUser1NestedInput
+  recievedDMs?: Prisma.DMUncheckedUpdateManyWithoutUser2NestedInput
+  sMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  rMessages?: Prisma.MessageUncheckedUpdateManyWithoutRecieverNestedInput
+  sReviews?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+  rReviews?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
+  tradeOffers?: Prisma.TradeOfferUncheckedUpdateManyWithoutOffererNestedInput
+  media?: Prisma.MediaUncheckedUpdateManyWithoutUploaderNestedInput
+  userMedia?: Prisma.UserMediaUncheckedUpdateManyWithoutUserNestedInput
   reportsFiled?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
   reportsAgainst?: Prisma.ReportUncheckedUpdateManyWithoutTargetUserNestedInput
   reportsResolved?: Prisma.ReportUncheckedUpdateManyWithoutResolverNestedInput
@@ -5054,6 +5341,7 @@ export type UserCountOutputType = {
   tradeOffers: number
   media: number
   userMedia: number
+  notifications: number
   reportsFiled: number
   reportsAgainst: number
   reportsResolved: number
@@ -5081,6 +5369,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   tradeOffers?: boolean | UserCountOutputTypeCountTradeOffersArgs
   media?: boolean | UserCountOutputTypeCountMediaArgs
   userMedia?: boolean | UserCountOutputTypeCountUserMediaArgs
+  notifications?: boolean | UserCountOutputTypeCountNotificationsArgs
   reportsFiled?: boolean | UserCountOutputTypeCountReportsFiledArgs
   reportsAgainst?: boolean | UserCountOutputTypeCountReportsAgainstArgs
   reportsResolved?: boolean | UserCountOutputTypeCountReportsResolvedArgs
@@ -5216,6 +5505,13 @@ export type UserCountOutputTypeCountUserMediaArgs<ExtArgs extends runtime.Types.
 /**
  * UserCountOutputType without action
  */
+export type UserCountOutputTypeCountNotificationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.NotificationWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
 export type UserCountOutputTypeCountReportsFiledArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.ReportWhereInput
 }
@@ -5299,6 +5595,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   tradeOffers?: boolean | Prisma.User$tradeOffersArgs<ExtArgs>
   media?: boolean | Prisma.User$mediaArgs<ExtArgs>
   userMedia?: boolean | Prisma.User$userMediaArgs<ExtArgs>
+  notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
   reportsFiled?: boolean | Prisma.User$reportsFiledArgs<ExtArgs>
   reportsAgainst?: boolean | Prisma.User$reportsAgainstArgs<ExtArgs>
   reportsResolved?: boolean | Prisma.User$reportsResolvedArgs<ExtArgs>
@@ -5373,6 +5670,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   tradeOffers?: boolean | Prisma.User$tradeOffersArgs<ExtArgs>
   media?: boolean | Prisma.User$mediaArgs<ExtArgs>
   userMedia?: boolean | Prisma.User$userMediaArgs<ExtArgs>
+  notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
   reportsFiled?: boolean | Prisma.User$reportsFiledArgs<ExtArgs>
   reportsAgainst?: boolean | Prisma.User$reportsAgainstArgs<ExtArgs>
   reportsResolved?: boolean | Prisma.User$reportsResolvedArgs<ExtArgs>
@@ -5405,6 +5703,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     tradeOffers: Prisma.$TradeOfferPayload<ExtArgs>[]
     media: Prisma.$MediaPayload<ExtArgs>[]
     userMedia: Prisma.$UserMediaPayload<ExtArgs>[]
+    notifications: Prisma.$NotificationPayload<ExtArgs>[]
     reportsFiled: Prisma.$ReportPayload<ExtArgs>[]
     reportsAgainst: Prisma.$ReportPayload<ExtArgs>[]
     reportsResolved: Prisma.$ReportPayload<ExtArgs>[]
@@ -5837,6 +6136,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   tradeOffers<T extends Prisma.User$tradeOffersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$tradeOffersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TradeOfferPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   media<T extends Prisma.User$mediaArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$mediaArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MediaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   userMedia<T extends Prisma.User$userMediaArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$userMediaArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserMediaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  notifications<T extends Prisma.User$notificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   reportsFiled<T extends Prisma.User$reportsFiledArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$reportsFiledArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   reportsAgainst<T extends Prisma.User$reportsAgainstArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$reportsAgainstArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   reportsResolved<T extends Prisma.User$reportsResolvedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$reportsResolvedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -6660,6 +6960,30 @@ export type User$userMediaArgs<ExtArgs extends runtime.Types.Extensions.Internal
   take?: number
   skip?: number
   distinct?: Prisma.UserMediaScalarFieldEnum | Prisma.UserMediaScalarFieldEnum[]
+}
+
+/**
+ * User.notifications
+ */
+export type User$notificationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Notification
+   */
+  select?: Prisma.NotificationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Notification
+   */
+  omit?: Prisma.NotificationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.NotificationInclude<ExtArgs> | null
+  where?: Prisma.NotificationWhereInput
+  orderBy?: Prisma.NotificationOrderByWithRelationInput | Prisma.NotificationOrderByWithRelationInput[]
+  cursor?: Prisma.NotificationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.NotificationScalarFieldEnum | Prisma.NotificationScalarFieldEnum[]
 }
 
 /**

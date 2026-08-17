@@ -5,6 +5,7 @@ import requireAuth from '../middleware/requireAuth.js';
 import requireModerator from '../middleware/requireModerator.js';
 import { TargetType, ReportReason, ReportStatus } from '../db/generated/enums.js';
 import { Prisma } from '../db/generated/client.js';
+import { enqueueJob } from '../services/jobs.js';
 
 const reports = Router();
 
@@ -182,30 +183,56 @@ reports.patch('/:id', requireModerator, async (req, res) => {
     }
 
     const isRemove = action === 'remove';
-    const reportUpdate = prisma.report.update({
-      where: { id },
-      data: {
-        status: isRemove ? ReportStatus.REMOVED : ReportStatus.APPROVED,
-        resolution: isRemove ? 'Removed by moderator' : 'Allowed: no action needed',
-        resolverId: req.user!.id,
-        resolvedAt: new Date(),
-      },
-    });
 
-    const extraUpdates = [];
-    if (report.postId) {
-      extraUpdates.push(prisma.post.update({
-        where: { id: report.postId },
-        data: { isRemoved: isRemove },
-      }));
-    }
-    if (report.messageId) {
-      extraUpdates.push(prisma.message.update({
-        where: { id: report.messageId },
-        data: { isRemoved: isRemove },
-      }));
-    }
-    const [resolved] = await prisma.$transaction([reportUpdate, ...extraUpdates]);
+    const resolved = await prisma.$transaction(async (tx) => {
+      const updatedReport = await tx.report.update({
+        where: { id },
+        data: {
+          status: isRemove ? ReportStatus.REMOVED : ReportStatus.APPROVED,
+          resolution: isRemove ? 'Removed by moderator' : 'Allowed: no action needed',
+          resolverId: req.user!.id,
+          resolvedAt: new Date(),
+        },
+      });
+
+      if (report.postId) {
+        const post = await tx.post.update({
+          where: { id: report.postId },
+          data: { isRemoved: isRemove },
+        });
+        if (isRemove) {
+          await enqueueJob(tx, 'SEND_NOTIFICATION', {
+            userId: post.userId,
+            type: 'REPORT_RESOLVED',
+            title: 'Your post was removed',
+            body: 'A moderator removed your post after a report.',
+            link: '/profile?mine=true',
+            entityType: 'POST',
+            entityId: report.postId,
+          });
+        }
+      }
+
+      if (report.messageId) {
+        const message = await tx.message.update({
+          where: { id: report.messageId },
+          data: { isRemoved: isRemove },
+        });
+        if (isRemove) {
+          await enqueueJob(tx, 'SEND_NOTIFICATION', {
+            userId: message.senderId,
+            type: 'REPORT_RESOLVED',
+            title: 'Your message was removed',
+            body: 'A moderator removed a message you sent after a report.',
+            link: `/messages/${message.dmId}`,
+            entityType: 'MESSAGE',
+            entityId: report.messageId,
+          });
+        }
+      }
+
+      return updatedReport;
+    });
 
     res.json(resolved);
   } catch (err) {

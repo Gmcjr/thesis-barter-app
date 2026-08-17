@@ -74,7 +74,9 @@ export const ModelName = {
   ServiceMedia: 'ServiceMedia',
   CommentMedia: 'CommentMedia',
   MessageMedia: 'MessageMedia',
-  UserMedia: 'UserMedia'
+  UserMedia: 'UserMedia',
+  Notification: 'Notification',
+  Job: 'Job'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -394,12 +396,51 @@ export const UserMediaScalarFieldEnum = {
 export type UserMediaScalarFieldEnum = (typeof UserMediaScalarFieldEnum)[keyof typeof UserMediaScalarFieldEnum]
 
 
+export const NotificationScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  type: 'type',
+  title: 'title',
+  body: 'body',
+  link: 'link',
+  entityType: 'entityType',
+  entityId: 'entityId',
+  readAt: 'readAt',
+  createdAt: 'createdAt'
+} as const
+
+export type NotificationScalarFieldEnum = (typeof NotificationScalarFieldEnum)[keyof typeof NotificationScalarFieldEnum]
+
+
+export const JobScalarFieldEnum = {
+  id: 'id',
+  type: 'type',
+  payload: 'payload',
+  status: 'status',
+  attempts: 'attempts',
+  maxAttempts: 'maxAttempts',
+  nextAttemptAt: 'nextAttemptAt',
+  lastError: 'lastError',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type JobScalarFieldEnum = (typeof JobScalarFieldEnum)[keyof typeof JobScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
 } as const
 
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+export const JsonNullValueInput = {
+  JsonNull: JsonNull
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
 export const QueryMode = {
@@ -416,4 +457,13 @@ export const NullsOrder = {
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 
