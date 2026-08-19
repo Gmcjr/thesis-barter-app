@@ -67,6 +67,9 @@ export default function SettingsMenu() {
         <MenuItem onClick={() => { navigate('/blocked-users'); handleClose(); }}>
           Blocked Users
         </MenuItem>
+        <MenuItem onClick={() => { navigate('/deleted-conversations'); handleClose(); }}>
+          Deleted Conversations
+        </MenuItem>
         {isModerator && (
           <MenuItem onClick={() => { navigate('/moderation'); handleClose(); }}>
             Moderation Queue

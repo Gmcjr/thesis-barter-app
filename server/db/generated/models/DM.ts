@@ -42,18 +42,24 @@ export type DMMinAggregateOutputType = {
   id: number | null
   user1Id: number | null
   user2Id: number | null
+  user1Archived: boolean | null
+  user2Archived: boolean | null
 }
 
 export type DMMaxAggregateOutputType = {
   id: number | null
   user1Id: number | null
   user2Id: number | null
+  user1Archived: boolean | null
+  user2Archived: boolean | null
 }
 
 export type DMCountAggregateOutputType = {
   id: number
   user1Id: number
   user2Id: number
+  user1Archived: number
+  user2Archived: number
   _all: number
 }
 
@@ -74,18 +80,24 @@ export type DMMinAggregateInputType = {
   id?: true
   user1Id?: true
   user2Id?: true
+  user1Archived?: true
+  user2Archived?: true
 }
 
 export type DMMaxAggregateInputType = {
   id?: true
   user1Id?: true
   user2Id?: true
+  user1Archived?: true
+  user2Archived?: true
 }
 
 export type DMCountAggregateInputType = {
   id?: true
   user1Id?: true
   user2Id?: true
+  user1Archived?: true
+  user2Archived?: true
   _all?: true
 }
 
@@ -179,6 +191,8 @@ export type DMGroupByOutputType = {
   id: number
   user1Id: number
   user2Id: number
+  user1Archived: boolean
+  user2Archived: boolean
   _count: DMCountAggregateOutputType | null
   _avg: DMAvgAggregateOutputType | null
   _sum: DMSumAggregateOutputType | null
@@ -208,6 +222,8 @@ export type DMWhereInput = {
   id?: Prisma.IntFilter<"DM"> | number
   user1Id?: Prisma.IntFilter<"DM"> | number
   user2Id?: Prisma.IntFilter<"DM"> | number
+  user1Archived?: Prisma.BoolFilter<"DM"> | boolean
+  user2Archived?: Prisma.BoolFilter<"DM"> | boolean
   user1?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   user2?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   messages?: Prisma.MessageListRelationFilter
@@ -217,6 +233,8 @@ export type DMOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   user1Id?: Prisma.SortOrder
   user2Id?: Prisma.SortOrder
+  user1Archived?: Prisma.SortOrder
+  user2Archived?: Prisma.SortOrder
   user1?: Prisma.UserOrderByWithRelationInput
   user2?: Prisma.UserOrderByWithRelationInput
   messages?: Prisma.MessageOrderByRelationAggregateInput
@@ -230,6 +248,8 @@ export type DMWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.DMWhereInput | Prisma.DMWhereInput[]
   user1Id?: Prisma.IntFilter<"DM"> | number
   user2Id?: Prisma.IntFilter<"DM"> | number
+  user1Archived?: Prisma.BoolFilter<"DM"> | boolean
+  user2Archived?: Prisma.BoolFilter<"DM"> | boolean
   user1?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   user2?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   messages?: Prisma.MessageListRelationFilter
@@ -239,6 +259,8 @@ export type DMOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   user1Id?: Prisma.SortOrder
   user2Id?: Prisma.SortOrder
+  user1Archived?: Prisma.SortOrder
+  user2Archived?: Prisma.SortOrder
   _count?: Prisma.DMCountOrderByAggregateInput
   _avg?: Prisma.DMAvgOrderByAggregateInput
   _max?: Prisma.DMMaxOrderByAggregateInput
@@ -253,9 +275,13 @@ export type DMScalarWhereWithAggregatesInput = {
   id?: Prisma.IntWithAggregatesFilter<"DM"> | number
   user1Id?: Prisma.IntWithAggregatesFilter<"DM"> | number
   user2Id?: Prisma.IntWithAggregatesFilter<"DM"> | number
+  user1Archived?: Prisma.BoolWithAggregatesFilter<"DM"> | boolean
+  user2Archived?: Prisma.BoolWithAggregatesFilter<"DM"> | boolean
 }
 
 export type DMCreateInput = {
+  user1Archived?: boolean
+  user2Archived?: boolean
   user1: Prisma.UserCreateNestedOneWithoutInitiatedDMsInput
   user2: Prisma.UserCreateNestedOneWithoutRecievedDMsInput
   messages?: Prisma.MessageCreateNestedManyWithoutDmInput
@@ -265,10 +291,14 @@ export type DMUncheckedCreateInput = {
   id?: number
   user1Id: number
   user2Id: number
+  user1Archived?: boolean
+  user2Archived?: boolean
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutDmInput
 }
 
 export type DMUpdateInput = {
+  user1Archived?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  user2Archived?: Prisma.BoolFieldUpdateOperationsInput | boolean
   user1?: Prisma.UserUpdateOneRequiredWithoutInitiatedDMsNestedInput
   user2?: Prisma.UserUpdateOneRequiredWithoutRecievedDMsNestedInput
   messages?: Prisma.MessageUpdateManyWithoutDmNestedInput
@@ -278,6 +308,8 @@ export type DMUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   user1Id?: Prisma.IntFieldUpdateOperationsInput | number
   user2Id?: Prisma.IntFieldUpdateOperationsInput | number
+  user1Archived?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  user2Archived?: Prisma.BoolFieldUpdateOperationsInput | boolean
   messages?: Prisma.MessageUncheckedUpdateManyWithoutDmNestedInput
 }
 
@@ -285,16 +317,21 @@ export type DMCreateManyInput = {
   id?: number
   user1Id: number
   user2Id: number
+  user1Archived?: boolean
+  user2Archived?: boolean
 }
 
 export type DMUpdateManyMutationInput = {
-
+  user1Archived?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  user2Archived?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type DMUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   user1Id?: Prisma.IntFieldUpdateOperationsInput | number
   user2Id?: Prisma.IntFieldUpdateOperationsInput | number
+  user1Archived?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  user2Archived?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type DMListRelationFilter = {
@@ -316,6 +353,8 @@ export type DMCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   user1Id?: Prisma.SortOrder
   user2Id?: Prisma.SortOrder
+  user1Archived?: Prisma.SortOrder
+  user2Archived?: Prisma.SortOrder
 }
 
 export type DMAvgOrderByAggregateInput = {
@@ -328,12 +367,16 @@ export type DMMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   user1Id?: Prisma.SortOrder
   user2Id?: Prisma.SortOrder
+  user1Archived?: Prisma.SortOrder
+  user2Archived?: Prisma.SortOrder
 }
 
 export type DMMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   user1Id?: Prisma.SortOrder
   user2Id?: Prisma.SortOrder
+  user1Archived?: Prisma.SortOrder
+  user2Archived?: Prisma.SortOrder
 }
 
 export type DMSumOrderByAggregateInput = {
@@ -446,6 +489,8 @@ export type DMUpdateOneRequiredWithoutMessagesNestedInput = {
 }
 
 export type DMCreateWithoutUser1Input = {
+  user1Archived?: boolean
+  user2Archived?: boolean
   user2: Prisma.UserCreateNestedOneWithoutRecievedDMsInput
   messages?: Prisma.MessageCreateNestedManyWithoutDmInput
 }
@@ -453,6 +498,8 @@ export type DMCreateWithoutUser1Input = {
 export type DMUncheckedCreateWithoutUser1Input = {
   id?: number
   user2Id: number
+  user1Archived?: boolean
+  user2Archived?: boolean
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutDmInput
 }
 
@@ -467,6 +514,8 @@ export type DMCreateManyUser1InputEnvelope = {
 }
 
 export type DMCreateWithoutUser2Input = {
+  user1Archived?: boolean
+  user2Archived?: boolean
   user1: Prisma.UserCreateNestedOneWithoutInitiatedDMsInput
   messages?: Prisma.MessageCreateNestedManyWithoutDmInput
 }
@@ -474,6 +523,8 @@ export type DMCreateWithoutUser2Input = {
 export type DMUncheckedCreateWithoutUser2Input = {
   id?: number
   user1Id: number
+  user1Archived?: boolean
+  user2Archived?: boolean
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutDmInput
 }
 
@@ -510,6 +561,8 @@ export type DMScalarWhereInput = {
   id?: Prisma.IntFilter<"DM"> | number
   user1Id?: Prisma.IntFilter<"DM"> | number
   user2Id?: Prisma.IntFilter<"DM"> | number
+  user1Archived?: Prisma.BoolFilter<"DM"> | boolean
+  user2Archived?: Prisma.BoolFilter<"DM"> | boolean
 }
 
 export type DMUpsertWithWhereUniqueWithoutUser2Input = {
@@ -529,6 +582,8 @@ export type DMUpdateManyWithWhereWithoutUser2Input = {
 }
 
 export type DMCreateWithoutMessagesInput = {
+  user1Archived?: boolean
+  user2Archived?: boolean
   user1: Prisma.UserCreateNestedOneWithoutInitiatedDMsInput
   user2: Prisma.UserCreateNestedOneWithoutRecievedDMsInput
 }
@@ -537,6 +592,8 @@ export type DMUncheckedCreateWithoutMessagesInput = {
   id?: number
   user1Id: number
   user2Id: number
+  user1Archived?: boolean
+  user2Archived?: boolean
 }
 
 export type DMCreateOrConnectWithoutMessagesInput = {
@@ -556,6 +613,8 @@ export type DMUpdateToOneWithWhereWithoutMessagesInput = {
 }
 
 export type DMUpdateWithoutMessagesInput = {
+  user1Archived?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  user2Archived?: Prisma.BoolFieldUpdateOperationsInput | boolean
   user1?: Prisma.UserUpdateOneRequiredWithoutInitiatedDMsNestedInput
   user2?: Prisma.UserUpdateOneRequiredWithoutRecievedDMsNestedInput
 }
@@ -564,19 +623,27 @@ export type DMUncheckedUpdateWithoutMessagesInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   user1Id?: Prisma.IntFieldUpdateOperationsInput | number
   user2Id?: Prisma.IntFieldUpdateOperationsInput | number
+  user1Archived?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  user2Archived?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type DMCreateManyUser1Input = {
   id?: number
   user2Id: number
+  user1Archived?: boolean
+  user2Archived?: boolean
 }
 
 export type DMCreateManyUser2Input = {
   id?: number
   user1Id: number
+  user1Archived?: boolean
+  user2Archived?: boolean
 }
 
 export type DMUpdateWithoutUser1Input = {
+  user1Archived?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  user2Archived?: Prisma.BoolFieldUpdateOperationsInput | boolean
   user2?: Prisma.UserUpdateOneRequiredWithoutRecievedDMsNestedInput
   messages?: Prisma.MessageUpdateManyWithoutDmNestedInput
 }
@@ -584,15 +651,21 @@ export type DMUpdateWithoutUser1Input = {
 export type DMUncheckedUpdateWithoutUser1Input = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   user2Id?: Prisma.IntFieldUpdateOperationsInput | number
+  user1Archived?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  user2Archived?: Prisma.BoolFieldUpdateOperationsInput | boolean
   messages?: Prisma.MessageUncheckedUpdateManyWithoutDmNestedInput
 }
 
 export type DMUncheckedUpdateManyWithoutUser1Input = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   user2Id?: Prisma.IntFieldUpdateOperationsInput | number
+  user1Archived?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  user2Archived?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type DMUpdateWithoutUser2Input = {
+  user1Archived?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  user2Archived?: Prisma.BoolFieldUpdateOperationsInput | boolean
   user1?: Prisma.UserUpdateOneRequiredWithoutInitiatedDMsNestedInput
   messages?: Prisma.MessageUpdateManyWithoutDmNestedInput
 }
@@ -600,12 +673,16 @@ export type DMUpdateWithoutUser2Input = {
 export type DMUncheckedUpdateWithoutUser2Input = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   user1Id?: Prisma.IntFieldUpdateOperationsInput | number
+  user1Archived?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  user2Archived?: Prisma.BoolFieldUpdateOperationsInput | boolean
   messages?: Prisma.MessageUncheckedUpdateManyWithoutDmNestedInput
 }
 
 export type DMUncheckedUpdateManyWithoutUser2Input = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   user1Id?: Prisma.IntFieldUpdateOperationsInput | number
+  user1Archived?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  user2Archived?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 
@@ -643,6 +720,8 @@ export type DMSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = run
   id?: boolean
   user1Id?: boolean
   user2Id?: boolean
+  user1Archived?: boolean
+  user2Archived?: boolean
   user1?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   user2?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   messages?: boolean | Prisma.DM$messagesArgs<ExtArgs>
@@ -653,6 +732,8 @@ export type DMSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions
   id?: boolean
   user1Id?: boolean
   user2Id?: boolean
+  user1Archived?: boolean
+  user2Archived?: boolean
   user1?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   user2?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["dM"]>
@@ -661,6 +742,8 @@ export type DMSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions
   id?: boolean
   user1Id?: boolean
   user2Id?: boolean
+  user1Archived?: boolean
+  user2Archived?: boolean
   user1?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   user2?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["dM"]>
@@ -669,9 +752,11 @@ export type DMSelectScalar = {
   id?: boolean
   user1Id?: boolean
   user2Id?: boolean
+  user1Archived?: boolean
+  user2Archived?: boolean
 }
 
-export type DMOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "user1Id" | "user2Id", ExtArgs["result"]["dM"]>
+export type DMOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "user1Id" | "user2Id" | "user1Archived" | "user2Archived", ExtArgs["result"]["dM"]>
 export type DMInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user1?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   user2?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -698,6 +783,8 @@ export type $DMPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
     id: number
     user1Id: number
     user2Id: number
+    user1Archived: boolean
+    user2Archived: boolean
   }, ExtArgs["result"]["dM"]>
   composites: {}
 }
@@ -1127,6 +1214,8 @@ export interface DMFieldRefs {
   readonly id: Prisma.FieldRef<"DM", 'Int'>
   readonly user1Id: Prisma.FieldRef<"DM", 'Int'>
   readonly user2Id: Prisma.FieldRef<"DM", 'Int'>
+  readonly user1Archived: Prisma.FieldRef<"DM", 'Boolean'>
+  readonly user2Archived: Prisma.FieldRef<"DM", 'Boolean'>
 }
     
 

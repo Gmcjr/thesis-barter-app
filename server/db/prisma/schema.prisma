@@ -71,6 +71,9 @@ model DM {
   user2   User @relation("recievedDMs", fields: [user2Id], references: [id])
   user2Id Int
 
+  user1Archived Boolean @default(false)
+  user2Archived Boolean @default(false)
+
   messages Message[]
 
   @@unique([user1Id, user2Id])
@@ -495,13 +498,20 @@ model MessageMedia {
 }
 
 model UserMedia {
-  id      Int   @id @default(autoincrement())
-  media   Media @relation(fields: [mediaId], references: [id], onDelete: Cascade)
+  id      Int           @id @default(autoincrement())
+  media   Media         @relation(fields: [mediaId], references: [id], onDelete: Cascade)
   mediaId Int
-  user    User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user    User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId  Int
 
-  @@unique([mediaId, userId])
+  slot    UserMediaSlot
+
+  @@unique([userId, slot])
+}
+
+enum UserMediaSlot {
+  AVATAR
+  BANNER
 }
 
 enum NotificationType {

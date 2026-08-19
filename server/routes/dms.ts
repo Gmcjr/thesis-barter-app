@@ -12,9 +12,13 @@ dms.use(requireAuth);
 dms.get('/', async (req, res) => {
   try {
     const userId = (req.user as { id: number }).id;
+    const wantArchived = req.query.archived === 'true';
 
     const threads = await prisma.dM.findMany({
-      where: { OR: [{ user1Id: userId }, { user2Id: userId }] },
+      where: {
+        OR: [{ user1Id: userId }, { user2Id: userId }],
+        messages: { some: {} },
+      },
       include: {
         user1: { select: { id: true, name: true } },
         user2: { select: { id: true, name: true } },
@@ -23,6 +27,10 @@ dms.get('/', async (req, res) => {
     });
 
     const inbox = threads
+      .filter((dm) => {
+        const archivedByMe = dm.user1Id === userId ? dm.user1Archived : dm.user2Archived;
+        return wantArchived ? archivedByMe : !archivedByMe;
+      })
       .map((dm) => ({
         id: dm.id,
         otherUser: dm.user1Id === userId ? dm.user2 : dm.user1,
@@ -37,6 +45,56 @@ dms.get('/', async (req, res) => {
     return res.json(inbox);
   } catch (error) {
     console.error('Failed to GET dms: ', error);
+    return res.sendStatus(500);
+  }
+});
+
+dms.get('/:id', async (req, res) => {
+  try {
+    const userId = (req.user as { id: number }).id;
+    const dmId = Number(req.params.id);
+
+    const dm = await prisma.dM.findUnique({
+      where: { id: dmId },
+      include: {
+        user1: { select: { id: true, name: true } },
+        user2: { select: { id: true, name: true } },
+      },
+    });
+    if (!dm || (dm.user1Id !== userId && dm.user2Id !== userId)) {
+      return res.status(404).json({ error: 'Conversation not found.' });
+    }
+
+    return res.json({
+      id: dm.id,
+      otherUser: dm.user1Id === userId ? dm.user2 : dm.user1,
+    });
+  } catch (error) {
+    console.error('Failed to GET dm: ', error);
+    return res.sendStatus(500);
+  }
+});
+
+dms.patch('/:id/archive', async (req, res) => {
+  try {
+    const userId = (req.user as { id: number }).id;
+    const dmId = Number(req.params.id);
+    const archived = Boolean(req.body.archived);
+
+    const dm = await prisma.dM.findUnique({ where: { id: dmId } });
+    if (!dm || (dm.user1Id !== userId && dm.user2Id !== userId)) {
+      return res.status(404).json({ error: 'Conversation not found.' });
+    }
+
+    const isUser1 = dm.user1Id === userId;
+    await prisma.dM.update({
+      where: { id: dmId },
+      data: isUser1 ? { user1Archived: archived } : { user2Archived: archived },
+    });
+
+    return res.sendStatus(204);
+  } catch (error) {
+    console.error('Failed to PATCH dm archive: ', error);
     return res.sendStatus(500);
   }
 });
@@ -61,9 +119,11 @@ dms.post('/', async (req, res) => {
 
     const [user1Id, user2Id] = userId < targetId ? [userId, targetId] : [targetId, userId];
 
+    const restoreField = userId === user1Id ? 'user1Archived' : 'user2Archived';
+
     const dm = await prisma.dM.upsert({
       where: { user1Id_user2Id: { user1Id, user2Id } },
-      update: {},
+      update: { [restoreField]: false },
       create: { user1Id, user2Id },
       include: {
         user1: { select: { id: true, name: true } },

@@ -11,10 +11,10 @@ const s3Client = new S3Client({
 });
 
 // generates a file path string for organizing and storing a user's art in S3
-export const buildKey = (userId: number, filename: string) => {
+export const buildKey = (userId: number, filename: string, prefix: string = 'art') => {
   const timestamp = Date.now();
   const safeName = filename.replace(/[^a-zA-Z0-9._-]/g, '_');
-  return `art/${userId}/${timestamp}_${safeName}`;
+  return `${prefix}/${userId}/${timestamp}_${safeName}`;
 };
 
 // creates URL allowing a client to upload a file to S3
