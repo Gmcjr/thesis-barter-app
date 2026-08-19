@@ -8,6 +8,8 @@ import { queueScreening } from '../services/moderation.js';
 
 const router = Router();
 
+export const BIO_MAX_LENGTH = 250;
+
 const VALID_SLOTS = ['avatar', 'banner'] as const;
 type MediaSlotParam = typeof VALID_SLOTS[number];
 
@@ -93,6 +95,10 @@ router.patch('/me', requireAuth, async (req, res) => {
     return res.status(400).json({ error: 'name cannot be empty' });
   }
 
+  if (bio !== undefined && bio !== null && bio.length > BIO_MAX_LENGTH) {
+    return res.status(400).json({ error: `bio must be ${BIO_MAX_LENGTH} characters or fewer` });
+  }
+
   try {
     const bioChanged = bio !== undefined;
     const user = await prisma.user.update({
@@ -103,6 +109,7 @@ router.patch('/me', requireAuth, async (req, res) => {
         zipCode,
         ...(bioChanged ? { pendingBio: bio, isPendingScreening: true } : {}),
       },
+      include: { userMedia: { include: { media: true } } },
     });
 
     if (bioChanged && bio) {
@@ -129,8 +136,8 @@ router.patch('/me', requireAuth, async (req, res) => {
         },
       });
     }
-
-    return res.status(200).json(user);
+    const { userMedia, ...userRest } = user;
+    return res.status(200).json({ ...userRest, ...(await getUserMediaUrls(userMedia)) });
   } catch (err) {
     console.error(err);
     return res.sendStatus(500);
