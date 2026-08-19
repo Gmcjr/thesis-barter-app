@@ -19,6 +19,7 @@ import ModQueue from './Moderation/ModQueue';
 import BlockedUsers from './BlockedUsers/BlockedUsers';
 import NotFound from './NotFound/NotFound';
 import Messages from './DMs/Messages';
+import DeletedConversations from './DMs/DeletedConversations';
 
 const routes: RouteDef[] = [
   { path: '/', component: Posts },
@@ -33,6 +34,7 @@ const routes: RouteDef[] = [
   { path: '/profile/:id', component: Profile },
   { path: '/messages', component: Messages, requiresAuth: true },
   { path: '/messages/:id', component: Messages, requiresAuth: true },
+  { path: '/deleted-conversations', component: DeletedConversations, requiresAuth: true },
 ];
 
 function AppShell() {

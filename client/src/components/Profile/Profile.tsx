@@ -9,6 +9,7 @@ import Collapse from '@mui/material/Collapse';
 import { useRouter, useParams } from '../../context/RouterContext';
 import { useToast } from '../../context/ToastContext';
 import { useAuth } from '../../context/AuthContext';
+import { useSocket } from '../../context/SocketContext';
 import type { PostData } from '../Posts/ManagePosts';
 import type { TradeRequestData } from '../Trades/RequestTradeButton';
 import Post from '../Posts/Post';
@@ -40,12 +41,15 @@ export default function Profile() {
   const [reviewsExpanded, setReviewsExpanded] = useState(false);
   const [myCompletedTrades, setMyCompletedTrades] = useState<MyCompletedTrade[]>([]);
   const [myReviews, setMyReviews] = useState<ReviewData[]>([]);
+  const [avatarUploading, setAvatarUploading] = useState(false);
+  const [bannerUploading, setBannerUploading] = useState(false);
 
   const {
     user, blockedUserIds, blockUser, unblockUser,
   } = useAuth();
   const { navigate } = useRouter();
   const { showToast } = useToast();
+  const socket = useSocket();
 
   const handleBlockToggle = async () => {
     if (blockedUserIds.includes(profile!.id)) {
@@ -57,17 +61,86 @@ export default function Profile() {
 
   const handleUpdateProfile = async (data: ProfileUpdateData) => {
     const toNullable = (value: string) => (value.trim() ? value.trim() : null);
+    const bio = toNullable(data.bio);
 
     const res = await axios.patch<ProfileUser>('/user/me', {
       user: {
         name: data.name.trim(),
-        bio: toNullable(data.bio),
+        bio,
         phone: toNullable(data.phone),
         zipCode: toNullable(data.zipCode),
       },
     }, { withCredentials: true });
 
-    setProfile(res.data);
+    setProfile((prev) => (prev ? { ...prev, ...res.data, bio } : res.data));
+  };
+
+  const uploadUserMedia = async (slot: 'avatar' | 'banner', file: File) => {
+    const presignRes = await axios.post<{ uploadUrl: string; key: string }>(
+      `/user/me/media/${slot}`,
+      { filename: file.name, contentType: file.type },
+      { withCredentials: true },
+    );
+    const { uploadUrl, key } = presignRes.data;
+
+    await axios.put(uploadUrl, file, { headers: { 'Content-Type': file.type } });
+
+    const saveRes = await axios.put<{ url: string }>(
+      `/user/me/media/${slot}`,
+      { s3Key: key },
+      { withCredentials: true },
+    );
+
+    setProfile((prev) => (prev ? {
+      ...prev,
+      ...(slot === 'avatar' ? { avatarUrl: saveRes.data.url } : { bannerUrl: saveRes.data.url }),
+    } : prev));
+  };
+
+  const handleAvatarChange = async (file: File) => {
+    setAvatarUploading(true);
+    try {
+      await uploadUserMedia('avatar', file);
+    } catch (err) {
+      const message = axios.isAxiosError(err) && err.response?.data?.error
+        ? err.response.data.error
+        : 'Could not upload photo.';
+      showToast(message, 'error');
+    } finally {
+      setAvatarUploading(false);
+    }
+  };
+
+  const handleBannerChange = async (file: File) => {
+    setBannerUploading(true);
+    try {
+      await uploadUserMedia('banner', file);
+    } catch (err) {
+      const message = axios.isAxiosError(err) && err.response?.data?.error
+        ? err.response.data.error
+        : 'Could not upload banner.';
+      showToast(message, 'error');
+    } finally {
+      setBannerUploading(false);
+    }
+  };
+
+  const handleAvatarRemove = async () => {
+    try {
+      await axios.delete('/user/me/media/avatar', { withCredentials: true });
+      setProfile((prev) => (prev ? { ...prev, avatarUrl: null } : prev));
+    } catch {
+      showToast('Could not remove photo.', 'error');
+    }
+  };
+
+  const handleBannerRemove = async () => {
+    try {
+      await axios.delete('/user/me/media/banner', { withCredentials: true });
+      setProfile((prev) => (prev ? { ...prev, bannerUrl: null } : prev));
+    } catch {
+      showToast('Could not remove banner.', 'error');
+    }
   };
 
   const handleOpenDM = async () => {
@@ -100,6 +173,28 @@ export default function Profile() {
     fetchProfile();
     return () => { cancelled = true; };
   }, [id]);
+
+  useEffect(() => {
+    if (!socket || !isOwnProfile || !user) return undefined;
+
+    const handleScreened = (payload: {
+      targetType: string; targetId: number; ok: boolean; rationale?: string;
+    }) => {
+      if (payload.targetType !== 'USER' || payload.targetId !== user.id) return;
+      if (!payload.ok) {
+        showToast(
+          `Your bio was removed for violating our community guidelines${payload.rationale ? `: ${payload.rationale}` : '.'}`,
+          'error',
+        );
+      }
+      axios.get<ProfileUser>('/user/me', { withCredentials: true })
+        .then((res) => setProfile(res.data))
+        .catch(() => {});
+    };
+
+    socket.on('content:screened', handleScreened);
+    return () => { socket.off('content:screened', handleScreened); };
+  }, [socket, isOwnProfile, user, showToast]);
 
   const loadPosts = useCallback(async () => {
     if (!profile) return;
@@ -283,6 +378,14 @@ export default function Profile() {
             zipCode: profile.zipCode ?? '',
           }}
           onSave={handleUpdateProfile}
+          avatarUrl={profile.avatarUrl}
+          bannerUrl={profile.bannerUrl}
+          avatarUploading={avatarUploading}
+          bannerUploading={bannerUploading}
+          onAvatarChange={handleAvatarChange}
+          onAvatarRemove={handleAvatarRemove}
+          onBannerChange={handleBannerChange}
+          onBannerRemove={handleBannerRemove}
         />
       )}
 

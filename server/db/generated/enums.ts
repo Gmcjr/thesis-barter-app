@@ -120,6 +120,14 @@ export const MediaVariant = {
 export type MediaVariant = (typeof MediaVariant)[keyof typeof MediaVariant]
 
 
+export const UserMediaSlot = {
+  AVATAR: 'AVATAR',
+  BANNER: 'BANNER'
+} as const
+
+export type UserMediaSlot = (typeof UserMediaSlot)[keyof typeof UserMediaSlot]
+
+
 export const NotificationType = {
   DM_MESSAGE: 'DM_MESSAGE',
   TRADE_OFFER_RECEIVED: 'TRADE_OFFER_RECEIVED',

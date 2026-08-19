@@ -10,11 +10,17 @@ import IconButton from '@mui/material/IconButton';
 import Avatar from '@mui/material/Avatar';
 import CircularProgress from '@mui/material/CircularProgress';
 import SendIcon from '@mui/icons-material/Send';
+import DeleteOutlineIcon from '@mui/icons-material/Delete';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { radius } from '../../theme';
+import {
+  formatInboxTime, formatDayDivider, formatClockTime, isSameDay,
+} from '../../utils/utils';
 
 import { useParams, useRouter } from '../../context/RouterContext';
 import { useAuth } from '../../context/AuthContext';
 import { useSocket } from '../../context/SocketContext';
+import { useToast } from '../../context/ToastContext';
 
 interface DMSummary {
   id: number;
@@ -37,12 +43,16 @@ export default function Messages() {
   const { navigate } = useRouter();
   const { user } = useAuth();
   const socket = useSocket();
+  const { showToast } = useToast();
 
   const [inbox, setInbox] = useState<DMSummary[]>([]);
   const [messages, setMessages] = useState<DMMessage[]>([]);
   const [draft, setDraft] = useState('');
   const [loadingInbox, setLoadingInbox] = useState(true);
   const [loadingThread, setLoadingThread] = useState(false);
+  // Fallback header info for a DM that was just opened but has no messages
+  // yet, so it hasn't shown up in the inbox list.
+  const [pendingConversation, setPendingConversation] = useState<DMSummary | null>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
 
   const loadInbox = useCallback(async () => {
@@ -57,6 +67,7 @@ export default function Messages() {
   };
 
   useEffect(() => {
+    setLoadingInbox(true);
     loadInbox().finally(() => setLoadingInbox(false));
   }, [loadInbox]);
 
@@ -72,6 +83,25 @@ export default function Messages() {
       .finally(() => { if (!cancelled) setLoadingThread(false); });
     return () => { cancelled = true; };
   }, [activeDmId]);
+
+  // If the active conversation isn't in the loaded inbox (e.g. it was just
+  // opened and has no messages yet, or it's archived), fetch its header info.
+  useEffect(() => {
+    if (!activeDmId || inbox.some((c) => c.id === activeDmId)) {
+      setPendingConversation(null);
+      return undefined;
+    }
+    let cancelled = false;
+    axios.get<{ id: number; otherUser: { id: number; name: string } }>(`/dms/${activeDmId}`, { withCredentials: true })
+      .then((res) => {
+        if (cancelled) return;
+        setPendingConversation({
+          id: res.data.id, otherUser: res.data.otherUser, lastMessage: null,
+        });
+      })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, [activeDmId, inbox]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -97,17 +127,44 @@ export default function Messages() {
     loadInbox();
   };
 
-  const activeConversation = inbox.find((c) => c.id === activeDmId);
+  const handleDelete = async (conversation: DMSummary, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setInbox((prev) => prev.filter((c) => c.id !== conversation.id));
+    if (activeDmId === conversation.id) navigate('/messages');
+
+    try {
+      await axios.patch(`/dms/${conversation.id}/archive`, { archived: true }, { withCredentials: true });
+      showToast('Conversation deleted.', 'info', {
+        label: 'Undo',
+        onClick: async () => {
+          await axios.patch(`/dms/${conversation.id}/archive`, { archived: false }, { withCredentials: true });
+          loadInbox();
+        },
+      });
+    } catch {
+      showToast('Could not delete conversation.', 'error');
+      loadInbox();
+    }
+  };
+
+  const activeConversation = inbox.find((c) => c.id === activeDmId)
+    ?? pendingConversation
+    ?? undefined;
 
   return (
     <Box sx={{
-      display: 'flex', gap: 2, height: 'calc(100vh - 180px)', px: { xs: 2, md: 0 },
+      display: 'flex', gap: { xs: 0, md: 2 }, height: 'calc(100vh - 180px)', px: { xs: 0, md: 0 },
     }}
     >
       <Card
         variant="outlined"
         sx={{
-          width: 280, flexShrink: 0, borderRadius: radius.md, borderColor: 'border.default', overflowY: 'auto',
+          width: { xs: '100%', md: 280 },
+          flexShrink: 0,
+          borderRadius: radius.md,
+          borderColor: 'border.default',
+          overflowY: 'auto',
+          display: { xs: activeDmId ? 'none' : 'block', md: 'block' },
         }}
       >
         {loadingInbox && (
@@ -140,13 +197,27 @@ export default function Messages() {
               {conversation.otherUser.name.charAt(0).toUpperCase()}
             </Avatar>
             <Box sx={{ minWidth: 0, flex: 1 }}>
-              <Typography variant="body2" sx={{ fontWeight: 600 }} noWrap>
-                {conversation.otherUser.name}
-              </Typography>
+              <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1 }}>
+                <Typography variant="body2" sx={{ fontWeight: 600, flex: 1, minWidth: 0 }} noWrap>
+                  {conversation.otherUser.name}
+                </Typography>
+                {conversation.lastMessage && (
+                  <Typography variant="caption" color="text.secondary" sx={{ flexShrink: 0 }}>
+                    {formatInboxTime(conversation.lastMessage.createdAt)}
+                  </Typography>
+                )}
+              </Box>
               <Typography variant="caption" color="text.secondary" noWrap sx={{ display: 'block' }}>
                 {conversation.lastMessage?.text ?? 'No messages yet'}
               </Typography>
             </Box>
+            <IconButton
+              size="small"
+              aria-label="Delete conversation"
+              onClick={(e) => handleDelete(conversation, e)}
+            >
+              <DeleteOutlineIcon fontSize="small" />
+            </IconButton>
           </Box>
         ))}
       </Card>
@@ -154,7 +225,11 @@ export default function Messages() {
       <Card
         variant="outlined"
         sx={{
-          flex: 1, borderRadius: radius.md, borderColor: 'border.default', display: 'flex', flexDirection: 'column',
+          flex: 1,
+          borderRadius: radius.md,
+          borderColor: 'border.default',
+          display: { xs: activeDmId ? 'flex' : 'none', md: 'flex' },
+          flexDirection: 'column',
         }}
       >
         {!activeDmId && (
@@ -168,7 +243,22 @@ export default function Messages() {
 
         {activeDmId && (
           <>
-            <Box sx={{ p: 2, borderBottom: (theme) => `1px solid ${theme.palette.border.default}` }}>
+            <Box sx={{
+              p: 2,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 1,
+              borderBottom: (theme) => `1px solid ${theme.palette.border.default}`,
+            }}
+            >
+              <IconButton
+                size="small"
+                aria-label="Back to conversations"
+                onClick={() => navigate('/messages')}
+                sx={{ display: { xs: 'inline-flex', md: 'none' } }}
+              >
+                <ArrowBackIcon fontSize="small" />
+              </IconButton>
               <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
                 {activeConversation?.otherUser.name ?? 'Conversation'}
               </Typography>
@@ -184,30 +274,59 @@ export default function Messages() {
                 </Box>
               )}
 
-              {!loadingThread && messages.map((message) => {
+              {!loadingThread && messages.map((message, index) => {
                 const isMine = message.senderId === user!.id;
+                const prevMessage = messages[index - 1];
+                const showDivider = !prevMessage
+                  || !isSameDay(new Date(message.createdAt), new Date(prevMessage.createdAt));
                 return (
-                  <Box
-                    key={message.id}
-                    sx={{
-                      alignSelf: isMine ? 'flex-end' : 'flex-start',
-                      bgcolor: isMine ? 'primary.main' : 'surface.sunken',
-                      color: 'primary.contrastText',
-                      borderRadius: radius.lg,
-                      px: 1.5,
-                      py: 0.75,
-                      maxWidth: '70%',
-                    }}
-                  >
-                    <Typography variant="body2">{message.text}</Typography>
-                  </Box>
+                  <React.Fragment key={message.id}>
+                    {showDivider && (
+                      <Box sx={{
+                        display: 'flex', alignItems: 'center', gap: 1.5, my: 0.5,
+                      }}
+                      >
+                        <Box sx={{ flex: 1, height: '1px', bgcolor: 'divider' }} />
+                        <Typography variant="caption" color="text.secondary" sx={{ whiteSpace: 'nowrap' }}>
+                          {formatDayDivider(message.createdAt)}
+                        </Typography>
+                        <Box sx={{ flex: 1, height: '1px', bgcolor: 'divider' }} />
+                      </Box>
+                    )}
+                    <Box sx={{ alignSelf: isMine ? 'flex-end' : 'flex-start', maxWidth: '70%' }}>
+                      <Box
+                        sx={{
+                          bgcolor: isMine ? 'primary.main' : 'surface.sunken',
+                          color: isMine ? 'primary.contrastText' : 'text.primary',
+                          borderRadius: radius.lg,
+                          px: 1.5,
+                          py: 0.75,
+                        }}
+                      >
+                        <Typography variant="body2">{message.text}</Typography>
+                      </Box>
+                      <Typography
+                        variant="caption"
+                        color="text.secondary"
+                        sx={{
+                          display: 'block', mt: 0.25, textAlign: isMine ? 'right' : 'left',
+                        }}
+                      >
+                        {formatClockTime(message.createdAt)}
+                      </Typography>
+                    </Box>
+                  </React.Fragment>
                 );
               })}
               <div ref={bottomRef} />
             </Box>
 
             <Box sx={{
-              p: 1.5, borderTop: (theme) => `1px solid ${theme.palette.border.default}`,
+              p: 1.5,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 1,
+              borderTop: (theme) => `1px solid ${theme.palette.border.default}`,
             }}
             >
               <TextField

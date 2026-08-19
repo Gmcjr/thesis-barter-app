@@ -2426,7 +2426,9 @@ export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof User
 export const DMScalarFieldEnum = {
   id: 'id',
   user1Id: 'user1Id',
-  user2Id: 'user2Id'
+  user2Id: 'user2Id',
+  user1Archived: 'user1Archived',
+  user2Archived: 'user2Archived'
 } as const
 
 export type DMScalarFieldEnum = (typeof DMScalarFieldEnum)[keyof typeof DMScalarFieldEnum]
@@ -2699,7 +2701,8 @@ export type MessageMediaScalarFieldEnum = (typeof MessageMediaScalarFieldEnum)[k
 export const UserMediaScalarFieldEnum = {
   id: 'id',
   mediaId: 'mediaId',
-  userId: 'userId'
+  userId: 'userId',
+  slot: 'slot'
 } as const
 
 export type UserMediaScalarFieldEnum = (typeof UserMediaScalarFieldEnum)[keyof typeof UserMediaScalarFieldEnum]
@@ -2997,6 +3000,20 @@ export type EnumMediaVariantFieldRefInput<$PrismaModel> = FieldRefInputType<$Pri
  * Reference to a field of type 'MediaVariant[]'
  */
 export type ListEnumMediaVariantFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MediaVariant[]'>
+    
+
+
+/**
+ * Reference to a field of type 'UserMediaSlot'
+ */
+export type EnumUserMediaSlotFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserMediaSlot'>
+    
+
+
+/**
+ * Reference to a field of type 'UserMediaSlot[]'
+ */
+export type ListEnumUserMediaSlotFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserMediaSlot[]'>
     
 
 

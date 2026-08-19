@@ -9,6 +9,8 @@ export interface ProfileUser {
   phone: string | null;
   zipCode: string | null;
   createdAt: string;
+  avatarUrl: string | null;
+  bannerUrl: string | null;
 }
 
 export interface ProfileHeaderProps {
@@ -36,6 +38,14 @@ export interface EditProfileModalProps {
   onClose: () => void;
   initialData: ProfileUpdateData;
   onSave: (data: ProfileUpdateData) => Promise<void>;
+  avatarUrl: string | null;
+  bannerUrl: string | null;
+  avatarUploading: boolean;
+  bannerUploading: boolean;
+  onAvatarChange: (file: File) => Promise<void>;
+  onAvatarRemove: () => Promise<void>;
+  onBannerChange: (file: File) => Promise<void>;
+  onBannerRemove: () => Promise<void>;
 }
 
 export interface ProfileTradesProps {

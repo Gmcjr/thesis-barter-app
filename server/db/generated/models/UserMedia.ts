@@ -42,18 +42,21 @@ export type UserMediaMinAggregateOutputType = {
   id: number | null
   mediaId: number | null
   userId: number | null
+  slot: $Enums.UserMediaSlot | null
 }
 
 export type UserMediaMaxAggregateOutputType = {
   id: number | null
   mediaId: number | null
   userId: number | null
+  slot: $Enums.UserMediaSlot | null
 }
 
 export type UserMediaCountAggregateOutputType = {
   id: number
   mediaId: number
   userId: number
+  slot: number
   _all: number
 }
 
@@ -74,18 +77,21 @@ export type UserMediaMinAggregateInputType = {
   id?: true
   mediaId?: true
   userId?: true
+  slot?: true
 }
 
 export type UserMediaMaxAggregateInputType = {
   id?: true
   mediaId?: true
   userId?: true
+  slot?: true
 }
 
 export type UserMediaCountAggregateInputType = {
   id?: true
   mediaId?: true
   userId?: true
+  slot?: true
   _all?: true
 }
 
@@ -179,6 +185,7 @@ export type UserMediaGroupByOutputType = {
   id: number
   mediaId: number
   userId: number
+  slot: $Enums.UserMediaSlot
   _count: UserMediaCountAggregateOutputType | null
   _avg: UserMediaAvgAggregateOutputType | null
   _sum: UserMediaSumAggregateOutputType | null
@@ -208,6 +215,7 @@ export type UserMediaWhereInput = {
   id?: Prisma.IntFilter<"UserMedia"> | number
   mediaId?: Prisma.IntFilter<"UserMedia"> | number
   userId?: Prisma.IntFilter<"UserMedia"> | number
+  slot?: Prisma.EnumUserMediaSlotFilter<"UserMedia"> | $Enums.UserMediaSlot
   media?: Prisma.XOR<Prisma.MediaScalarRelationFilter, Prisma.MediaWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
@@ -216,26 +224,29 @@ export type UserMediaOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   mediaId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  slot?: Prisma.SortOrder
   media?: Prisma.MediaOrderByWithRelationInput
   user?: Prisma.UserOrderByWithRelationInput
 }
 
 export type UserMediaWhereUniqueInput = Prisma.AtLeast<{
   id?: number
-  mediaId_userId?: Prisma.UserMediaMediaIdUserIdCompoundUniqueInput
+  userId_slot?: Prisma.UserMediaUserIdSlotCompoundUniqueInput
   AND?: Prisma.UserMediaWhereInput | Prisma.UserMediaWhereInput[]
   OR?: Prisma.UserMediaWhereInput[]
   NOT?: Prisma.UserMediaWhereInput | Prisma.UserMediaWhereInput[]
   mediaId?: Prisma.IntFilter<"UserMedia"> | number
   userId?: Prisma.IntFilter<"UserMedia"> | number
+  slot?: Prisma.EnumUserMediaSlotFilter<"UserMedia"> | $Enums.UserMediaSlot
   media?: Prisma.XOR<Prisma.MediaScalarRelationFilter, Prisma.MediaWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-}, "id" | "mediaId_userId">
+}, "id" | "userId_slot">
 
 export type UserMediaOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   mediaId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  slot?: Prisma.SortOrder
   _count?: Prisma.UserMediaCountOrderByAggregateInput
   _avg?: Prisma.UserMediaAvgOrderByAggregateInput
   _max?: Prisma.UserMediaMaxOrderByAggregateInput
@@ -250,9 +261,11 @@ export type UserMediaScalarWhereWithAggregatesInput = {
   id?: Prisma.IntWithAggregatesFilter<"UserMedia"> | number
   mediaId?: Prisma.IntWithAggregatesFilter<"UserMedia"> | number
   userId?: Prisma.IntWithAggregatesFilter<"UserMedia"> | number
+  slot?: Prisma.EnumUserMediaSlotWithAggregatesFilter<"UserMedia"> | $Enums.UserMediaSlot
 }
 
 export type UserMediaCreateInput = {
+  slot: $Enums.UserMediaSlot
   media: Prisma.MediaCreateNestedOneWithoutUserMediaInput
   user: Prisma.UserCreateNestedOneWithoutUserMediaInput
 }
@@ -261,9 +274,11 @@ export type UserMediaUncheckedCreateInput = {
   id?: number
   mediaId: number
   userId: number
+  slot: $Enums.UserMediaSlot
 }
 
 export type UserMediaUpdateInput = {
+  slot?: Prisma.EnumUserMediaSlotFieldUpdateOperationsInput | $Enums.UserMediaSlot
   media?: Prisma.MediaUpdateOneRequiredWithoutUserMediaNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutUserMediaNestedInput
 }
@@ -272,22 +287,25 @@ export type UserMediaUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   mediaId?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
+  slot?: Prisma.EnumUserMediaSlotFieldUpdateOperationsInput | $Enums.UserMediaSlot
 }
 
 export type UserMediaCreateManyInput = {
   id?: number
   mediaId: number
   userId: number
+  slot: $Enums.UserMediaSlot
 }
 
 export type UserMediaUpdateManyMutationInput = {
-
+  slot?: Prisma.EnumUserMediaSlotFieldUpdateOperationsInput | $Enums.UserMediaSlot
 }
 
 export type UserMediaUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   mediaId?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
+  slot?: Prisma.EnumUserMediaSlotFieldUpdateOperationsInput | $Enums.UserMediaSlot
 }
 
 export type UserMediaListRelationFilter = {
@@ -300,15 +318,16 @@ export type UserMediaOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
-export type UserMediaMediaIdUserIdCompoundUniqueInput = {
-  mediaId: number
+export type UserMediaUserIdSlotCompoundUniqueInput = {
   userId: number
+  slot: $Enums.UserMediaSlot
 }
 
 export type UserMediaCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   mediaId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  slot?: Prisma.SortOrder
 }
 
 export type UserMediaAvgOrderByAggregateInput = {
@@ -321,12 +340,14 @@ export type UserMediaMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   mediaId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  slot?: Prisma.SortOrder
 }
 
 export type UserMediaMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   mediaId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  slot?: Prisma.SortOrder
 }
 
 export type UserMediaSumOrderByAggregateInput = {
@@ -419,13 +440,19 @@ export type UserMediaUncheckedUpdateManyWithoutMediaNestedInput = {
   deleteMany?: Prisma.UserMediaScalarWhereInput | Prisma.UserMediaScalarWhereInput[]
 }
 
+export type EnumUserMediaSlotFieldUpdateOperationsInput = {
+  set?: $Enums.UserMediaSlot
+}
+
 export type UserMediaCreateWithoutUserInput = {
+  slot: $Enums.UserMediaSlot
   media: Prisma.MediaCreateNestedOneWithoutUserMediaInput
 }
 
 export type UserMediaUncheckedCreateWithoutUserInput = {
   id?: number
   mediaId: number
+  slot: $Enums.UserMediaSlot
 }
 
 export type UserMediaCreateOrConnectWithoutUserInput = {
@@ -461,15 +488,18 @@ export type UserMediaScalarWhereInput = {
   id?: Prisma.IntFilter<"UserMedia"> | number
   mediaId?: Prisma.IntFilter<"UserMedia"> | number
   userId?: Prisma.IntFilter<"UserMedia"> | number
+  slot?: Prisma.EnumUserMediaSlotFilter<"UserMedia"> | $Enums.UserMediaSlot
 }
 
 export type UserMediaCreateWithoutMediaInput = {
+  slot: $Enums.UserMediaSlot
   user: Prisma.UserCreateNestedOneWithoutUserMediaInput
 }
 
 export type UserMediaUncheckedCreateWithoutMediaInput = {
   id?: number
   userId: number
+  slot: $Enums.UserMediaSlot
 }
 
 export type UserMediaCreateOrConnectWithoutMediaInput = {
@@ -501,39 +531,47 @@ export type UserMediaUpdateManyWithWhereWithoutMediaInput = {
 export type UserMediaCreateManyUserInput = {
   id?: number
   mediaId: number
+  slot: $Enums.UserMediaSlot
 }
 
 export type UserMediaUpdateWithoutUserInput = {
+  slot?: Prisma.EnumUserMediaSlotFieldUpdateOperationsInput | $Enums.UserMediaSlot
   media?: Prisma.MediaUpdateOneRequiredWithoutUserMediaNestedInput
 }
 
 export type UserMediaUncheckedUpdateWithoutUserInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   mediaId?: Prisma.IntFieldUpdateOperationsInput | number
+  slot?: Prisma.EnumUserMediaSlotFieldUpdateOperationsInput | $Enums.UserMediaSlot
 }
 
 export type UserMediaUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   mediaId?: Prisma.IntFieldUpdateOperationsInput | number
+  slot?: Prisma.EnumUserMediaSlotFieldUpdateOperationsInput | $Enums.UserMediaSlot
 }
 
 export type UserMediaCreateManyMediaInput = {
   id?: number
   userId: number
+  slot: $Enums.UserMediaSlot
 }
 
 export type UserMediaUpdateWithoutMediaInput = {
+  slot?: Prisma.EnumUserMediaSlotFieldUpdateOperationsInput | $Enums.UserMediaSlot
   user?: Prisma.UserUpdateOneRequiredWithoutUserMediaNestedInput
 }
 
 export type UserMediaUncheckedUpdateWithoutMediaInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
+  slot?: Prisma.EnumUserMediaSlotFieldUpdateOperationsInput | $Enums.UserMediaSlot
 }
 
 export type UserMediaUncheckedUpdateManyWithoutMediaInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
+  slot?: Prisma.EnumUserMediaSlotFieldUpdateOperationsInput | $Enums.UserMediaSlot
 }
 
 
@@ -542,6 +580,7 @@ export type UserMediaSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   id?: boolean
   mediaId?: boolean
   userId?: boolean
+  slot?: boolean
   media?: boolean | Prisma.MediaDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["userMedia"]>
@@ -550,6 +589,7 @@ export type UserMediaSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
   id?: boolean
   mediaId?: boolean
   userId?: boolean
+  slot?: boolean
   media?: boolean | Prisma.MediaDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["userMedia"]>
@@ -558,6 +598,7 @@ export type UserMediaSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
   id?: boolean
   mediaId?: boolean
   userId?: boolean
+  slot?: boolean
   media?: boolean | Prisma.MediaDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["userMedia"]>
@@ -566,9 +607,10 @@ export type UserMediaSelectScalar = {
   id?: boolean
   mediaId?: boolean
   userId?: boolean
+  slot?: boolean
 }
 
-export type UserMediaOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "mediaId" | "userId", ExtArgs["result"]["userMedia"]>
+export type UserMediaOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "mediaId" | "userId" | "slot", ExtArgs["result"]["userMedia"]>
 export type UserMediaInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   media?: boolean | Prisma.MediaDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -592,6 +634,7 @@ export type $UserMediaPayload<ExtArgs extends runtime.Types.Extensions.InternalA
     id: number
     mediaId: number
     userId: number
+    slot: $Enums.UserMediaSlot
   }, ExtArgs["result"]["userMedia"]>
   composites: {}
 }
@@ -1020,6 +1063,7 @@ export interface UserMediaFieldRefs {
   readonly id: Prisma.FieldRef<"UserMedia", 'Int'>
   readonly mediaId: Prisma.FieldRef<"UserMedia", 'Int'>
   readonly userId: Prisma.FieldRef<"UserMedia", 'Int'>
+  readonly slot: Prisma.FieldRef<"UserMedia", 'UserMediaSlot'>
 }
     
 
