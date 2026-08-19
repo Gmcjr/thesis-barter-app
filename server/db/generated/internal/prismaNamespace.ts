@@ -2426,7 +2426,9 @@ export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof User
 export const DMScalarFieldEnum = {
   id: 'id',
   user1Id: 'user1Id',
-  user2Id: 'user2Id'
+  user2Id: 'user2Id',
+  user1Archived: 'user1Archived',
+  user2Archived: 'user2Archived'
 } as const
 
 export type DMScalarFieldEnum = (typeof DMScalarFieldEnum)[keyof typeof DMScalarFieldEnum]

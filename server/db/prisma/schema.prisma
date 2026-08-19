@@ -71,6 +71,9 @@ model DM {
   user2   User @relation("recievedDMs", fields: [user2Id], references: [id])
   user2Id Int
 
+  user1Archived Boolean @default(false)
+  user2Archived Boolean @default(false)
+
   messages Message[]
 
   @@unique([user1Id, user2Id])
