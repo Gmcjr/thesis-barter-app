@@ -538,6 +538,7 @@ model Notification {
 
 enum JobType {
   SEND_NOTIFICATION
+  SCREEN_CONTENT
 }
 
 enum JobStatus {

@@ -1,8 +1,8 @@
 import { GoogleGenAI, Type } from '@google/genai';
 import { ReportStatus, TargetType, ReportReason } from '../db/generated/enums';
 import { prisma } from '../db/index.js';
-import { getIo } from '../middleware/socket.js';
 import { getDownloadUrl } from './s3.js';
+import type { Db } from './jobQueue.js';
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
@@ -152,7 +152,7 @@ function guessMimeType(s3Key: string): string {
   return 'image/jpeg';
 }
 
-async function fetchAsBase64(
+export async function fetchAsBase64(
   s3Key: string,
 ): Promise<{ mimeType: string; data: string }> {
   const url = await getDownloadUrl(s3Key);
@@ -162,7 +162,7 @@ async function fetchAsBase64(
 }
 
 let systemUserId: number | null = null;
-async function getSystemUserId(): Promise<number> {
+export async function getSystemUserId(): Promise<number> {
   if (systemUserId) return systemUserId;
   const sysUser = await prisma.user.findFirstOrThrow({
     where: { isSystem: true },
@@ -171,7 +171,7 @@ async function getSystemUserId(): Promise<number> {
   return systemUserId;
 }
 
-const REPORT_FK_FIELD: Record<string, string> = {
+export const REPORT_FK_FIELD: Record<string, string> = {
   POST: 'postId',
   USER: 'targetUserId',
   MESSAGE: 'messageId',
@@ -180,71 +180,34 @@ const REPORT_FK_FIELD: Record<string, string> = {
   TRADE_REQUEST: 'tradeRequestId',
 };
 
-async function fileSystemReport(
-  targetType: keyof typeof REPORT_FK_FIELD,
-  targetId: number,
-  screening: ScreeningResult,
-) {
-  const reporterId = await getSystemUserId();
-  await prisma.report.create({
+interface FileSystemReportInput {
+  db: Db;
+  targetType: TargetType;
+  targetId: number;
+  reporterId: number;
+  status: typeof ReportStatus.REMOVED | typeof ReportStatus.PENDING;
+  resolution: string;
+  screening?: ScreeningResult;
+}
+
+// db is the job processor's transaction client when filing alongside a REMOVED row-flip,
+// or the bare prisma client when filing a PENDING pipeline-failure report from failJob
+export async function fileSystemReport(input: FileSystemReportInput): Promise<void> {
+  const {
+    db, targetType, targetId, reporterId, status, resolution, screening,
+  } = input;
+  await db.report.create({
     data: {
       reporterId,
-      targetType: targetType as TargetType,
+      targetType,
       [REPORT_FK_FIELD[targetType]]: targetId,
       reason: ReportReason.AUTO_SCREENING,
-      aiScore: screening.score,
-      aiCategories: screening.categories,
-      aiRationale: screening.rationale,
-      status: ReportStatus.REMOVED,
-      resolution: `Auto-removed: ${screening.rationale}`,
-      resolvedAt: new Date(),
+      aiScore: screening?.score ?? null,
+      aiCategories: screening?.categories ?? [],
+      aiRationale: screening?.rationale ?? null,
+      status,
+      resolution,
+      resolvedAt: status === ReportStatus.REMOVED ? new Date() : null,
     },
   });
-}
-
-export interface ScreenTarget {
-  targetType: keyof typeof REPORT_FK_FIELD;
-  targetId: number;
-  authorId: number;
-  text: string;
-  imageKeys?: string[];
-  onApproved: () => Promise<void>;
-  onRemoved: () => Promise<void>;
-}
-
-// Generic async screening for any content type
-export function queueScreening(target: ScreenTarget) {
-  (async () => {
-    try {
-      const images = target.imageKeys?.length
-        ? await Promise.all(target.imageKeys.map(fetchAsBase64))
-        : [];
-      const screening = await screenContent(target.text, images);
-      const action = screening ? decideAutoAction(screening) : null;
-
-      if (action?.status === ReportStatus.REMOVED) {
-        await fileSystemReport(target.targetType, target.targetId, screening!);
-        await target.onRemoved();
-        getIo().to(`user:${target.authorId}`).emit('content:screened', {
-          targetType: target.targetType,
-          targetId: target.targetId,
-          ok: false,
-          rationale: screening!.rationale,
-        });
-        return;
-      }
-
-      await target.onApproved();
-      getIo().to(`user:${target.authorId}`).emit('content:screened', {
-        targetType: target.targetType,
-        targetId: target.targetId,
-        ok: true,
-      });
-    } catch (err) {
-      console.error(
-        `Screening failed for ${target.targetType}:${target.targetId}`,
-        err,
-      );
-    }
-  })();
 }

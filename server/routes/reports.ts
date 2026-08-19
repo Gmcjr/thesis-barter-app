@@ -5,7 +5,7 @@ import requireAuth from '../middleware/requireAuth.js';
 import requireModerator from '../middleware/requireModerator.js';
 import { TargetType, ReportReason, ReportStatus } from '../db/generated/enums.js';
 import { Prisma } from '../db/generated/client.js';
-import { enqueueJob } from '../services/jobs.js';
+import { enqueueJob } from '../services/jobQueue.js';
 
 const reports = Router();
 

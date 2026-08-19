@@ -3,7 +3,7 @@ import { prisma } from '../db/index';
 import requireAuth from '../middleware/requireAuth';
 import { Status } from '../db/generated/client';
 import { getIo } from '../middleware/socket';
-import { enqueueJob } from '../services/jobs';
+import { enqueueJob } from '../services/jobQueue';
 
 const trades = Router();
 

@@ -3,7 +3,7 @@ import { prisma } from '../db/index.js';
 import requireAuth from '../middleware/requireAuth.js';
 import { isBlocked } from '../services/blocks.js';
 import { getIo } from '../middleware/socket';
-import { enqueueJob } from '../services/jobs.js';
+import { enqueueJob } from '../services/jobQueue.js';
 
 const dms = Router();
 

@@ -4,7 +4,7 @@ import { Prisma } from '../db/generated/client.js';
 import requireAuth from '../middleware/requireAuth';
 import requireModerator from '../middleware/requireModerator';
 import { ReportStatus, AppealStatus, ReportReason } from '../db/generated/enums';
-import { enqueueJob } from '../services/jobs.js';
+import { enqueueJob } from '../services/jobQueue.js';
 
 const appeals = Router();
 const QUEUE_PAGE_SIZE = 50;
