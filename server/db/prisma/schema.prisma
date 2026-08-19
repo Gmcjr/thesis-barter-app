@@ -45,6 +45,7 @@ model User {
   isSystem           Boolean @default(false)
   pendingBio         String?
   isPendingScreening Boolean @default(false)
+  version            Int     @default(0)
 
   reportsFiled    Report[] @relation("reportsFiled")
   reportsAgainst  Report[] @relation("reportsAgainst")
@@ -94,6 +95,7 @@ model Message {
   reports      Report[]
   isRemoved    Boolean        @default(false)
   messageMedia MessageMedia[]
+  version      Int            @default(0)
 
   @@index([dmId, createdAt])
 }
@@ -133,8 +135,12 @@ model Post {
   isPendingScreening Boolean  @default(false)
   isRemoved          Boolean  @default(false)
   reports            Report[]
+  version            Int      @default(0)
 
   tradeRequests TradeRequest[]
+
+  @@index([isRemoved, isPendingScreening])
+  @@index([userId])
 }
 
 enum Status {
@@ -175,6 +181,7 @@ model TradeOffer {
   isPendingScreening Boolean  @default(false)
   isRemoved          Boolean  @default(false)
   reports            Report[]
+  version            Int      @default(0)
 
   tradeOfferMedia TradeOfferMedia[]
 
@@ -183,6 +190,8 @@ model TradeOffer {
   status          TradeOfferStatus @default(PENDING)
 
   createdAt DateTime @default(now())
+
+  @@index([postId, status])
 }
 
 enum TradeOfferStatus {
@@ -199,12 +208,14 @@ model TradeRequest {
   requester   User @relation(fields: [requesterId], references: [id], onDelete: Cascade)
   requesterId Int
 
-  message            String?
-  status             TradeRequestStatus @default(PENDING)
-  createdAt          DateTime           @default(now())
-  isPendingScreening Boolean            @default(false)
-  isRemoved          Boolean            @default(false)
+  message   String?
+  status    TradeRequestStatus @default(PENDING)
+  createdAt DateTime           @default(now())
+
+  isPendingScreening Boolean  @default(false)
+  isRemoved          Boolean  @default(false)
   reports            Report[]
+  version            Int      @default(0)
 
   @@unique([postId, requesterId])
 }
@@ -302,6 +313,7 @@ model Review {
   isPendingScreening Boolean  @default(false)
   isRemoved          Boolean  @default(false)
   reports            Report[]
+  version            Int      @default(0)
 
   @@unique([tradeId, reviewerId])
 }
@@ -498,13 +510,13 @@ model MessageMedia {
 }
 
 model UserMedia {
-  id      Int           @id @default(autoincrement())
-  media   Media         @relation(fields: [mediaId], references: [id], onDelete: Cascade)
+  id      Int   @id @default(autoincrement())
+  media   Media @relation(fields: [mediaId], references: [id], onDelete: Cascade)
   mediaId Int
-  user    User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user    User  @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId  Int
 
-  slot    UserMediaSlot
+  slot UserMediaSlot
 
   @@unique([userId, slot])
 }
