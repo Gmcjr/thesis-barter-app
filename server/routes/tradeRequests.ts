@@ -157,7 +157,7 @@ tradeRequests.get('/for-post/:postId', requireAuth, async (req, res) => {
     }
 
     const requestsForPost = await prisma.tradeRequest.findMany({
-      where: { postId, isRemoved: false },
+      where: { postId, isRemoved: false, isPendingScreening: false },
       include: {
         requester: { select: { id: true, name: true, email: true } },
       },
@@ -183,6 +183,7 @@ tradeRequests.get('/received', requireAuth, async (req, res) => {
         userId: ownerId,
         status: Status.OPEN,
         isRemoved: false,
+        isPendingScreening: false,
       },
       select: {
         id: true,

@@ -177,7 +177,7 @@ appeals.patch('/:id', requireModerator, async (req, res) => {
         if (appeal.report.postId) {
           await tx.post.update({
             where: { id: appeal.report.postId },
-            data: { isRemoved: false },
+            data: { isRemoved: false, isPendingScreening: false },
           });
         }
         if (appeal.report.messageId) {

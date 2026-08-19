@@ -110,7 +110,7 @@ router.get('/:id', async (req, res) => {
     const user = await prisma.user.findUnique({
       where: { id },
       include: {
-        posts: true,
+        posts: { where: { isRemoved: false, isPendingScreening: false } },
       },
     });
 

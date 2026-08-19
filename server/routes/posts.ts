@@ -83,11 +83,15 @@ posts.get('/', async (req, res) => {
       OR: [
         { userId },
         {
+          isRemoved: false,
+          isPendingScreening: false,
           tradeOffers: {
             some: { offererId: userId, status: 'COMPLETED' as const },
           },
         },
         {
+          isRemoved: false,
+          isPendingScreening: false,
           trades: {
             some: { requesterId: userId, status: 'COMPLETED' as const },
           },

@@ -198,7 +198,7 @@ reports.patch('/:id', requireModerator, async (req, res) => {
       if (report.postId) {
         const post = await tx.post.update({
           where: { id: report.postId },
-          data: { isRemoved: isRemove },
+          data: { isRemoved: isRemove, isPendingScreening: false },
         });
         if (isRemove) {
           await enqueueJob(tx, 'SEND_NOTIFICATION', {

@@ -1,5 +1,5 @@
 import { GoogleGenAI, Type } from '@google/genai';
-import { ReportStatus, TargetType, ReportReason } from '../db/generated/enums';
+import { ReportStatus, TargetType, ReportReason } from '../db/generated/enums.js';
 import { prisma } from '../db/index.js';
 import { getDownloadUrl } from './s3.js';
 import type { Db } from './jobQueue.js';

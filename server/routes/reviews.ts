@@ -167,7 +167,7 @@ reviews.patch('/:id', requireAuth, async (req, res) => {
         where: { id: review.id },
         data: {
           ...data,
-          ...(data.comment ? { isPendingScreeing: true } : {}),
+          ...(data.comment ? { isPendingScreening: true } : {}),
         },
       });
 
@@ -218,14 +218,14 @@ reviews.get('/user/:userId', async (req, res) => {
       reviewList, aggregate, completedTradeCount, completedOfferCount, ownedCompletedOfferPostCount,
     ] = await Promise.all([
       prisma.review.findMany({
-        where: { revieweeId: userId, isRemoved: false },
+        where: { revieweeId: userId, isRemoved: false, isPendingScreening: false },
         include: {
           reviewer: { select: { id: true, name: true } },
         },
         orderBy: { createdAt: 'desc' },
       }),
       prisma.review.aggregate({
-        where: { revieweeId: userId, isRemoved: false },
+        where: { revieweeId: userId, isRemoved: false, isPendingScreening: false },
         _avg: { rating: true },
         _count: { rating: true },
       }),
