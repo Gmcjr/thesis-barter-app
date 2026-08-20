@@ -2,8 +2,7 @@ import { Router } from 'express';
 import { prisma } from '../db/index.js';
 import requireAuth from '../middleware/requireAuth.js';
 import { Status, TradeRequestStatus } from '../db/generated/enums.js';
-import { queueScreening } from '../services/moderation.js';
-import { enqueueJob } from '../services/jobs.js';
+import { enqueueJob } from '../services/jobQueue.js';
 
 const tradeRequests = Router();
 
@@ -49,52 +48,47 @@ tradeRequests.post('/', requireAuth, async (req, res) => {
 
     const trimmedMessage = typeof message === 'string' && message.trim() ? message.trim() : null;
 
-    const tradeRequest = await prisma.tradeRequest.upsert({
-      where: { postId_requesterId: { postId, requesterId } },
-      create: {
-        postId,
-        requesterId,
-        message: trimmedMessage,
-        isPendingScreening: !!trimmedMessage,
-      },
-      update: {
-        status: TradeRequestStatus.PENDING,
-        message: trimmedMessage,
-        createdAt: new Date(),
-        isPendingScreening: !!trimmedMessage,
-      },
-    });
+    const tradeRequest = await prisma.$transaction(async (tx) => {
+      const upserted = await tx.tradeRequest.upsert({
+        where: { postId_requesterId: { postId, requesterId } },
+        create: {
+          postId,
+          requesterId,
+          message: trimmedMessage,
+          isPendingScreening: !!trimmedMessage,
+        },
+        update: {
+          status: TradeRequestStatus.PENDING,
+          message: trimmedMessage,
+          createdAt: new Date(),
+          isPendingScreening: !!trimmedMessage,
+        },
+      });
 
-    if (trimmedMessage) {
-      queueScreening({
-        targetType: 'TRADE_REQUEST',
-        targetId: tradeRequest.id,
-        authorId: requesterId,
-        text: trimmedMessage,
-        onApproved: async () => {
-          await prisma.tradeRequest.update({
-            where: { id: tradeRequest.id },
-            data: { isPendingScreening: false },
-          });
-          const preview = trimmedMessage.length > 80 ? `${trimmedMessage.slice(0, 80)}...` : trimmedMessage;
-          await enqueueJob(prisma, 'SEND_NOTIFICATION', {
+      if (trimmedMessage) {
+        const preview = trimmedMessage.length > 80 ? `${trimmedMessage.slice(0, 80)}...` : trimmedMessage;
+        await enqueueJob(tx, 'SCREEN_CONTENT', {
+          targetType: 'TRADE_REQUEST',
+          targetId: upserted.id,
+          authorId: requesterId,
+          text: trimmedMessage,
+          notifyOnApprove: {
             userId: post.userId,
             type: 'TRADE_REQUEST_RECEIVED',
             title: 'New trade request on your post',
             body: preview,
             link: `/profile?postId=${postId}`,
             entityType: 'TRADE_REQUEST',
-            entityId: tradeRequest.id,
-          });
-        },
-        onRemoved: async () => {
-          await prisma.tradeRequest.update({
-            where: { id: tradeRequest.id },
-            data: { isPendingScreening: false, isRemoved: true },
-          });
-        },
-      });
-    } else {
+            entityId: upserted.id,
+          },
+        });
+      }
+
+      return upserted;
+    });
+
+    // No message = nothing to screen, notify immediately
+    if (!trimmedMessage) {
       await enqueueJob(prisma, 'SEND_NOTIFICATION', {
         userId: post.userId,
         type: 'TRADE_REQUEST_RECEIVED',
@@ -163,7 +157,7 @@ tradeRequests.get('/for-post/:postId', requireAuth, async (req, res) => {
     }
 
     const requestsForPost = await prisma.tradeRequest.findMany({
-      where: { postId, isRemoved: false },
+      where: { postId, isRemoved: false, isPendingScreening: false },
       include: {
         requester: { select: { id: true, name: true, email: true } },
       },
@@ -189,6 +183,7 @@ tradeRequests.get('/received', requireAuth, async (req, res) => {
         userId: ownerId,
         status: Status.OPEN,
         isRemoved: false,
+        isPendingScreening: false,
       },
       select: {
         id: true,

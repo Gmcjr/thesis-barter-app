@@ -146,7 +146,8 @@ export type NotificationType = (typeof NotificationType)[keyof typeof Notificati
 
 
 export const JobType = {
-  SEND_NOTIFICATION: 'SEND_NOTIFICATION'
+  SEND_NOTIFICATION: 'SEND_NOTIFICATION',
+  SCREEN_CONTENT: 'SCREEN_CONTENT'
 } as const
 
 export type JobType = (typeof JobType)[keyof typeof JobType]

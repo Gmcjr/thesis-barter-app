@@ -4,7 +4,7 @@ import requireAuth from '../middleware/requireAuth.js';
 import { isBlocked } from '../services/blocks.js';
 import { buildKey, getUploadUrl, getDownloadUrl } from '../services/s3.js';
 import { UserMediaSlot } from '../db/generated/enums.js';
-import { queueScreening } from '../services/moderation.js';
+import { enqueueJob } from '../services/jobQueue.js';
 
 const router = Router();
 
@@ -101,41 +101,30 @@ router.patch('/me', requireAuth, async (req, res) => {
 
   try {
     const bioChanged = bio !== undefined;
-    const user = await prisma.user.update({
-      where: { id: req.user!.id },
-      data: {
-        name: name !== undefined ? name.trim() : undefined,
-        phone,
-        zipCode,
-        ...(bioChanged ? { pendingBio: bio, isPendingScreening: true } : {}),
-      },
-      include: { userMedia: { include: { media: true } } },
-    });
 
-    if (bioChanged && bio) {
-      queueScreening({
-        targetType: 'USER',
-        targetId: user.id,
-        authorId: user.id,
-        text: bio,
-        onApproved: async () => {
-          await prisma.user.update({
-            where: { id: user.id },
-            data: {
-              bio: user.pendingBio,
-              pendingBio: null,
-              isPendingScreening: false,
-            },
-          });
+    const user = await prisma.$transaction(async (tx) => {
+      const updated = await tx.user.update({
+        where: { id: req.user!.id },
+        data: {
+          name: name !== undefined ? name.trim() : undefined,
+          phone,
+          zipCode,
+          ...(bioChanged ? { pendingBio: bio, isPendingScreening: true } : {}),
         },
-        onRemoved: async () => {
-          await prisma.user.update({
-            where: { id: user.id },
-            data: { pendingBio: null, isPendingScreening: false },
-          });
-        },
+        include: { userMedia: { include: { media: true } } },
       });
-    }
+
+      if (bioChanged && bio) {
+        await enqueueJob(tx, 'SCREEN_CONTENT', {
+          targetType: 'USER',
+          targetId: user.id,
+          authorId: user.id,
+          text: bio,
+        });
+      }
+
+      return updated;
+    });
     const { userMedia, ...userRest } = user;
     return res.status(200).json({ ...userRest, ...(await getUserMediaUrls(userMedia)) });
   } catch (err) {
@@ -157,7 +146,7 @@ router.get('/:id', async (req, res) => {
     const user = await prisma.user.findUnique({
       where: { id },
       include: {
-        posts: true,
+        posts: { where: { isRemoved: false, isPendingScreening: false } },
         userMedia: { include: { media: true } },
       },
     });

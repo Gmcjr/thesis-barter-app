@@ -2417,7 +2417,8 @@ export const UserScalarFieldEnum = {
   zipCode: 'zipCode',
   isSystem: 'isSystem',
   pendingBio: 'pendingBio',
-  isPendingScreening: 'isPendingScreening'
+  isPendingScreening: 'isPendingScreening',
+  version: 'version'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -2441,7 +2442,8 @@ export const MessageScalarFieldEnum = {
   recieverId: 'recieverId',
   text: 'text',
   createdAt: 'createdAt',
-  isRemoved: 'isRemoved'
+  isRemoved: 'isRemoved',
+  version: 'version'
 } as const
 
 export type MessageScalarFieldEnum = (typeof MessageScalarFieldEnum)[keyof typeof MessageScalarFieldEnum]
@@ -2470,7 +2472,8 @@ export const PostScalarFieldEnum = {
   lat: 'lat',
   lng: 'lng',
   isPendingScreening: 'isPendingScreening',
-  isRemoved: 'isRemoved'
+  isRemoved: 'isRemoved',
+  version: 'version'
 } as const
 
 export type PostScalarFieldEnum = (typeof PostScalarFieldEnum)[keyof typeof PostScalarFieldEnum]
@@ -2497,6 +2500,7 @@ export const TradeOfferScalarFieldEnum = {
   message: 'message',
   isPendingScreening: 'isPendingScreening',
   isRemoved: 'isRemoved',
+  version: 'version',
   ownerApproved: 'ownerApproved',
   offererApproved: 'offererApproved',
   status: 'status',
@@ -2514,7 +2518,8 @@ export const TradeRequestScalarFieldEnum = {
   status: 'status',
   createdAt: 'createdAt',
   isPendingScreening: 'isPendingScreening',
-  isRemoved: 'isRemoved'
+  isRemoved: 'isRemoved',
+  version: 'version'
 } as const
 
 export type TradeRequestScalarFieldEnum = (typeof TradeRequestScalarFieldEnum)[keyof typeof TradeRequestScalarFieldEnum]
@@ -2575,7 +2580,8 @@ export const ReviewScalarFieldEnum = {
   comment: 'comment',
   createdAt: 'createdAt',
   isPendingScreening: 'isPendingScreening',
-  isRemoved: 'isRemoved'
+  isRemoved: 'isRemoved',
+  version: 'version'
 } as const
 
 export type ReviewScalarFieldEnum = (typeof ReviewScalarFieldEnum)[keyof typeof ReviewScalarFieldEnum]

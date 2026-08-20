@@ -1,6 +1,6 @@
 import { Router, type Request } from 'express';
 import { prisma } from '../db/index.js';
-import { queueScreening } from '../services/moderation.js';
+import { enqueueJob } from '../services/jobQueue.js';
 import requireAuth from '../middleware/requireAuth.js';
 import { getDownloadUrl } from '../services/s3.js';
 import { getBlockedRelationshipIds } from '../services/blocks.js';
@@ -27,7 +27,11 @@ interface TradeOfferItem {
 
 const getUserId = (req: Request): number => req.user!.id;
 
-// generate the repeated where-clause for updating/deleting posts
+// Signals 'no owned-open post matched' out of a $transaction callback, since you
+// can't `return res.status(...)` from inside one
+class PostNotFoundForUpdate extends Error {}
+
+// Generate the repeated where-clause for updating/deleting posts
 const getOwnedOpenPostWhere = (req: Request) => ({
   id: Number(req.params.id),
   userId: getUserId(req),
@@ -74,16 +78,20 @@ posts.get('/', async (req, res) => {
 
     // A user's 'trading history' includes posts they authored, posts where they
     // completed an art trade offer, and posts where they completed a generic
-    // trade as the requester - not just posts they own.
+    // trade as the requester - not just posts they own
     const ownedOrCompletedFilter = (userId: number) => ({
       OR: [
         { userId },
         {
+          isRemoved: false,
+          isPendingScreening: false,
           tradeOffers: {
             some: { offererId: userId, status: 'COMPLETED' as const },
           },
         },
         {
+          isRemoved: false,
+          isPendingScreening: false,
           trades: {
             some: { requesterId: userId, status: 'COMPLETED' as const },
           },
@@ -230,6 +238,18 @@ posts.post('/', requireAuth, async (req, res) => {
     const userId = getUserId(req);
     const trimmedCategory = typeof category === 'string' ? category.trim() : '';
 
+    // Doesn't depend on the post existing yet - resolve before opening the transaction
+    const mediaKeys = previewMediaId && fullMediaId
+      ? (
+        await prisma.media.findMany({
+          where: {
+            id: { in: [Number(previewMediaId), Number(fullMediaId)] },
+          },
+          select: { s3Key: true },
+        })
+      ).map((m) => m.s3Key)
+      : [];
+
     const newPost = await prisma.$transaction(async (tx) => {
       const post = await tx.post.create({
         data: {
@@ -287,42 +307,20 @@ posts.post('/', requireAuth, async (req, res) => {
         }
       }
 
+      // Same transaction as the create - a crash between the two would otherwise
+      // leave the post stuck isPendingScreening forever with no Job to reclaim it
+      await enqueueJob(tx, 'SCREEN_CONTENT', {
+        targetType: 'POST',
+        targetId: post.id,
+        authorId: userId,
+        text: `${title}\n\n${message}`,
+        imageKeys: mediaKeys,
+      });
+
       return post;
     });
 
-    const mediaKeys = previewMediaId && fullMediaId
-      ? (
-        await prisma.media.findMany({
-          where: {
-            id: { in: [Number(previewMediaId), Number(fullMediaId)] },
-          },
-          select: { s3Key: true },
-        })
-      ).map((m) => m.s3Key)
-      : [];
-
-    queueScreening({
-      targetType: 'POST',
-      targetId: newPost.id,
-      authorId: userId,
-      text: `${title}\n\n${message}`,
-      imageKeys: mediaKeys,
-      onApproved: async () => {
-        await prisma.post.update({
-          where: { id: newPost.id },
-          data: { isPendingScreening: false },
-        });
-        getIo().emit('posts:changed');
-      },
-      onRemoved: async () => {
-        await prisma.post.update({
-          where: { id: newPost.id },
-          data: { isPendingScreening: false, isRemoved: true },
-        });
-        getIo().emit('posts:changed');
-      },
-    });
-
+    // Optimistic refresh signal - the processor emits its own post-commit posts:changed later
     getIo().emit('posts:changed');
     return res.status(201).json(newPost);
   } catch (error) {
@@ -356,46 +354,41 @@ posts.patch('/:id', requireAuth, async (req, res) => {
         .json({ error: 'radiusMiles must be a number when isLocal is true.' });
     }
 
-    const { count } = await prisma.post.updateMany({
-      where: getOwnedOpenPostWhere(req),
-      data: {
-        title,
-        message,
-        isLocal,
-        zipCode: isLocal ? String(zipCode) : null,
-        radiusMiles: parsedRadius,
-        ...(title || message ? { isPendingScreening: true } : {}),
-      },
-    });
+    try {
+      await prisma.$transaction(async (tx) => {
+        const { count } = await tx.post.updateMany({
+          where: getOwnedOpenPostWhere(req),
+          data: {
+            title,
+            message,
+            isLocal,
+            zipCode: isLocal ? String(zipCode) : null,
+            radiusMiles: parsedRadius,
+            ...(title || message ? { isPendingScreening: true } : {}),
+          },
+        });
 
-    if (!count) {
-      return res
-        .status(404)
-        .json({ error: 'Post not found to PATCH as update.' });
-    }
-    if (title || message) {
-      const postId = Number(req.params.id);
-      queueScreening({
-        targetType: 'POST',
-        targetId: postId,
-        authorId: getUserId(req),
-        text: `${title}\n\n${message}`,
-        onApproved: async () => {
-          await prisma.post.update({ where: { id: postId }, data: { isPendingScreening: false } });
-          getIo().emit('posts:changed');
-        },
-        onRemoved: async () => {
-          await prisma.post.update({
-            where: { id: postId },
-            data: {
-              isPendingScreening: false,
-              isRemoved: true,
-            },
+        // Can't `return res.status(...)` from inside a transaction - signal via throw
+        if (!count) throw new PostNotFoundForUpdate();
+
+        if (title || message) {
+          await enqueueJob(tx, 'SCREEN_CONTENT', {
+            targetType: 'POST',
+            targetId: Number(req.params.id),
+            authorId: getUserId(req),
+            text: `${title}\n\n${message}`,
           });
-          getIo().emit('posts:changed');
-        },
+        }
       });
+    } catch (err) {
+      if (err instanceof PostNotFoundForUpdate) {
+        return res
+          .status(404)
+          .json({ error: 'Post not found to PATCH as update.' });
+      }
+      throw err; // Falls through to the route's own outer catch
     }
+
     getIo().emit('posts:changed');
     return res.json({ success: true });
   } catch (error) {

@@ -55,7 +55,7 @@ export default function ReportDialog({
       await axios.post('/reports', {
         targetType, targetId, reason: submittedReason, details: submittedDetails,
       }, { withCredentials: true });
-      showToast('Screening complete. A neighbor moderator will confirm within 24 hours.', 'info');
+      showToast('Report submitted. A moderator will review it shortly.', 'info');
     } catch {
       showToast("Couldn't submit report - check your connection and try again.", 'error');
     }
