@@ -32,6 +32,7 @@ async function flipTargetRow(
   text: string,
   action: ReturnType<typeof decideAutoAction>,
   isRescreen: boolean,
+  expectedVersion: number,
 ): Promise<void> {
   const removed = action?.status === ReportStatus.REMOVED;
   const noVerdict = action === null;
@@ -41,11 +42,8 @@ async function flipTargetRow(
       if (isRescreen) {
         if (noVerdict || !removed) return; // Rescreen only acts on removal
         // OCC: read current version, only write if it hasn't moved
-        const current = await db.post.findUniqueOrThrow({
-          where: { id: targetId }, select: { version: true },
-        });
         const { count } = await db.post.updateMany({
-          where: { id: targetId, version: current.version },
+          where: { id: targetId, version: expectedVersion },
           data: { isRemoved: true, version: { increment: 1 } },
         });
         if (count === 0) console.warn(`OCC conflict on POST:${targetId} rescreen - already resolved, skipping stale verdict`);
@@ -53,11 +51,8 @@ async function flipTargetRow(
       }
       if (noVerdict) return; // Fail-closed leave isPendingScreening: true, no write
       {
-        const current = await db.post.findFirstOrThrow({
-          where: { id: targetId }, select: { version: true },
-        });
         const { count } = await db.post.updateMany({
-          where: { id: targetId, version: current.version },
+          where: { id: targetId, version: expectedVersion },
           data: {
             isPendingScreening: false,
             ...(removed
@@ -72,12 +67,8 @@ async function flipTargetRow(
     }
     case TargetType.TRADE_OFFER: {
       if (noVerdict) return; // Fail-closed
-      const current = await db.tradeOffer.findUniqueOrThrow({
-        where: { id: targetId },
-        select: { version: true },
-      });
       const { count } = await db.tradeOffer.updateMany({
-        where: { id: targetId, version: current.version },
+        where: { id: targetId, version: expectedVersion },
         data: {
           isPendingScreening: false,
           ...(removed
@@ -91,12 +82,8 @@ async function flipTargetRow(
     }
     case TargetType.TRADE_REQUEST: {
       if (noVerdict) return; // Fail-closed
-      const current = await db.tradeRequest.findUniqueOrThrow({
-        where: { id: targetId },
-        select: { version: true },
-      });
       const { count } = await db.tradeRequest.updateMany({
-        where: { id: targetId, version: current.version },
+        where: { id: targetId, version: expectedVersion },
         data: {
           isPendingScreening: false,
           ...(removed
@@ -110,12 +97,8 @@ async function flipTargetRow(
     }
     case TargetType.REVIEW: {
       if (noVerdict) return; // Fail-closed
-      const current = await db.review.findUniqueOrThrow({
-        where: { id: targetId },
-        select: { version: true },
-      });
       const { count } = await db.review.updateMany({
-        where: { id: targetId, version: current.version },
+        where: { id: targetId, version: expectedVersion },
         data: {
           isPendingScreening: false,
           ...(removed
@@ -129,13 +112,9 @@ async function flipTargetRow(
     }
     case TargetType.USER: {
       if (noVerdict) return; // Fail-closed: pendingBio stays queued, bio untouched
-      const current = await db.user.findUniqueOrThrow({
-        where: { id: targetId },
-        select: { version: true },
-      });
       // Approve: promote pendingBio into bio / remove: drop pendingBio, keep old bio
       const { count } = await db.user.updateMany({
-        where: { id: targetId, version: current.version },
+        where: { id: targetId, version: expectedVersion },
         data: removed
           ? { pendingBio: null, isPendingScreening: false, version: { increment: 1 } }
           : {
@@ -154,11 +133,8 @@ async function flipTargetRow(
       }
       // No isPendingScreening field on Message - nothing to do otherwise
       if (noVerdict || !removed) return;
-      const current = await db.message.findUniqueOrThrow({
-        where: { id: targetId }, select: { version: true },
-      });
       const { count } = await db.message.updateMany({
-        where: { id: targetId, version: current.version },
+        where: { id: targetId, version: expectedVersion },
         data: { isRemoved: true, version: { increment: 1 } },
       });
       if (count === 0) console.warn(`OCC conflict on MESSAGE:${targetId} rescreen - already resolved, skipping stale verdict`);
@@ -169,7 +145,49 @@ async function flipTargetRow(
   }
 }
 
+async function getCurrentVersion(
+  db: Db,
+  targetType: TargetTypeT,
+  targetId: number,
+): Promise<number> {
+  switch (targetType) {
+    case TargetType.POST:
+      return (await db.post.findUniqueOrThrow({
+        where: { id: targetId },
+        select: { version: true },
+      })).version;
+    case TargetType.TRADE_OFFER:
+      return (await db.tradeOffer.findUniqueOrThrow({
+        where: { id: targetId },
+        select: { version: true },
+      })).version;
+    case TargetType.TRADE_REQUEST:
+      return (await db.tradeRequest.findUniqueOrThrow({
+        where: { id: targetId },
+        select: { version: true },
+      })).version;
+    case TargetType.REVIEW:
+      return (await db.review.findUniqueOrThrow({
+        where: { id: targetId },
+        select: { version: true },
+      })).version;
+    case TargetType.USER:
+      return (await db.user.findUniqueOrThrow({
+        where: { id: targetId },
+        select: { version: true },
+      })).version;
+    case TargetType.MESSAGE:
+      return (await db.message.findUniqueOrThrow({
+        where: { id: targetId },
+        select: { version: true },
+      })).version;
+    default:
+      throw new Error(`getCurrentVersion: no handler for targetType ${targetType}`);
+  }
+}
+
 export async function processScreenContent(payload: ScreenContentPayload): Promise<void> {
+  const expectedVersion = await getCurrentVersion(prisma, payload.targetType, payload.targetId);
   // Fetch each reported image as base64 / Fallback to text-only screening
   const images = payload.imageKeys?.length
     ? (await Promise.all(payload.imageKeys.map(async (key) => {
@@ -192,7 +210,15 @@ export async function processScreenContent(payload: ScreenContentPayload): Promi
 
   await prisma.$transaction(async (tx) => {
     // Row flip (or no-op if fail-closed) - see flipTargetRow per-case
-    await flipTargetRow(tx, payload.targetType, payload.targetId, payload.text, action, isRescreen);
+    await flipTargetRow(
+      tx,
+      payload.targetType,
+      payload.targetId,
+      payload.text,
+      action,
+      isRescreen,
+      expectedVersion,
+    );
 
     if (payload.existingReportId !== undefined) {
       //  The report already exists (user-filed) - update it in place, never file a duplicate
