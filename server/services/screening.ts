@@ -16,6 +16,9 @@ export interface ScreenContentPayload {
   text: string;
   imageKeys?: string[];
   notifyOnApprove?: SendNotificationPayload;
+  // Present only for a report-triggered rescreen of already-published content
+  // Update this report row in place instead of filing a new system report
+  existingReportId?: number;
 }
 
 // Applies a screening verdict to the target row.
@@ -28,54 +31,140 @@ async function flipTargetRow(
   targetId: number,
   text: string,
   action: ReturnType<typeof decideAutoAction>,
+  isRescreen: boolean,
 ): Promise<void> {
   const removed = action?.status === ReportStatus.REMOVED;
   const noVerdict = action === null;
 
   switch (targetType) {
-    case TargetType.POST:
-      if (noVerdict) return; // Fail-closed: leave isPendingScreening: true, no write
-      // Approve: clear pending flag / remove: also flag isRemoved
-      await db.post.update({
-        where: { id: targetId },
-        data: { isPendingScreening: false, ...(removed ? { isRemoved: true } : {}) },
-      });
+    case TargetType.POST: {
+      if (isRescreen) {
+        if (noVerdict || !removed) return; // Rescreen only acts on removal
+        // OCC: read current version, only write if it hasn't moved
+        const current = await db.post.findUniqueOrThrow({
+          where: { id: targetId }, select: { version: true },
+        });
+        const { count } = await db.post.updateMany({
+          where: { id: targetId, version: current.version },
+          data: { isRemoved: true, version: { increment: 1 } },
+        });
+        if (count === 0) console.warn(`OCC conflict on POST:${targetId} rescreen - already resolved, skipping stale verdict`);
+        return;
+      }
+      if (noVerdict) return; // Fail-closed leave isPendingScreening: true, no write
+      {
+        const current = await db.post.findFirstOrThrow({
+          where: { id: targetId }, select: { version: true },
+        });
+        const { count } = await db.post.updateMany({
+          where: { id: targetId, version: current.version },
+          data: {
+            isPendingScreening: false,
+            ...(removed
+              ? { isRemoved: true }
+              : {}),
+            version: { increment: 1 },
+          },
+        });
+        if (count === 0) console.warn(`OCC conflict on POST:${targetId} - already resolved, skipping stale verdict`);
+      }
       return;
-    case TargetType.TRADE_OFFER:
+    }
+    case TargetType.TRADE_OFFER: {
       if (noVerdict) return; // Fail-closed
-      await db.tradeOffer.update({
+      const current = await db.tradeOffer.findUniqueOrThrow({
         where: { id: targetId },
-        data: { isPendingScreening: false, ...(removed ? { isRemoved: true } : {}) },
+        select: { version: true },
       });
+      const { count } = await db.tradeOffer.updateMany({
+        where: { id: targetId, version: current.version },
+        data: {
+          isPendingScreening: false,
+          ...(removed
+            ? { isRemoved: true }
+            : {}),
+          version: { increment: 1 },
+        },
+      });
+      if (count === 0) console.warn(`OCC conflict on TRADE_OFFER:${targetId} - already resolved, skipping stale verdict`);
       return;
-    case TargetType.TRADE_REQUEST:
+    }
+    case TargetType.TRADE_REQUEST: {
       if (noVerdict) return; // Fail-closed
-      await db.tradeRequest.update({
+      const current = await db.tradeRequest.findUniqueOrThrow({
         where: { id: targetId },
-        data: { isPendingScreening: false, ...(removed ? { isRemoved: true } : {}) },
+        select: { version: true },
       });
+      const { count } = await db.tradeRequest.updateMany({
+        where: { id: targetId, version: current.version },
+        data: {
+          isPendingScreening: false,
+          ...(removed
+            ? { isRemoved: true }
+            : {}),
+          version: { increment: 1 },
+        },
+      });
+      if (count === 0) console.warn(`OCC conflict on TRADE_REQUEST:${targetId} - already resolved, skipping stale verdict`);
       return;
-    case TargetType.REVIEW:
+    }
+    case TargetType.REVIEW: {
       if (noVerdict) return; // Fail-closed
-      await db.review.update({
+      const current = await db.review.findUniqueOrThrow({
         where: { id: targetId },
-        data: { isPendingScreening: false, ...(removed ? { isRemoved: true } : {}) },
+        select: { version: true },
       });
+      const { count } = await db.review.updateMany({
+        where: { id: targetId, version: current.version },
+        data: {
+          isPendingScreening: false,
+          ...(removed
+            ? { isRemoved: true }
+            : {}),
+          version: { increment: 1 },
+        },
+      });
+      if (count === 0) console.warn(`OCC conflict on REVIEW:${targetId} - already resolved, skipping stale verdict`);
       return;
-    case TargetType.USER:
+    }
+    case TargetType.USER: {
       if (noVerdict) return; // Fail-closed: pendingBio stays queued, bio untouched
-      // Approve: promote pendingBio into bio / remove: drop pendingBio, keep old bio
-      await db.user.update({
+      const current = await db.user.findUniqueOrThrow({
         where: { id: targetId },
-        data: removed
-          ? { pendingBio: null, isPendingScreening: false }
-          : { bio: text, pendingBio: null, isPendingScreening: false },
+        select: { version: true },
       });
+      // Approve: promote pendingBio into bio / remove: drop pendingBio, keep old bio
+      const { count } = await db.user.updateMany({
+        where: { id: targetId, version: current.version },
+        data: removed
+          ? { pendingBio: null, isPendingScreening: false, version: { increment: 1 } }
+          : {
+            bio: text, pendingBio: null, isPendingScreening: false, version: { increment: 1 },
+          },
+      });
+      if (count === 0) console.warn(`OCC conflict on USER:${targetId} - already resolved, skipping stale verdict`);
       return;
-    case TargetType.MESSAGE:
+    }
+    case TargetType.MESSAGE: {
+      // DMs are private by design
+      // Only rescreened when reported
+      // Throw loudly if a fresh-content call site ever reaches here w/o updating this file first
+      if (!isRescreen) {
+        throw new Error(`processScreenContent: no fresh-content handler for targetType ${targetType}`);
+      }
+      // No isPendingScreening field on Message - nothing to do otherwise
+      if (noVerdict || !removed) return;
+      const current = await db.message.findUniqueOrThrow({
+        where: { id: targetId }, select: { version: true },
+      });
+      const { count } = await db.message.updateMany({
+        where: { id: targetId, version: current.version },
+        data: { isRemoved: true, version: { increment: 1 } },
+      });
+      if (count === 0) console.warn(`OCC conflict on MESSAGE:${targetId} rescreen - already resolved, skipping stale verdict`);
+      return;
+    }
     default:
-      // No call site reaches MESSAGE yet (reports.ts message screening is coming later)
-      // Throw error in case I forget
       throw new Error(`processScreenContent: no handler for targetType ${targetType}`);
   }
 }
@@ -98,11 +187,32 @@ export async function processScreenContent(payload: ScreenContentPayload): Promi
   // Translate score/categories into approve/remove, or null if ambiguous/unscreened
   const action = screening ? decideAutoAction(screening) : null;
   const systemUserId = await getSystemUserId();
+  // A rescreen is a report re-checking already-published content, not fresh content
+  const isRescreen = payload.existingReportId !== undefined;
 
   await prisma.$transaction(async (tx) => {
     // Row flip (or no-op if fail-closed) - see flipTargetRow per-case
-    await flipTargetRow(tx, payload.targetType, payload.targetId, payload.text, action);
+    await flipTargetRow(tx, payload.targetType, payload.targetId, payload.text, action, isRescreen);
 
+    if (payload.existingReportId !== undefined) {
+      //  The report already exists (user-filed) - update it in place, never file a duplicate
+      await tx.report.update({
+        where: { id: payload.existingReportId },
+        data: {
+          aiScore: screening?.score ?? null,
+          aiCategories: screening?.categories ?? [],
+          aiRationale: screening?.rationale ?? null,
+          ...(action ? {
+            status: action.status,
+            resolution: action.resolution,
+            resolvedAt: new Date(),
+          } : {}), // No verdict - leave status PENDING, it's already sitting there for a moderator
+        },
+      });
+      return;
+    }
+
+    // Fresh-content path
     if (action === null) {
       // No verdict reached - file for human review
       await fileSystemReport({

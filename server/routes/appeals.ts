@@ -9,6 +9,10 @@ import { enqueueJob } from '../services/jobQueue.js';
 const appeals = Router();
 const QUEUE_PAGE_SIZE = 50;
 
+// Signals an OCC conflict out of a $transaction callback
+// The screening system already wrote this row since it was read
+class ScreeningConflict extends Error {}
+
 // File an appeal (owner of the removed content)
 appeals.post('/', requireAuth, async (req, res) => {
   try {
@@ -150,56 +154,75 @@ appeals.patch('/:id', requireModerator, async (req, res) => {
     const isGrant = action === 'grant';
     const resolverId = (req.user as { id: number }).id;
 
-    const resolved = await prisma.$transaction(async (tx) => {
-      const updatedAppeal = await tx.appeal.update({
-        where: { id },
-        data: {
-          status: isGrant ? 'GRANTED' : 'DENIED',
-          resolution: isGrant ? 'Appeal granted' : 'Appeal denied',
-          resolverId,
-          resolvedAt: new Date(),
-        },
-      });
-
-      if (isGrant) {
-        // Reinstate the content and flip the original report back to Allowed
-        // Same as a moderator directly clicking 'Allow' on the report itself
-        await tx.report.update({
-          where: { id: appeal.reportId },
+    let resolved;
+    try {
+      resolved = await prisma.$transaction(async (tx) => {
+        const updatedAppeal = await tx.appeal.update({
+          where: { id },
           data: {
-            status: ReportStatus.APPROVED,
-            resolution: 'Reinstated via granted appeal',
+            status: isGrant ? 'GRANTED' : 'DENIED',
+            resolution: isGrant ? 'Appeal granted' : 'Appeal denied',
             resolverId,
             resolvedAt: new Date(),
           },
         });
 
-        if (appeal.report.postId) {
-          await tx.post.update({
-            where: { id: appeal.report.postId },
-            data: { isRemoved: false, isPendingScreening: false },
+        if (isGrant) {
+          // Reinstate the content and flip the original report back to Allowed
+          // Same as a moderator directly clicking 'Allow' on the report itself
+          await tx.report.update({
+            where: { id: appeal.reportId },
+            data: {
+              status: ReportStatus.APPROVED,
+              resolution: 'Reinstated via granted appeal',
+              resolverId,
+              resolvedAt: new Date(),
+            },
           });
-        }
-        if (appeal.report.messageId) {
-          await tx.message.update({
-            where: { id: appeal.report.messageId },
-            data: { isRemoved: false },
-          });
-        }
-      }
 
-      await enqueueJob(tx, 'SEND_NOTIFICATION', {
-        userId: appeal.appellantId,
-        type: 'APPEAL_RESOLVED',
-        title: isGrant ? 'Your appeal was granted' : 'Your appeal was denied',
-        body: isGrant ? 'Your content has been reinstated.' : 'A moderator reviewed your appeal and upheld the original decision.',
-        link: '/profile?mine=true',
-        entityType: 'APPEAL',
-        entityId: appeal.id,
+          if (appeal.report.postId) {
+            const current = await tx.post.findUniqueOrThrow({
+              where: { id: appeal.report.postId },
+              select: { version: true },
+            });
+            const { count } = await tx.post.updateMany({
+              where: { id: appeal.report.postId, version: current.version },
+              data: { isRemoved: false, isPendingScreening: false, version: { increment: 1 } },
+            });
+            if (count === 0) throw new ScreeningConflict();
+          }
+          if (appeal.report.messageId) {
+            const current = await tx.message.findUniqueOrThrow({
+              where: { id: appeal.report.messageId },
+              select: { version: true },
+            });
+            const { count } = await tx.message.updateMany({
+              where: { id: appeal.report.messageId, version: current.version },
+              data: { isRemoved: false, version: { increment: 1 } },
+            });
+            if (count === 0) throw new ScreeningConflict();
+          }
+        }
+
+        await enqueueJob(tx, 'SEND_NOTIFICATION', {
+          userId: appeal.appellantId,
+          type: 'APPEAL_RESOLVED',
+          title: isGrant ? 'Your appeal was granted' : 'Your appeal was denied',
+          body: isGrant ? 'Your content has been reinstated.' : 'A moderator reviewed your appeal and upheld the original decision.',
+          link: '/profile?mine=true',
+          entityType: 'APPEAL',
+          entityId: appeal.id,
+        });
+
+        return updatedAppeal;
       });
-
-      return updatedAppeal;
-    });
+    } catch (err) {
+      if (err instanceof ScreeningConflict) {
+        res.status(409).json({ error: 'This item was already updated by the screening system - refresh and try, try again' });
+        return;
+      }
+      throw err; // Falls through to the route's own outer catch
+    }
 
     res.json(resolved);
   } catch (err) {
