@@ -20,7 +20,7 @@
     "prepare": "husky || true",
     "lint": "eslint . --fix",
     "typecheck": "tsc --noEmit",
-    "migrate": "npx prisma migrate dev && prisma generate"
+    "migrate": "npx prisma migrate dev && prisma generate && tsx server/scripts/createSystemUser.ts"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": "eslint --fix"

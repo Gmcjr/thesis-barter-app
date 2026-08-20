@@ -5,6 +5,7 @@ import requireModerator from '../middleware/requireModerator.js';
 import { TargetType, ReportReason, ReportStatus } from '../db/generated/enums.js';
 import { Prisma } from '../db/generated/client.js';
 import { enqueueJob } from '../services/jobQueue.js';
+import { getIo } from '../middleware/socket.js';
 
 const reports = Router();
 
@@ -191,6 +192,7 @@ reports.patch('/:id', requireModerator, async (req, res) => {
 
     const isRemove = action === 'remove';
 
+    let ownerId: number | undefined;
     let resolved;
     try {
       resolved = await prisma.$transaction(async (tx) => {
@@ -209,6 +211,7 @@ reports.patch('/:id', requireModerator, async (req, res) => {
             where: { id: report.postId },
             select: { version: true, userId: true },
           });
+          ownerId = current.userId;
           const { count } = await tx.post.updateMany({
             where: { id: report.postId, version: current.version },
             data: { isRemoved: isRemove, isPendingScreening: false, version: { increment: 1 } },
@@ -232,6 +235,7 @@ reports.patch('/:id', requireModerator, async (req, res) => {
             where: { id: report.messageId },
             select: { version: true, senderId: true, dmId: true },
           });
+          ownerId = current.senderId;
           const { count } = await tx.message.updateMany({
             where: { id: report.messageId, version: current.version },
             data: { isRemoved: isRemove, version: { increment: 1 } },
@@ -258,6 +262,22 @@ reports.patch('/:id', requireModerator, async (req, res) => {
         return;
       }
       throw err; // Falls through to the route's own outer catch
+    }
+
+    // Post-commit, best-effort - a socket failure must never fail a request already committed
+    if (ownerId !== undefined) {
+      try {
+        getIo().to(`user:${ownerId}`).emit('content:screened', {
+          TargetType: report.postId ? TargetType.POST : TargetType.MESSAGE,
+          targetId: (report.postId ?? report.messageId)!,
+          ok: !isRemove,
+          pending: false,
+          rationale: resolved.resolution,
+        });
+        if (report.postId) getIo().emit('posts:changed');
+      } catch (err) {
+        console.error('content:screened emit failed (report already committed):', err);
+      }
     }
 
     res.json(resolved);
