@@ -341,7 +341,12 @@ export default function Messages() {
               <div ref={bottomRef} />
             </Box>
 
-            <Menu anchorEl={menuAnchor?.el} open={!!menuAnchor} onClose={() => setMenuAnchor(null)}>
+            <Menu
+              anchorEl={menuAnchor?.el}
+              open={!!menuAnchor}
+              onClose={() => setMenuAnchor(null)}
+              slotProps={{ paper: { sx: { maxHeight: 420 } } }}
+            >
               <MenuItem onClick={() => {
                 setReportDialogMessageId(menuAnchor!.messageId); setMenuAnchor(null);
               }}
