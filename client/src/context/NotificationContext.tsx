@@ -23,6 +23,8 @@ interface NotificationContextValue {
   unreadCount: number;
   markRead: (id: number) => Promise<void>;
   markAllRead: () => Promise<void>;
+  deleteNotification: (id: number) => Promise<void>;
+  deleteMany: (id: number[]) => Promise<void>;
   refresh: () => Promise<void>;
 }
 
@@ -84,9 +86,28 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
     setUnreadCount(0);
   }, []);
 
+  const deleteNotification = useCallback(async (id: number) => {
+    const target = notifications.find((n) => n.id === id);
+    if (!target) return;
+    await axios.delete(`/notifications/${id}`, { withCredentials: true });
+    setNotifications((prev) => prev
+      .filter((n) => n.id !== id));
+    if (!target.readAt) setUnreadCount((count) => Math.max(0, count - 1));
+    setUnreadCount((count) => Math.max(0, count - 1));
+  }, [notifications]);
+
+  const deleteMany = useCallback(async (ids: number[]) => {
+    const idSet = new Set(ids);
+    const unreadRemoved = notifications.filter((n) => idSet.has(n.id) && !n.readAt).length;
+    await axios.delete('/notifications', { data: { ids }, withCredentials: true });
+    setNotifications((prev) => prev
+      .filter((n) => !idSet.has(n.id)));
+    setUnreadCount((count) => Math.max(0, count - unreadRemoved));
+  }, [notifications]);
+
   const value = useMemo(() => ({
-    notifications, unreadCount, markRead, markAllRead, refresh,
-  }), [notifications, unreadCount, markRead, markAllRead, refresh]);
+    notifications, unreadCount, markRead, markAllRead, deleteNotification, deleteMany, refresh,
+  }), [notifications, unreadCount, markRead, markAllRead, deleteNotification, deleteMany, refresh]);
 
   return (
     <NotificationContext.Provider value={value}>
