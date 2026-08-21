@@ -282,7 +282,7 @@ artTradeOffers.patch('/:offerId/approve', requireAuth, async (req, res) => {
           type: 'TRADE_OFFER_ACCEPTED',
           title: 'Trade completed',
           body: 'Your trade offer was fully approved and marked complete.',
-          link: '/profile?mine=true',
+          link: `/profile/history/${offer.postId}`,
           entityType: 'TRADE_OFFER',
           entityId: offerId,
         });
@@ -291,7 +291,7 @@ artTradeOffers.patch('/:offerId/approve', requireAuth, async (req, res) => {
           type: 'TRADE_OFFER_ACCEPTED',
           title: 'Trade completed',
           body: 'Your trade offer was fully approved and marked complete.',
-          link: '/profile?mine=true',
+          link: `/profile/history/${offer.postId}`,
           entityType: 'TRADE_OFFER',
           entityId: offerId,
         });
@@ -387,7 +387,7 @@ artTradeOffers.patch('/:offerId/accept', requireAuth, async (req, res) => {
         type: 'TRADE_OFFER_ACCEPTED',
         title: 'Your trade offer was accepted',
         body: 'The post owner accepted your offer and marked the trade complete.',
-        link: '/profile?mine=true',
+        link: `/profile/history/${offer.postId}`,
         entityType: 'TRADE_OFFER',
         entityId: offerId,
       });

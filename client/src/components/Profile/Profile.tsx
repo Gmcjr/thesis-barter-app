@@ -24,16 +24,28 @@ import type { MyCompletedTrade } from '../Reviews/ReviewQueueModal';
 import type { ReviewData } from '../Reviews/ReviewFormModal';
 import type { ProfileUser, ProfileUpdateData, ReviewsSummary } from './types';
 
-export default function Profile() {
-  const { id, offerId } = useParams();
-  const isOwnProfile = !id;
-  const highlightOfferId = offerId ? Number(offerId) : undefined;
+function initialTabFor(hasOffer: boolean, hasPost: boolean): 'current' | 'history' | 'offers' {
+  if (hasOffer) return 'offers';
+  if (hasPost) return 'history';
+  return 'current';
+}
 
-  const [activeTab, setActiveTab] = useState<'current' | 'history' | 'offers'>(offerId
-    ? 'offers'
-    : 'current');
-  const [profile, setProfile] = useState<ProfileUser | null>(null);
+export default function Profile() {
+  const { id, offerId, postId } = useParams();
+  const isOwnProfile = !id;
   const [posts, setPosts] = useState<PostData[]>([]);
+  const highlightOfferId = offerId ? Number(offerId) : undefined;
+  const highlightPostId = postId ? Number(postId) : undefined;
+
+  const [activeTab, setActiveTab] = useState<'current' | 'history' | 'offers'>(
+    initialTabFor(!!offerId, !!postId),
+  );
+
+  const visiblePosts = posts.filter((post) => (
+    activeTab === 'history' ? post.status === 'COMPLETED' : post.status !== 'COMPLETED'
+  ));
+
+  const [profile, setProfile] = useState<ProfileUser | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [reportDialogPostId, setReportDialogPostId] = useState<number | null>(null);
@@ -271,6 +283,11 @@ export default function Profile() {
     loadMyReviewStatus();
   }, [loadMyReviewStatus]);
 
+  useEffect(() => {
+    if (!highlightPostId || loading) return;
+    document.getElementById(`post-${highlightPostId}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, [highlightPostId, loading, visiblePosts]);
+
   const handleTradeActivity = async () => {
     await Promise.all([loadPosts(), loadMyTradeRequests(), loadReviewsSummary(), loadMyReviewStatus()]);
   };
@@ -294,10 +311,6 @@ export default function Profile() {
       </Box>
     );
   }
-
-  const visiblePosts = posts.filter((post) => (
-    activeTab === 'history' ? post.status === 'COMPLETED' : post.status !== 'COMPLETED'
-  ));
 
   return (
     <Box sx={{ width: '100%', mt: -4 }}>
@@ -365,6 +378,7 @@ export default function Profile() {
               myTradeRequests={myTradeRequests.find((r) => r.postId === post.id) ?? null}
               onTradeActivity={handleTradeActivity}
               onOfferSubmitted={handleTradeActivity}
+              highlight={post.id === highlightPostId}
             />
           ))}
         </Box>

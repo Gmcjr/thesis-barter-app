@@ -37,11 +37,12 @@ interface PostProps {
   onUpdate?: (postId: number, postData: PostUpdateData) => Promise<void>;
   onDelete?: (postId: number) => Promise<void>;
   onComplete?: (tradeId: number) => Promise<void>;
+  highlight?: boolean;
 }
 
 export default function Post({
   post, onReport, myTradeRequests, onTradeActivity, onOfferSubmitted,
-  onUpdate, onDelete, onComplete,
+  onUpdate, onDelete, onComplete, highlight,
 }: PostProps) {
   const postUser = post.user.name ?? post.user.email;
   const {
@@ -135,7 +136,15 @@ export default function Post({
   };
 
   return (
-    <Card variant="outlined" sx={{ borderRadius: radius.md, borderColor: 'border.default' }}>
+    <Card
+      id={`post-${post.id}`}
+      variant="outlined"
+      sx={{
+        borderRadius: radius.md,
+        borderColor: 'border.default',
+        ...(highlight && { outline: '2px solid', outlineColor: 'primary.main' }),
+      }}
+    >
       <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
         <Box sx={{
           display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, justifyContent: { xs: 'flex-start', sm: 'space-between' }, alignItems: { xs: 'stretch', sm: 'flex-start' }, mb: 2, gap: { xs: 1, sm: 2 },

@@ -67,7 +67,7 @@ export default function TradeOffersReceivedView({
   }, [loadOffers]);
 
   useEffect(() => {
-    if (highlightOfferId || loading) return;
+    if (!highlightOfferId || loading) return;
     document.getElementById(`offer-${highlightOfferId}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }, [highlightOfferId, loading, artOffers]);
 
