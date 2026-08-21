@@ -19,7 +19,7 @@ import PendingTradeOffers from './PendingTradeOffers';
 import type { ArtTradeOfferData, NormalTradeOffer, TradeOffersReceivedViewProps } from './types';
 
 export default function TradeOffersReceivedView({
-  onOfferAccepted,
+  onOfferAccepted, highlightOfferId,
 }: TradeOffersReceivedViewProps) {
   const [normalOffers, setNormalOffers] = useState<NormalTradeOffer[]>([]);
   const [artOffers, setArtOffers] = useState<ArtTradeOfferData[]>([]);
@@ -65,6 +65,11 @@ export default function TradeOffersReceivedView({
   useEffect(() => {
     loadOffers();
   }, [loadOffers]);
+
+  useEffect(() => {
+    if (highlightOfferId || loading) return;
+    document.getElementById(`offer-${highlightOfferId}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, [highlightOfferId, loading, artOffers]);
 
   const handleAcceptNormalOffer = async (requestId: number) => {
     setAcceptingNormalId(requestId);
@@ -189,8 +194,13 @@ export default function TradeOffersReceivedView({
           {artOffers.map((offer) => (
             <Card
               key={offer.id}
+              id={`offer-${offer.id}`}
               variant="outlined"
-              sx={{ borderRadius: radius.lg, flexShrink: 0 }}
+              sx={{
+                borderRadius: radius.lg,
+                flexShrink: 0,
+                ...(offer.id === highlightOfferId && { outline: '2px solid', outlineColor: 'primary.main' }),
+              }}
             >
               {offer.previewUrl && (
                 <CardMedia

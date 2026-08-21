@@ -182,7 +182,7 @@ artTradeOffers.post('/', requireAuth, async (req, res) => {
           type: 'TRADE_OFFER_RECEIVED',
           title: 'New trade offer on your post',
           body: preview || undefined,
-          link: `/profile?postId=${postId}`,
+          link: `/profile/offers/${created.id}`,
           entityType: 'TRADE_OFFER',
           entityId: created.id,
         },

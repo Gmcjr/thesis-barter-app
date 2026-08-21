@@ -25,10 +25,13 @@ import type { ReviewData } from '../Reviews/ReviewFormModal';
 import type { ProfileUser, ProfileUpdateData, ReviewsSummary } from './types';
 
 export default function Profile() {
-  const { id } = useParams();
+  const { id, offerId } = useParams();
   const isOwnProfile = !id;
+  const highlightOfferId = offerId ? Number(offerId) : undefined;
 
-  const [activeTab, setActiveTab] = useState<'current' | 'history' | 'offers'>('current');
+  const [activeTab, setActiveTab] = useState<'current' | 'history' | 'offers'>(offerId
+    ? 'offers'
+    : 'current');
   const [profile, setProfile] = useState<ProfileUser | null>(null);
   const [posts, setPosts] = useState<PostData[]>([]);
   const [loading, setLoading] = useState(true);
@@ -344,7 +347,7 @@ export default function Profile() {
       />
 
       {isOwnProfile && activeTab === 'offers' ? (
-        <TradeOffersReceivedView onOfferAccepted={handleTradeActivity} />
+        <TradeOffersReceivedView onOfferAccepted={handleTradeActivity} highlightOfferId={highlightOfferId} />
       ) : (
         <Box sx={{
           display: 'flex', flexDirection: 'column', gap: 3, px: { xs: 2, md: 0 },
