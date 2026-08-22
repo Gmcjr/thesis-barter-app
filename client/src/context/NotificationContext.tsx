@@ -93,7 +93,6 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
     setNotifications((prev) => prev
       .filter((n) => n.id !== id));
     if (!target.readAt) setUnreadCount((count) => Math.max(0, count - 1));
-    setUnreadCount((count) => Math.max(0, count - 1));
   }, [notifications]);
 
   const deleteMany = useCallback(async (ids: number[]) => {
