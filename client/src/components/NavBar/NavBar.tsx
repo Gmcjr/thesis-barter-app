@@ -14,13 +14,10 @@ import MessageIcon from '@mui/icons-material/Message';
 import SettingsIcon from '@mui/icons-material/Settings';
 import axios from 'axios';
 
-import Badge from '@mui/material/Badge';
-import NotificationsIcon from '@mui/icons-material/Notifications';
 import PersonIcon from '@mui/icons-material/Person';
 import { Link, useRouter } from '../../context/RouterContext';
 import SettingsMenu from './SettingsMenu';
 import NotificationBell from './NotificationBell';
-import { useNotifications } from '../../context/NotificationContext';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import NewPost, { type PostFormData } from '../Posts/NewPost';
@@ -28,7 +25,6 @@ import NewPost, { type PostFormData } from '../Posts/NewPost';
 function NavBar() {
   const { path, navigate } = useRouter();
   const { user, loading, logout } = useAuth();
-  const { unreadCount } = useNotifications();
   const { showToast } = useToast();
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -170,6 +166,8 @@ function NavBar() {
             flexShrink: 0,
           }}
           >
+            {/* Notification Bell - standalone, hidden for guests */}
+            {user && <NotificationBell />}
             {loading ? (
               <Typography variant="caption" color="text.secondary">Loading…</Typography>
             ) : (
@@ -249,51 +247,6 @@ function NavBar() {
                         Settings
                       </Typography>
                       <SettingsMenu />
-                    </Box>
-                  </MenuItem>
-
-                  {/* Notifications Item */}
-                  <MenuItem
-                    disableRipple
-                    sx={{
-                      p: 0,
-                      position: 'relative',
-                      '& button, & .MuiIconButton-root': {
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        width: '100%',
-                        height: '100%',
-                        opacity: 0,
-                        zIndex: 2,
-                        cursor: 'pointer',
-                      },
-                    }}
-                  >
-                    <Box sx={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 1,
-                      px: 2,
-                      py: 1,
-                      width:
-  '100%',
-                    }}
-                    >
-                      <Badge badgeContent={unreadCount} color="error">
-                        <NotificationsIcon sx={{ fontSize: '1.25rem' }} />
-                      </Badge>
-                      <Typography
-                        variant="body2"
-                        sx={{
-                          fontWeight: 600,
-                          pointerEvents: 'none',
-                          zIndex: 1,
-                        }}
-                      >
-                        Notifications
-                      </Typography>
-                      <NotificationBell />
                     </Box>
                   </MenuItem>
 
