@@ -38,6 +38,7 @@ export interface PostFormData {
   radiusMiles?: number;
   previewMediaId?: number;
   fullMediaId?: number;
+  mediaIds?: number[];
 }
 
 interface CreatePostModalProps {
@@ -142,6 +143,7 @@ export default function CreatePostModal({
 }: CreatePostModalProps) {
   const [formData, setFormData] = useState<FormState>(initialForm);
   const [file, setFile] = useState<File | null>(null);
+  const [postImages, setPostImages] = useState<File[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // change handler
@@ -165,6 +167,7 @@ export default function CreatePostModal({
   const handleClose = () => {
     setFormData(initialForm);
     setFile(null);
+    setPostImages([]);
     onClose();
   };
 
@@ -172,7 +175,7 @@ export default function CreatePostModal({
     fileOrBlob: File | Blob,
     filename: string,
     contentType: string,
-    variant: 'PREVIEW' | 'FULL',
+    variant?: 'PREVIEW' | 'FULL',
   ) => {
     const presignRes = await axios.post<{ uploadUrl: string; key: string }>('/media/presign', {
       filename,
@@ -186,7 +189,7 @@ export default function CreatePostModal({
 
     const mediaRes = await axios.post<{ id: number }>('/media', {
       key,
-      variant,
+      ...(variant && { variant }),
     });
 
     return mediaRes.data.id;
@@ -204,11 +207,20 @@ export default function CreatePostModal({
     try {
       let previewMediaId: number | undefined;
       let fullMediaId: number | undefined;
+      let mediaIds: number[] | undefined;
 
       if (formData.offerType === 'DIGITAL' && file) {
         const previewBlob = await createWatermark(file);
         previewMediaId = await uploadFileToS3(previewBlob, `preview_${file.name}`, 'image/jpeg', 'PREVIEW');
         fullMediaId = await uploadFileToS3(file, file.name, file.type, 'FULL');
+      }
+
+      if (formData.offerType !== 'DIGITAL' && postImages.length > 0) {
+        mediaIds = await Promise.all(
+          postImages.map((postImage) => (
+            uploadFileToS3(postImage, postImage.name, postImage.type)
+          )),
+        );
       }
 
       await onSubmit({
@@ -223,10 +235,12 @@ export default function CreatePostModal({
         radiusMiles: formData.isLocal ? formData.radiusMiles : undefined,
         previewMediaId,
         fullMediaId,
+        mediaIds,
       });
 
       setFormData(initialForm);
       setFile(null);
+      setPostImages([]);
       onClose();
     } catch (err) {
       console.error('Failed to create post:', err);
@@ -302,6 +316,25 @@ export default function CreatePostModal({
                     {file.name}
                   </Typography>
                 )}
+              </Box>
+            </Collapse>
+
+            {/* Post Image Upload */}
+            <Collapse in={formData.offerType !== 'DIGITAL'} unmountOnExit>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                <Button variant="outlined" component="label" startIcon={<CloudUploadIcon />} disabled={isSubmitting}>
+                  Attach Images
+                  <input
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    hidden
+                    onChange={(e) => setPostImages(Array.from(e.target.files ?? []).slice(0, 5))}
+                  />
+                </Button>
+                <Typography variant="body2" color="text.secondary">
+                  {postImages.length > 0 ? `${postImages.length} of 5 images selected` : 'Select up to 5 images.'}
+                </Typography>
               </Box>
             </Collapse>
 
