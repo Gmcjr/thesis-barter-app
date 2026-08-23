@@ -9,6 +9,7 @@ import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import Divider from '@mui/material/Divider';
 import AddIcon from '@mui/icons-material/Add';
 import MessageIcon from '@mui/icons-material/Message';
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -18,6 +19,8 @@ import Badge from '@mui/material/Badge';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import PersonIcon from '@mui/icons-material/Person';
 import GavelIcon from '@mui/icons-material/Gavel';
+import PersonOffIcon from '@mui/icons-material/PersonOff';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { Link, useRouter } from '../../context/RouterContext';
 import SettingsMenu from './SettingsMenu';
 import NotificationBell from './NotificationBell';
@@ -160,7 +163,7 @@ function NavBar() {
             </Button>
           </Box>
 
-          {/* Username + Avatar + modal with: Google Login / Logout + Accessibility Settins + Profile link */}
+          {/* Username + Avatar + modal with: Google Login / Logout + Accessibility Settings + Profile link */}
           <Box sx={{
             display: 'flex',
             alignItems: 'center',
@@ -234,6 +237,33 @@ function NavBar() {
                       </Box>
                     </MenuItem>
                   )}
+
+                  {/* Blocked Users Item */}
+                  {user && (
+                    <MenuItem onClick={() => { setUserMenuTarget(null); navigate('/blocked-users'); }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <PersonOffIcon sx={{ fontSize: '1.25rem' }} />
+                        <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                          Blocked Users
+                        </Typography>
+                      </Box>
+                    </MenuItem>
+                  )}
+
+                  {/* Deleted Conversations Item */}
+                  {user && (
+                    <MenuItem onClick={() => { setUserMenuTarget(null); navigate('/deleted-conversations'); }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <DeleteIcon sx={{ fontSize: '1.25' }} />
+                        <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                          Deleted Conversations
+                        </Typography>
+                      </Box>
+                    </MenuItem>
+                  )}
+
+                  {/* Separates plain-navigate items above from embedded-menu items below */}
+                  {user && <Divider />}
 
                   {/* Settings Item */}
                   <MenuItem
