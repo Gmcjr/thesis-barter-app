@@ -17,11 +17,12 @@ import axios from 'axios';
 import Badge from '@mui/material/Badge';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import PersonIcon from '@mui/icons-material/Person';
+import GavelIcon from '@mui/icons-material/Gavel';
 import { Link, useRouter } from '../../context/RouterContext';
 import SettingsMenu from './SettingsMenu';
 import NotificationBell from './NotificationBell';
 import { useNotifications } from '../../context/NotificationContext';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth, isModerator } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import NewPost, { type PostFormData } from '../Posts/NewPost';
 
@@ -217,6 +218,18 @@ function NavBar() {
                         <PersonIcon sx={{ fontSize: '1.25rem' }} />
                         <Typography variant="body2" sx={{ fontWeight: 600 }}>
                           Profile
+                        </Typography>
+                      </Box>
+                    </MenuItem>
+                  )}
+
+                  {/* Moderation Queue Item - moderators/admins only, hidden otherwise */}
+                  {isModerator(user?.role ?? null) && (
+                    <MenuItem onClick={() => { setUserMenuTarget(null); navigate('/moderation'); }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <GavelIcon sx={{ fontSize: '1.25rem' }} />
+                        <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                          Moderation Queue
                         </Typography>
                       </Box>
                     </MenuItem>
