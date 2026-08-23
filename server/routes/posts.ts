@@ -10,6 +10,7 @@ const posts = Router();
 
 // type definitions
 interface MediaItem {
+  sortOrder?: number;
   media?: {
     variant?: string | null;
     s3Key: string;
@@ -58,6 +59,30 @@ const getMediaUrls = async (
     previewUrl: await fetchUrl('PREVIEW'),
     fullUrl: allowFull ? await fetchUrl('FULL') : null,
   };
+};
+
+const getPostImageUrls = async (
+  mediaArray?: MediaItem[],
+) => {
+  if (!mediaArray) return [];
+
+  const postImages = mediaArray
+    .filter((m) => m.media?.variant == null && m.media?.s3Key)
+    .sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0));
+
+  const imageUrls = await Promise.all(
+    postImages.map((item) => {
+      const key = item.media?.s3Key;
+      if (!key) return Promise.resolve(null);
+
+      return getDownloadUrl(key).catch((err) => {
+        console.error('Error getting post image URL:', err);
+        return null;
+      });
+    }),
+  );
+
+  return imageUrls.filter((url): url is string => Boolean(url));
 };
 
 // GET: public feed excludes removed posts: ?mine=true returns
@@ -190,6 +215,8 @@ posts.get('/', async (req, res) => {
           isOwner || Boolean(viewerCompletedOffer),
         );
 
+        const imageUrls = await getPostImageUrls(post.postMedia);
+
         const tradeOffers = await Promise.all(
           (post.tradeOffers || []).map(async (offer: TradeOfferItem) => {
             const isOfferer = viewerId !== undefined && offer.offererId === viewerId;
@@ -205,6 +232,7 @@ posts.get('/', async (req, res) => {
           ...postRest,
           trade: trades[0] ?? null,
           ...postUrls,
+          imageUrls,
           tradeOffers,
         };
       }),
@@ -229,6 +257,7 @@ posts.post('/', requireAuth, async (req, res) => {
       radiusMiles,
       previewMediaId,
       fullMediaId,
+      mediaIds,
       name,
       offerType,
       category,
@@ -239,16 +268,76 @@ posts.post('/', requireAuth, async (req, res) => {
     const trimmedCategory = typeof category === 'string' ? category.trim() : '';
 
     // Doesn't depend on the post existing yet - resolve before opening the transaction
-    const mediaKeys = previewMediaId && fullMediaId
-      ? (
+    if (mediaIds !== undefined && !Array.isArray(mediaIds)) {
+      return res.status(400).json({ error: 'mediaIds must be an array.' });
+    }
+
+    const normalMediaIds = Array.isArray(mediaIds)
+      ? mediaIds.map(Number)
+      : [];
+
+    if (normalMediaIds.length > 5) {
+      return res.status(400).json({ error: 'Image limit is 5.' });
+    }
+
+    if (normalMediaIds.some((mediaId) => !Number.isInteger(mediaId) || mediaId <= 0)) {
+      return res.status(400).json({ error: 'Invalid media ID.' });
+    }
+
+    if (new Set(normalMediaIds).size !== normalMediaIds.length) {
+      return res.status(400).json({ error: 'Duplicate media IDs are not allowed.' });
+    }
+
+    let mediaKeys: string[] = [];
+    let postMediaCreate: { mediaId: number; sortOrder: number }[] = [];
+
+    if (offerType === 'DIGITAL' && previewMediaId && fullMediaId) {
+      mediaKeys = (
         await prisma.media.findMany({
           where: {
             id: { in: [Number(previewMediaId), Number(fullMediaId)] },
           },
           select: { s3Key: true },
         })
-      ).map((m) => m.s3Key)
-      : [];
+      ).map((m) => m.s3Key);
+
+      postMediaCreate = [
+        { mediaId: Number(previewMediaId), sortOrder: 0 },
+        { mediaId: Number(fullMediaId), sortOrder: 1 },
+      ];
+    } else if (
+      (offerType === 'PRODUCT' || offerType === 'SERVICE')
+      && normalMediaIds.length > 0
+    ) {
+      const normalMedia = await prisma.media.findMany({
+        where: {
+          id: { in: normalMediaIds },
+          uploaderId: userId,
+          variant: null,
+        },
+        select: {
+          id: true,
+          s3Key: true,
+        },
+      });
+
+      if (normalMedia.length !== normalMediaIds.length) {
+        return res.status(400).json({ error: 'One or more post images are invalid.' });
+      }
+
+      const normalMediaById = new Map(
+        normalMedia.map((mediaItem) => [mediaItem.id, mediaItem]),
+      );
+
+      mediaKeys = normalMediaIds.map(
+        (mediaId) => normalMediaById.get(mediaId)!.s3Key,
+      );
+
+      postMediaCreate = normalMediaIds.map((mediaId, sortOrder) => ({
+        mediaId,
+        sortOrder,
+      }));
+    }
 
     const newPost = await prisma.$transaction(async (tx) => {
       const post = await tx.post.create({
@@ -260,13 +349,9 @@ posts.post('/', requireAuth, async (req, res) => {
           zipCode: isLocal ? zipCode : null,
           radiusMiles: isLocal ? radiusMiles : null,
           isPendingScreening: true,
-          ...(previewMediaId
-            && fullMediaId && {
+          ...(postMediaCreate.length > 0 && {
             postMedia: {
-              create: [
-                { mediaId: Number(previewMediaId), sortOrder: 0 },
-                { mediaId: Number(fullMediaId), sortOrder: 1 },
-              ],
+              create: postMediaCreate,
             },
           }),
         },
