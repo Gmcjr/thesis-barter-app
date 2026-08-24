@@ -5,7 +5,7 @@ import Rating from '@mui/material/Rating';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
-import { radius } from '../../theme';
+import { useTheme } from '@mui/material/styles';
 
 import { formatPostDate } from '../../utils/utils';
 import ReviewQueueModal, { type MyCompletedTrade } from './ReviewQueueModal';
@@ -31,6 +31,7 @@ interface ReviewsDetailPanelProps {
 export default function ReviewsDetailPanel({
   reviews, isOwnProfile, PendingTradeOffers, myReviews, currentUserId, onReviewSaved,
 }: ReviewsDetailPanelProps) {
+  const theme = useTheme();
   const [queueOpen, setQueueOpen] = useState(false);
   const reviewedTradeIds = new Set(myReviews.map((r) => r.tradeId));
   const unreviewed = PendingTradeOffers.filter((t) => !reviewedTradeIds.has(t.id));
@@ -40,7 +41,7 @@ export default function ReviewsDetailPanel({
       {isOwnProfile && unreviewed.length > 0 && (
         <>
           <Box sx={{
-            display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 1.5, bgcolor: 'action.hover', borderRadius: radius.lg, mb: 2,
+            display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 1.5, bgcolor: 'action.hover', borderRadius: theme.radius.lg, mb: 2,
           }}
           >
             <Typography variant="body2">

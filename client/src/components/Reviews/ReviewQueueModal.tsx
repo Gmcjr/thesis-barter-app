@@ -7,7 +7,7 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Rating from '@mui/material/Rating';
-import { radius } from '../../theme';
+import { useTheme } from '@mui/material/styles';
 
 import ReviewFormModal, { type ReviewData } from './ReviewFormModal';
 
@@ -35,6 +35,7 @@ const EDIT_WINDOW_MS = 24 * 60 * 60 * 1000;
 export default function ReviewQueueModal({
   open, onClose, trades, myReviews, currentUserId, onReviewSaved,
 }: ReviewQueueModalProps) {
+  const theme = useTheme();
   const [activeTrade, setActiveTrade] = useState<MyCompletedTrade | null>(null);
   const reviewForTrade = (tradeId: number) => myReviews.find((r) => r.tradeId === tradeId);
 
@@ -54,7 +55,7 @@ export default function ReviewQueueModal({
                 <Box
                   key={trade.id}
                   sx={{
-                    display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 1.5, bgcolor: 'action.hover', borderRadius: radius.lg, gap: 1,
+                    display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 1.5, bgcolor: 'action.hover', borderRadius: theme.radius.lg, gap: 1,
                   }}
                 >
                   <Box>

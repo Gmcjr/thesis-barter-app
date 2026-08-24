@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
-import { radius } from '../../theme';
+import { useTheme } from '@mui/material/styles';
 import { useToast } from '../../context/ToastContext';
 
 interface IncomingRequest {
@@ -21,6 +21,7 @@ interface IncomingTradeRequestsProps {
 }
 
 export default function IncomingTradeRequests({ postId, onAccepted }: IncomingTradeRequestsProps) {
+  const theme = useTheme();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [requests, setRequests] = useState<IncomingRequest[]>([]);
@@ -66,7 +67,7 @@ export default function IncomingTradeRequests({ postId, onAccepted }: IncomingTr
 
   return (
     <Box sx={{ mt: 2, pt: 2 }}>
-      <Button size="small" variant="outlined" onClick={handleToggle} sx={{ borderRadius: radius.md, textTransform: 'none' }}>
+      <Button size="small" variant="outlined" onClick={handleToggle} sx={{ borderRadius: theme.radius.md, textTransform: 'none' }}>
         {open ? 'Hide Trade Requests' : 'View Trade Requests'}
       </Button>
 
@@ -85,7 +86,7 @@ export default function IncomingTradeRequests({ postId, onAccepted }: IncomingTr
             <Box
               key={request.id}
               sx={{
-                display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 1.5, bgcolor: 'surface.sunken', borderRadius: radius.md, gap: 2,
+                display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 1.5, bgcolor: 'surface.sunken', borderRadius: theme.radius.md, gap: 2,
               }}
             >
               <Box sx={{ minWidth: 0 }}>

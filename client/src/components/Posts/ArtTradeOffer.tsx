@@ -9,7 +9,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Modal from '@mui/material/Modal';
 import Alert from '@mui/material/Alert';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import { radius } from '../../theme';
+import { useTheme } from '@mui/material/styles';
 
 interface ArtTradeOfferProps {
   postId: number;
@@ -82,6 +82,7 @@ const createWatermark = (file: File): Promise<Blob> => new Promise((resolve, rej
 });
 
 export const ArtTradeOffer: React.FC<ArtTradeOfferProps> = ({ postId, onSuccess }) => {
+  const theme = useTheme();
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState('');
   const [file, setFile] = useState<File | null>(null);
@@ -171,7 +172,7 @@ export const ArtTradeOffer: React.FC<ArtTradeOfferProps> = ({ postId, onSuccess 
           component="form"
           onSubmit={handleSubmit}
           sx={{
-            position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 400, bgcolor: 'background.paper', boxShadow: 24, p: 4, borderRadius: radius.xl, display: 'flex', flexDirection: 'column', gap: 2,
+            position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 400, bgcolor: 'background.paper', boxShadow: 24, p: 4, borderRadius: theme.radius.xl, display: 'flex', flexDirection: 'column', gap: 2,
           }}
         >
           <Typography variant="h6">Make an Art Trade Offer</Typography>

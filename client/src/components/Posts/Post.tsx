@@ -21,6 +21,7 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import OpenInFullIcon from '@mui/icons-material/OpenInFull';
 import CloseIcon from '@mui/icons-material/Close';
+import { useTheme } from '@mui/material/styles';
 
 import { formatPostDate } from '../../utils/utils';
 import type { PostData, PostUpdateData } from './ManagePosts';
@@ -33,7 +34,6 @@ import IncomingTradeRequests from '../Trades/IncomingTradeRequests';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import { useRouter } from '../../context/RouterContext';
-import { radius } from '../../theme';
 
 interface PostProps {
   post: PostData;
@@ -51,6 +51,7 @@ export default function Post({
   post, onReport, myTradeRequests, onTradeActivity, onOfferSubmitted,
   onUpdate, onDelete, onComplete, highlight,
 }: PostProps) {
+  const theme = useTheme();
   const postUser = post.user.name ?? post.user.email;
   const {
     user, blockedUserIds, blockUser, unblockUser,
@@ -165,7 +166,7 @@ export default function Post({
         id={`post-${post.id}`}
         variant="outlined"
         sx={{
-          borderRadius: radius.md,
+          borderRadius: theme.radius.md,
           borderColor: 'border.default',
           ...(highlight && { outline: '2px solid', outlineColor: 'primary.main' }),
         }}
@@ -227,7 +228,7 @@ export default function Post({
                 </Typography>
               </Box>
               {!isOwnPost && (
-              <Button size="small" variant="outlined" onClick={handleOpenDM} sx={{ borderRadius: radius.md, textTransform: 'none' }}>
+              <Button size="small" variant="outlined" onClick={handleOpenDM} sx={{ borderRadius: theme.radius.md, textTransform: 'none' }}>
                 Open DM
               </Button>
               )}
@@ -254,7 +255,7 @@ export default function Post({
                 width: '100%',
                 height: { xs: 280, sm: 400 },
                 bgcolor: 'surface.sunken',
-                borderRadius: radius.md,
+                borderRadius: theme.radius.md,
                 overflow: 'hidden',
                 display: 'flex',
                 alignItems: 'center',
@@ -347,7 +348,7 @@ export default function Post({
                     sx={{
                       width: index === currentImageIndex ? 18 : 7,
                       height: 7,
-                      borderRadius: radius.pill,
+                      borderRadius: theme.radius.pill,
                       bgcolor: index === currentImageIndex ? 'primary.main' : 'text.disabled',
                       cursor: 'pointer',
                       transition: 'width 0.2s ease',
@@ -376,7 +377,7 @@ export default function Post({
                       width: 72,
                       height: 72,
                       flexShrink: 0,
-                      borderRadius: radius.sm,
+                      borderRadius: theme.radius.sm,
                       overflow: 'hidden',
                       cursor: 'pointer',
                       border: '2px solid',
@@ -412,7 +413,7 @@ export default function Post({
               src={post.previewUrl}
               alt="Post Preview"
               style={{
-                maxWidth: '100%', borderRadius: radius.sm, maxHeight: '350px', objectFit: 'contain',
+                maxWidth: '100%', borderRadius: theme.radius.sm, maxHeight: '350px', objectFit: 'contain',
               }}
             />
           </Box>
@@ -434,7 +435,7 @@ export default function Post({
                 <Box
                   key={comment.id}
                   sx={{
-                    display: 'flex', gap: 2, alignItems: 'flex-start', p: 1.5, bgcolor: 'surface.sunken', borderRadius: radius.md,
+                    display: 'flex', gap: 2, alignItems: 'flex-start', p: 1.5, bgcolor: 'surface.sunken', borderRadius: theme.radius.md,
                   }}
                 >
                   <Typography variant="body2" sx={{ flex: 1, color: 'text.primary' }}>
@@ -455,9 +456,9 @@ export default function Post({
               fullWidth
               placeholder="Add a comment..."
               variant="outlined"
-              sx={{ '& .MuiOutlinedInput-root': { borderRadius: radius.md } }}
+              sx={{ '& .MuiOutlinedInput-root': { borderRadius: theme.radius.md } }}
             />
-            <Button variant="contained" disableElevation sx={{ borderRadius: radius.md, textTransform: 'none' }}>
+            <Button variant="contained" disableElevation sx={{ borderRadius: theme.radius.md, textTransform: 'none' }}>
               Send
             </Button>
           </Box>
@@ -476,7 +477,7 @@ export default function Post({
                     Art Sent:
                   </Typography>
                   <Box sx={{
-                    bgcolor: 'surface.sunken', borderRadius: radius.lg, p: 1, textAlign: 'center', minHeight: 200, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    bgcolor: 'surface.sunken', borderRadius: theme.radius.lg, p: 1, textAlign: 'center', minHeight: 200, display: 'flex', alignItems: 'center', justifyContent: 'center',
                   }}
                   >
                     {sentUrl ? (
@@ -497,7 +498,7 @@ export default function Post({
                     Art Received:
                   </Typography>
                   <Box sx={{
-                    bgcolor: 'surface.sunken', borderRadius: radius.lg, p: 1, textAlign: 'center', minHeight: 200, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    bgcolor: 'surface.sunken', borderRadius: theme.radius.lg, p: 1, textAlign: 'center', minHeight: 200, display: 'flex', alignItems: 'center', justifyContent: 'center',
                   }}
                   >
                     {receivedUrl ? (
@@ -533,7 +534,7 @@ export default function Post({
                   Trade Details & Summary:
                 </Typography>
                 <Box sx={{
-                  bgcolor: 'surface.sunken', borderRadius: radius.lg, p: 2, textAlign: 'left',
+                  bgcolor: 'surface.sunken', borderRadius: theme.radius.lg, p: 2, textAlign: 'left',
                 }}
                 >
                   <Typography variant="body2" color="text.primary">
@@ -564,7 +565,7 @@ export default function Post({
             {isArtTrade ? (
               <ArtTradeOffer postId={post.id} onSuccess={onOfferSubmitted} />
             ) : (
-              <Button variant="contained" onClick={onOfferSubmitted} sx={{ borderRadius: radius.pill, textTransform: 'none' }}>
+              <Button variant="contained" onClick={onOfferSubmitted} sx={{ borderRadius: theme.radius.pill, textTransform: 'none' }}>
                 Make Offer
               </Button>
             )}
@@ -589,7 +590,7 @@ export default function Post({
               height: { xs: '90vh', md: '94vh' },
               maxHeight: '94vh',
               bgcolor: 'background.default',
-              borderRadius: radius.md,
+              borderRadius: theme.radius.md,
             },
           },
         }}

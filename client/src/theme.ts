@@ -36,6 +36,13 @@ declare module '@mui/material/styles' {
     border?: { subtle: string; default: string; strong: string };
     link?: { main: string; hover: string };
   }
+  // eslint-disable-next-line no-shadow
+  interface Theme {
+    radius: typeof radius;
+  }
+  interface ThemeOptions {
+    radius?: typeof radius;
+  }
 }
 
 // A theme is a self-contained set of every palette value
@@ -315,6 +322,7 @@ export function buildTheme(tokens: ThemeTokens): Theme {
       border: tokens.border,
       link: tokens.link,
     },
+    radius,
     spacing: spacingUnit,
     shape: {
       borderRadius: 10,
@@ -330,9 +338,9 @@ export function buildTheme(tokens: ThemeTokens): Theme {
       },
       MuiButton: {
         styleOverrides: {
-          root: {
-            borderRadius: radius.md,
-          },
+          root: ({ theme }) => ({
+            borderRadius: theme.radius.md,
+          }),
         },
       },
       // Visible keyboard-focus ring
@@ -350,7 +358,7 @@ export function buildTheme(tokens: ThemeTokens): Theme {
   });
 }
 
-// Contrast defaults to 'normal' here until Settings exposes a contrast toggle
+// Contrast comes from SettingsContext, defaults to 'normal' when unset
 export default function getTheme(mode: ThemeMode, contrast: ContrastMode): Theme {
   return buildTheme(getThemeTokens(mode, contrast));
 }

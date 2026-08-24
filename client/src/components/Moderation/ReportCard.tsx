@@ -8,7 +8,7 @@ import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import Chip from '@mui/material/Chip';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { radius } from '../../theme';
+import { useTheme } from '@mui/material/styles';
 import { humanizeReason, reportSummary, targetSnippet } from './format';
 import type { ReportRow } from './types';
 
@@ -23,6 +23,7 @@ import type { ReportRow } from './types';
 export default function ReportCard({
   report, showActions, resolvingId, onApprove, onRemove,
 }: Props) {
+  const theme = useTheme();
   return (
     <Accordion
       disableGutters
@@ -30,7 +31,7 @@ export default function ReportCard({
       sx={{
         border: '1px solid',
         borderColor: 'divider',
-        borderRadius: radius.md,
+        borderRadius: theme.radius.md,
         '&:before': { display: 'none' },
       }}
     >
