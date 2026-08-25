@@ -258,7 +258,6 @@ posts.post('/', requireAuth, async (req, res) => {
       previewMediaId,
       fullMediaId,
       mediaIds,
-      name,
       offerType,
       category,
       condition,
@@ -362,7 +361,6 @@ posts.post('/', requireAuth, async (req, res) => {
       if (
         (offerType === 'PRODUCT' || offerType === 'SERVICE')
         && trimmedCategory
-        && name
       ) {
         const cat = await tx.cat.upsert({
           where: { name_type: { name: trimmedCategory, type: offerType } },
@@ -376,7 +374,7 @@ posts.post('/', requireAuth, async (req, res) => {
               postId: post.id,
               userId,
               catId: cat.id,
-              name,
+              name: title,
               condition: condition || 'GOOD',
             },
           });
@@ -386,7 +384,7 @@ posts.post('/', requireAuth, async (req, res) => {
               postId: post.id,
               userId,
               catId: cat.id,
-              name,
+              name: title,
             },
           });
         }

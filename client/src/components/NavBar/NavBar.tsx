@@ -42,7 +42,6 @@ function NavBar() {
     try {
       await axios.post('/posts', {
         title: formData.title,
-        name: formData.name,
         offerType: formData.offerType,
         category: formData.category,
         message: formData.description,

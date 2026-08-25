@@ -28,7 +28,6 @@ import type { CatType, Cond } from '../../../../server/db/generated/browser';
 // type definitions
 export interface PostFormData {
   title: string;
-  name: string;
   offerType: CatType;
   category: string;
   description: string;
@@ -49,7 +48,6 @@ interface CreatePostModalProps {
 
 type FormState = {
   title: string;
-  name: string;
   offerType: CatType;
   category: string;
   description: string;
@@ -61,7 +59,6 @@ type FormState = {
 
 const initialForm: FormState = {
   title: '',
-  name: '',
   offerType: 'PRODUCT',
   category: '',
   description: '',
@@ -196,7 +193,7 @@ export default function CreatePostModal({
   };
 
   // check for valid data
-  const isInvalid = (!formData.title.trim() || !formData.name.trim() || !formData.category.trim() || !formData.description.trim() || (formData.isLocal && !formData.zipCode.trim()) || (formData.offerType === 'DIGITAL' && !file));
+  const isInvalid = (!formData.title.trim() || !formData.category.trim() || !formData.description.trim() || (formData.isLocal && !formData.zipCode.trim()) || (formData.offerType === 'DIGITAL' && !file));
 
   // submit handler for the form
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
@@ -225,7 +222,6 @@ export default function CreatePostModal({
 
       await onSubmit({
         title: formData.title.trim(),
-        name: formData.name.trim(),
         offerType: formData.offerType,
         category: formData.category.trim(),
         description: formData.description.trim(),
@@ -264,17 +260,6 @@ export default function CreatePostModal({
               required
               value={formData.title}
               onChange={(e) => handleChange('title', e.target.value)}
-              disabled={isSubmitting}
-            />
-
-            {/* Item / Service Name */}
-            <TextField
-              label="Item or Service Name"
-              placeholder="e.g., Acoustic guitar or Guitar Lessons"
-              fullWidth
-              required
-              value={formData.name}
-              onChange={(e) => handleChange('name', e.target.value)}
               disabled={isSubmitting}
             />
 
