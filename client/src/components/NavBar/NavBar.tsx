@@ -16,10 +16,13 @@ import LoginIcon from '@mui/icons-material/Login';
 import Fab from '@mui/material/Fab';
 import axios from 'axios';
 
+import Badge from '@mui/material/Badge';
+import NotificationsIcon from '@mui/icons-material/Notifications';
 import PersonIcon from '@mui/icons-material/Person';
 import { Link, useRouter } from '../../context/RouterContext';
 import SettingsMenu from './SettingsMenu';
 import NotificationBell from './NotificationBell';
+import { useNotifications } from '../../context/NotificationContext';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import NewPost, { type PostFormData } from '../Posts/NewPost';
@@ -27,6 +30,7 @@ import NewPost, { type PostFormData } from '../Posts/NewPost';
 function NavBar() {
   const { navigate } = useRouter();
   const { user, loading, logout } = useAuth();
+  const { unreadCount } = useNotifications();
   const { showToast } = useToast();
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -105,8 +109,6 @@ function NavBar() {
             flexShrink: 0,
           }}
           >
-            {/* Notification Bell - standalone, hidden for guests */}
-            {user && <NotificationBell />}
             {loading ? (
               <Typography variant="caption" color="text.secondary">Loading…</Typography>
             ) : (
@@ -119,6 +121,57 @@ function NavBar() {
                       gap: 1.5,
                     }}
                   >
+                    {/* Notifications only visible when logged in */}
+                    <Box
+                      sx={{
+                        position: 'relative',
+                        width: 36,
+                        height: 36,
+                        flexShrink: 0,
+                        borderRadius: '50%',
+                        bgcolor: 'primary.main',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        transition: 'background-color 0.15s ease',
+                        '&:hover': {
+                          bgcolor: 'primary.main',
+                        },
+                        '& button, & .MuiIconButton-root': {
+                          position: 'absolute',
+                          top: 0,
+                          left: 0,
+                          width: 36,
+                          height: 36,
+                          opacity: 0,
+                          zIndex: 2,
+                          cursor: 'pointer',
+                        },
+                      }}
+                    >
+                      <Badge
+                        badgeContent={unreadCount}
+                        color="error"
+                        sx={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          '& .MuiBadge-badge': {
+                            top: 1,
+                            right: 0,
+                          },
+                        }}
+                      >
+                        <NotificationsIcon
+                          sx={{
+                            fontSize: 22,
+                            display: 'block',
+                          }}
+                        />
+                      </Badge>
+                      <NotificationBell />
+                    </Box>
+
                     <Box
                       onClick={(e) => setUserMenuTarget(e.currentTarget)}
                       sx={{
@@ -146,7 +199,7 @@ function NavBar() {
 
                 {!user && (
                   <Box
-                    onClick={(e) => setUserMenuTarget(e.currentTarget)}
+                    onClick={() => { window.location.href = '/oauth2/login'; }}
                     sx={{
                       display: 'flex',
                       alignItems: 'center',
@@ -154,16 +207,7 @@ function NavBar() {
                       cursor: 'pointer',
                     }}
                   >
-                    <Avatar
-                      sx={{
-                        width: 28,
-                        height: 28,
-                        bgcolor: 'primary.main',
-                        fontSize: '0.75rem',
-                      }}
-                    >
-                      G
-                    </Avatar>
+                    <LoginIcon sx={{ fontSize: '1.25rem' }} />
 
                     <Typography
                       variant="subtitle2"
@@ -172,7 +216,7 @@ function NavBar() {
                         fontSize: { xs: '0.75rem', sm: '0.875rem' },
                       }}
                     >
-                      Hello Guest, sign in here.
+                      Sign in with Google
                     </Typography>
                   </Box>
                 )}
@@ -217,51 +261,44 @@ function NavBar() {
                   )}
 
                   {/* Settings Item */}
-                  <MenuItem
-                    disableRipple
-                    sx={{
-                      p: 0,
-                      position: 'relative',
-                      '& button, & .MuiIconButton-root': {
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        width: '100%',
-                        height: '100%',
-                        opacity: 0,
-                        zIndex: 2,
-                        cursor: 'pointer',
-                      },
-                    }}
-                  >
-                    <Box sx={{
-                      display: 'flex', alignItems: 'center', gap: 1, px: 2, py: 1, width: '100%',
-                    }}
+                  {user && (
+                    <MenuItem
+                      disableRipple
+                      sx={{
+                        p: 0,
+                        position: 'relative',
+                        '& button, & .MuiIconButton-root': {
+                          position: 'absolute',
+                          top: 0,
+                          left: 0,
+                          width: '100%',
+                          height: '100%',
+                          opacity: 0,
+                          zIndex: 2,
+                          cursor: 'pointer',
+                        },
+                      }}
                     >
-                      <SettingsIcon sx={{ fontSize: '1.25rem' }} />
-                      <Typography variant="body2" sx={{ fontWeight: 600, pointerEvents: 'none', zIndex: 1 }}>
-                        Settings
-                      </Typography>
-                      <SettingsMenu />
-                    </Box>
-                  </MenuItem>
+                      <Box sx={{
+                        display: 'flex', alignItems: 'center', gap: 1, px: 2, py: 1, width: '100%',
+                      }}
+                      >
+                        <SettingsIcon sx={{ fontSize: '1.25rem' }} />
+                        <Typography variant="body2" sx={{ fontWeight: 600, pointerEvents: 'none', zIndex: 1 }}>
+                          Settings
+                        </Typography>
+                        <SettingsMenu />
+                      </Box>
+                    </MenuItem>
+                  )}
 
                   {/* Log out when logged in / Sign in with Google when logged out */}
-                  {user ? (
+                  {user && (
                     <MenuItem onClick={() => { setUserMenuTarget(null); logout(); }}>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                         <LogoutIcon sx={{ fontSize: '1.25rem' }} />
                         <Typography variant="body2" sx={{ fontWeight: 600 }}>
                           Log out
-                        </Typography>
-                      </Box>
-                    </MenuItem>
-                  ) : (
-                    <MenuItem onClick={() => { setUserMenuTarget(null); window.location.href = '/oauth2/login'; }}>
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <LoginIcon sx={{ fontSize: '1.25rem' }} />
-                        <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                          Sign in with Google
                         </Typography>
                       </Box>
                     </MenuItem>
