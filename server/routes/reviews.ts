@@ -70,7 +70,7 @@ reviews.post('/', requireAuth, async (req, res) => {
 
         await enqueueJob(tx, 'SCREEN_CONTENT', {
           targetType: 'REVIEW',
-          targetId: review.id,
+          targetId: created.id,
           authorId: reviewerId,
           text: comment,
           notifyOnApprove: {
@@ -174,7 +174,7 @@ reviews.patch('/:id', requireAuth, async (req, res) => {
       if (data.comment) {
         await enqueueJob(tx, 'SCREEN_CONTENT', {
           targetType: 'REVIEW',
-          targetId: review.id,
+          targetId: result.id,
           authorId: userId,
           text: data.comment,
         });

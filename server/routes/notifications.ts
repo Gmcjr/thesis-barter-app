@@ -54,6 +54,24 @@ notifications.patch('/:id/read', async (req, res) => {
   }
 });
 
+notifications.delete('/:id', async (req, res) => {
+  try {
+    const userId = (req.user as { id: number }).id;
+    const id = Number(req.params.id);
+
+    const notification = await prisma.notification.findUnique({ where: { id } });
+    if (!notification || notification.userId !== userId) {
+      return res.sendStatus(404);
+    }
+
+    await prisma.notification.delete({ where: { id } });
+    return res.sendStatus(204);
+  } catch (error) {
+    console.error('Failed to DELETE notification:', error);
+    return res.sendStatus(500);
+  }
+});
+
 notifications.patch('/read-all', async (req, res) => {
   try {
     const userId = (req.user as { id: number }).id;
@@ -64,6 +82,25 @@ notifications.patch('/read-all', async (req, res) => {
     return res.sendStatus(204);
   } catch (error) {
     console.error('Failed to mark all notifications read:', error);
+    return res.sendStatus(500);
+  }
+});
+
+notifications.delete('/', async (req, res) => {
+  try {
+    const userId = (req.user as { id: number }).id;
+    const { ids } = req.body;
+
+    if (!Array.isArray(ids) || ids.some((id) => !Number.isInteger(id))) {
+      return res.status(400).json({ error: 'ids must be an array of integers.' });
+    }
+
+    await prisma.notification.deleteMany({
+      where: { id: { in: ids }, userId },
+    });
+    return res.sendStatus(204);
+  } catch (error) {
+    console.error('Failed to bulk-delete notifications:', error);
     return res.sendStatus(500);
   }
 });

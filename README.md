@@ -17,7 +17,7 @@ Barta is a peer-to-peer marketplace for barter, digital art trade, and community
 2. Copy `config/.env.example` to `config/.env` and fill in the values (see [Environment variables](#environment-variables) below).
 3. Set up a local Postgres database (see [Local database setup](#local-database-setup) below).
 4. `npx prisma migrate dev` — applies migrations to your local database and generates the Prisma client.
-5. `npx tsx server/scripts/createSystemUser.ts` — appended to migrate script - seeds the system user that automated screening/moderation actions get attributed to. It's an upsert, safe to re-run. With the system user, `SCREEN_CONTENT` will not work properly.
+5. `npx tsx server/scripts/createSystemUser.ts` — appended to migrate script - seeds the system user that automated screening/moderation actions get attributed to. It's an upsert, safe to re-run. Without the system user, `SCREEN_CONTENT` will not work properly.
 6. `npm run dev:server` — starts the server via `tsx watch`, restarting on file changes.
 7. `npm run build` — bundles the client with Webpack.
 

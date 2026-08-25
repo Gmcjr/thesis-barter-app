@@ -16,13 +16,10 @@ import LoginIcon from '@mui/icons-material/Login';
 import Fab from '@mui/material/Fab';
 import axios from 'axios';
 
-import Badge from '@mui/material/Badge';
-import NotificationsIcon from '@mui/icons-material/Notifications';
 import PersonIcon from '@mui/icons-material/Person';
 import { Link, useRouter } from '../../context/RouterContext';
 import SettingsMenu from './SettingsMenu';
 import NotificationBell from './NotificationBell';
-import { useNotifications } from '../../context/NotificationContext';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import NewPost, { type PostFormData } from '../Posts/NewPost';
@@ -30,7 +27,6 @@ import NewPost, { type PostFormData } from '../Posts/NewPost';
 function NavBar() {
   const { navigate } = useRouter();
   const { user, loading, logout } = useAuth();
-  const { unreadCount } = useNotifications();
   const { showToast } = useToast();
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -110,6 +106,8 @@ function NavBar() {
             flexShrink: 0,
           }}
           >
+            {/* Notification Bell - standalone, hidden for guests */}
+            {user && <NotificationBell />}
             {loading ? (
               <Typography variant="caption" color="text.secondary">Loading…</Typography>
             ) : (
@@ -122,57 +120,6 @@ function NavBar() {
                       gap: 1.5,
                     }}
                   >
-                    {/* Notifications only visible when logged in */}
-                    <Box
-                      sx={{
-                        position: 'relative',
-                        width: 36,
-                        height: 36,
-                        flexShrink: 0,
-                        borderRadius: '50%',
-                        bgcolor: 'primary.main',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        transition: 'background-color 0.15s ease',
-                        '&:hover': {
-                          bgcolor: 'primary.main',
-                        },
-                        '& button, & .MuiIconButton-root': {
-                          position: 'absolute',
-                          top: 0,
-                          left: 0,
-                          width: 36,
-                          height: 36,
-                          opacity: 0,
-                          zIndex: 2,
-                          cursor: 'pointer',
-                        },
-                      }}
-                    >
-                      <Badge
-                        badgeContent={unreadCount}
-                        color="error"
-                        sx={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          '& .MuiBadge-badge': {
-                            top: 1,
-                            right: 0,
-                          },
-                        }}
-                      >
-                        <NotificationsIcon
-                          sx={{
-                            fontSize: 22,
-                            display: 'block',
-                          }}
-                        />
-                      </Badge>
-                      <NotificationBell />
-                    </Box>
-
                     <Box
                       onClick={(e) => setUserMenuTarget(e.currentTarget)}
                       sx={{

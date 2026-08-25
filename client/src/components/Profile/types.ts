@@ -133,4 +133,5 @@ export interface ArtTradeOfferData {
 
 export interface TradeOffersReceivedViewProps {
   onOfferAccepted: () => Promise<unknown>;
+  highlightOfferId?: number;
 }

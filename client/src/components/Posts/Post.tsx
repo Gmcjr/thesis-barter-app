@@ -44,11 +44,12 @@ interface PostProps {
   onUpdate?: (postId: number, postData: PostUpdateData) => Promise<void>;
   onDelete?: (postId: number) => Promise<void>;
   onComplete?: (tradeId: number) => Promise<void>;
+  highlight?: boolean;
 }
 
 export default function Post({
   post, onReport, myTradeRequests, onTradeActivity, onOfferSubmitted,
-  onUpdate, onDelete, onComplete,
+  onUpdate, onDelete, onComplete, highlight,
 }: PostProps) {
   const postUser = post.user.name ?? post.user.email;
   const {
@@ -160,7 +161,15 @@ export default function Post({
 
   return (
     <>
-      <Card variant="outlined" sx={{ borderRadius: radius.md, borderColor: 'border.default' }}>
+      <Card
+        id={`post-${post.id}`}
+        variant="outlined"
+        sx={{
+          borderRadius: radius.md,
+          borderColor: 'border.default',
+          ...(highlight && { outline: '2px solid', outlineColor: 'primary.main' }),
+        }}
+      >
         <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
           <Box sx={{
             display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, justifyContent: { xs: 'flex-start', sm: 'space-between' }, alignItems: { xs: 'stretch', sm: 'flex-start' }, mb: 2, gap: { xs: 1, sm: 2 },
@@ -177,11 +186,11 @@ export default function Post({
                 </Typography>
 
                 {post.status === 'COMPLETED' && (
-                  <Chip
-                    size="small"
-                    color="success"
-                    label="Trade Completed"
-                  />
+                <Chip
+                  size="small"
+                  color="success"
+                  label="Trade Completed"
+                />
                 )}
               </Box>
 
@@ -218,9 +227,9 @@ export default function Post({
                 </Typography>
               </Box>
               {!isOwnPost && (
-                <Button size="small" variant="outlined" onClick={handleOpenDM} sx={{ borderRadius: radius.md, textTransform: 'none' }}>
-                  Open DM
-                </Button>
+              <Button size="small" variant="outlined" onClick={handleOpenDM} sx={{ borderRadius: radius.md, textTransform: 'none' }}>
+                Open DM
+              </Button>
               )}
               <PostActionsMenu
                 onReport={onReport}
@@ -238,77 +247,40 @@ export default function Post({
           </Box>
 
           {currentPostImage && (
-            <Box sx={{ mb: 2 }}>
-              <Box
-                sx={{
-                  position: 'relative',
+          <Box sx={{ mb: 2 }}>
+            <Box
+              sx={{
+                position: 'relative',
+                width: '100%',
+                height: { xs: 280, sm: 400 },
+                bgcolor: 'surface.sunken',
+                borderRadius: radius.md,
+                overflow: 'hidden',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <img
+                src={currentPostImage}
+                alt={`Post ${currentImageIndex + 1}`}
+                style={{
                   width: '100%',
-                  height: { xs: 280, sm: 400 },
-                  bgcolor: 'surface.sunken',
-                  borderRadius: radius.md,
-                  overflow: 'hidden',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
+                  height: '100%',
+                  objectFit: 'contain',
                 }}
-              >
-                <img
-                  src={currentPostImage}
-                  alt={`Post ${currentImageIndex + 1}`}
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'contain',
-                  }}
-                />
+              />
 
-                {postImages.length > 1 && (
-                  <>
-                    <IconButton
-                      onClick={handlePreviousImage}
-                      aria-label="Previous image"
-                      sx={{
-                        position: 'absolute',
-                        left: 12,
-                        top: '50%',
-                        transform: 'translateY(-50%)',
-                        bgcolor: 'background.paper',
-                        boxShadow: 2,
-                        '&:hover': {
-                          bgcolor: 'background.paper',
-                        },
-                      }}
-                    >
-                      <ChevronLeftIcon />
-                    </IconButton>
-
-                    <IconButton
-                      onClick={handleNextImage}
-                      aria-label="Next image"
-                      sx={{
-                        position: 'absolute',
-                        right: 12,
-                        top: '50%',
-                        transform: 'translateY(-50%)',
-                        bgcolor: 'background.paper',
-                        boxShadow: 2,
-                        '&:hover': {
-                          bgcolor: 'background.paper',
-                        },
-                      }}
-                    >
-                      <ChevronRightIcon />
-                    </IconButton>
-                  </>
-                )}
-
+              {postImages.length > 1 && (
+              <>
                 <IconButton
-                  onClick={() => setImageViewerOpen(true)}
-                  aria-label="Expand image"
+                  onClick={handlePreviousImage}
+                  aria-label="Previous image"
                   sx={{
                     position: 'absolute',
-                    right: 12,
-                    bottom: 12,
+                    left: 12,
+                    top: '50%',
+                    transform: 'translateY(-50%)',
                     bgcolor: 'background.paper',
                     boxShadow: 2,
                     '&:hover': {
@@ -316,97 +288,134 @@ export default function Post({
                     },
                   }}
                 >
-                  <OpenInFullIcon />
+                  <ChevronLeftIcon />
                 </IconButton>
+
+                <IconButton
+                  onClick={handleNextImage}
+                  aria-label="Next image"
+                  sx={{
+                    position: 'absolute',
+                    right: 12,
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    bgcolor: 'background.paper',
+                    boxShadow: 2,
+                    '&:hover': {
+                      bgcolor: 'background.paper',
+                    },
+                  }}
+                >
+                  <ChevronRightIcon />
+                </IconButton>
+              </>
+              )}
+
+              <IconButton
+                onClick={() => setImageViewerOpen(true)}
+                aria-label="Expand image"
+                sx={{
+                  position: 'absolute',
+                  right: 12,
+                  bottom: 12,
+                  bgcolor: 'background.paper',
+                  boxShadow: 2,
+                  '&:hover': {
+                    bgcolor: 'background.paper',
+                  },
+                }}
+              >
+                <OpenInFullIcon />
+              </IconButton>
+            </Box>
+
+            {postImages.length > 1 && (
+            <>
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  gap: 0.75,
+                  mt: 1,
+                }}
+              >
+                {postImages.map((imageUrl, index) => (
+                  <Box
+                    key={`dot-${imageUrl}`}
+                    onClick={() => setCurrentImageIndex(index)}
+                    sx={{
+                      width: index === currentImageIndex ? 18 : 7,
+                      height: 7,
+                      borderRadius: radius.pill,
+                      bgcolor: index === currentImageIndex ? 'primary.main' : 'text.disabled',
+                      cursor: 'pointer',
+                      transition: 'width 0.2s ease',
+                    }}
+                  />
+                ))}
               </Box>
 
-              {postImages.length > 1 && (
-                <>
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  gap: 1,
+                  mt: 1.5,
+                  overflowX: 'auto',
+                  pb: 0.5,
+                }}
+              >
+                {postImages.map((imageUrl, index) => (
                   <Box
+                    key={`thumbnail-${imageUrl}`}
+                    onClick={() => setCurrentImageIndex(index)}
+                    role="button"
+                    tabIndex={0}
                     sx={{
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      gap: 0.75,
-                      mt: 1,
+                      width: 72,
+                      height: 72,
+                      flexShrink: 0,
+                      borderRadius: radius.sm,
+                      overflow: 'hidden',
+                      cursor: 'pointer',
+                      border: '2px solid',
+                      borderColor: index === currentImageIndex ? 'primary.main' : 'border.default',
+                      opacity: index === currentImageIndex ? 1 : 0.7,
+                      transition: 'opacity 0.15s ease, border-color 0.15s ease',
+                      '&:hover': {
+                        opacity: 1,
+                      },
                     }}
                   >
-                    {postImages.map((imageUrl, index) => (
-                      <Box
-                        key={`dot-${imageUrl}`}
-                        onClick={() => setCurrentImageIndex(index)}
-                        sx={{
-                          width: index === currentImageIndex ? 18 : 7,
-                          height: 7,
-                          borderRadius: radius.pill,
-                          bgcolor: index === currentImageIndex ? 'primary.main' : 'text.disabled',
-                          cursor: 'pointer',
-                          transition: 'width 0.2s ease',
-                        }}
-                      />
-                    ))}
+                    <img
+                      src={imageUrl}
+                      alt={`Post Thumbnail ${index + 1}`}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        display: 'block',
+                      }}
+                    />
                   </Box>
-
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      justifyContent: 'center',
-                      gap: 1,
-                      mt: 1.5,
-                      overflowX: 'auto',
-                      pb: 0.5,
-                    }}
-                  >
-                    {postImages.map((imageUrl, index) => (
-                      <Box
-                        key={`thumbnail-${imageUrl}`}
-                        onClick={() => setCurrentImageIndex(index)}
-                        role="button"
-                        tabIndex={0}
-                        sx={{
-                          width: 72,
-                          height: 72,
-                          flexShrink: 0,
-                          borderRadius: radius.sm,
-                          overflow: 'hidden',
-                          cursor: 'pointer',
-                          border: '2px solid',
-                          borderColor: index === currentImageIndex ? 'primary.main' : 'border.default',
-                          opacity: index === currentImageIndex ? 1 : 0.7,
-                          transition: 'opacity 0.15s ease, border-color 0.15s ease',
-                          '&:hover': {
-                            opacity: 1,
-                          },
-                        }}
-                      >
-                        <img
-                          src={imageUrl}
-                          alt={`Post Thumbnail ${index + 1}`}
-                          style={{
-                            width: '100%',
-                            height: '100%',
-                            objectFit: 'cover',
-                            display: 'block',
-                          }}
-                        />
-                      </Box>
-                    ))}
-                  </Box>
-                </>
-              )}
-            </Box>
+                ))}
+              </Box>
+            </>
+            )}
+          </Box>
           )}
 
           {post.previewUrl && (
-            <Box sx={{ mb: 2 }}>
-              <img
-                src={post.previewUrl}
-                alt="Post Preview"
-                style={{
-                  maxWidth: '100%', borderRadius: radius.sm, maxHeight: '350px', objectFit: 'contain',
-                }}
-              />
-            </Box>
+          <Box sx={{ mb: 2 }}>
+            <img
+              src={post.previewUrl}
+              alt="Post Preview"
+              style={{
+                maxWidth: '100%', borderRadius: radius.sm, maxHeight: '350px', objectFit: 'contain',
+              }}
+            />
+          </Box>
           )}
 
           <Typography variant="body1" sx={{ mb: 3, lineHeight: 1.6 }}>
@@ -455,116 +464,116 @@ export default function Post({
 
           {/* Layout for Completed Trades (support for local and digital trades) */}
           {post.status === 'COMPLETED' && completedOffer && (
-            <Box sx={{
-              mt: 2, pt: 2, borderTop: '1px solid', borderColor: 'divider',
-            }}
-            >
-              {isArtTrade ? (
-                <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: 2 }}>
-                  {/* Art Sent */}
-                  <Box sx={{ flex: 1 }}>
-                    <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 'bold' }}>
-                      Art Sent:
-                    </Typography>
-                    <Box sx={{
-                      bgcolor: 'surface.sunken', borderRadius: radius.lg, p: 1, textAlign: 'center', minHeight: 200, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    }}
-                    >
-                      {sentUrl ? (
-                        <img
-                          src={sentUrl}
-                          alt="Traded Away"
-                          style={{ maxWidth: '100%', maxHeight: 200, objectFit: 'contain' }}
-                        />
-                      ) : (
-                        <Typography variant="caption" color="text.secondary">No image available</Typography>
-                      )}
-                    </Box>
-                  </Box>
-
-                  {/* Art Received */}
-                  <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-                    <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 'bold' }}>
-                      Art Received:
-                    </Typography>
-                    <Box sx={{
-                      bgcolor: 'surface.sunken', borderRadius: radius.lg, p: 1, textAlign: 'center', minHeight: 200, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    }}
-                    >
-                      {receivedUrl ? (
-                        <img
-                          src={receivedUrl}
-                          alt="Received Art"
-                          style={{ maxWidth: '100%', maxHeight: 200, objectFit: 'contain' }}
-                        />
-                      ) : (
-                        <Typography variant="caption" color="text.secondary">No image available</Typography>
-                      )}
-                    </Box>
-
-                    {/* Only render download button for the poster and the user they trade with */}
-                    {receivedUrl && isParticipant && (
-                      <Button
-                        variant="contained"
-                        color="success"
-                        size="small"
-                        startIcon={downloadingFull ? <CircularProgress size={16} color="inherit" /> : <DownloadIcon />}
-                        onClick={() => handleDownloadFull(receivedUrl)}
-                        disabled={downloadingFull}
-                        sx={{ mt: 1.5, alignSelf: 'flex-start' }}
-                      >
-                        {downloadingFull ? 'Saving File...' : 'Download Art Received'}
-                      </Button>
+          <Box sx={{
+            mt: 2, pt: 2, borderTop: '1px solid', borderColor: 'divider',
+          }}
+          >
+            {isArtTrade ? (
+              <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: 2 }}>
+                {/* Art Sent */}
+                <Box sx={{ flex: 1 }}>
+                  <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 'bold' }}>
+                    Art Sent:
+                  </Typography>
+                  <Box sx={{
+                    bgcolor: 'surface.sunken', borderRadius: radius.lg, p: 1, textAlign: 'center', minHeight: 200, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  }}
+                  >
+                    {sentUrl ? (
+                      <img
+                        src={sentUrl}
+                        alt="Traded Away"
+                        style={{ maxWidth: '100%', maxHeight: 200, objectFit: 'contain' }}
+                      />
+                    ) : (
+                      <Typography variant="caption" color="text.secondary">No image available</Typography>
                     )}
                   </Box>
                 </Box>
-              ) : (
-                <Box>
+
+                {/* Art Received */}
+                <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
                   <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 'bold' }}>
-                    Trade Details & Summary:
+                    Art Received:
                   </Typography>
                   <Box sx={{
-                    bgcolor: 'surface.sunken', borderRadius: radius.lg, p: 2, textAlign: 'left',
+                    bgcolor: 'surface.sunken', borderRadius: radius.lg, p: 1, textAlign: 'center', minHeight: 200, display: 'flex', alignItems: 'center', justifyContent: 'center',
                   }}
                   >
-                    <Typography variant="body2" color="text.primary">
-                      {(completedOffer as { message?: string })?.message || post.message || 'Trade successfully completed between users.'}
-                    </Typography>
+                    {receivedUrl ? (
+                      <img
+                        src={receivedUrl}
+                        alt="Received Art"
+                        style={{ maxWidth: '100%', maxHeight: 200, objectFit: 'contain' }}
+                      />
+                    ) : (
+                      <Typography variant="caption" color="text.secondary">No image available</Typography>
+                    )}
                   </Box>
+
+                  {/* Only render download button for the poster and the user they trade with */}
+                  {receivedUrl && isParticipant && (
+                  <Button
+                    variant="contained"
+                    color="success"
+                    size="small"
+                    startIcon={downloadingFull ? <CircularProgress size={16} color="inherit" /> : <DownloadIcon />}
+                    onClick={() => handleDownloadFull(receivedUrl)}
+                    disabled={downloadingFull}
+                    sx={{ mt: 1.5, alignSelf: 'flex-start' }}
+                  >
+                    {downloadingFull ? 'Saving File...' : 'Download Art Received'}
+                  </Button>
+                  )}
                 </Box>
-              )}
-            </Box>
+              </Box>
+            ) : (
+              <Box>
+                <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 'bold' }}>
+                  Trade Details & Summary:
+                </Typography>
+                <Box sx={{
+                  bgcolor: 'surface.sunken', borderRadius: radius.lg, p: 2, textAlign: 'left',
+                }}
+                >
+                  <Typography variant="body2" color="text.primary">
+                    {(completedOffer as { message?: string })?.message || post.message || 'Trade successfully completed between users.'}
+                  </Typography>
+                </Box>
+              </Box>
+            )}
+          </Box>
           )}
 
           {/* Request to Trade + Offer buttons */}
           {!isOwnPost && post.status === 'OPEN' && (
-            <Box sx={{
-              mt: 2,
-              pt: 2,
-              display: 'flex',
-              justifyContent: 'flex-end',
-              gap: 1,
-              flexWrap: 'wrap',
-            }}
-            >
-              <RequestTradeButton
-                postId={post.id}
-                myRequest={myTradeRequests}
-                onRequestChanged={onTradeActivity}
-              />
-              {isArtTrade ? (
-                <ArtTradeOffer postId={post.id} onSuccess={onOfferSubmitted} />
-              ) : (
-                <Button variant="contained" onClick={onOfferSubmitted} sx={{ borderRadius: radius.pill, textTransform: 'none' }}>
-                  Make Offer
-                </Button>
-              )}
-            </Box>
+          <Box sx={{
+            mt: 2,
+            pt: 2,
+            display: 'flex',
+            justifyContent: 'flex-end',
+            gap: 1,
+            flexWrap: 'wrap',
+          }}
+          >
+            <RequestTradeButton
+              postId={post.id}
+              myRequest={myTradeRequests}
+              onRequestChanged={onTradeActivity}
+            />
+            {isArtTrade ? (
+              <ArtTradeOffer postId={post.id} onSuccess={onOfferSubmitted} />
+            ) : (
+              <Button variant="contained" onClick={onOfferSubmitted} sx={{ borderRadius: radius.pill, textTransform: 'none' }}>
+                Make Offer
+              </Button>
+            )}
+          </Box>
           )}
 
           {/* Owner's view of incoming requests on their own open post */}
           {isOwnPost && post.status === 'OPEN' && (
-            <IncomingTradeRequests postId={post.id} onAccepted={onTradeActivity} />
+          <IncomingTradeRequests postId={post.id} onAccepted={onTradeActivity} />
           )}
         </CardContent>
       </Card>
@@ -614,59 +623,59 @@ export default function Post({
           </IconButton>
 
           {postImages.length > 1 && (
-            <IconButton
-              onClick={handlePreviousImage}
-              aria-label="Previous image"
-              sx={{
-                position: 'absolute',
-                left: { xs: 8, sm: 20 },
-                top: '50%',
-                transform: 'translateY(-50%)',
-                zIndex: 2,
+          <IconButton
+            onClick={handlePreviousImage}
+            aria-label="Previous image"
+            sx={{
+              position: 'absolute',
+              left: { xs: 8, sm: 20 },
+              top: '50%',
+              transform: 'translateY(-50%)',
+              zIndex: 2,
+              bgcolor: 'background.paper',
+              boxShadow: 2,
+              '&:hover': {
                 bgcolor: 'background.paper',
-                boxShadow: 2,
-                '&:hover': {
-                  bgcolor: 'background.paper',
-                },
-              }}
-            >
-              <ChevronLeftIcon />
-            </IconButton>
+              },
+            }}
+          >
+            <ChevronLeftIcon />
+          </IconButton>
           )}
 
           {currentPostImage && (
-            <img
-              src={currentPostImage}
-              alt={`Expanded Post ${currentImageIndex + 1}`}
-              style={{
-                maxWidth: '100%',
-                maxHeight: 'calc(94vh - 48px)',
-                width: 'auto',
-                height: 'auto',
-                objectFit: 'contain',
-              }}
-            />
+          <img
+            src={currentPostImage}
+            alt={`Expanded Post ${currentImageIndex + 1}`}
+            style={{
+              maxWidth: '100%',
+              maxHeight: 'calc(94vh - 48px)',
+              width: 'auto',
+              height: 'auto',
+              objectFit: 'contain',
+            }}
+          />
           )}
 
           {postImages.length > 1 && (
-            <IconButton
-              onClick={handleNextImage}
-              aria-label="Next image"
-              sx={{
-                position: 'absolute',
-                right: { xs: 8, sm: 20 },
-                top: '50%',
-                transform: 'translateY(-50%)',
-                zIndex: 2,
+          <IconButton
+            onClick={handleNextImage}
+            aria-label="Next image"
+            sx={{
+              position: 'absolute',
+              right: { xs: 8, sm: 20 },
+              top: '50%',
+              transform: 'translateY(-50%)',
+              zIndex: 2,
+              bgcolor: 'background.paper',
+              boxShadow: 2,
+              '&:hover': {
                 bgcolor: 'background.paper',
-                boxShadow: 2,
-                '&:hover': {
-                  bgcolor: 'background.paper',
-                },
-              }}
-            >
-              <ChevronRightIcon />
-            </IconButton>
+              },
+            }}
+          >
+            <ChevronRightIcon />
+          </IconButton>
           )}
         </DialogContent>
       </Dialog>
