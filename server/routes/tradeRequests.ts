@@ -4,6 +4,7 @@ import requireAuth from '../middleware/requireAuth.js';
 import { Status, TradeRequestStatus } from '../db/generated/enums.js';
 import { queueScreening } from '../services/moderation.js';
 import { enqueueJob } from '../services/jobs.js';
+import { getAvatarUrlMap } from '../services/userMedia.js';
 
 const tradeRequests = Router();
 
@@ -170,7 +171,13 @@ tradeRequests.get('/for-post/:postId', requireAuth, async (req, res) => {
       orderBy: { createdAt: 'desc' },
     });
 
-    return res.json(requestsForPost);
+    const avatarMap = await getAvatarUrlMap(requestsForPost.map((r) => r.requesterId));
+    const withAvatars = requestsForPost.map((r) => ({
+      ...r,
+      requester: { ...r.requester, avatarUrl: avatarMap.get(r.requesterId) ?? null },
+    }));
+
+    return res.json(withAvatars);
   } catch (err) {
     console.error(err);
     return res.sendStatus(500);
@@ -226,7 +233,13 @@ tradeRequests.get('/received', requireAuth, async (req, res) => {
       },
     });
 
-    return res.json(receivedRequests);
+    const avatarMap = await getAvatarUrlMap(receivedRequests.map((r) => r.requesterId));
+    const withAvatars = receivedRequests.map((r) => ({
+      ...r,
+      requester: { ...r.requester, avatarUrl: avatarMap.get(r.requesterId) ?? null },
+    }));
+
+    return res.json(withAvatars);
   } catch (err) {
     console.error(err);
     return res.sendStatus(500);

@@ -5,6 +5,7 @@ import requireAuth from '../middleware/requireAuth.js';
 import { getDownloadUrl } from '../services/s3.js';
 import { getBlockedRelationshipIds } from '../services/blocks.js';
 import { getIo } from '../middleware/socket.js';
+import { getAvatarUrlMap } from '../services/userMedia.js';
 
 const posts = Router();
 
@@ -130,7 +131,7 @@ posts.get('/', async (req, res) => {
       take: mine || profileUserId ? undefined : 50,
       orderBy: { createdAt: 'desc' },
       include: {
-        user: { select: { id: true, name: true } },
+        user: { select: { id: true, name: true, email: true } },
         products: true,
         services: true,
         comments: true,
@@ -169,6 +170,8 @@ posts.get('/', async (req, res) => {
 
     const viewerId = req.user?.id;
 
+    const authorAvatarMap = await getAvatarUrlMap(rawPosts.map((post) => post.user.id));
+
     const postsWithUrls = await Promise.all(
       rawPosts.map(async (post) => {
         const { trades, ...postRest } = post;
@@ -195,6 +198,7 @@ posts.get('/', async (req, res) => {
 
         return {
           ...postRest,
+          user: { ...postRest.user, avatarUrl: authorAvatarMap.get(post.user.id) ?? null },
           trade: trades[0] ?? null,
           ...postUrls,
           tradeOffers,

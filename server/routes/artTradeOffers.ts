@@ -8,6 +8,7 @@ import { getBlockedRelationshipIds, isBlocked } from '../services/blocks.js';
 import { Status } from '../db/generated/enums.js';
 import { queueScreening } from '../services/moderation.js';
 import { enqueueJob } from '../services/jobs.js';
+import { getAvatarUrlMap } from '../services/userMedia.js';
 
 const artTradeOffers = Router();
 
@@ -94,6 +95,8 @@ artTradeOffers.get('/', requireAuth, async (req, res) => {
       },
     });
 
+    const avatarMap = await getAvatarUrlMap(rawOffers.map((offer) => offer.offererId));
+
     const offers = await Promise.all(
       rawOffers.map(async (offer) => {
         const urls = await getMediaUrls(offer.tradeOfferMedia, offer.status === 'COMPLETED', true);
@@ -105,7 +108,7 @@ artTradeOffers.get('/', requireAuth, async (req, res) => {
           status: offer.status,
           ownerApproved: offer.ownerApproved,
           offererApproved: offer.offererApproved,
-          offerer: offer.offerer,
+          offerer: { ...offer.offerer, avatarUrl: avatarMap.get(offer.offererId) ?? null },
           post: { id: offer.post.id, title: offer.post.title },
           ...urls,
         };

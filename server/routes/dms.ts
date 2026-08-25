@@ -4,6 +4,7 @@ import requireAuth from '../middleware/requireAuth.js';
 import { isBlocked } from '../services/blocks.js';
 import { getIo } from '../middleware/socket';
 import { enqueueJob } from '../services/jobs.js';
+import { getAvatarUrlMap } from '../services/userMedia.js';
 
 const dms = Router();
 
@@ -26,16 +27,24 @@ dms.get('/', async (req, res) => {
       },
     });
 
-    const inbox = threads
-      .filter((dm) => {
-        const archivedByMe = dm.user1Id === userId ? dm.user1Archived : dm.user2Archived;
-        return wantArchived ? archivedByMe : !archivedByMe;
+    const filteredThreads = threads.filter((dm) => {
+      const archivedByMe = dm.user1Id === userId ? dm.user1Archived : dm.user2Archived;
+      return wantArchived ? archivedByMe : !archivedByMe;
+    });
+
+    const avatarMap = await getAvatarUrlMap(
+      filteredThreads.map((dm) => (dm.user1Id === userId ? dm.user2.id : dm.user1.id)),
+    );
+
+    const inbox = filteredThreads
+      .map((dm) => {
+        const otherUser = dm.user1Id === userId ? dm.user2 : dm.user1;
+        return {
+          id: dm.id,
+          otherUser: { ...otherUser, avatarUrl: avatarMap.get(otherUser.id) ?? null },
+          lastMessage: dm.messages[0] ?? null,
+        };
       })
-      .map((dm) => ({
-        id: dm.id,
-        otherUser: dm.user1Id === userId ? dm.user2 : dm.user1,
-        lastMessage: dm.messages[0] ?? null,
-      }))
       .sort((a, b) => {
         const aTime = a.lastMessage?.createdAt ?? 0;
         const bTime = b.lastMessage?.createdAt ?? 0;
@@ -65,9 +74,12 @@ dms.get('/:id', async (req, res) => {
       return res.status(404).json({ error: 'Conversation not found.' });
     }
 
+    const otherUser = dm.user1Id === userId ? dm.user2 : dm.user1;
+    const avatarMap = await getAvatarUrlMap([otherUser.id]);
+
     return res.json({
       id: dm.id,
-      otherUser: dm.user1Id === userId ? dm.user2 : dm.user1,
+      otherUser: { ...otherUser, avatarUrl: avatarMap.get(otherUser.id) ?? null },
     });
   } catch (error) {
     console.error('Failed to GET dm: ', error);
