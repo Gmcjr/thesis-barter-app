@@ -220,13 +220,13 @@ function NavBar() {
                     </MenuItem>
                   )}
 
-                  {/* Moderation Queue Item - moderators/admins only, hidden otherwise */}
-                  {isModerator(user?.role ?? null) && (
-                    <MenuItem onClick={() => { setUserMenuTarget(null); navigate('/moderation'); }}>
+                  {/* Deleted Conversations Item */}
+                  {user && (
+                    <MenuItem onClick={() => { setUserMenuTarget(null); navigate('/deleted-conversations'); }}>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <GavelIcon sx={{ fontSize: '1.25rem' }} />
+                        <DeleteIcon sx={{ fontSize: '1.25rem' }} />
                         <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                          Moderation Queue
+                          Deleted Conversations
                         </Typography>
                       </Box>
                     </MenuItem>
@@ -244,13 +244,13 @@ function NavBar() {
                     </MenuItem>
                   )}
 
-                  {/* Deleted Conversations Item */}
-                  {user && (
-                    <MenuItem onClick={() => { setUserMenuTarget(null); navigate('/deleted-conversations'); }}>
+                  {/* Moderation Queue Item - moderators/admins only, hidden otherwise */}
+                  {isModerator(user?.role ?? null) && (
+                    <MenuItem onClick={() => { setUserMenuTarget(null); navigate('/moderation'); }}>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <DeleteIcon sx={{ fontSize: '1.25' }} />
+                        <GavelIcon sx={{ fontSize: '1.25rem' }} />
                         <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                          Deleted Conversations
+                          Moderation Queue
                         </Typography>
                       </Box>
                     </MenuItem>
