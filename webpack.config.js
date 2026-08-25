@@ -42,6 +42,10 @@ export default {
           },
         },
       },
+      {
+        test: /\.(png|jpe?g|gif|webp)$/i,
+        type: 'asset/resource',
+      },
     ],
   },
   plugins: [new HtmlWebpackPlugin({ template: path.join(client, 'src', 'index.html') })],
