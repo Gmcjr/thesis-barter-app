@@ -85,20 +85,16 @@ function NavBar() {
 
           {/* App Name (maybe logo later?) */}
           <Link to="/" style={{ textDecoration: 'none' }}>
-            <Typography
-              variant="h3"
+            <Box
+              component="img"
+              src={new URL('../../assets/BartaNoBackground.png', import.meta.url).href}
+              alt="Barta"
               sx={{
-                color: 'accent.main',
-                cursor: 'pointer',
-                fontSize: { xs: '1.4rem', sm: '1.75rem' },
-                flexShrink: 0,
-                textDecoration: 'none',
-                transition: 'color 0.15s ease',
-                '&:hover': { color: 'accent.dark' },
+                height: { xs: 70, sm: 80 },
+                width: 'auto',
+                display: 'block',
               }}
-            >
-              Barta
-            </Typography>
+            />
           </Link>
 
           {/* Username + Avatar + modal with: Google Login / Logout + Accessibility Settins + Profile link */}
