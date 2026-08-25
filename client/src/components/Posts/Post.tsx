@@ -399,13 +399,46 @@ export default function Post({
 
           {post.previewUrl && (
             <Box sx={{ mb: 2 }}>
-              <img
-                src={post.previewUrl}
-                alt="Post Preview"
-                style={{
-                  maxWidth: '100%', borderRadius: radius.sm, maxHeight: '350px', objectFit: 'contain',
+              <Box
+                sx={{
+                  position: 'relative',
+                  width: '100%',
+                  height: { xs: 280, sm: 400 },
+                  bgcolor: 'surface.sunken',
+                  borderRadius: radius.md,
+                  overflow: 'hidden',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
                 }}
-              />
+              >
+                <img
+                  src={post.previewUrl}
+                  alt="Post Preview"
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'contain',
+                  }}
+                />
+
+                <IconButton
+                  onClick={() => setImageViewerOpen(true)}
+                  aria-label="Expand image"
+                  sx={{
+                    position: 'absolute',
+                    right: 12,
+                    bottom: 12,
+                    bgcolor: 'background.paper',
+                    boxShadow: 2,
+                    '&:hover': {
+                      bgcolor: 'background.paper',
+                    },
+                  }}
+                >
+                  <OpenInFullIcon />
+                </IconButton>
+              </Box>
             </Box>
           )}
 
@@ -634,9 +667,9 @@ export default function Post({
             </IconButton>
           )}
 
-          {currentPostImage && (
+          {(currentPostImage || post.previewUrl) && (
             <img
-              src={currentPostImage}
+              src={currentPostImage ?? post.previewUrl}
               alt={`Expanded Post ${currentImageIndex + 1}`}
               style={{
                 maxWidth: '100%',
