@@ -180,9 +180,9 @@ artTradeOffers.post('/', requireAuth, async (req, res) => {
         notifyOnApprove: {
           userId: post.userId,
           type: 'TRADE_OFFER_RECEIVED',
-          title: 'New trade offer on your post',
+          title: `New trade offer on "${post.title}"`,
           body: preview || undefined,
-          link: `/profile?postId=${postId}`,
+          link: `/profile/offers/${created.id}`,
           entityType: 'TRADE_OFFER',
           entityId: created.id,
         },
@@ -280,18 +280,18 @@ artTradeOffers.patch('/:offerId/approve', requireAuth, async (req, res) => {
         await enqueueJob(tx, 'SEND_NOTIFICATION', {
           userId: offer.post.userId,
           type: 'TRADE_OFFER_ACCEPTED',
-          title: 'Trade completed',
-          body: 'Your trade offer was fully approved and marked complete.',
-          link: '/profile?mine=true',
+          title: `Trade completed: "${offer.post.title}"`,
+          body: 'Your trade offer was fully approved and marked complete',
+          link: `/profile/history/${offer.postId}`,
           entityType: 'TRADE_OFFER',
           entityId: offerId,
         });
         await enqueueJob(tx, 'SEND_NOTIFICATION', {
           userId: offer.offererId,
           type: 'TRADE_OFFER_ACCEPTED',
-          title: 'Trade completed',
-          body: 'Your trade offer was fully approved and marked complete.',
-          link: '/profile?mine=true',
+          title: `Trade completed: "${offer.post.title}"`,
+          body: 'Your trade offer was fully approved and marked complete',
+          link: `/profile/history/${offer.postId}`,
           entityType: 'TRADE_OFFER',
           entityId: offerId,
         });
@@ -385,9 +385,9 @@ artTradeOffers.patch('/:offerId/accept', requireAuth, async (req, res) => {
       await enqueueJob(tx, 'SEND_NOTIFICATION', {
         userId: offer.offererId,
         type: 'TRADE_OFFER_ACCEPTED',
-        title: 'Your trade offer was accepted',
-        body: 'The post owner accepted your offer and marked the trade complete.',
-        link: '/profile?mine=true',
+        title: `Trade completed: "${offer.post.title}"`,
+        body: 'The post owner accepted your offer and marked the trade complete',
+        link: `/profile/history/${offer.postId}`,
         entityType: 'TRADE_OFFER',
         entityId: offerId,
       });

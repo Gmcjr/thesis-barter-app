@@ -19,7 +19,7 @@ tradeRequests.post('/', requireAuth, async (req, res) => {
     const post = await prisma.post.findUnique({
       where: { id: postId },
       select: {
-        id: true, userId: true, status: true, isRemoved: true,
+        id: true, userId: true, status: true, isRemoved: true, title: true,
       },
     });
 
@@ -75,7 +75,7 @@ tradeRequests.post('/', requireAuth, async (req, res) => {
           notifyOnApprove: {
             userId: post.userId,
             type: 'TRADE_REQUEST_RECEIVED',
-            title: 'New trade request on your post',
+            title: `New trade request on "${post.title}"`,
             body: preview,
             link: `/profile?postId=${postId}`,
             entityType: 'TRADE_REQUEST',
@@ -92,7 +92,7 @@ tradeRequests.post('/', requireAuth, async (req, res) => {
       await enqueueJob(prisma, 'SEND_NOTIFICATION', {
         userId: post.userId,
         type: 'TRADE_REQUEST_RECEIVED',
-        title: 'New trade request on your post',
+        title: `New trade request on "${post.title}"`,
         link: `/profile?postId=${postId}`,
         entityType: 'TRADE_REQUEST',
         entityId: tradeRequest.id,
@@ -236,7 +236,13 @@ tradeRequests.patch('/:id/accept', requireAuth, async (req, res) => {
 
     const tradeRequest = await prisma.tradeRequest.findUnique({
       where: { id: requestId },
-      include: { post: { select: { id: true, userId: true, status: true } } },
+      include: {
+        post: {
+          select: {
+            id: true, userId: true, status: true, title: true,
+          },
+        },
+      },
     });
 
     if (!tradeRequest) {
@@ -287,6 +293,7 @@ tradeRequests.patch('/:id/accept', requireAuth, async (req, res) => {
         userId: tradeRequest.requesterId,
         type: 'TRADE_REQUEST_ACCEPTED',
         title: 'Your trade request was accepted',
+        body: `Your trade request for "${tradeRequest.post.title}" was accepted.`,
         link: '/profile?mine=true',
         entityType: 'TRADE_REQUEST',
         entityId: tradeRequest.id,

@@ -3,8 +3,11 @@ import { prisma } from '../db/index.js';
 import { Prisma } from '../db/generated/client.js';
 import requireAuth from '../middleware/requireAuth';
 import requireModerator from '../middleware/requireModerator';
-import { ReportStatus, AppealStatus, ReportReason } from '../db/generated/enums';
+import {
+  ReportStatus, AppealStatus, ReportReason, TargetType,
+} from '../db/generated/enums';
 import { enqueueJob } from '../services/jobQueue.js';
+import { getIo } from '../middleware/socket.js';
 
 const appeals = Router();
 const QUEUE_PAGE_SIZE = 50;
@@ -154,6 +157,7 @@ appeals.patch('/:id', requireModerator, async (req, res) => {
     const isGrant = action === 'grant';
     const resolverId = (req.user as { id: number }).id;
 
+    let ownerId: number | undefined;
     let resolved;
     try {
       resolved = await prisma.$transaction(async (tx) => {
@@ -183,24 +187,26 @@ appeals.patch('/:id', requireModerator, async (req, res) => {
           if (appeal.report.postId) {
             const current = await tx.post.findUniqueOrThrow({
               where: { id: appeal.report.postId },
-              select: { version: true },
+              select: { version: true, userId: true },
             });
             const { count } = await tx.post.updateMany({
               where: { id: appeal.report.postId, version: current.version },
               data: { isRemoved: false, isPendingScreening: false, version: { increment: 1 } },
             });
             if (count === 0) throw new ScreeningConflict();
+            ownerId = current.userId;
           }
           if (appeal.report.messageId) {
             const current = await tx.message.findUniqueOrThrow({
               where: { id: appeal.report.messageId },
-              select: { version: true },
+              select: { version: true, senderId: true },
             });
             const { count } = await tx.message.updateMany({
               where: { id: appeal.report.messageId, version: current.version },
               data: { isRemoved: false, version: { increment: 1 } },
             });
             if (count === 0) throw new ScreeningConflict();
+            ownerId = current.senderId;
           }
         }
 
@@ -222,6 +228,22 @@ appeals.patch('/:id', requireModerator, async (req, res) => {
         return;
       }
       throw err; // Falls through to the route's own outer catch
+    }
+
+    // Post-commit, best-effort - a socket failure must never fail a request already committed
+    if (isGrant && ownerId !== undefined) {
+      try {
+        getIo().to(`user:${ownerId}`).emit('content:screened', {
+          targetType: appeal.report.postId ? TargetType.POST : TargetType.MESSAGE,
+          targetId: (appeal.report.postId ?? appeal.report.messageId)!,
+          ok: true,
+          pending: false,
+          rationale: resolved.resolution,
+        });
+        if (appeal.report.postId) getIo().emit('posts:changed');
+      } catch (err) {
+        console.error('content:screened emit failed (appeal already committed):', err);
+      }
     }
 
     res.json(resolved);
