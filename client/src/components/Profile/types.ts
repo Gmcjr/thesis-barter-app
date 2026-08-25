@@ -104,6 +104,7 @@ export interface NormalTradeOffer {
     id: number;
     name: string | null;
     email: string;
+    avatarUrl: string | null;
   };
   post: {
     id: number;
@@ -124,6 +125,7 @@ export interface ArtTradeOfferData {
     id: number;
     name: string;
     email: string;
+    avatarUrl: string | null;
   };
   post: {
     id: number;

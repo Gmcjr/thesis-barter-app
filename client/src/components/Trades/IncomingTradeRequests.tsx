@@ -6,6 +6,7 @@ import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
 import { radius } from '../../theme';
 import { useToast } from '../../context/ToastContext';
+import UserAvatar from '../common/UserAvatar';
 
 interface IncomingRequest {
   id: number;
@@ -88,13 +89,19 @@ export default function IncomingTradeRequests({ postId, onAccepted }: IncomingTr
                 display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 1.5, bgcolor: 'surface.sunken', borderRadius: radius.md, gap: 2,
               }}
             >
-              <Box sx={{ minWidth: 0 }}>
-                <Typography variant="body2" sx={{ fontWeight: 600, color: 'text.primary' }}>
-                  {request.requester.name ?? request.requester.email}
-                </Typography>
-                {request.message && (
-                  <Typography variant="body2" sx={{ color: 'text.primary' }}>{request.message}</Typography>
-                )}
+              <Box sx={{
+                display: 'flex', alignItems: 'center', gap: 1.5, minWidth: 0,
+              }}
+              >
+                <UserAvatar user={request.requester} size={32} />
+                <Box sx={{ minWidth: 0 }}>
+                  <Typography variant="body2" sx={{ fontWeight: 600, color: 'text.primary' }}>
+                    {request.requester.name ?? request.requester.email}
+                  </Typography>
+                  {request.message && (
+                    <Typography variant="body2" sx={{ color: 'text.primary' }}>{request.message}</Typography>
+                  )}
+                </Box>
               </Box>
               <Button size="small" variant="contained" color="success" disabled={acceptingId !== null} onClick={() => handleAccept(request.id)}>
                 {acceptingId === request.id ? 'Accepting...' : 'Accept'}

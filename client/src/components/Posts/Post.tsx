@@ -9,7 +9,6 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import Avatar from '@mui/material/Avatar';
 import Divider from '@mui/material/Divider';
 import Chip from '@mui/material/Chip';
 import DownloadIcon from '@mui/icons-material/Download';
@@ -18,6 +17,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { formatPostDate } from '../../utils/utils';
 import type { PostData, PostUpdateData } from './ManagePosts';
 
+import UserAvatar from '../common/UserAvatar';
 import PostActionsMenu from './PostActionsMenu';
 import ArtTradeOffer from './ArtTradeOffer';
 import type { TradeRequestData } from '../Trades/RequestTradeButton';
@@ -182,12 +182,7 @@ export default function Post({
                 '&:hover .post-username': { textDecoration: 'underline' },
               }}
             >
-              <Avatar sx={{
-                bgcolor: 'primary.main', width: 32, height: 32, fontSize: '0.9rem',
-              }}
-              >
-                {postUser.charAt(0).toUpperCase()}
-              </Avatar>
+              <UserAvatar user={post.user} size={32} sx={{ fontSize: '0.9rem' }} />
               <Typography variant="subtitle2" className="post-username">
                 {postUser}
               </Typography>

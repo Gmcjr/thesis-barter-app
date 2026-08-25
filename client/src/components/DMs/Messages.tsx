@@ -7,7 +7,6 @@ import Card from '@mui/material/Card';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
-import Avatar from '@mui/material/Avatar';
 import CircularProgress from '@mui/material/CircularProgress';
 import SendIcon from '@mui/icons-material/Send';
 import DeleteOutlineIcon from '@mui/icons-material/Delete';
@@ -21,10 +20,11 @@ import { useParams, useRouter } from '../../context/RouterContext';
 import { useAuth } from '../../context/AuthContext';
 import { useSocket } from '../../context/SocketContext';
 import { useToast } from '../../context/ToastContext';
+import UserAvatar from '../common/UserAvatar';
 
 interface DMSummary {
   id: number;
-  otherUser: { id: number; name: string };
+  otherUser: { id: number; name: string; avatarUrl: string | null };
   lastMessage: { text: string; createdAt: string; senderId: number } | null;
 }
 
@@ -92,7 +92,7 @@ export default function Messages() {
       return undefined;
     }
     let cancelled = false;
-    axios.get<{ id: number; otherUser: { id: number; name: string } }>(`/dms/${activeDmId}`, { withCredentials: true })
+    axios.get<{ id: number; otherUser: { id: number; name: string; avatarUrl: string | null } }>(`/dms/${activeDmId}`, { withCredentials: true })
       .then((res) => {
         if (cancelled) return;
         setPendingConversation({
@@ -193,9 +193,7 @@ export default function Messages() {
               '&:hover': { bgcolor: 'action.hover' },
             }}
           >
-            <Avatar sx={{ width: 40, height: 40 }}>
-              {conversation.otherUser.name.charAt(0).toUpperCase()}
-            </Avatar>
+            <UserAvatar user={conversation.otherUser} size={40} />
             <Box sx={{ minWidth: 0, flex: 1 }}>
               <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1 }}>
                 <Typography variant="body2" sx={{ fontWeight: 600, flex: 1, minWidth: 0 }} noWrap>
@@ -259,6 +257,9 @@ export default function Messages() {
               >
                 <ArrowBackIcon fontSize="small" />
               </IconButton>
+              {activeConversation?.otherUser && (
+                <UserAvatar user={activeConversation.otherUser} size={32} />
+              )}
               <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
                 {activeConversation?.otherUser.name ?? 'Conversation'}
               </Typography>

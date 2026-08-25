@@ -14,6 +14,7 @@ import Typography from '@mui/material/Typography';
 import { radius } from '../../theme';
 
 import { useToast } from '../../context/ToastContext';
+import UserAvatar from '../common/UserAvatar';
 import PendingTradeOffers from './PendingTradeOffers';
 
 import type { ArtTradeOfferData, NormalTradeOffer, TradeOffersReceivedViewProps } from './types';
@@ -156,9 +157,15 @@ export default function TradeOffersReceivedView({
                   Offer For: {offer.post.title}
                 </Typography>
 
-                <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>
-                  Offered by: {offer.requester.name ?? offer.requester.email}
-                </Typography>
+                <Box sx={{
+                  display: 'flex', alignItems: 'center', gap: 1, my: 1,
+                }}
+                >
+                  <UserAvatar user={offer.requester} size={28} />
+                  <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>
+                    Offered by: {offer.requester.name ?? offer.requester.email}
+                  </Typography>
+                </Box>
 
                 <Typography variant="subtitle2" sx={{ my: 1 }}>
                   Offer Message: {offer.message || 'No details provided.'}
@@ -208,9 +215,15 @@ export default function TradeOffersReceivedView({
                   Offer For: {offer.post.title}
                 </Typography>
 
-                <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>
-                  Offered by: {offer.offerer.name || offer.offerer.email}
-                </Typography>
+                <Box sx={{
+                  display: 'flex', alignItems: 'center', gap: 1, my: 1,
+                }}
+                >
+                  <UserAvatar user={offer.offerer} size={28} />
+                  <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>
+                    Offered by: {offer.offerer.name || offer.offerer.email}
+                  </Typography>
+                </Box>
 
                 <Typography variant="subtitle2" sx={{ my: 1 }}>
                   Offer Message: {offer.message || 'No details provided.'}

@@ -46,6 +46,7 @@ export type PostData = {
     id: number;
     name: string | null;
     email: string;
+    avatarUrl: string | null;
   };
   comments: {
     id: number;

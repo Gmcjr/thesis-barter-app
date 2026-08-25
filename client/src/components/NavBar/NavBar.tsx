@@ -24,6 +24,7 @@ import { useNotifications } from '../../context/NotificationContext';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import NewPost, { type PostFormData } from '../Posts/NewPost';
+import UserAvatar from '../common/UserAvatar';
 
 function NavBar() {
   const { path, navigate } = useRouter();
@@ -183,16 +184,16 @@ function NavBar() {
                     cursor: 'pointer',
                   }}
                 >
-                  <Avatar
-                    sx={{
-                      width: 28,
-                      height: 28,
-                      bgcolor: 'primary.main',
-                      fontSize: '0.75rem',
+                  {user ? (
+                    <UserAvatar user={user} size={28} sx={{ fontSize: '0.75rem' }} />
+                  ) : (
+                    <Avatar sx={{
+                      width: 28, height: 28, bgcolor: 'primary.main', fontSize: '0.75rem',
                     }}
-                  >
-                    {user ? (user.name ?? user.email).charAt(0).toUpperCase() : 'G'}
-                  </Avatar>
+                    >
+                      G
+                    </Avatar>
+                  )}
                   <Typography
                     variant="subtitle2"
                     sx={{
