@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import React, { useState, useRef } from 'react';
 import axios from 'axios';
 
@@ -8,8 +9,11 @@ import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
 import Modal from '@mui/material/Modal';
 import Alert from '@mui/material/Alert';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { radius } from '../../theme';
+import { useAuth } from '../../context/AuthContext';
 
 interface ArtTradeOfferProps {
   postId: number;
@@ -17,7 +21,7 @@ interface ArtTradeOfferProps {
 }
 
 // creates a watermark for the image preview
-const createWatermark = (file: File): Promise<Blob> => new Promise((resolve, reject) => {
+const createWatermark = (file: File, watermarkText?: string): Promise<Blob> => new Promise((resolve, reject) => {
   const sourceImage = new Image();
 
   sourceImage.onload = () => {
@@ -36,30 +40,20 @@ const createWatermark = (file: File): Promise<Blob> => new Promise((resolve, rej
     outputCanvas.height = scaledHeight;
     outputContext.drawImage(sourceImage, 0, 0, scaledWidth, scaledHeight);
 
-    const watermarkTile = document.createElement('canvas');
-    watermarkTile.width = 180;
-    watermarkTile.height = 70;
-    const watermarkTileContext = watermarkTile.getContext('2d');
+    if (watermarkText) {
+      const watermarkFontSize = Math.max(24, Math.min(72, scaledWidth * 0.08));
 
-    if (watermarkTileContext) {
-      watermarkTileContext.font = 'bold 14px sans-serif';
-      watermarkTileContext.fillStyle = 'rgba(255, 255, 255, 0.4)';
-      watermarkTileContext.textAlign = 'center';
-      watermarkTileContext.textBaseline = 'middle';
+      outputContext.font = `bold ${watermarkFontSize}px sans-serif`;
+      outputContext.fillStyle = 'rgba(255, 255, 255, 0.4)';
+      outputContext.textAlign = 'center';
+      outputContext.textBaseline = 'middle';
 
-      watermarkTileContext.fillText('TRADE PREVIEW ONLY', 90, 18);
-      watermarkTileContext.fillText('TRADE PREVIEW ONLY', 0, 52);
-      watermarkTileContext.fillText('TRADE PREVIEW ONLY', 180, 52);
-    }
-
-    outputContext.translate(scaledWidth / 2, scaledHeight / 2);
-    outputContext.rotate((-30 * Math.PI) / 180);
-
-    const watermarkPattern = outputContext.createPattern(watermarkTile, 'repeat');
-    if (watermarkPattern) {
-      outputContext.fillStyle = watermarkPattern;
-      const overfillSize = Math.max(scaledWidth, scaledHeight) * 2;
-      outputContext.fillRect(-overfillSize, -overfillSize, overfillSize * 2, overfillSize * 2);
+      outputContext.fillText(
+        watermarkText,
+        scaledWidth / 2,
+        scaledHeight / 2,
+        scaledWidth * 0.8,
+      );
     }
 
     outputCanvas.toBlob(
@@ -82,9 +76,11 @@ const createWatermark = (file: File): Promise<Blob> => new Promise((resolve, rej
 });
 
 export const ArtTradeOffer: React.FC<ArtTradeOfferProps> = ({ postId, onSuccess }) => {
+  const { user } = useAuth();
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState('');
   const [file, setFile] = useState<File | null>(null);
+  const [addWatermark, setAddWatermark] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -95,6 +91,7 @@ export const ArtTradeOffer: React.FC<ArtTradeOfferProps> = ({ postId, onSuccess 
       setOpen(false);
       setMessage('');
       setFile(null);
+      setAddWatermark(false);
       setError('');
       if (fileInputRef.current) fileInputRef.current.value = '';
     }
@@ -135,7 +132,11 @@ export const ArtTradeOffer: React.FC<ArtTradeOfferProps> = ({ postId, onSuccess 
 
     setIsSubmitting(true);
     try {
-      const previewBlob = await createWatermark(file);
+      const watermarkText = `@${user?.name ?? user?.email}`;
+      const previewBlob = await createWatermark(
+        file,
+        addWatermark ? watermarkText : undefined,
+      );
       const previewMediaId = await uploadFileToS3(previewBlob, `preview_${file.name}`, 'image/jpeg', 'PREVIEW');
       const fullMediaId = await uploadFileToS3(file, file.name, file.type, 'FULL');
 
@@ -208,6 +209,17 @@ export const ArtTradeOffer: React.FC<ArtTradeOfferProps> = ({ postId, onSuccess 
               </Typography>
             )}
           </Box>
+
+          <FormControlLabel
+            control={(
+              <Checkbox
+                checked={addWatermark}
+                disabled={isSubmitting}
+                onChange={(e) => setAddWatermark(e.target.checked)}
+              />
+            )}
+            label="Optional: Add Watermark of Username"
+          />
 
           <Box sx={{
             display: 'flex', justifyContent: 'flex-end', gap: 1, mt: 1,
