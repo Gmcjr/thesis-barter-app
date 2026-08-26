@@ -6,6 +6,7 @@ import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
 import { radius } from '../../theme';
 import { useToast } from '../../context/ToastContext';
+import { useRouter } from '../../context/RouterContext';
 import UserAvatar from '../common/UserAvatar';
 
 interface IncomingRequest {
@@ -27,6 +28,7 @@ export default function IncomingTradeRequests({ postId, onAccepted }: IncomingTr
   const [requests, setRequests] = useState<IncomingRequest[]>([]);
   const [acceptingId, setAcceptingId] = useState<number | null>(null);
   const { showToast } = useToast();
+  const { navigate } = useRouter();
 
   const loadRequests = async () => {
     setLoading(true);
@@ -89,19 +91,28 @@ export default function IncomingTradeRequests({ postId, onAccepted }: IncomingTr
                 display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 1.5, bgcolor: 'surface.sunken', borderRadius: radius.md, gap: 2,
               }}
             >
-              <Box sx={{
-                display: 'flex', alignItems: 'center', gap: 1.5, minWidth: 0,
-              }}
-              >
-                <UserAvatar user={request.requester} size={32} />
-                <Box sx={{ minWidth: 0 }}>
-                  <Typography variant="body2" sx={{ fontWeight: 600, color: 'text.primary' }}>
+              <Box sx={{ minWidth: 0 }}>
+                <Box
+                  onClick={() => navigate(`/profile/${request.requester.id}`)}
+                  role="button"
+                  tabIndex={0}
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 1.5,
+                    width: 'fit-content',
+                    cursor: 'pointer',
+                    '&:hover .requester-name': { textDecoration: 'underline' },
+                  }}
+                >
+                  <UserAvatar user={request.requester} size={32} />
+                  <Typography variant="body2" className="requester-name" sx={{ fontWeight: 600, color: 'text.primary' }}>
                     {request.requester.name ?? request.requester.email}
                   </Typography>
-                  {request.message && (
-                    <Typography variant="body2" sx={{ color: 'text.primary' }}>{request.message}</Typography>
-                  )}
                 </Box>
+                {request.message && (
+                  <Typography variant="body2" sx={{ color: 'text.primary', mt: 0.5 }}>{request.message}</Typography>
+                )}
               </Box>
               <Button size="small" variant="contained" color="success" disabled={acceptingId !== null} onClick={() => handleAccept(request.id)}>
                 {acceptingId === request.id ? 'Accepting...' : 'Accept'}

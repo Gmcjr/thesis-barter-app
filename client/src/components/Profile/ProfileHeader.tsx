@@ -91,7 +91,7 @@ export default function ProfileHeader({
           >
             {profile.name.charAt(0).toUpperCase()}
           </Avatar>
-          {isOwnProfile ? (
+          {isOwnProfile && (
             <Button
               variant="outlined"
               size="small"
@@ -99,14 +99,6 @@ export default function ProfileHeader({
               sx={{ borderRadius: radius.md, textTransform: 'none' }}
             >
               Edit Profile
-            </Button>
-          ) : (
-            <Button
-              variant="outlined"
-              size="small"
-              sx={{ borderRadius: radius.md, textTransform: 'none' }}
-            >
-              Follow
             </Button>
           )}
         </Box>

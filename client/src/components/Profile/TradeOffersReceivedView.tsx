@@ -14,6 +14,7 @@ import Typography from '@mui/material/Typography';
 import { radius } from '../../theme';
 
 import { useToast } from '../../context/ToastContext';
+import { useRouter } from '../../context/RouterContext';
 import UserAvatar from '../common/UserAvatar';
 import PendingTradeOffers from './PendingTradeOffers';
 
@@ -29,6 +30,7 @@ export default function TradeOffersReceivedView({
   const [acceptingNormalId, setAcceptingNormalId] = useState<number | null>(null);
   const [acceptingArtId, setAcceptingArtId] = useState<number | null>(null);
   const { showToast } = useToast();
+  const { navigate } = useRouter();
 
   const loadOffers = useCallback(async () => {
     setLoading(true);
@@ -157,12 +159,22 @@ export default function TradeOffersReceivedView({
                   Offer For: {offer.post.title}
                 </Typography>
 
-                <Box sx={{
-                  display: 'flex', alignItems: 'center', gap: 1, my: 1,
-                }}
+                <Box
+                  onClick={() => navigate(`/profile/${offer.requester.id}`)}
+                  role="button"
+                  tabIndex={0}
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 1,
+                    my: 1,
+                    width: 'fit-content',
+                    cursor: 'pointer',
+                    '&:hover .offer-user-name': { textDecoration: 'underline' },
+                  }}
                 >
                   <UserAvatar user={offer.requester} size={28} />
-                  <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>
+                  <Typography variant="subtitle2" className="offer-user-name" sx={{ fontWeight: 'bold' }}>
                     Offered by: {offer.requester.name ?? offer.requester.email}
                   </Typography>
                 </Box>
@@ -215,12 +227,22 @@ export default function TradeOffersReceivedView({
                   Offer For: {offer.post.title}
                 </Typography>
 
-                <Box sx={{
-                  display: 'flex', alignItems: 'center', gap: 1, my: 1,
-                }}
+                <Box
+                  onClick={() => navigate(`/profile/${offer.offerer.id}`)}
+                  role="button"
+                  tabIndex={0}
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 1,
+                    my: 1,
+                    width: 'fit-content',
+                    cursor: 'pointer',
+                    '&:hover .offer-user-name': { textDecoration: 'underline' },
+                  }}
                 >
                   <UserAvatar user={offer.offerer} size={28} />
-                  <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>
+                  <Typography variant="subtitle2" className="offer-user-name" sx={{ fontWeight: 'bold' }}>
                     Offered by: {offer.offerer.name || offer.offerer.email}
                   </Typography>
                 </Box>
