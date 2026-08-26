@@ -8,7 +8,7 @@ import React, {
   type ComponentType,
   type ReactNode,
 } from 'react';
-import { useAuth } from './AuthContext';
+import { useAuth, type UserRole, type ModeratorRole } from './AuthContext';
 
 interface RouterContextValue {
   path: string;
@@ -79,7 +79,7 @@ export interface RouteDef {
   path: string;
   component: ComponentType;
   requiresAuth?: boolean;
-  requiresRole?: ('MODERATOR' | 'ADMIN')[];
+  requiresRole?: ModeratorRole[];
 }
 
 const ParamsContext = createContext<Record<string, string>>({});
@@ -102,7 +102,8 @@ function matchRoute(pattern: string, path: string): Record<string, string> | nul
   return params;
 }
 
-function hasRole(userRole: 'USER' | 'MODERATOR' | 'ADMIN' | null, allowed: ('MODERATOR' | 'ADMIN')[]): boolean {
+// True if userRole is in the allowed list  for this route
+function hasRole(userRole: UserRole, allowed: ModeratorRole[]): boolean {
   return allowed.some((role) => role === userRole);
 }
 

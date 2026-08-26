@@ -8,8 +8,6 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import CheckIcon from '@mui/icons-material/Check';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import { useSettings } from '../../context/SettingsContext';
-import { useAuth } from '../../context/AuthContext';
-import { useRouter } from '../../context/RouterContext';
 import type { ContrastMode } from '../../theme';
 
 const CONTRAST_OPTIONS: { value: ContrastMode; label: string }[] = [
@@ -23,13 +21,9 @@ export default function SettingsMenu() {
   const {
     mode, setMode, contrast, setContrast,
   } = useSettings();
-  const { user } = useAuth();
-  const { navigate } = useRouter();
 
   const handleOpen = (e: React.MouseEvent<HTMLElement>) => setAnchorEl(e.currentTarget);
   const handleClose = () => setAnchorEl(null);
-
-  const isModerator = user?.role === 'MODERATOR' || user?.role === 'ADMIN';
 
   return (
     <>
@@ -63,18 +57,6 @@ export default function SettingsMenu() {
           </MenuItem>
         ))}
 
-        <Divider />
-        <MenuItem onClick={() => { navigate('/blocked-users'); handleClose(); }}>
-          Blocked Users
-        </MenuItem>
-        <MenuItem onClick={() => { navigate('/deleted-conversations'); handleClose(); }}>
-          Deleted Conversations
-        </MenuItem>
-        {isModerator && (
-          <MenuItem onClick={() => { navigate('/moderation'); handleClose(); }}>
-            Moderation Queue
-          </MenuItem>
-        )}
       </Menu>
     </>
   );
