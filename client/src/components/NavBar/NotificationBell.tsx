@@ -6,7 +6,12 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import { useNotifications } from '../../context/NotificationContext';
 import NotificationPanel from './NotificationPanel';
 
-export default function NotificationBell() {
+interface NotificationBellProps {
+  // Filled circular, matches avatar button
+  filled: boolean;
+}
+
+export default function NotificationBell({ filled }: NotificationBellProps) {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const { unreadCount } = useNotifications();
 
@@ -15,7 +20,17 @@ export default function NotificationBell() {
 
   return (
     <>
-      <IconButton size="small" onClick={handleOpen} sx={{ color: 'inherit' }}>
+      <IconButton
+        size="small"
+        onClick={handleOpen}
+        sx={filled ? {
+          width: 36,
+          height: 36,
+          bgcolor: 'primary.main',
+          color: 'common.white',
+          '&:hover': { bgcolor: 'primary.dark' },
+        } : { color: 'inherit' }}
+      >
         <Badge badgeContent={unreadCount} color="error">
           <NotificationsIcon fontSize="small" />
         </Badge>
