@@ -407,15 +407,48 @@ export default function Post({
           )}
 
           {post.previewUrl && (
-          <Box sx={{ mb: 2 }}>
-            <img
-              src={post.previewUrl}
-              alt="Post Preview"
-              style={{
-                maxWidth: '100%', borderRadius: radius.sm, maxHeight: '350px', objectFit: 'contain',
-              }}
-            />
-          </Box>
+            <Box sx={{ mb: 2 }}>
+              <Box
+                sx={{
+                  position: 'relative',
+                  width: '100%',
+                  height: { xs: 280, sm: 400 },
+                  bgcolor: 'surface.sunken',
+                  borderRadius: radius.md,
+                  overflow: 'hidden',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <img
+                  src={post.previewUrl}
+                  alt="Post Preview"
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'contain',
+                  }}
+                />
+
+                <IconButton
+                  onClick={() => setImageViewerOpen(true)}
+                  aria-label="Expand image"
+                  sx={{
+                    position: 'absolute',
+                    right: 12,
+                    bottom: 12,
+                    bgcolor: 'background.paper',
+                    boxShadow: 2,
+                    '&:hover': {
+                      bgcolor: 'background.paper',
+                    },
+                  }}
+                >
+                  <OpenInFullIcon />
+                </IconButton>
+              </Box>
+            </Box>
           )}
 
           <Typography variant="body1" sx={{ mb: 3, lineHeight: 1.6 }}>
@@ -643,18 +676,18 @@ export default function Post({
           </IconButton>
           )}
 
-          {currentPostImage && (
-          <img
-            src={currentPostImage}
-            alt={`Expanded Post ${currentImageIndex + 1}`}
-            style={{
-              maxWidth: '100%',
-              maxHeight: 'calc(94vh - 48px)',
-              width: 'auto',
-              height: 'auto',
-              objectFit: 'contain',
-            }}
-          />
+          {(currentPostImage || post.previewUrl) && (
+            <img
+              src={currentPostImage ?? post.previewUrl}
+              alt={`Expanded Post ${currentImageIndex + 1}`}
+              style={{
+                maxWidth: '100%',
+                maxHeight: 'calc(94vh - 48px)',
+                width: 'auto',
+                height: 'auto',
+                objectFit: 'contain',
+              }}
+            />
           )}
 
           {postImages.length > 1 && (
