@@ -302,6 +302,9 @@ export default function CreatePostModal({
                       {file.name}
                     </Typography>
                   )}
+                  <Typography variant="body2" color="text.secondary">
+                    Select an image (.jpg, .jpeg, .png, .webp, .gif, .bmp, .avif, and .svg file types are supported).
+                  </Typography>
                 </Box>
 
                 <FormControlLabel
@@ -331,7 +334,7 @@ export default function CreatePostModal({
                   />
                 </Button>
                 <Typography variant="body2" color="text.secondary">
-                  {postImages.length > 0 ? `${postImages.length} of 5 images selected` : 'Select up to 5 images.'}
+                  {postImages.length > 0 ? `${postImages.length} of 5 images selected` : 'Select up to 5 images (.jpg, .jpeg, .png, .webp, .gif, .bmp, .avif, and .svg file types are supported).'}
                 </Typography>
               </Box>
             </Collapse>
