@@ -17,10 +17,13 @@ import Fab from '@mui/material/Fab';
 import axios from 'axios';
 
 import PersonIcon from '@mui/icons-material/Person';
+import GavelIcon from '@mui/icons-material/Gavel';
+import PersonOffIcon from '@mui/icons-material/PersonOff';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { Link, useRouter } from '../../context/RouterContext';
 import SettingsMenu from './SettingsMenu';
 import NotificationBell from './NotificationBell';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth, isModerator } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import NewPost, { type PostFormData } from '../Posts/NewPost';
 
@@ -98,7 +101,7 @@ function NavBar() {
             </Typography>
           </Link>
 
-          {/* Username + Avatar + modal with: Google Login / Logout + Accessibility Settins + Profile link */}
+          {/* Username + Avatar + modal with: Google Login / Logout + Accessibility Settings + Profile link */}
           <Box sx={{
             display: 'flex',
             alignItems: 'center',
@@ -212,6 +215,42 @@ function NavBar() {
                         <MessageIcon sx={{ fontSize: '1.25rem' }} />
                         <Typography variant="body2" sx={{ fontWeight: 600 }}>
                           Messages
+                        </Typography>
+                      </Box>
+                    </MenuItem>
+                  )}
+
+                  {/* Deleted Conversations Item */}
+                  {user && (
+                    <MenuItem onClick={() => { setUserMenuTarget(null); navigate('/deleted-conversations'); }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <DeleteIcon sx={{ fontSize: '1.25rem' }} />
+                        <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                          Deleted Conversations
+                        </Typography>
+                      </Box>
+                    </MenuItem>
+                  )}
+
+                  {/* Blocked Users Item */}
+                  {user && (
+                    <MenuItem onClick={() => { setUserMenuTarget(null); navigate('/blocked-users'); }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <PersonOffIcon sx={{ fontSize: '1.25rem' }} />
+                        <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                          Blocked Users
+                        </Typography>
+                      </Box>
+                    </MenuItem>
+                  )}
+
+                  {/* Moderation Queue Item - moderators/admins only, hidden otherwise */}
+                  {isModerator(user?.role ?? null) && (
+                    <MenuItem onClick={() => { setUserMenuTarget(null); navigate('/moderation'); }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <GavelIcon sx={{ fontSize: '1.25rem' }} />
+                        <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                          Moderation Queue
                         </Typography>
                       </Box>
                     </MenuItem>
