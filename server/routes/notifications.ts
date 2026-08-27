@@ -10,8 +10,9 @@ notifications.use(requireAuth);
 notifications.get('/', async (req, res) => {
   try {
     const userId = (req.user as { id: number }).id;
+    const archived = req.query.archived === 'true';
     const list = await prisma.notification.findMany({
-      where: { userId },
+      where: { userId, archivedAt: archived ? { not: null } : null },
       orderBy: { createdAt: 'desc' },
       take: PAGE_SIZE,
     });
@@ -25,7 +26,9 @@ notifications.get('/', async (req, res) => {
 notifications.get('/unread-count', async (req, res) => {
   try {
     const userId = (req.user as { id: number }).id;
-    const count = await prisma.notification.count({ where: { userId, readAt: null } });
+    const count = await prisma.notification.count({
+      where: { userId, readAt: null, archivedAt: null },
+    });
     return res.json({ count });
   } catch (error) {
     console.error('Failed to GET unread notificatoin count:', error);
@@ -54,6 +57,78 @@ notifications.patch('/:id/read', async (req, res) => {
   }
 });
 
+notifications.patch('/:id/archive', async (req, res) => {
+  try {
+    const userId = (req.user as { id: number }).id;
+    const id = Number(req.params.id);
+
+    const notification = await prisma.notification.findUnique({
+      where: { id },
+    });
+    if (!notification || notification.userId !== userId) {
+      return res.sendStatus(404);
+    }
+
+    const updated = await prisma.notification.update({
+      where: { id },
+      data: {
+        archivedAt: notification.archivedAt ?? new Date(),
+        readAt: notification.readAt ?? new Date(),
+      },
+    });
+    return res.json(updated);
+  } catch (error) {
+    console.error('Failed to PATCH notification archive:', error);
+    return res.sendStatus(500);
+  }
+});
+
+notifications.patch('/:id/unarchive', async (req, res) => {
+  try {
+    const userId = (req.user as { id: number }).id;
+    const id = Number(req.params.id);
+
+    const notification = await prisma.notification.findUnique({
+      where: { id },
+    });
+    if (!notification || notification.userId !== userId) {
+      return res.sendStatus(404);
+    }
+
+    const updated = await prisma.notification.update({
+      where: { id },
+      data: { archivedAt: null },
+    });
+    return res.json(updated);
+  } catch (error) {
+    console.error('Failed to PATCH notification unarchive:', error);
+    return res.sendStatus(500);
+  }
+});
+
+notifications.patch('/archive', async (req, res) => {
+  try {
+    const userId = (req.user as { id: number }).id;
+    const { ids } = req.body;
+
+    if (!Array.isArray(ids) || ids.some((id) => !Number.isInteger(id))) {
+      return res.status(400).json({ error: 'ids must be an array of integers.' });
+    }
+    if (ids.length > PAGE_SIZE) {
+      return res.status(400).json({ error: `ids cannot exceed ${PAGE_SIZE}.` });
+    }
+
+    await prisma.notification.updateMany({
+      where: { id: { in: ids }, userId },
+      data: { archivedAt: new Date(), readAt: new Date() },
+    });
+    return res.sendStatus(204);
+  } catch (error) {
+    console.error('Failed to bulk-archive notifications:', error);
+    return res.sendStatus(500);
+  }
+});
+
 notifications.delete('/:id', async (req, res) => {
   try {
     const userId = (req.user as { id: number }).id;
@@ -76,7 +151,7 @@ notifications.patch('/read-all', async (req, res) => {
   try {
     const userId = (req.user as { id: number }).id;
     await prisma.notification.updateMany({
-      where: { userId, readAt: null },
+      where: { userId, readAt: null, archivedAt: null },
       data: { readAt: new Date() },
     });
     return res.sendStatus(204);
@@ -93,6 +168,9 @@ notifications.delete('/', async (req, res) => {
 
     if (!Array.isArray(ids) || ids.some((id) => !Number.isInteger(id))) {
       return res.status(400).json({ error: 'ids must be an array of integers.' });
+    }
+    if (ids.length > PAGE_SIZE) {
+      return res.status(400).json({ error: `ids cannot exceed ${PAGE_SIZE}.` });
     }
 
     await prisma.notification.deleteMany({
