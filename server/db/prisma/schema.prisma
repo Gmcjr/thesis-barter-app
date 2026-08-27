@@ -553,9 +553,10 @@ model Notification {
   entityId   Int?
 
   readAt    DateTime?
+  archivedAt DateTime?
   createdAt DateTime  @default(now())
 
-  @@index([userId, readAt, createdAt])
+  @@index([userId, archivedAt, createdAt])
 }
 
 enum JobType {
