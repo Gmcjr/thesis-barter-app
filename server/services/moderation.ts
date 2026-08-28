@@ -178,6 +178,7 @@ const REPORT_FK_FIELD: Record<string, string> = {
   TRADE_OFFER: 'offerId',
   REVIEW: 'reviewId',
   TRADE_REQUEST: 'tradeRequestId',
+  COMMENT: 'commentId',
 };
 
 async function fileSystemReport(

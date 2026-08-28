@@ -69,6 +69,8 @@ posts.get('/', async (req, res) => {
 
     if (mine && !req.user) return res.status(401).json({ error: 'Unauthorized' });
 
+    const viewerId = req.user?.id;
+
     const blockedRelationshipIds = !mine && !profileUserId && req.user
       ? await getBlockedRelationshipIds(getUserId(req))
       : [];
@@ -134,7 +136,21 @@ posts.get('/', async (req, res) => {
         user: { select: { id: true, name: true, email: true } },
         products: true,
         services: true,
-        comments: true,
+        comments: {
+          // Everyone sees approved comments; the author of a comment still
+          // waiting on screening can also see their own until it resolves.
+          where: {
+            isRemoved: false,
+            OR: [
+              { isPendingScreening: false },
+              ...(viewerId !== undefined ? [{ userId: viewerId }] : []),
+            ],
+          },
+          orderBy: { createdAt: 'asc' },
+          include: {
+            user: { select: { id: true, name: true, email: true } },
+          },
+        },
         trades: {
           orderBy: { createdAt: 'desc' },
           take: 1,
@@ -168,9 +184,10 @@ posts.get('/', async (req, res) => {
       },
     });
 
-    const viewerId = req.user?.id;
-
-    const authorAvatarMap = await getAvatarUrlMap(rawPosts.map((post) => post.user.id));
+    const authorAvatarMap = await getAvatarUrlMap([
+      ...rawPosts.map((post) => post.user.id),
+      ...rawPosts.flatMap((post) => post.comments.map((comment) => comment.userId)),
+    ]);
 
     const postsWithUrls = await Promise.all(
       rawPosts.map(async (post) => {
@@ -199,6 +216,10 @@ posts.get('/', async (req, res) => {
         return {
           ...postRest,
           user: { ...postRest.user, avatarUrl: authorAvatarMap.get(post.user.id) ?? null },
+          comments: post.comments.map((comment) => ({
+            ...comment,
+            user: { ...comment.user, avatarUrl: authorAvatarMap.get(comment.userId) ?? null },
+          })),
           trade: trades[0] ?? null,
           ...postUrls,
           tradeOffers,
