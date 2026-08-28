@@ -215,7 +215,9 @@ export const CommentScalarFieldEnum = {
   text: 'text',
   createdAt: 'createdAt',
   postId: 'postId',
-  userId: 'userId'
+  userId: 'userId',
+  isPendingScreening: 'isPendingScreening',
+  isRemoved: 'isRemoved'
 } as const
 
 export type CommentScalarFieldEnum = (typeof CommentScalarFieldEnum)[keyof typeof CommentScalarFieldEnum]
@@ -291,6 +293,7 @@ export const ReportScalarFieldEnum = {
   offerId: 'offerId',
   reviewId: 'reviewId',
   tradeRequestId: 'tradeRequestId',
+  commentId: 'commentId',
   reason: 'reason',
   details: 'details',
   aiScore: 'aiScore',
