@@ -226,6 +226,10 @@ model Comment {
   user         User           @relation(fields: [userId], references: [id])
   userId       Int
   commentMedia CommentMedia[]
+
+  isPendingScreening Boolean @default(false)
+  isRemoved          Boolean  @default(false)
+  reports            Report[]
 }
 
 model Product {
@@ -338,6 +342,8 @@ model Report {
   reviewId       Int?
   tradeRequest   TradeRequest? @relation(fields: [tradeRequestId], references: [id])
   tradeRequestId Int?
+  comment        Comment?      @relation(fields: [commentId], references: [id])
+  commentId      Int?
 
   reason  ReportReason
   details String?
@@ -526,6 +532,7 @@ enum NotificationType {
   CONTENT_SCREENED
   REPORT_RESOLVED
   APPEAL_RESOLVED
+  COMMENT_RECIEVED
 }
 
 model Notification {
