@@ -47,7 +47,7 @@ export default function ProfileHeader({
           <Box sx={{
             position: 'absolute',
             inset: 0,
-            background: 'linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.72) 100%)',
+            background: 'linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.05) 100%)',
             zIndex: 0,
           }}
           />
