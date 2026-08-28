@@ -257,12 +257,29 @@ export default function Messages() {
               >
                 <ArrowBackIcon fontSize="small" />
               </IconButton>
-              {activeConversation?.otherUser && (
-                <UserAvatar user={activeConversation.otherUser} size={32} />
+              {activeConversation?.otherUser ? (
+                <Box
+                  onClick={() => navigate(`/profile/${activeConversation.otherUser.id}`)}
+                  role="button"
+                  tabIndex={0}
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 1,
+                    cursor: 'pointer',
+                    '&:hover .dm-header-name': { textDecoration: 'underline' },
+                  }}
+                >
+                  <UserAvatar user={activeConversation.otherUser} size={32} />
+                  <Typography variant="subtitle1" className="dm-header-name" sx={{ fontWeight: 600 }}>
+                    {activeConversation.otherUser.name}
+                  </Typography>
+                </Box>
+              ) : (
+                <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+                  Conversation
+                </Typography>
               )}
-              <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-                {activeConversation?.otherUser.name ?? 'Conversation'}
-              </Typography>
             </Box>
 
             <Box sx={{
