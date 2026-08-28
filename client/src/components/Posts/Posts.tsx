@@ -12,10 +12,12 @@ import Post from './Post';
 import ReportDialog from './ReportDialog';
 import SearchPosts from './SearchPosts';
 import { useSocket } from '../../context/SocketContext';
+import { useToast } from '../../context/ToastContext';
 
 export default function Posts() {
   const { user, blockedUserIds } = useAuth();
   const socket = useSocket();
+  const { showToast } = useToast();
 
   const [posts, setPosts] = useState<PostData[]>([]);
   const [myTradeRequests, setMyTradeRequests] = useState<TradeRequestData[]>([]);
@@ -76,6 +78,23 @@ export default function Posts() {
       socket.off('posts:changed', handleChange);
     };
   }, [socket, search, loadPosts]);
+
+  // Comment screening only ever emits into the author's own socket room, so
+  // this is always about a comment the current user just posted.
+  useEffect(() => {
+    if (!socket || !user) return undefined;
+    const handleCommentScreened = (payload: {
+      targetType: string; targetId: number; ok: boolean; rationale?: string;
+    }) => {
+      if (payload.targetType !== 'COMMENT' || payload.ok) return;
+      showToast(
+        `Your comment was removed for violating our community guidelines${payload.rationale ? `: ${payload.rationale}` : '.'}`,
+        'error',
+      );
+    };
+    socket.on('content:screened', handleCommentScreened);
+    return () => { socket.off('content:screened', handleCommentScreened); };
+  }, [socket, user, showToast]);
 
   // search posts
   const handleSearch = (event: React.SubmitEvent<HTMLFormElement>) => {

@@ -256,6 +256,31 @@ export default function Profile() {
     loadPosts();
   }, [loadPosts]);
 
+  // Keep this profile's post/comment list live, same as the main feed.
+  useEffect(() => {
+    if (!socket) return undefined;
+    const handleChange = () => { loadPosts(); };
+    socket.on('posts:changed', handleChange);
+    return () => { socket.off('posts:changed', handleChange); };
+  }, [socket, loadPosts]);
+
+  // Comment screening only ever emits into the author's own socket room, so
+  // this fires regardless of whose profile is currently being viewed.
+  useEffect(() => {
+    if (!socket || !user) return undefined;
+    const handleCommentScreened = (payload: {
+      targetType: string; targetId: number; ok: boolean; rationale?: string;
+    }) => {
+      if (payload.targetType !== 'COMMENT' || payload.ok) return;
+      showToast(
+        `Your comment was removed for violating our community guidelines${payload.rationale ? `: ${payload.rationale}` : '.'}`,
+        'error',
+      );
+    };
+    socket.on('content:screened', handleCommentScreened);
+    return () => { socket.off('content:screened', handleCommentScreened); };
+  }, [socket, user, showToast]);
+
   useEffect(() => {
     loadMyTradeRequests();
   }, [loadMyTradeRequests]);

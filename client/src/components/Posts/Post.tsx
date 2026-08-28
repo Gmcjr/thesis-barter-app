@@ -11,10 +11,12 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Divider from '@mui/material/Divider';
 import Chip from '@mui/material/Chip';
+import IconButton from '@mui/material/IconButton';
+import DeleteOutlineIcon from '@mui/icons-material/Delete';
 import DownloadIcon from '@mui/icons-material/Download';
 import CircularProgress from '@mui/material/CircularProgress';
 
-import { formatPostDate } from '../../utils/utils';
+import { formatPostDate, formatInboxTime } from '../../utils/utils';
 import type { PostData, PostUpdateData } from './ManagePosts';
 
 import UserAvatar from '../common/UserAvatar';
@@ -52,6 +54,9 @@ export default function Post({
   const isOwnPost = user?.id === post.userId;
   const isBlocked = blockedUserIds.includes(post.userId);
   const [downloadingFull, setDownloadingFull] = useState(false);
+  const [commentDraft, setCommentDraft] = useState('');
+  const [submittingComment, setSubmittingComment] = useState(false);
+  const [deletingCommentId, setDeletingCommentId] = useState<number | null>(null);
 
   const isArtTrade = Boolean(post.previewUrl || post.fullUrl);
 
@@ -115,6 +120,35 @@ export default function Post({
       }
     } catch {
       showToast('Could not update block status - try again.', 'error');
+    }
+  };
+
+  const handleAddComment = async () => {
+    const text = commentDraft.trim();
+    if (!text) return;
+    setSubmittingComment(true);
+    try {
+      await axios.post('/comments', { postId: post.id, text }, { withCredentials: true });
+      // The new comment shows up via the posts:changed refresh triggered server-side.
+      setCommentDraft('');
+    } catch (err) {
+      const message = axios.isAxiosError(err) && err.response?.data?.error
+        ? err.response.data.error
+        : 'Could not add comment - try again.';
+      showToast(message, 'error');
+    } finally {
+      setSubmittingComment(false);
+    }
+  };
+
+  const handleDeleteComment = async (commentId: number) => {
+    setDeletingCommentId(commentId);
+    try {
+      await axios.delete(`/comments/${commentId}`, { withCredentials: true });
+    } catch {
+      showToast('Could not delete comment - try again.', 'error');
+    } finally {
+      setDeletingCommentId(null);
     }
   };
 
@@ -235,12 +269,39 @@ export default function Post({
               <Box
                 key={comment.id}
                 sx={{
-                  display: 'flex', gap: 2, alignItems: 'flex-start', p: 1.5, bgcolor: 'surface.sunken', borderRadius: radius.md,
+                  display: 'flex', gap: 1.5, alignItems: 'flex-start', p: 1.5, bgcolor: 'surface.sunken', borderRadius: radius.md,
                 }}
               >
-                <Typography variant="body2" sx={{ flex: 1, color: 'text.primary' }}>
-                  {comment.text}
-                </Typography>
+                <UserAvatar user={comment.user} size={28} />
+                <Box sx={{ flex: 1, minWidth: 0 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1 }}>
+                    <Typography
+                      variant="body2"
+                      onClick={() => navigate(`/profile/${comment.user.id}`)}
+                      sx={{
+                        fontWeight: 600, cursor: 'pointer', '&:hover': { textDecoration: 'underline' },
+                      }}
+                    >
+                      {comment.user.name ?? comment.user.email}
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      {formatInboxTime(comment.createdAt)}
+                    </Typography>
+                  </Box>
+                  <Typography variant="body2" sx={{ color: 'text.primary', mt: 0.25, wordBreak: 'break-word' }}>
+                    {comment.text}
+                  </Typography>
+                </Box>
+                {comment.userId === user?.id && (
+                  <IconButton
+                    size="small"
+                    aria-label="Delete comment"
+                    disabled={deletingCommentId === comment.id}
+                    onClick={() => handleDeleteComment(comment.id)}
+                  >
+                    <DeleteOutlineIcon fontSize="small" />
+                  </IconButton>
+                )}
               </Box>
             ))}
           </Box>
@@ -250,18 +311,35 @@ export default function Post({
           </Typography>
         )}
 
-        <Box sx={{ display: 'flex', mt: 3, gap: 1 }}>
-          <TextField
-            size="small"
-            fullWidth
-            placeholder="Add a comment..."
-            variant="outlined"
-            sx={{ '& .MuiOutlinedInput-root': { borderRadius: radius.md } }}
-          />
-          <Button variant="contained" disableElevation sx={{ borderRadius: radius.md, textTransform: 'none' }}>
-            Send
-          </Button>
-        </Box>
+        {user && (
+          <Box sx={{ display: 'flex', mt: 3, gap: 1 }}>
+            <TextField
+              size="small"
+              fullWidth
+              placeholder="Add a comment..."
+              variant="outlined"
+              value={commentDraft}
+              disabled={submittingComment}
+              onChange={(e) => setCommentDraft(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault();
+                  handleAddComment();
+                }
+              }}
+              sx={{ '& .MuiOutlinedInput-root': { borderRadius: radius.md } }}
+            />
+            <Button
+              variant="contained"
+              disableElevation
+              disabled={submittingComment || !commentDraft.trim()}
+              onClick={handleAddComment}
+              sx={{ borderRadius: radius.md, textTransform: 'none' }}
+            >
+              {submittingComment ? <CircularProgress size={18} color="inherit" /> : 'Send'}
+            </Button>
+          </Box>
+        )}
 
         {/* Layout for Completed Trades (support for local and digital trades) */}
         {post.status === 'COMPLETED' && completedOffer && (

@@ -52,6 +52,13 @@ export type PostData = {
     id: number;
     text: string;
     userId: number;
+    createdAt: string;
+    user: {
+      id: number;
+      name: string | null;
+      email: string;
+      avatarUrl: string | null;
+    };
   }[];
   trade: {
     id: number;
