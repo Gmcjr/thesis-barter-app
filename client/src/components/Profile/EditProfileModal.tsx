@@ -40,7 +40,8 @@ export default function EditProfileModal({
 
   useEffect(() => {
     if (open) setFormData(initialData);
-  }, [open, initialData]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
 
   // Revoke the object URL we created for the crop dialog once it's no
   // longer needed, so we don't leak memory across repeated edits.
