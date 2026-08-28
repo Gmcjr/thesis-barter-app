@@ -11,8 +11,13 @@ import IconButton from '@mui/material/IconButton';
 import CircularProgress from '@mui/material/CircularProgress';
 import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 import CloseIcon from '@mui/icons-material/Close';
+import Switch from '@mui/material/Switch';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Divider from '@mui/material/Divider';
+import Typography from '@mui/material/Typography';
 import ImageCropDialog from './ImageCropDialog';
 import type { EditProfileModalProps, ProfileUpdateData } from './types';
+import { isValidPhone, isValidZipCode } from '../../utils/validation';
 
 export const BIO_MAX_LENGTH = 250;
 const AVATAR_ASPECT = 1;
@@ -43,7 +48,10 @@ export default function EditProfileModal({
     if (pendingCrop) URL.revokeObjectURL(pendingCrop.objectUrl);
   }, [pendingCrop]);
 
-  const isInvalid = !formData.name.trim();
+  const phoneError = Boolean(formData.phone.trim()) && !isValidPhone(formData.phone);
+  const zipError = Boolean(formData.zipCode.trim()) && !isValidZipCode(formData.zipCode);
+
+  const isInvalid = !formData.name.trim() || phoneError || zipError;
 
   const handleClose = () => {
     if (saving) return;
@@ -213,12 +221,43 @@ export default function EditProfileModal({
             fullWidth
             value={formData.phone}
             onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+            error={phoneError}
+            helperText={phoneError ? 'Enter a valid phone number.' : ' '}
           />
           <TextField
             label="Zip Code"
             fullWidth
             value={formData.zipCode}
             onChange={(e) => setFormData({ ...formData, zipCode: e.target.value })}
+            error={zipError}
+            helperText={zipError ? 'Enter a valid zip code (e.g. 94103).' : ' '}
+          />
+
+          <Divider sx={{ my: 0.5 }} />
+
+          <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
+            Privacy
+          </Typography>
+
+          <FormControlLabel
+            label="Show my email on my profile"
+            control={(
+              <Switch
+                checked={formData.emailVisible}
+                onChange={(e) => setFormData({ ...formData, emailVisible: e.target.checked })}
+              />
+            )}
+          />
+          <FormControlLabel
+            label="Show my trade history to other users"
+            control={(
+              <Switch
+                checked={formData.tradeHistoryVisible}
+                onChange={(e) => setFormData({
+                  ...formData, tradeHistoryVisible: e.target.checked,
+                })}
+              />
+            )}
           />
         </Box>
       </DialogContent>

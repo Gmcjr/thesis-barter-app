@@ -112,14 +112,16 @@ export default function ProfileHeader({
           >
             {profile.name}
           </Typography>
-          <Typography
-            variant="h1"
-            sx={{
-              fontWeight: 300, fontSize: 16, color: primaryTextColor, textShadow: textOutline,
-            }}
-          >
-            {profile.email}
-          </Typography>
+          {profile.email && (
+            <Typography
+              variant="h1"
+              sx={{
+                fontWeight: 300, fontSize: 16, color: primaryTextColor, textShadow: textOutline,
+              }}
+            >
+              {profile.email}
+            </Typography>
+          )}
           <Typography variant="caption" sx={{ color: secondaryTextColor, textShadow: textOutline }}>
             {`User since ${new Date(profile.createdAt).toLocaleDateString()}`}
           </Typography>

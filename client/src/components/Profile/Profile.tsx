@@ -69,6 +69,8 @@ export default function Profile() {
         bio,
         phone: toNullable(data.phone),
         zipCode: toNullable(data.zipCode),
+        emailVisible: data.emailVisible,
+        tradeHistoryVisible: data.tradeHistoryVisible,
       },
     }, { withCredentials: true });
 
@@ -317,8 +319,11 @@ export default function Profile() {
     );
   }
 
+  const showTradeHistory = isOwnProfile || profile.tradeHistoryVisible;
+  const effectiveTab = !showTradeHistory && activeTab === 'history' ? 'current' : activeTab;
+
   const visiblePosts = posts.filter((post) => (
-    activeTab === 'history' ? post.status === 'COMPLETED' : post.status !== 'COMPLETED'
+    effectiveTab === 'history' ? post.status === 'COMPLETED' : post.status !== 'COMPLETED'
   ));
 
   return (
@@ -361,11 +366,12 @@ export default function Profile() {
       )}
 
       <ProfileTabs
-        activeTab={activeTab}
+        activeTab={effectiveTab}
         onTabChange={setActiveTab}
         tradeCount={reviewsSummary?.totalTrades ?? 0}
         isOwnProfile={isOwnProfile}
         onDM={handleOpenDM}
+        showTradeHistory={showTradeHistory}
       />
 
       {isOwnProfile && activeTab === 'offers' ? (
@@ -401,6 +407,8 @@ export default function Profile() {
             bio: profile.bio ?? '',
             phone: profile.phone ?? '',
             zipCode: profile.zipCode ?? '',
+            emailVisible: profile.emailVisible,
+            tradeHistoryVisible: profile.tradeHistoryVisible,
           }}
           onSave={handleUpdateProfile}
           avatarUrl={profile.avatarUrl}

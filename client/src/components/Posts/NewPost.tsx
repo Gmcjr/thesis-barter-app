@@ -24,6 +24,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 import type { CatType, Cond } from '../../../../server/db/generated/browser';
+import { isValidZipCode } from '../../utils/validation';
 
 // type definitions
 export interface PostFormData {
@@ -193,7 +194,8 @@ export default function CreatePostModal({
   };
 
   // check for valid data
-  const isInvalid = (!formData.title.trim() || !formData.name.trim() || !formData.category.trim() || !formData.description.trim() || (formData.isLocal && !formData.zipCode.trim()) || (formData.offerType === 'DIGITAL' && !file));
+  const zipError = formData.isLocal && Boolean(formData.zipCode.trim()) && !isValidZipCode(formData.zipCode);
+  const isInvalid = (!formData.title.trim() || !formData.name.trim() || !formData.category.trim() || !formData.description.trim() || (formData.isLocal && !isValidZipCode(formData.zipCode)) || (formData.offerType === 'DIGITAL' && !file));
 
   // submit handler for the form
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
@@ -360,6 +362,8 @@ export default function CreatePostModal({
                     value={formData.zipCode}
                     onChange={(e) => handleChange('zipCode', e.target.value)}
                     disabled={isSubmitting}
+                    error={zipError}
+                    helperText={zipError ? 'Enter a valid zip code' : ' '}
                   />
                 </Grid>
                 <Grid size={6}>
