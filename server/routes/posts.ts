@@ -6,6 +6,7 @@ import { getDownloadUrl } from '../services/s3.js';
 import { getBlockedRelationshipIds } from '../services/blocks.js';
 import { getIo } from '../middleware/socket.js';
 import { getAvatarUrlMap } from '../services/userMedia.js';
+import { isValidZipCode } from '../services/validation.js';
 
 const posts = Router();
 
@@ -75,6 +76,15 @@ posts.get('/', async (req, res) => {
       ? await getBlockedRelationshipIds(getUserId(req))
       : [];
 
+    let hideTradeHistory = false;
+    if (profileUserId && profileUserId !== viewerId) {
+      const profileUser = await prisma.user.findUnique({
+        where: { id: profileUserId },
+        select: { tradeHistoryVisible: true },
+      });
+      hideTradeHistory = Boolean(profileUser && !profileUser.tradeHistoryVisible);
+    }
+
     // A user's 'trading history' includes posts they authored, posts where they
     // completed an art trade offer, and posts where they completed a generic
     // trade as the requester - not just posts they own.
@@ -112,6 +122,7 @@ posts.get('/', async (req, res) => {
           AND: [
             { isRemoved: false, isPendingScreening: false },
             ownedOrCompletedFilter(profileUserId),
+            ...(hideTradeHistory ? [{ status: { not: 'COMPLETED' as const } }] : []),
             ...searchFilter,
           ],
         };
@@ -252,6 +263,10 @@ posts.post('/', requireAuth, async (req, res) => {
       condition,
     } = req.body;
 
+    if (isLocal && (!zipCode || !isValidZipCode(String(zipCode)))) {
+      return res.status(400).json({ error: 'Please enter a valid zip code.' });
+    }
+
     const userId = getUserId(req);
     const trimmedCategory = typeof category === 'string' ? category.trim() : '';
 
@@ -371,6 +386,10 @@ posts.patch('/:id', requireAuth, async (req, res) => {
       return res
         .status(400)
         .json({ error: 'zipCode is required when isLocal is true.' });
+    }
+
+    if (isLocal && !isValidZipCode(String(zipCode))) {
+      return res.status(400).json({ error: 'Please enter a valid zip code.' });
     }
 
     const parsedRadius = isLocal ? Number(radiusMiles) : null;
