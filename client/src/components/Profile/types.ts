@@ -8,6 +8,9 @@ export interface ProfileUser {
   bio: string | null;
   phone: string | null;
   zipCode: string | null;
+  country: string | null;
+  lat: number | null;
+  lng: number | null;
   createdAt: string;
   avatarUrl: string | null;
   bannerUrl: string | null;
@@ -31,6 +34,7 @@ export interface ProfileUpdateData {
   bio: string;
   phone: string;
   zipCode: string;
+  country: string;
 }
 
 export interface EditProfileModalProps {
