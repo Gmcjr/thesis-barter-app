@@ -46,6 +46,9 @@ model User {
   pendingBio         String?
   isPendingScreening Boolean @default(false)
 
+  emailVisible        Boolean @default(true)
+  tradeHistoryVisible Boolean @default(true)
+
   reportsFiled    Report[] @relation("reportsFiled")
   reportsAgainst  Report[] @relation("reportsAgainst")
   reportsResolved Report[] @relation("reportsResolved")

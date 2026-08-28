@@ -107,7 +107,9 @@ export const UserScalarFieldEnum = {
   zipCode: 'zipCode',
   isSystem: 'isSystem',
   pendingBio: 'pendingBio',
-  isPendingScreening: 'isPendingScreening'
+  isPendingScreening: 'isPendingScreening',
+  emailVisible: 'emailVisible',
+  tradeHistoryVisible: 'tradeHistoryVisible'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
