@@ -16,6 +16,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import Switch from '@mui/material/Switch';
+import Checkbox from '@mui/material/Checkbox';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Collapse from '@mui/material/Collapse';
@@ -25,11 +26,11 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 import type { CatType, Cond } from '../../../../server/db/generated/browser';
 import { isValidZipCode } from '../../utils/validation';
+import { useAuth } from '../../context/AuthContext';
 
 // type definitions
 export interface PostFormData {
   title: string;
-  name: string;
   offerType: CatType;
   category: string;
   description: string;
@@ -39,6 +40,7 @@ export interface PostFormData {
   radiusMiles?: number;
   previewMediaId?: number;
   fullMediaId?: number;
+  mediaIds?: number[];
 }
 
 interface CreatePostModalProps {
@@ -49,7 +51,6 @@ interface CreatePostModalProps {
 
 type FormState = {
   title: string;
-  name: string;
   offerType: CatType;
   category: string;
   description: string;
@@ -61,7 +62,6 @@ type FormState = {
 
 const initialForm: FormState = {
   title: '',
-  name: '',
   offerType: 'PRODUCT',
   category: '',
   description: '',
@@ -72,7 +72,7 @@ const initialForm: FormState = {
 };
 
 // creates a watermark for the image preview
-const createWatermark = (file: File): Promise<Blob> => new Promise((resolve, reject) => {
+const createWatermark = (file: File, watermarkText?: string): Promise<Blob> => new Promise((resolve, reject) => {
   const sourceImage = new Image();
 
   sourceImage.onload = () => {
@@ -91,30 +91,20 @@ const createWatermark = (file: File): Promise<Blob> => new Promise((resolve, rej
     outputCanvas.height = scaledHeight;
     outputContext.drawImage(sourceImage, 0, 0, scaledWidth, scaledHeight);
 
-    const watermarkTile = document.createElement('canvas');
-    watermarkTile.width = 180;
-    watermarkTile.height = 70;
-    const watermarkTileContext = watermarkTile.getContext('2d');
+    if (watermarkText) {
+      const watermarkFontSize = Math.max(24, Math.min(72, scaledWidth * 0.08));
 
-    if (watermarkTileContext) {
-      watermarkTileContext.font = 'bold 14px sans-serif';
-      watermarkTileContext.fillStyle = 'rgba(255, 255, 255, 0.4)';
-      watermarkTileContext.textAlign = 'center';
-      watermarkTileContext.textBaseline = 'middle';
+      outputContext.font = `bold ${watermarkFontSize}px sans-serif`;
+      outputContext.fillStyle = 'rgba(255, 255, 255, 0.4)';
+      outputContext.textAlign = 'center';
+      outputContext.textBaseline = 'middle';
 
-      watermarkTileContext.fillText('TRADE PREVIEW ONLY', 90, 18);
-      watermarkTileContext.fillText('TRADE PREVIEW ONLY', 0, 52);
-      watermarkTileContext.fillText('TRADE PREVIEW ONLY', 180, 52);
-    }
-
-    outputContext.translate(scaledWidth / 2, scaledHeight / 2);
-    outputContext.rotate((-30 * Math.PI) / 180);
-
-    const watermarkPattern = outputContext.createPattern(watermarkTile, 'repeat');
-    if (watermarkPattern) {
-      outputContext.fillStyle = watermarkPattern;
-      const overfillSize = Math.max(scaledWidth, scaledHeight) * 2;
-      outputContext.fillRect(-overfillSize, -overfillSize, overfillSize * 2, overfillSize * 2);
+      outputContext.fillText(
+        watermarkText,
+        scaledWidth / 2,
+        scaledHeight / 2,
+        scaledWidth * 0.8,
+      );
     }
 
     outputCanvas.toBlob(
@@ -141,8 +131,11 @@ export default function CreatePostModal({
   onClose,
   onSubmit,
 }: CreatePostModalProps) {
+  const { user } = useAuth();
   const [formData, setFormData] = useState<FormState>(initialForm);
   const [file, setFile] = useState<File | null>(null);
+  const [postImages, setPostImages] = useState<File[]>([]);
+  const [addWatermark, setAddWatermark] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // change handler
@@ -166,6 +159,8 @@ export default function CreatePostModal({
   const handleClose = () => {
     setFormData(initialForm);
     setFile(null);
+    setPostImages([]);
+    setAddWatermark(false);
     onClose();
   };
 
@@ -173,7 +168,7 @@ export default function CreatePostModal({
     fileOrBlob: File | Blob,
     filename: string,
     contentType: string,
-    variant: 'PREVIEW' | 'FULL',
+    variant?: 'PREVIEW' | 'FULL',
   ) => {
     const presignRes = await axios.post<{ uploadUrl: string; key: string }>('/media/presign', {
       filename,
@@ -187,7 +182,7 @@ export default function CreatePostModal({
 
     const mediaRes = await axios.post<{ id: number }>('/media', {
       key,
-      variant,
+      ...(variant && { variant }),
     });
 
     return mediaRes.data.id;
@@ -195,7 +190,13 @@ export default function CreatePostModal({
 
   // check for valid data
   const zipError = formData.isLocal && Boolean(formData.zipCode.trim()) && !isValidZipCode(formData.zipCode);
-  const isInvalid = (!formData.title.trim() || !formData.name.trim() || !formData.category.trim() || !formData.description.trim() || (formData.isLocal && !isValidZipCode(formData.zipCode)) || (formData.offerType === 'DIGITAL' && !file));
+  const isInvalid = (
+    !formData.title.trim()
+    || !formData.category.trim()
+    || !formData.description.trim()
+    || (formData.isLocal && !isValidZipCode(formData.zipCode))
+    || (formData.offerType === 'DIGITAL' && !file)
+  );
 
   // submit handler for the form
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
@@ -206,16 +207,28 @@ export default function CreatePostModal({
     try {
       let previewMediaId: number | undefined;
       let fullMediaId: number | undefined;
+      let mediaIds: number[] | undefined;
 
       if (formData.offerType === 'DIGITAL' && file) {
-        const previewBlob = await createWatermark(file);
+        const watermarkText = `@${user?.name ?? user?.email}`;
+        const previewBlob = await createWatermark(
+          file,
+          addWatermark ? watermarkText : undefined,
+        );
         previewMediaId = await uploadFileToS3(previewBlob, `preview_${file.name}`, 'image/jpeg', 'PREVIEW');
         fullMediaId = await uploadFileToS3(file, file.name, file.type, 'FULL');
       }
 
+      if (formData.offerType !== 'DIGITAL' && postImages.length > 0) {
+        mediaIds = await Promise.all(
+          postImages.map((postImage) => (
+            uploadFileToS3(postImage, postImage.name, postImage.type)
+          )),
+        );
+      }
+
       await onSubmit({
         title: formData.title.trim(),
-        name: formData.name.trim(),
         offerType: formData.offerType,
         category: formData.category.trim(),
         description: formData.description.trim(),
@@ -225,10 +238,13 @@ export default function CreatePostModal({
         radiusMiles: formData.isLocal ? formData.radiusMiles : undefined,
         previewMediaId,
         fullMediaId,
+        mediaIds,
       });
 
       setFormData(initialForm);
       setFile(null);
+      setPostImages([]);
+      setAddWatermark(false);
       onClose();
     } catch (err) {
       console.error('Failed to create post:', err);
@@ -255,17 +271,6 @@ export default function CreatePostModal({
               disabled={isSubmitting}
             />
 
-            {/* Item / Service Name */}
-            <TextField
-              label="Item or Service Name"
-              placeholder="e.g., Acoustic guitar or Guitar Lessons"
-              fullWidth
-              required
-              value={formData.name}
-              onChange={(e) => handleChange('name', e.target.value)}
-              disabled={isSubmitting}
-            />
-
             {/* Type of Offer */}
             <RadioGroup
               row
@@ -289,21 +294,56 @@ export default function CreatePostModal({
 
             {/* Digital Trade File Upload */}
             <Collapse in={formData.offerType === 'DIGITAL'} unmountOnExit>
+              <>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                  <Button variant="outlined" component="label" startIcon={<CloudUploadIcon />} disabled={isSubmitting}>
+                    Attach Artwork
+                    <input
+                      type="file"
+                      accept="image/*"
+                      hidden
+                      onChange={(e) => setFile(e.target.files?.[0] || null)}
+                    />
+                  </Button>
+                  {file && (
+                    <Typography variant="body2" color="text.secondary" noWrap sx={{ maxWidth: 200 }}>
+                      {file.name}
+                    </Typography>
+                  )}
+                  <Typography variant="body2" color="text.secondary">
+                    Select an image (.jpg, .jpeg, .png, .webp, .gif, .bmp, .avif, and .svg file types are supported).
+                  </Typography>
+                </Box>
+
+                <FormControlLabel
+                  control={(
+                    <Checkbox
+                      checked={addWatermark}
+                      disabled={isSubmitting}
+                      onChange={(e) => setAddWatermark(e.target.checked)}
+                    />
+                  )}
+                  label="Optional: Add Watermark of Username"
+                />
+              </>
+            </Collapse>
+
+            {/* Post Image Upload */}
+            <Collapse in={formData.offerType !== 'DIGITAL'} unmountOnExit>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                 <Button variant="outlined" component="label" startIcon={<CloudUploadIcon />} disabled={isSubmitting}>
-                  Attach Artwork
+                  Attach Images
                   <input
                     type="file"
                     accept="image/*"
+                    multiple
                     hidden
-                    onChange={(e) => setFile(e.target.files?.[0] || null)}
+                    onChange={(e) => setPostImages(Array.from(e.target.files ?? []).slice(0, 5))}
                   />
                 </Button>
-                {file && (
-                  <Typography variant="body2" color="text.secondary" noWrap sx={{ maxWidth: 200 }}>
-                    {file.name}
-                  </Typography>
-                )}
+                <Typography variant="body2" color="text.secondary">
+                  {postImages.length > 0 ? `${postImages.length} of 5 images selected` : 'Select up to 5 images (.jpg, .jpeg, .png, .webp, .gif, .bmp, .avif, and .svg file types are supported).'}
+                </Typography>
               </Box>
             </Collapse>
 

@@ -11,6 +11,10 @@ import CircularProgress from '@mui/material/CircularProgress';
 import SendIcon from '@mui/icons-material/Send';
 import DeleteOutlineIcon from '@mui/icons-material/Delete';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import ReportDialog from '../Posts/ReportDialog';
 import { radius } from '../../theme';
 import {
   formatInboxTime, formatDayDivider, formatClockTime, isSameDay,
@@ -53,6 +57,8 @@ export default function Messages() {
   // Fallback header info for a DM that was just opened but has no messages
   // yet, so it hasn't shown up in the inbox list.
   const [pendingConversation, setPendingConversation] = useState<DMSummary | null>(null);
+  const [menuAnchor, setMenuAnchor] = useState<{ el: HTMLElement; messageId: number } | null>(null);
+  const [reportDialogMessageId, setReportDialogMessageId] = useState<number | null>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
 
   const loadInbox = useCallback(async () => {
@@ -311,33 +317,68 @@ export default function Messages() {
                         <Box sx={{ flex: 1, height: '1px', bgcolor: 'divider' }} />
                       </Box>
                     )}
-                    <Box sx={{ alignSelf: isMine ? 'flex-end' : 'flex-start', maxWidth: '70%' }}>
-                      <Box
-                        sx={{
-                          bgcolor: isMine ? 'primary.main' : 'surface.sunken',
-                          color: isMine ? 'primary.contrastText' : 'text.primary',
-                          borderRadius: radius.lg,
-                          px: 1.5,
-                          py: 0.75,
-                        }}
-                      >
-                        <Typography variant="body2">{message.text}</Typography>
+                    <Box sx={{
+                      display: 'flex',
+                      alignItems: 'flex-end',
+                      gap: 0.25,
+                      alignSelf: isMine ? 'flex-end' : 'flex-start',
+                      maxWidth: '70%',
+                    }}
+                    >
+                      {!isMine && (
+                        <IconButton size="small" onClick={(e) => setMenuAnchor({ el: e.currentTarget, messageId: message.id })}>
+                          <MoreVertIcon fontSize="small" />
+                        </IconButton>
+                      )}
+                      <Box sx={{ minWidth: 0 }}>
+                        <Box
+                          sx={{
+                            bgcolor: isMine ? 'primary.main' : 'surface.sunken',
+                            color: isMine ? 'primary.contrastText' : 'text.primary',
+                            borderRadius: radius.lg,
+                            px: 1.5,
+                            py: 0.75,
+                          }}
+                        >
+                          <Typography variant="body2">{message.text}</Typography>
+                        </Box>
+                        <Typography
+                          variant="caption"
+                          color="text.secondary"
+                          sx={{
+                            display: 'block', mt: 0.25, textAlign: isMine ? 'right' : 'left',
+                          }}
+                        >
+                          {formatClockTime(message.createdAt)}
+                        </Typography>
                       </Box>
-                      <Typography
-                        variant="caption"
-                        color="text.secondary"
-                        sx={{
-                          display: 'block', mt: 0.25, textAlign: isMine ? 'right' : 'left',
-                        }}
-                      >
-                        {formatClockTime(message.createdAt)}
-                      </Typography>
                     </Box>
                   </React.Fragment>
                 );
               })}
               <div ref={bottomRef} />
             </Box>
+
+            <Menu
+              anchorEl={menuAnchor?.el}
+              open={!!menuAnchor}
+              onClose={() => setMenuAnchor(null)}
+              slotProps={{ paper: { sx: { maxHeight: 420 } } }}
+            >
+              <MenuItem onClick={() => {
+                setReportDialogMessageId(menuAnchor!.messageId); setMenuAnchor(null);
+              }}
+              >
+                Report message
+              </MenuItem>
+            </Menu>
+
+            <ReportDialog
+              open={reportDialogMessageId !== null}
+              onClose={() => setReportDialogMessageId(null)}
+              targetType="MESSAGE"
+              targetId={reportDialogMessageId ?? 0}
+            />
 
             <Box sx={{
               p: 1.5,

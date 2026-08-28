@@ -85,7 +85,8 @@ export const TargetType = {
   MESSAGE: 'MESSAGE',
   TRADE_OFFER: 'TRADE_OFFER',
   REVIEW: 'REVIEW',
-  TRADE_REQUEST: 'TRADE_REQUEST'
+  TRADE_REQUEST: 'TRADE_REQUEST',
+  COMMENT: 'COMMENT'
 } as const
 
 export type TargetType = (typeof TargetType)[keyof typeof TargetType]
@@ -147,7 +148,8 @@ export type NotificationType = (typeof NotificationType)[keyof typeof Notificati
 
 
 export const JobType = {
-  SEND_NOTIFICATION: 'SEND_NOTIFICATION'
+  SEND_NOTIFICATION: 'SEND_NOTIFICATION',
+  SCREEN_CONTENT: 'SCREEN_CONTENT'
 } as const
 
 export type JobType = (typeof JobType)[keyof typeof JobType]

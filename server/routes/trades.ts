@@ -3,7 +3,7 @@ import { prisma } from '../db/index';
 import requireAuth from '../middleware/requireAuth';
 import { Status } from '../db/generated/client';
 import { getIo } from '../middleware/socket';
-import { enqueueJob } from '../services/jobs';
+import { enqueueJob } from '../services/jobQueue';
 
 const trades = Router();
 
@@ -154,6 +154,7 @@ trades.patch('/:id/complete', requireAuth, async (req, res) => {
   try {
     const trade = await prisma.trade.findUnique({
       where: { id: Number(req.params.id) },
+      include: { post: { select: { title: true } } },
     });
 
     if (!trade) {
@@ -205,8 +206,8 @@ trades.patch('/:id/complete', requireAuth, async (req, res) => {
         await enqueueJob(tx, 'SEND_NOTIFICATION', {
           userId: trade.ownerId,
           type: 'TRADE_COMPLETED',
-          title: 'Trade completed',
-          body: 'Your trade is complete - leave a review!',
+          title: `Trade completed: "${trade.post.title}"`,
+          body: 'Leave a review for your trade partner!',
           link: '/profile',
           entityType: 'TRADE',
           entityId: trade.id,
@@ -214,8 +215,8 @@ trades.patch('/:id/complete', requireAuth, async (req, res) => {
         await enqueueJob(tx, 'SEND_NOTIFICATION', {
           userId: trade.requesterId,
           type: 'TRADE_COMPLETED',
-          title: 'Trade completed',
-          body: 'Your trade is complete - leave a review!',
+          title: `Trade completed: "${trade.post.title}"`,
+          body: 'Leave a review for your trade partner!',
           link: '/profile',
           entityType: 'TRADE',
           entityId: trade.id,
@@ -225,8 +226,8 @@ trades.patch('/:id/complete', requireAuth, async (req, res) => {
         await enqueueJob(tx, 'SEND_NOTIFICATION', {
           userId: otherUserId,
           type: 'TRADE_PARTNER_COMPLETED',
-          title: 'Your trade partner marked their side complete',
-          body: 'Mark your side complete to finish the trade.',
+          title: 'Your trade partner completed their side of the trade',
+          body: `Finish "${trade.post.title}" by marking your side complete.`,
           link: '/profile',
           entityType: 'TRADE',
           entityId: trade.id,

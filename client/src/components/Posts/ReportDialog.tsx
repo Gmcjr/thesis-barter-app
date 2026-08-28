@@ -19,12 +19,16 @@ const baseReasons = [
   { value: 'OTHER', label: 'Other' },
 ];
 
+const targetLabels: Record<'POST' | 'USER' | 'MESSAGE', string> = {
+  POST: 'post', USER: 'user', MESSAGE: 'message',
+};
+
 const reasonsFor = (targetType: 'POST' | 'USER' | 'MESSAGE') => (
-  targetType === 'USER' ? baseReasons : [
+  targetType === 'POST' ? [
     ...baseReasons.slice(0, 2),
     { value: 'ITEM_MISMATCH', label: "Item doesn't match description" },
     ...baseReasons.slice(2),
-  ]
+  ] : baseReasons
 );
 
 interface ReportDialogProps {
@@ -55,7 +59,7 @@ export default function ReportDialog({
       await axios.post('/reports', {
         targetType, targetId, reason: submittedReason, details: submittedDetails,
       }, { withCredentials: true });
-      showToast('Screening complete. A neighbor moderator will confirm within 24 hours.', 'info');
+      showToast('Report submitted. A moderator will review it shortly.', 'info');
     } catch {
       showToast("Couldn't submit report - check your connection and try again.", 'error');
     }
@@ -63,7 +67,7 @@ export default function ReportDialog({
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="xs">
-      <DialogTitle>{`Report this ${targetType === 'USER' ? 'user' : 'post'}`}</DialogTitle>
+      <DialogTitle>{`Report this ${targetLabels[targetType]}`}</DialogTitle>
       <DialogContent>
         <RadioGroup value={reason} onChange={(e) => setReason(e.target.value)}>
           {reasons.map((r) => (

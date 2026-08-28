@@ -1,6 +1,6 @@
 import { Router, type Request } from 'express';
 import { prisma } from '../db/index.js';
-import { queueScreening } from '../services/moderation.js';
+import { enqueueJob } from '../services/jobQueue.js';
 import requireAuth from '../middleware/requireAuth.js';
 import { getDownloadUrl } from '../services/s3.js';
 import { getBlockedRelationshipIds } from '../services/blocks.js';
@@ -12,6 +12,7 @@ const posts = Router();
 
 // type definitions
 interface MediaItem {
+  sortOrder?: number;
   media?: {
     variant?: string | null;
     s3Key: string;
@@ -29,7 +30,11 @@ interface TradeOfferItem {
 
 const getUserId = (req: Request): number => req.user!.id;
 
-// generate the repeated where-clause for updating/deleting posts
+// Signals 'no owned-open post matched' out of a $transaction callback, since you
+// can't `return res.status(...)` from inside one
+class PostNotFoundForUpdate extends Error {}
+
+// Generate the repeated where-clause for updating/deleting posts
 const getOwnedOpenPostWhere = (req: Request) => ({
   id: Number(req.params.id),
   userId: getUserId(req),
@@ -56,6 +61,30 @@ const getMediaUrls = async (
     previewUrl: await fetchUrl('PREVIEW'),
     fullUrl: allowFull ? await fetchUrl('FULL') : null,
   };
+};
+
+const getPostImageUrls = async (
+  mediaArray?: MediaItem[],
+) => {
+  if (!mediaArray) return [];
+
+  const postImages = mediaArray
+    .filter((m) => m.media?.variant == null && m.media?.s3Key)
+    .sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0));
+
+  const imageUrls = await Promise.all(
+    postImages.map((item) => {
+      const key = item.media?.s3Key;
+      if (!key) return Promise.resolve(null);
+
+      return getDownloadUrl(key).catch((err) => {
+        console.error('Error getting post image URL:', err);
+        return null;
+      });
+    }),
+  );
+
+  return imageUrls.filter((url): url is string => Boolean(url));
 };
 
 // GET: public feed excludes removed posts: ?mine=true returns
@@ -87,16 +116,20 @@ posts.get('/', async (req, res) => {
 
     // A user's 'trading history' includes posts they authored, posts where they
     // completed an art trade offer, and posts where they completed a generic
-    // trade as the requester - not just posts they own.
+    // trade as the requester - not just posts they own
     const ownedOrCompletedFilter = (userId: number) => ({
       OR: [
         { userId },
         {
+          isRemoved: false,
+          isPendingScreening: false,
           tradeOffers: {
             some: { offererId: userId, status: 'COMPLETED' as const },
           },
         },
         {
+          isRemoved: false,
+          isPendingScreening: false,
           trades: {
             some: { requesterId: userId, status: 'COMPLETED' as const },
           },
@@ -213,6 +246,8 @@ posts.get('/', async (req, res) => {
           isOwner || Boolean(viewerCompletedOffer),
         );
 
+        const imageUrls = await getPostImageUrls(post.postMedia);
+
         const tradeOffers = await Promise.all(
           (post.tradeOffers || []).map(async (offer: TradeOfferItem) => {
             const isOfferer = viewerId !== undefined && offer.offererId === viewerId;
@@ -233,6 +268,7 @@ posts.get('/', async (req, res) => {
           })),
           trade: trades[0] ?? null,
           ...postUrls,
+          imageUrls,
           tradeOffers,
         };
       }),
@@ -257,7 +293,7 @@ posts.post('/', requireAuth, async (req, res) => {
       radiusMiles,
       previewMediaId,
       fullMediaId,
-      name,
+      mediaIds,
       offerType,
       category,
       condition,
@@ -270,6 +306,78 @@ posts.post('/', requireAuth, async (req, res) => {
     const userId = getUserId(req);
     const trimmedCategory = typeof category === 'string' ? category.trim() : '';
 
+    // Doesn't depend on the post existing yet - resolve before opening the transaction
+    if (mediaIds !== undefined && !Array.isArray(mediaIds)) {
+      return res.status(400).json({ error: 'mediaIds must be an array.' });
+    }
+
+    const normalMediaIds = Array.isArray(mediaIds)
+      ? mediaIds.map(Number)
+      : [];
+
+    if (normalMediaIds.length > 5) {
+      return res.status(400).json({ error: 'Image limit is 5.' });
+    }
+
+    if (normalMediaIds.some((mediaId) => !Number.isInteger(mediaId) || mediaId <= 0)) {
+      return res.status(400).json({ error: 'Invalid media ID.' });
+    }
+
+    if (new Set(normalMediaIds).size !== normalMediaIds.length) {
+      return res.status(400).json({ error: 'Duplicate media IDs are not allowed.' });
+    }
+
+    let mediaKeys: string[] = [];
+    let postMediaCreate: { mediaId: number; sortOrder: number }[] = [];
+
+    if (offerType === 'DIGITAL' && previewMediaId && fullMediaId) {
+      mediaKeys = (
+        await prisma.media.findMany({
+          where: {
+            id: { in: [Number(previewMediaId), Number(fullMediaId)] },
+          },
+          select: { s3Key: true },
+        })
+      ).map((m) => m.s3Key);
+
+      postMediaCreate = [
+        { mediaId: Number(previewMediaId), sortOrder: 0 },
+        { mediaId: Number(fullMediaId), sortOrder: 1 },
+      ];
+    } else if (
+      (offerType === 'PRODUCT' || offerType === 'SERVICE')
+      && normalMediaIds.length > 0
+    ) {
+      const normalMedia = await prisma.media.findMany({
+        where: {
+          id: { in: normalMediaIds },
+          uploaderId: userId,
+          variant: null,
+        },
+        select: {
+          id: true,
+          s3Key: true,
+        },
+      });
+
+      if (normalMedia.length !== normalMediaIds.length) {
+        return res.status(400).json({ error: 'One or more post images are invalid.' });
+      }
+
+      const normalMediaById = new Map(
+        normalMedia.map((mediaItem) => [mediaItem.id, mediaItem]),
+      );
+
+      mediaKeys = normalMediaIds.map(
+        (mediaId) => normalMediaById.get(mediaId)!.s3Key,
+      );
+
+      postMediaCreate = normalMediaIds.map((mediaId, sortOrder) => ({
+        mediaId,
+        sortOrder,
+      }));
+    }
+
     const newPost = await prisma.$transaction(async (tx) => {
       const post = await tx.post.create({
         data: {
@@ -280,13 +388,9 @@ posts.post('/', requireAuth, async (req, res) => {
           zipCode: isLocal ? zipCode : null,
           radiusMiles: isLocal ? radiusMiles : null,
           isPendingScreening: true,
-          ...(previewMediaId
-            && fullMediaId && {
+          ...(postMediaCreate.length > 0 && {
             postMedia: {
-              create: [
-                { mediaId: Number(previewMediaId), sortOrder: 0 },
-                { mediaId: Number(fullMediaId), sortOrder: 1 },
-              ],
+              create: postMediaCreate,
             },
           }),
         },
@@ -297,7 +401,6 @@ posts.post('/', requireAuth, async (req, res) => {
       if (
         (offerType === 'PRODUCT' || offerType === 'SERVICE')
         && trimmedCategory
-        && name
       ) {
         const cat = await tx.cat.upsert({
           where: { name_type: { name: trimmedCategory, type: offerType } },
@@ -311,7 +414,7 @@ posts.post('/', requireAuth, async (req, res) => {
               postId: post.id,
               userId,
               catId: cat.id,
-              name,
+              name: title,
               condition: condition || 'GOOD',
             },
           });
@@ -321,48 +424,26 @@ posts.post('/', requireAuth, async (req, res) => {
               postId: post.id,
               userId,
               catId: cat.id,
-              name,
+              name: title,
             },
           });
         }
       }
 
+      // Same transaction as the create - a crash between the two would otherwise
+      // leave the post stuck isPendingScreening forever with no Job to reclaim it
+      await enqueueJob(tx, 'SCREEN_CONTENT', {
+        targetType: 'POST',
+        targetId: post.id,
+        authorId: userId,
+        text: `${title}\n\n${message}`,
+        imageKeys: mediaKeys,
+      });
+
       return post;
     });
 
-    const mediaKeys = previewMediaId && fullMediaId
-      ? (
-        await prisma.media.findMany({
-          where: {
-            id: { in: [Number(previewMediaId), Number(fullMediaId)] },
-          },
-          select: { s3Key: true },
-        })
-      ).map((m) => m.s3Key)
-      : [];
-
-    queueScreening({
-      targetType: 'POST',
-      targetId: newPost.id,
-      authorId: userId,
-      text: `${title}\n\n${message}`,
-      imageKeys: mediaKeys,
-      onApproved: async () => {
-        await prisma.post.update({
-          where: { id: newPost.id },
-          data: { isPendingScreening: false },
-        });
-        getIo().emit('posts:changed');
-      },
-      onRemoved: async () => {
-        await prisma.post.update({
-          where: { id: newPost.id },
-          data: { isPendingScreening: false, isRemoved: true },
-        });
-        getIo().emit('posts:changed');
-      },
-    });
-
+    // Optimistic refresh signal - the processor emits its own post-commit posts:changed later
     getIo().emit('posts:changed');
     return res.status(201).json(newPost);
   } catch (error) {
@@ -400,46 +481,41 @@ posts.patch('/:id', requireAuth, async (req, res) => {
         .json({ error: 'radiusMiles must be a number when isLocal is true.' });
     }
 
-    const { count } = await prisma.post.updateMany({
-      where: getOwnedOpenPostWhere(req),
-      data: {
-        title,
-        message,
-        isLocal,
-        zipCode: isLocal ? String(zipCode) : null,
-        radiusMiles: parsedRadius,
-        ...(title || message ? { isPendingScreening: true } : {}),
-      },
-    });
+    try {
+      await prisma.$transaction(async (tx) => {
+        const { count } = await tx.post.updateMany({
+          where: getOwnedOpenPostWhere(req),
+          data: {
+            title,
+            message,
+            isLocal,
+            zipCode: isLocal ? String(zipCode) : null,
+            radiusMiles: parsedRadius,
+            ...(title || message ? { isPendingScreening: true } : {}),
+          },
+        });
 
-    if (!count) {
-      return res
-        .status(404)
-        .json({ error: 'Post not found to PATCH as update.' });
-    }
-    if (title || message) {
-      const postId = Number(req.params.id);
-      queueScreening({
-        targetType: 'POST',
-        targetId: postId,
-        authorId: getUserId(req),
-        text: `${title}\n\n${message}`,
-        onApproved: async () => {
-          await prisma.post.update({ where: { id: postId }, data: { isPendingScreening: false } });
-          getIo().emit('posts:changed');
-        },
-        onRemoved: async () => {
-          await prisma.post.update({
-            where: { id: postId },
-            data: {
-              isPendingScreening: false,
-              isRemoved: true,
-            },
+        // Can't `return res.status(...)` from inside a transaction - signal via throw
+        if (!count) throw new PostNotFoundForUpdate();
+
+        if (title || message) {
+          await enqueueJob(tx, 'SCREEN_CONTENT', {
+            targetType: 'POST',
+            targetId: Number(req.params.id),
+            authorId: getUserId(req),
+            text: `${title}\n\n${message}`,
           });
-          getIo().emit('posts:changed');
-        },
+        }
       });
+    } catch (err) {
+      if (err instanceof PostNotFoundForUpdate) {
+        return res
+          .status(404)
+          .json({ error: 'Post not found to PATCH as update.' });
+      }
+      throw err; // Falls through to the route's own outer catch
     }
+
     getIo().emit('posts:changed');
     return res.json({ success: true });
   } catch (error) {

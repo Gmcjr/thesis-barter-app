@@ -32,6 +32,7 @@ export type PostAvgAggregateOutputType = {
   radiusMiles: number | null
   lat: number | null
   lng: number | null
+  version: number | null
 }
 
 export type PostSumAggregateOutputType = {
@@ -40,6 +41,7 @@ export type PostSumAggregateOutputType = {
   radiusMiles: number | null
   lat: number | null
   lng: number | null
+  version: number | null
 }
 
 export type PostMinAggregateOutputType = {
@@ -57,6 +59,7 @@ export type PostMinAggregateOutputType = {
   lng: number | null
   isPendingScreening: boolean | null
   isRemoved: boolean | null
+  version: number | null
 }
 
 export type PostMaxAggregateOutputType = {
@@ -74,6 +77,7 @@ export type PostMaxAggregateOutputType = {
   lng: number | null
   isPendingScreening: boolean | null
   isRemoved: boolean | null
+  version: number | null
 }
 
 export type PostCountAggregateOutputType = {
@@ -92,6 +96,7 @@ export type PostCountAggregateOutputType = {
   lng: number
   isPendingScreening: number
   isRemoved: number
+  version: number
   _all: number
 }
 
@@ -102,6 +107,7 @@ export type PostAvgAggregateInputType = {
   radiusMiles?: true
   lat?: true
   lng?: true
+  version?: true
 }
 
 export type PostSumAggregateInputType = {
@@ -110,6 +116,7 @@ export type PostSumAggregateInputType = {
   radiusMiles?: true
   lat?: true
   lng?: true
+  version?: true
 }
 
 export type PostMinAggregateInputType = {
@@ -127,6 +134,7 @@ export type PostMinAggregateInputType = {
   lng?: true
   isPendingScreening?: true
   isRemoved?: true
+  version?: true
 }
 
 export type PostMaxAggregateInputType = {
@@ -144,6 +152,7 @@ export type PostMaxAggregateInputType = {
   lng?: true
   isPendingScreening?: true
   isRemoved?: true
+  version?: true
 }
 
 export type PostCountAggregateInputType = {
@@ -162,6 +171,7 @@ export type PostCountAggregateInputType = {
   lng?: true
   isPendingScreening?: true
   isRemoved?: true
+  version?: true
   _all?: true
 }
 
@@ -267,6 +277,7 @@ export type PostGroupByOutputType = {
   lng: number | null
   isPendingScreening: boolean
   isRemoved: boolean
+  version: number
   _count: PostCountAggregateOutputType | null
   _avg: PostAvgAggregateOutputType | null
   _sum: PostSumAggregateOutputType | null
@@ -308,6 +319,7 @@ export type PostWhereInput = {
   lng?: Prisma.FloatNullableFilter<"Post"> | number | null
   isPendingScreening?: Prisma.BoolFilter<"Post"> | boolean
   isRemoved?: Prisma.BoolFilter<"Post"> | boolean
+  version?: Prisma.IntFilter<"Post"> | number
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   products?: Prisma.ProductListRelationFilter
   services?: Prisma.ServiceListRelationFilter
@@ -335,6 +347,7 @@ export type PostOrderByWithRelationInput = {
   lng?: Prisma.SortOrderInput | Prisma.SortOrder
   isPendingScreening?: Prisma.SortOrder
   isRemoved?: Prisma.SortOrder
+  version?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
   products?: Prisma.ProductOrderByRelationAggregateInput
   services?: Prisma.ServiceOrderByRelationAggregateInput
@@ -365,6 +378,7 @@ export type PostWhereUniqueInput = Prisma.AtLeast<{
   lng?: Prisma.FloatNullableFilter<"Post"> | number | null
   isPendingScreening?: Prisma.BoolFilter<"Post"> | boolean
   isRemoved?: Prisma.BoolFilter<"Post"> | boolean
+  version?: Prisma.IntFilter<"Post"> | number
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   products?: Prisma.ProductListRelationFilter
   services?: Prisma.ServiceListRelationFilter
@@ -392,6 +406,7 @@ export type PostOrderByWithAggregationInput = {
   lng?: Prisma.SortOrderInput | Prisma.SortOrder
   isPendingScreening?: Prisma.SortOrder
   isRemoved?: Prisma.SortOrder
+  version?: Prisma.SortOrder
   _count?: Prisma.PostCountOrderByAggregateInput
   _avg?: Prisma.PostAvgOrderByAggregateInput
   _max?: Prisma.PostMaxOrderByAggregateInput
@@ -418,6 +433,7 @@ export type PostScalarWhereWithAggregatesInput = {
   lng?: Prisma.FloatNullableWithAggregatesFilter<"Post"> | number | null
   isPendingScreening?: Prisma.BoolWithAggregatesFilter<"Post"> | boolean
   isRemoved?: Prisma.BoolWithAggregatesFilter<"Post"> | boolean
+  version?: Prisma.IntWithAggregatesFilter<"Post"> | number
 }
 
 export type PostCreateInput = {
@@ -434,6 +450,7 @@ export type PostCreateInput = {
   lng?: number | null
   isPendingScreening?: boolean
   isRemoved?: boolean
+  version?: number
   user: Prisma.UserCreateNestedOneWithoutPostsInput
   products?: Prisma.ProductCreateNestedManyWithoutPostInput
   services?: Prisma.ServiceCreateNestedManyWithoutPostInput
@@ -461,6 +478,7 @@ export type PostUncheckedCreateInput = {
   lng?: number | null
   isPendingScreening?: boolean
   isRemoved?: boolean
+  version?: number
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutPostInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutPostInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutPostInput
@@ -485,6 +503,7 @@ export type PostUpdateInput = {
   lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   user?: Prisma.UserUpdateOneRequiredWithoutPostsNestedInput
   products?: Prisma.ProductUpdateManyWithoutPostNestedInput
   services?: Prisma.ServiceUpdateManyWithoutPostNestedInput
@@ -512,6 +531,7 @@ export type PostUncheckedUpdateInput = {
   lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   products?: Prisma.ProductUncheckedUpdateManyWithoutPostNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutPostNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutPostNestedInput
@@ -538,6 +558,7 @@ export type PostCreateManyInput = {
   lng?: number | null
   isPendingScreening?: boolean
   isRemoved?: boolean
+  version?: number
 }
 
 export type PostUpdateManyMutationInput = {
@@ -554,6 +575,7 @@ export type PostUpdateManyMutationInput = {
   lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type PostUncheckedUpdateManyInput = {
@@ -572,6 +594,7 @@ export type PostUncheckedUpdateManyInput = {
   lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type PostListRelationFilter = {
@@ -608,6 +631,7 @@ export type PostCountOrderByAggregateInput = {
   lng?: Prisma.SortOrder
   isPendingScreening?: Prisma.SortOrder
   isRemoved?: Prisma.SortOrder
+  version?: Prisma.SortOrder
 }
 
 export type PostAvgOrderByAggregateInput = {
@@ -616,6 +640,7 @@ export type PostAvgOrderByAggregateInput = {
   radiusMiles?: Prisma.SortOrder
   lat?: Prisma.SortOrder
   lng?: Prisma.SortOrder
+  version?: Prisma.SortOrder
 }
 
 export type PostMaxOrderByAggregateInput = {
@@ -633,6 +658,7 @@ export type PostMaxOrderByAggregateInput = {
   lng?: Prisma.SortOrder
   isPendingScreening?: Prisma.SortOrder
   isRemoved?: Prisma.SortOrder
+  version?: Prisma.SortOrder
 }
 
 export type PostMinOrderByAggregateInput = {
@@ -650,6 +676,7 @@ export type PostMinOrderByAggregateInput = {
   lng?: Prisma.SortOrder
   isPendingScreening?: Prisma.SortOrder
   isRemoved?: Prisma.SortOrder
+  version?: Prisma.SortOrder
 }
 
 export type PostSumOrderByAggregateInput = {
@@ -658,6 +685,7 @@ export type PostSumOrderByAggregateInput = {
   radiusMiles?: Prisma.SortOrder
   lat?: Prisma.SortOrder
   lng?: Prisma.SortOrder
+  version?: Prisma.SortOrder
 }
 
 export type PostScalarRelationFilter = {
@@ -869,6 +897,7 @@ export type PostCreateWithoutUserInput = {
   lng?: number | null
   isPendingScreening?: boolean
   isRemoved?: boolean
+  version?: number
   products?: Prisma.ProductCreateNestedManyWithoutPostInput
   services?: Prisma.ServiceCreateNestedManyWithoutPostInput
   comments?: Prisma.CommentCreateNestedManyWithoutPostInput
@@ -894,6 +923,7 @@ export type PostUncheckedCreateWithoutUserInput = {
   lng?: number | null
   isPendingScreening?: boolean
   isRemoved?: boolean
+  version?: number
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutPostInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutPostInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutPostInput
@@ -949,6 +979,7 @@ export type PostScalarWhereInput = {
   lng?: Prisma.FloatNullableFilter<"Post"> | number | null
   isPendingScreening?: Prisma.BoolFilter<"Post"> | boolean
   isRemoved?: Prisma.BoolFilter<"Post"> | boolean
+  version?: Prisma.IntFilter<"Post"> | number
 }
 
 export type PostCreateWithoutTradesInput = {
@@ -965,6 +996,7 @@ export type PostCreateWithoutTradesInput = {
   lng?: number | null
   isPendingScreening?: boolean
   isRemoved?: boolean
+  version?: number
   user: Prisma.UserCreateNestedOneWithoutPostsInput
   products?: Prisma.ProductCreateNestedManyWithoutPostInput
   services?: Prisma.ServiceCreateNestedManyWithoutPostInput
@@ -991,6 +1023,7 @@ export type PostUncheckedCreateWithoutTradesInput = {
   lng?: number | null
   isPendingScreening?: boolean
   isRemoved?: boolean
+  version?: number
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutPostInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutPostInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutPostInput
@@ -1030,6 +1063,7 @@ export type PostUpdateWithoutTradesInput = {
   lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   user?: Prisma.UserUpdateOneRequiredWithoutPostsNestedInput
   products?: Prisma.ProductUpdateManyWithoutPostNestedInput
   services?: Prisma.ServiceUpdateManyWithoutPostNestedInput
@@ -1056,6 +1090,7 @@ export type PostUncheckedUpdateWithoutTradesInput = {
   lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   products?: Prisma.ProductUncheckedUpdateManyWithoutPostNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutPostNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutPostNestedInput
@@ -1079,6 +1114,7 @@ export type PostCreateWithoutTradeOffersInput = {
   lng?: number | null
   isPendingScreening?: boolean
   isRemoved?: boolean
+  version?: number
   user: Prisma.UserCreateNestedOneWithoutPostsInput
   products?: Prisma.ProductCreateNestedManyWithoutPostInput
   services?: Prisma.ServiceCreateNestedManyWithoutPostInput
@@ -1105,6 +1141,7 @@ export type PostUncheckedCreateWithoutTradeOffersInput = {
   lng?: number | null
   isPendingScreening?: boolean
   isRemoved?: boolean
+  version?: number
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutPostInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutPostInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutPostInput
@@ -1144,6 +1181,7 @@ export type PostUpdateWithoutTradeOffersInput = {
   lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   user?: Prisma.UserUpdateOneRequiredWithoutPostsNestedInput
   products?: Prisma.ProductUpdateManyWithoutPostNestedInput
   services?: Prisma.ServiceUpdateManyWithoutPostNestedInput
@@ -1170,6 +1208,7 @@ export type PostUncheckedUpdateWithoutTradeOffersInput = {
   lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   products?: Prisma.ProductUncheckedUpdateManyWithoutPostNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutPostNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutPostNestedInput
@@ -1193,6 +1232,7 @@ export type PostCreateWithoutTradeRequestsInput = {
   lng?: number | null
   isPendingScreening?: boolean
   isRemoved?: boolean
+  version?: number
   user: Prisma.UserCreateNestedOneWithoutPostsInput
   products?: Prisma.ProductCreateNestedManyWithoutPostInput
   services?: Prisma.ServiceCreateNestedManyWithoutPostInput
@@ -1219,6 +1259,7 @@ export type PostUncheckedCreateWithoutTradeRequestsInput = {
   lng?: number | null
   isPendingScreening?: boolean
   isRemoved?: boolean
+  version?: number
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutPostInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutPostInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutPostInput
@@ -1258,6 +1299,7 @@ export type PostUpdateWithoutTradeRequestsInput = {
   lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   user?: Prisma.UserUpdateOneRequiredWithoutPostsNestedInput
   products?: Prisma.ProductUpdateManyWithoutPostNestedInput
   services?: Prisma.ServiceUpdateManyWithoutPostNestedInput
@@ -1284,6 +1326,7 @@ export type PostUncheckedUpdateWithoutTradeRequestsInput = {
   lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   products?: Prisma.ProductUncheckedUpdateManyWithoutPostNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutPostNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutPostNestedInput
@@ -1307,6 +1350,7 @@ export type PostCreateWithoutCommentsInput = {
   lng?: number | null
   isPendingScreening?: boolean
   isRemoved?: boolean
+  version?: number
   user: Prisma.UserCreateNestedOneWithoutPostsInput
   products?: Prisma.ProductCreateNestedManyWithoutPostInput
   services?: Prisma.ServiceCreateNestedManyWithoutPostInput
@@ -1333,6 +1377,7 @@ export type PostUncheckedCreateWithoutCommentsInput = {
   lng?: number | null
   isPendingScreening?: boolean
   isRemoved?: boolean
+  version?: number
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutPostInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutPostInput
   trades?: Prisma.TradeUncheckedCreateNestedManyWithoutPostInput
@@ -1372,6 +1417,7 @@ export type PostUpdateWithoutCommentsInput = {
   lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   user?: Prisma.UserUpdateOneRequiredWithoutPostsNestedInput
   products?: Prisma.ProductUpdateManyWithoutPostNestedInput
   services?: Prisma.ServiceUpdateManyWithoutPostNestedInput
@@ -1398,6 +1444,7 @@ export type PostUncheckedUpdateWithoutCommentsInput = {
   lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   products?: Prisma.ProductUncheckedUpdateManyWithoutPostNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutPostNestedInput
   trades?: Prisma.TradeUncheckedUpdateManyWithoutPostNestedInput
@@ -1421,6 +1468,7 @@ export type PostCreateWithoutProductsInput = {
   lng?: number | null
   isPendingScreening?: boolean
   isRemoved?: boolean
+  version?: number
   user: Prisma.UserCreateNestedOneWithoutPostsInput
   services?: Prisma.ServiceCreateNestedManyWithoutPostInput
   comments?: Prisma.CommentCreateNestedManyWithoutPostInput
@@ -1447,6 +1495,7 @@ export type PostUncheckedCreateWithoutProductsInput = {
   lng?: number | null
   isPendingScreening?: boolean
   isRemoved?: boolean
+  version?: number
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutPostInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutPostInput
   trades?: Prisma.TradeUncheckedCreateNestedManyWithoutPostInput
@@ -1486,6 +1535,7 @@ export type PostUpdateWithoutProductsInput = {
   lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   user?: Prisma.UserUpdateOneRequiredWithoutPostsNestedInput
   services?: Prisma.ServiceUpdateManyWithoutPostNestedInput
   comments?: Prisma.CommentUpdateManyWithoutPostNestedInput
@@ -1512,6 +1562,7 @@ export type PostUncheckedUpdateWithoutProductsInput = {
   lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   services?: Prisma.ServiceUncheckedUpdateManyWithoutPostNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutPostNestedInput
   trades?: Prisma.TradeUncheckedUpdateManyWithoutPostNestedInput
@@ -1535,6 +1586,7 @@ export type PostCreateWithoutServicesInput = {
   lng?: number | null
   isPendingScreening?: boolean
   isRemoved?: boolean
+  version?: number
   user: Prisma.UserCreateNestedOneWithoutPostsInput
   products?: Prisma.ProductCreateNestedManyWithoutPostInput
   comments?: Prisma.CommentCreateNestedManyWithoutPostInput
@@ -1561,6 +1613,7 @@ export type PostUncheckedCreateWithoutServicesInput = {
   lng?: number | null
   isPendingScreening?: boolean
   isRemoved?: boolean
+  version?: number
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutPostInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutPostInput
   trades?: Prisma.TradeUncheckedCreateNestedManyWithoutPostInput
@@ -1600,6 +1653,7 @@ export type PostUpdateWithoutServicesInput = {
   lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   user?: Prisma.UserUpdateOneRequiredWithoutPostsNestedInput
   products?: Prisma.ProductUpdateManyWithoutPostNestedInput
   comments?: Prisma.CommentUpdateManyWithoutPostNestedInput
@@ -1626,6 +1680,7 @@ export type PostUncheckedUpdateWithoutServicesInput = {
   lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   products?: Prisma.ProductUncheckedUpdateManyWithoutPostNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutPostNestedInput
   trades?: Prisma.TradeUncheckedUpdateManyWithoutPostNestedInput
@@ -1649,6 +1704,7 @@ export type PostCreateWithoutReportsInput = {
   lng?: number | null
   isPendingScreening?: boolean
   isRemoved?: boolean
+  version?: number
   user: Prisma.UserCreateNestedOneWithoutPostsInput
   products?: Prisma.ProductCreateNestedManyWithoutPostInput
   services?: Prisma.ServiceCreateNestedManyWithoutPostInput
@@ -1675,6 +1731,7 @@ export type PostUncheckedCreateWithoutReportsInput = {
   lng?: number | null
   isPendingScreening?: boolean
   isRemoved?: boolean
+  version?: number
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutPostInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutPostInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutPostInput
@@ -1714,6 +1771,7 @@ export type PostUpdateWithoutReportsInput = {
   lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   user?: Prisma.UserUpdateOneRequiredWithoutPostsNestedInput
   products?: Prisma.ProductUpdateManyWithoutPostNestedInput
   services?: Prisma.ServiceUpdateManyWithoutPostNestedInput
@@ -1740,6 +1798,7 @@ export type PostUncheckedUpdateWithoutReportsInput = {
   lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   products?: Prisma.ProductUncheckedUpdateManyWithoutPostNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutPostNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutPostNestedInput
@@ -1763,6 +1822,7 @@ export type PostCreateWithoutPostMediaInput = {
   lng?: number | null
   isPendingScreening?: boolean
   isRemoved?: boolean
+  version?: number
   user: Prisma.UserCreateNestedOneWithoutPostsInput
   products?: Prisma.ProductCreateNestedManyWithoutPostInput
   services?: Prisma.ServiceCreateNestedManyWithoutPostInput
@@ -1789,6 +1849,7 @@ export type PostUncheckedCreateWithoutPostMediaInput = {
   lng?: number | null
   isPendingScreening?: boolean
   isRemoved?: boolean
+  version?: number
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutPostInput
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutPostInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutPostInput
@@ -1828,6 +1889,7 @@ export type PostUpdateWithoutPostMediaInput = {
   lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   user?: Prisma.UserUpdateOneRequiredWithoutPostsNestedInput
   products?: Prisma.ProductUpdateManyWithoutPostNestedInput
   services?: Prisma.ServiceUpdateManyWithoutPostNestedInput
@@ -1854,6 +1916,7 @@ export type PostUncheckedUpdateWithoutPostMediaInput = {
   lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   products?: Prisma.ProductUncheckedUpdateManyWithoutPostNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutPostNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutPostNestedInput
@@ -1878,6 +1941,7 @@ export type PostCreateManyUserInput = {
   lng?: number | null
   isPendingScreening?: boolean
   isRemoved?: boolean
+  version?: number
 }
 
 export type PostUpdateWithoutUserInput = {
@@ -1894,6 +1958,7 @@ export type PostUpdateWithoutUserInput = {
   lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   products?: Prisma.ProductUpdateManyWithoutPostNestedInput
   services?: Prisma.ServiceUpdateManyWithoutPostNestedInput
   comments?: Prisma.CommentUpdateManyWithoutPostNestedInput
@@ -1919,6 +1984,7 @@ export type PostUncheckedUpdateWithoutUserInput = {
   lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   products?: Prisma.ProductUncheckedUpdateManyWithoutPostNestedInput
   services?: Prisma.ServiceUncheckedUpdateManyWithoutPostNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutPostNestedInput
@@ -1944,6 +2010,7 @@ export type PostUncheckedUpdateManyWithoutUserInput = {
   lng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 
@@ -2056,6 +2123,7 @@ export type PostSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   lng?: boolean
   isPendingScreening?: boolean
   isRemoved?: boolean
+  version?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   products?: boolean | Prisma.Post$productsArgs<ExtArgs>
   services?: boolean | Prisma.Post$servicesArgs<ExtArgs>
@@ -2084,6 +2152,7 @@ export type PostSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   lng?: boolean
   isPendingScreening?: boolean
   isRemoved?: boolean
+  version?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["post"]>
 
@@ -2103,6 +2172,7 @@ export type PostSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   lng?: boolean
   isPendingScreening?: boolean
   isRemoved?: boolean
+  version?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["post"]>
 
@@ -2122,9 +2192,10 @@ export type PostSelectScalar = {
   lng?: boolean
   isPendingScreening?: boolean
   isRemoved?: boolean
+  version?: boolean
 }
 
-export type PostOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "images" | "status" | "title" | "message" | "createdAt" | "updatedAt" | "isLocal" | "zipCode" | "radiusMiles" | "lat" | "lng" | "isPendingScreening" | "isRemoved", ExtArgs["result"]["post"]>
+export type PostOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "images" | "status" | "title" | "message" | "createdAt" | "updatedAt" | "isLocal" | "zipCode" | "radiusMiles" | "lat" | "lng" | "isPendingScreening" | "isRemoved" | "version", ExtArgs["result"]["post"]>
 export type PostInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   products?: boolean | Prisma.Post$productsArgs<ExtArgs>
@@ -2173,6 +2244,7 @@ export type $PostPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     lng: number | null
     isPendingScreening: boolean
     isRemoved: boolean
+    version: number
   }, ExtArgs["result"]["post"]>
   composites: {}
 }
@@ -2620,6 +2692,7 @@ export interface PostFieldRefs {
   readonly lng: Prisma.FieldRef<"Post", 'Float'>
   readonly isPendingScreening: Prisma.FieldRef<"Post", 'Boolean'>
   readonly isRemoved: Prisma.FieldRef<"Post", 'Boolean'>
+  readonly version: Prisma.FieldRef<"Post", 'Int'>
 }
     
 

@@ -2,17 +2,16 @@ import { Router } from 'express';
 import { prisma } from '../db/index.js';
 import requireAuth from '../middleware/requireAuth.js';
 import { isBlocked } from '../services/blocks.js';
-import { queueScreening } from '../services/moderation.js';
-import { enqueueJob } from '../services/jobs.js';
+import { enqueueJob } from '../services/jobQueue.js';
 import { getIo } from '../middleware/socket.js';
 import { withAvatarUrl } from '../services/userMedia.js';
 
 const comments = Router();
 
-// POST: add a comment to a post. Screening runs in the background (queueScreening
-// is fire-and-forget) so the commenter isn't blocked waiting on it - the comment
-// is created right away and only shown to its own author until it's approved,
-// same pattern as posts/trade requests/offers.
+// POST: add a comment to a post. Screening runs as a background SCREEN_CONTENT job
+// so the commenter isn't blocked waiting on it - the comment is created right away
+// and only shown to its own author until it's approved, same pattern as
+// posts/trade requests/offers.
 comments.post('/', requireAuth, async (req, res) => {
   try {
     const userId = req.user!.id;
@@ -39,52 +38,43 @@ comments.post('/', requireAuth, async (req, res) => {
       return res.status(403).json({ error: 'Unable to comment on this post.' });
     }
 
-    const comment = await prisma.comment.create({
-      data: {
-        postId,
-        userId,
+    const comment = await prisma.$transaction(async (tx) => {
+      const created = await tx.comment.create({
+        data: {
+          postId,
+          userId,
+          text: trimmed,
+          isPendingScreening: true,
+        },
+      });
+
+      const preview = trimmed.length > 80 ? `${trimmed.slice(0, 80)}...` : trimmed;
+
+      await enqueueJob(tx, 'SCREEN_CONTENT', {
+        targetType: 'COMMENT',
+        targetId: created.id,
+        authorId: userId,
         text: trimmed,
-        isPendingScreening: true,
-      },
-    });
-
-    // Only the comment refreshes for the author right away (they can see their
-    // own pending comment); everyone else picks it up once it's approved below.
-    getIo().emit('posts:changed');
-
-    queueScreening({
-      targetType: 'COMMENT',
-      targetId: comment.id,
-      authorId: userId,
-      text: trimmed,
-      onApproved: async () => {
-        await prisma.comment.update({
-          where: { id: comment.id },
-          data: { isPendingScreening: false },
-        });
-        getIo().emit('posts:changed');
-
-        if (post.userId !== userId) {
-          const preview = trimmed.length > 80 ? `${trimmed.slice(0, 80)}...` : trimmed;
-          await enqueueJob(prisma, 'SEND_NOTIFICATION', {
+        ...(post.userId !== userId ? {
+          notifyOnApprove: {
             userId: post.userId,
-            type: 'COMMENT_RECEIVED',
+            type: 'COMMENT_RECIEVED',
             title: 'New comment on your post',
             body: preview,
             link: `/profile?postId=${postId}`,
             entityType: 'COMMENT',
-            entityId: comment.id,
-          });
-        }
-      },
-      onRemoved: async () => {
-        await prisma.comment.update({
-          where: { id: comment.id },
-          data: { isPendingScreening: false, isRemoved: true },
-        });
-        getIo().emit('posts:changed');
-      },
+            entityId: created.id,
+          },
+        } : {}),
+      });
+
+      return created;
     });
+
+    // Only the comment author sees their own pending comment right away;
+    // everyone else picks it up once processScreenContent approves it and
+    // emits content:screened / posts:changed.
+    getIo().emit('posts:changed');
 
     const author = await withAvatarUrl({
       id: userId,

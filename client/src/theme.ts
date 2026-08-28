@@ -335,6 +335,17 @@ export function buildTheme(tokens: ThemeTokens): Theme {
           },
         },
       },
+      // Visible keyboard-focus ring
+      MuiButtonBase: {
+        styleOverrides: {
+          root: ({ theme }) => ({
+            '&.Mui-focusVisible': {
+              outline: `2px solid ${theme.palette.border.strong}`,
+              outlineOffset: 2,
+            },
+          }),
+        },
+      },
     },
   });
 }

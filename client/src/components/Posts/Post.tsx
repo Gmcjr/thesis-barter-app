@@ -9,12 +9,17 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import Divider from '@mui/material/Divider';
 import Chip from '@mui/material/Chip';
-import IconButton from '@mui/material/IconButton';
 import DeleteOutlineIcon from '@mui/icons-material/Delete';
 import DownloadIcon from '@mui/icons-material/Download';
 import CircularProgress from '@mui/material/CircularProgress';
+import IconButton from '@mui/material/IconButton';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import OpenInFullIcon from '@mui/icons-material/OpenInFull';
+import CloseIcon from '@mui/icons-material/Close';
 
 import { formatPostDate, formatInboxTime } from '../../utils/utils';
 import type { PostData, PostUpdateData } from './ManagePosts';
@@ -39,11 +44,12 @@ interface PostProps {
   onUpdate?: (postId: number, postData: PostUpdateData) => Promise<void>;
   onDelete?: (postId: number) => Promise<void>;
   onComplete?: (tradeId: number) => Promise<void>;
+  highlight?: boolean;
 }
 
 export default function Post({
   post, onReport, myTradeRequests, onTradeActivity, onOfferSubmitted,
-  onUpdate, onDelete, onComplete,
+  onUpdate, onDelete, onComplete, highlight,
 }: PostProps) {
   const postUser = post.user.name ?? post.user.email;
   const {
@@ -57,8 +63,13 @@ export default function Post({
   const [commentDraft, setCommentDraft] = useState('');
   const [submittingComment, setSubmittingComment] = useState(false);
   const [deletingCommentId, setDeletingCommentId] = useState<number | null>(null);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [imageViewerOpen, setImageViewerOpen] = useState(false);
 
   const isArtTrade = Boolean(post.previewUrl || post.fullUrl);
+
+  const postImages = post.imageUrls ?? [];
+  const currentPostImage = postImages[currentImageIndex] ?? postImages[0];
 
   const completedOffer = post.tradeOffers?.find((o) => o.status === 'COMPLETED');
 
@@ -82,6 +93,18 @@ export default function Post({
   } else if (isOfferer) {
     receivedUrl = post.fullUrl ?? undefined;
   }
+
+  const handlePreviousImage = () => {
+    setCurrentImageIndex((currentIndex) => (
+      currentIndex === 0 ? postImages.length - 1 : currentIndex - 1
+    ));
+  };
+
+  const handleNextImage = () => {
+    setCurrentImageIndex((currentIndex) => (
+      currentIndex === postImages.length - 1 ? 0 : currentIndex + 1
+    ));
+  };
 
   const handleDownloadFull = async (imageUrl: string) => {
     try {
@@ -169,180 +192,393 @@ export default function Post({
   };
 
   return (
-    <Card variant="outlined" sx={{ borderRadius: radius.md, borderColor: 'border.default' }}>
-      <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
-        <Box sx={{
-          display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, justifyContent: { xs: 'flex-start', sm: 'space-between' }, alignItems: { xs: 'stretch', sm: 'flex-start' }, mb: 2, gap: { xs: 1, sm: 2 },
+    <>
+      <Card
+        id={`post-${post.id}`}
+        variant="outlined"
+        sx={{
+          borderRadius: radius.md,
+          borderColor: 'border.default',
+          ...(highlight && { outline: '2px solid', outlineColor: 'primary.main' }),
         }}
-        >
-          {/* title, date, "Trade Complete" chip */}
-          <Box sx={{ minWidth: 0, flex: 1 }}>
-            <Box sx={{
-              display: 'flex', alignItems: 'baseline', flexWrap: 'wrap', gap: 1.5,
-            }}
-            >
-              <Typography variant="h5" sx={{ wordBreak: 'break-word' }}>
-                {post.title}
-              </Typography>
+      >
+        <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
+          <Box sx={{
+            display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, justifyContent: { xs: 'flex-start', sm: 'space-between' }, alignItems: { xs: 'stretch', sm: 'flex-start' }, mb: 2, gap: { xs: 1, sm: 2 },
+          }}
+          >
+            {/* title, date, "Trade Complete" chip */}
+            <Box sx={{ minWidth: 0, flex: 1 }}>
+              <Box sx={{
+                display: 'flex', alignItems: 'baseline', flexWrap: 'wrap', gap: 1.5,
+              }}
+              >
+                <Typography variant="h5" sx={{ wordBreak: 'break-word' }}>
+                  {post.title}
+                </Typography>
 
-              {post.status === 'COMPLETED' && (
+                {post.status === 'COMPLETED' && (
                 <Chip
                   size="small"
                   color="success"
                   label="Trade Completed"
                 />
-              )}
-            </Box>
+                )}
+              </Box>
 
-            <Typography variant="caption" color="text.secondary">
-              {((post.updatedAt && post.updatedAt !== post.createdAt) && `Updated on ${formatPostDate(post.updatedAt)}`) || `Posted on ${formatPostDate(post.createdAt)}`}
-            </Typography>
-          </Box>
-
-          {/* user avatar, name, DM button and report modal */}
-          <Box sx={{
-            display: 'flex', alignItems: 'center', gap: 1, flexShrink: 0, flexWrap: 'wrap',
-          }}
-          >
-            <Box
-              onClick={() => navigate(`/profile/${post.user.id}`)}
-              role="button"
-              tabIndex={0}
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 1,
-                cursor: 'pointer',
-                '&:hover .post-username': { textDecoration: 'underline' },
-              }}
-            >
-              <UserAvatar user={post.user} size={32} sx={{ fontSize: '0.9rem' }} />
-              <Typography variant="subtitle2" className="post-username">
-                {postUser}
+              <Typography variant="caption" color="text.secondary">
+                {((post.updatedAt && post.updatedAt !== post.createdAt) && `Updated on ${formatPostDate(post.updatedAt)}`) || `Posted on ${formatPostDate(post.createdAt)}`}
               </Typography>
             </Box>
-            {!isOwnPost && (
+
+            {/* user avatar, name, DM button and report modal */}
+            <Box sx={{
+              display: 'flex', alignItems: 'center', gap: 1, flexShrink: 0, flexWrap: 'wrap',
+            }}
+            >
+              <Box
+                onClick={() => navigate(`/profile/${post.user.id}`)}
+                role="button"
+                tabIndex={0}
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 1,
+                  cursor: 'pointer',
+                  '&:hover .post-username': { textDecoration: 'underline' },
+                }}
+              >
+                <UserAvatar user={post.user} size={32} sx={{ fontSize: '0.9rem' }} />
+                <Typography variant="subtitle2" className="post-username">
+                  {postUser}
+                </Typography>
+              </Box>
+              {!isOwnPost && (
               <Button size="small" variant="outlined" onClick={handleOpenDM} sx={{ borderRadius: radius.md, textTransform: 'none' }}>
                 Open DM
               </Button>
-            )}
-            <PostActionsMenu
-              onReport={onReport}
-              showReport={!isOwnPost}
-              showBlock={!isOwnPost}
-              blocked={isBlocked}
-              onBlock={handleBlockToggle}
-              showManage={isOwnPost}
-              managePosts={[post]}
-              onUpdate={onUpdate}
-              onDelete={onDelete}
-              onComplete={onComplete}
-            />
+              )}
+              <PostActionsMenu
+                onReport={onReport}
+                showReport={!isOwnPost}
+                showBlock={!isOwnPost}
+                blocked={isBlocked}
+                onBlock={handleBlockToggle}
+                showManage={isOwnPost}
+                managePosts={[post]}
+                onUpdate={onUpdate}
+                onDelete={onDelete}
+                onComplete={onComplete}
+              />
+            </Box>
           </Box>
-        </Box>
 
-        {post.previewUrl && (
+          {currentPostImage && (
           <Box sx={{ mb: 2 }}>
-            <img
-              src={post.previewUrl}
-              alt="Post Preview"
-              style={{
-                maxWidth: '100%', borderRadius: radius.sm, maxHeight: '350px', objectFit: 'contain',
+            <Box
+              sx={{
+                position: 'relative',
+                width: '100%',
+                height: { xs: 280, sm: 400 },
+                bgcolor: 'surface.sunken',
+                borderRadius: radius.md,
+                overflow: 'hidden',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
               }}
-            />
-          </Box>
-        )}
+            >
+              <img
+                src={currentPostImage}
+                alt={`Post ${currentImageIndex + 1}`}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'contain',
+                }}
+              />
 
-        <Typography variant="body1" sx={{ mb: 3, lineHeight: 1.6 }}>
-          {post.message}
-        </Typography>
+              {postImages.length > 1 && (
+              <>
+                <IconButton
+                  onClick={handlePreviousImage}
+                  aria-label="Previous image"
+                  sx={{
+                    position: 'absolute',
+                    left: 12,
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    bgcolor: 'background.paper',
+                    boxShadow: 2,
+                    '&:hover': {
+                      bgcolor: 'background.paper',
+                    },
+                  }}
+                >
+                  <ChevronLeftIcon />
+                </IconButton>
 
-        <Divider sx={{ mb: 2 }} />
+                <IconButton
+                  onClick={handleNextImage}
+                  aria-label="Next image"
+                  sx={{
+                    position: 'absolute',
+                    right: 12,
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    bgcolor: 'background.paper',
+                    boxShadow: 2,
+                    '&:hover': {
+                      bgcolor: 'background.paper',
+                    },
+                  }}
+                >
+                  <ChevronRightIcon />
+                </IconButton>
+              </>
+              )}
 
-        <Typography variant="subtitle2" sx={{ mb: 1.5, color: 'text.secondary' }}>
-          Comments
-        </Typography>
-
-        {post.comments.length > 0 ? (
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-            {post.comments.map((comment) => (
-              <Box
-                key={comment.id}
+              <IconButton
+                onClick={() => setImageViewerOpen(true)}
+                aria-label="Expand image"
                 sx={{
-                  display: 'flex', gap: 1.5, alignItems: 'flex-start', p: 1.5, bgcolor: 'surface.sunken', borderRadius: radius.md,
+                  position: 'absolute',
+                  right: 12,
+                  bottom: 12,
+                  bgcolor: 'background.paper',
+                  boxShadow: 2,
+                  '&:hover': {
+                    bgcolor: 'background.paper',
+                  },
                 }}
               >
-                <UserAvatar user={comment.user} size={28} />
-                <Box sx={{ flex: 1, minWidth: 0 }}>
-                  <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1 }}>
-                    <Typography
-                      variant="body2"
-                      onClick={() => navigate(`/profile/${comment.user.id}`)}
-                      sx={{
-                        fontWeight: 600, cursor: 'pointer', '&:hover': { textDecoration: 'underline' },
+                <OpenInFullIcon />
+              </IconButton>
+            </Box>
+
+            {postImages.length > 1 && (
+            <>
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  gap: 0.75,
+                  mt: 1,
+                }}
+              >
+                {postImages.map((imageUrl, index) => (
+                  <Box
+                    key={`dot-${imageUrl}`}
+                    onClick={() => setCurrentImageIndex(index)}
+                    sx={{
+                      width: index === currentImageIndex ? 18 : 7,
+                      height: 7,
+                      borderRadius: radius.pill,
+                      bgcolor: index === currentImageIndex ? 'primary.main' : 'text.disabled',
+                      cursor: 'pointer',
+                      transition: 'width 0.2s ease',
+                    }}
+                  />
+                ))}
+              </Box>
+
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  gap: 1,
+                  mt: 1.5,
+                  overflowX: 'auto',
+                  pb: 0.5,
+                }}
+              >
+                {postImages.map((imageUrl, index) => (
+                  <Box
+                    key={`thumbnail-${imageUrl}`}
+                    onClick={() => setCurrentImageIndex(index)}
+                    role="button"
+                    tabIndex={0}
+                    sx={{
+                      width: 72,
+                      height: 72,
+                      flexShrink: 0,
+                      borderRadius: radius.sm,
+                      overflow: 'hidden',
+                      cursor: 'pointer',
+                      border: '2px solid',
+                      borderColor: index === currentImageIndex ? 'primary.main' : 'border.default',
+                      opacity: index === currentImageIndex ? 1 : 0.7,
+                      transition: 'opacity 0.15s ease, border-color 0.15s ease',
+                      '&:hover': {
+                        opacity: 1,
+                      },
+                    }}
+                  >
+                    <img
+                      src={imageUrl}
+                      alt={`Post Thumbnail ${index + 1}`}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        display: 'block',
                       }}
-                    >
-                      {comment.user.name ?? comment.user.email}
-                    </Typography>
-                    <Typography variant="caption" color="text.secondary">
-                      {formatInboxTime(comment.createdAt)}
+                    />
+                  </Box>
+                ))}
+              </Box>
+            </>
+            )}
+          </Box>
+          )}
+
+          {post.previewUrl && (
+            <Box sx={{ mb: 2 }}>
+              <Box
+                sx={{
+                  position: 'relative',
+                  width: '100%',
+                  height: { xs: 280, sm: 400 },
+                  bgcolor: 'surface.sunken',
+                  borderRadius: radius.md,
+                  overflow: 'hidden',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <img
+                  src={post.previewUrl}
+                  alt="Post Preview"
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'contain',
+                  }}
+                />
+
+                <IconButton
+                  onClick={() => setImageViewerOpen(true)}
+                  aria-label="Expand image"
+                  sx={{
+                    position: 'absolute',
+                    right: 12,
+                    bottom: 12,
+                    bgcolor: 'background.paper',
+                    boxShadow: 2,
+                    '&:hover': {
+                      bgcolor: 'background.paper',
+                    },
+                  }}
+                >
+                  <OpenInFullIcon />
+                </IconButton>
+              </Box>
+            </Box>
+          )}
+
+          <Typography variant="body1" sx={{ mb: 3, lineHeight: 1.6 }}>
+            {post.message}
+          </Typography>
+
+          {user && (
+            <Box sx={{ display: 'flex', mt: 3, gap: 1 }}>
+              <TextField
+                size="small"
+                fullWidth
+                placeholder="Add a comment..."
+                variant="outlined"
+                value={commentDraft}
+                disabled={submittingComment}
+                onChange={(e) => setCommentDraft(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    handleAddComment();
+                  }
+                }}
+                sx={{ '& .MuiOutlinedInput-root': { borderRadius: radius.md } }}
+              />
+              <Button
+                variant="contained"
+                disableElevation
+                disabled={submittingComment || !commentDraft.trim()}
+                onClick={handleAddComment}
+                sx={{ borderRadius: radius.md, textTransform: 'none' }}
+              >
+                {submittingComment ? <CircularProgress size={18} color="inherit" /> : 'Send'}
+              </Button>
+            </Box>
+          )}
+
+          <Typography variant="subtitle2" sx={{ mb: 1.5, color: 'text.secondary' }}>
+            Comments
+          </Typography>
+
+          {post.comments.length > 0 ? (
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+              {post.comments.map((comment) => (
+                <Box
+                  key={comment.id}
+                  sx={{
+                    display: 'flex', gap: 1.5, alignItems: 'flex-start', p: 1.5, bgcolor: 'surface.sunken', borderRadius: radius.md,
+                  }}
+                >
+                  <UserAvatar user={comment.user} size={28} />
+                  <Box sx={{ flex: 1, minWidth: 0 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1 }}>
+                      <Typography
+                        variant="body2"
+                        onClick={() => navigate(`/profile/${comment.user.id}`)}
+                        sx={{
+                          fontWeight: 600, cursor: 'pointer', '&:hover': { textDecoration: 'underline' },
+                        }}
+                      >
+                        {comment.user.name ?? comment.user.email}
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        {formatInboxTime(comment.createdAt)}
+                      </Typography>
+                    </Box>
+                    <Typography variant="body2" sx={{ color: 'text.primary', mt: 0.25, wordBreak: 'break-word' }}>
+                      {comment.text}
                     </Typography>
                   </Box>
-                  <Typography variant="body2" sx={{ color: 'text.primary', mt: 0.25, wordBreak: 'break-word' }}>
-                    {comment.text}
-                  </Typography>
+                  {comment.userId === user?.id && (
+                    <IconButton
+                      size="small"
+                      aria-label="Delete comment"
+                      disabled={deletingCommentId === comment.id}
+                      onClick={() => handleDeleteComment(comment.id)}
+                    >
+                      <DeleteOutlineIcon fontSize="small" />
+                    </IconButton>
+                  )}
                 </Box>
-                {comment.userId === user?.id && (
-                  <IconButton
-                    size="small"
-                    aria-label="Delete comment"
-                    disabled={deletingCommentId === comment.id}
-                    onClick={() => handleDeleteComment(comment.id)}
-                  >
-                    <DeleteOutlineIcon fontSize="small" />
-                  </IconButton>
-                )}
-              </Box>
-            ))}
-          </Box>
-        ) : (
-          <Typography variant="body2" color="text.disabled" sx={{ mb: 2, fontStyle: 'italic' }}>
-            No comments...
-          </Typography>
-        )}
+              ))}
+            </Box>
+          ) : (
+            <Typography variant="body2" color="text.disabled" sx={{ mb: 2, fontStyle: 'italic' }}>
+              No comments...
+            </Typography>
+          )}
 
-        {user && (
           <Box sx={{ display: 'flex', mt: 3, gap: 1 }}>
             <TextField
               size="small"
               fullWidth
               placeholder="Add a comment..."
               variant="outlined"
-              value={commentDraft}
-              disabled={submittingComment}
-              onChange={(e) => setCommentDraft(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                  e.preventDefault();
-                  handleAddComment();
-                }
-              }}
               sx={{ '& .MuiOutlinedInput-root': { borderRadius: radius.md } }}
             />
-            <Button
-              variant="contained"
-              disableElevation
-              disabled={submittingComment || !commentDraft.trim()}
-              onClick={handleAddComment}
-              sx={{ borderRadius: radius.md, textTransform: 'none' }}
-            >
-              {submittingComment ? <CircularProgress size={18} color="inherit" /> : 'Send'}
+            <Button variant="contained" disableElevation sx={{ borderRadius: radius.md, textTransform: 'none' }}>
+              Send
             </Button>
           </Box>
-        )}
 
-        {/* Layout for Completed Trades (support for local and digital trades) */}
-        {post.status === 'COMPLETED' && completedOffer && (
+          {/* Layout for Completed Trades (support for local and digital trades) */}
+          {post.status === 'COMPLETED' && completedOffer && (
           <Box sx={{
             mt: 2, pt: 2, borderTop: '1px solid', borderColor: 'divider',
           }}
@@ -392,17 +628,17 @@ export default function Post({
 
                   {/* Only render download button for the poster and the user they trade with */}
                   {receivedUrl && isParticipant && (
-                    <Button
-                      variant="contained"
-                      color="success"
-                      size="small"
-                      startIcon={downloadingFull ? <CircularProgress size={16} color="inherit" /> : <DownloadIcon />}
-                      onClick={() => handleDownloadFull(receivedUrl)}
-                      disabled={downloadingFull}
-                      sx={{ mt: 1.5, alignSelf: 'flex-start' }}
-                    >
-                      {downloadingFull ? 'Saving File...' : 'Download Art Received'}
-                    </Button>
+                  <Button
+                    variant="contained"
+                    color="success"
+                    size="small"
+                    startIcon={downloadingFull ? <CircularProgress size={16} color="inherit" /> : <DownloadIcon />}
+                    onClick={() => handleDownloadFull(receivedUrl)}
+                    disabled={downloadingFull}
+                    sx={{ mt: 1.5, alignSelf: 'flex-start' }}
+                  >
+                    {downloadingFull ? 'Saving File...' : 'Download Art Received'}
+                  </Button>
                   )}
                 </Box>
               </Box>
@@ -422,10 +658,10 @@ export default function Post({
               </Box>
             )}
           </Box>
-        )}
+          )}
 
-        {/* Request to Trade + Offer buttons */}
-        {!isOwnPost && post.status === 'OPEN' && (
+          {/* Request to Trade + Offer buttons */}
+          {!isOwnPost && post.status === 'OPEN' && (
           <Box sx={{
             mt: 2,
             pt: 2,
@@ -448,13 +684,116 @@ export default function Post({
               </Button>
             )}
           </Box>
-        )}
+          )}
 
-        {/* Owner's view of incoming requests on their own open post */}
-        {isOwnPost && post.status === 'OPEN' && (
+          {/* Owner's view of incoming requests on their own open post */}
+          {isOwnPost && post.status === 'OPEN' && (
           <IncomingTradeRequests postId={post.id} onAccepted={onTradeActivity} />
-        )}
-      </CardContent>
-    </Card>
+          )}
+        </CardContent>
+      </Card>
+
+      <Dialog
+        open={imageViewerOpen}
+        onClose={() => setImageViewerOpen(false)}
+        maxWidth="xl"
+        fullWidth
+        slotProps={{
+          paper: {
+            sx: {
+              height: { xs: '90vh', md: '94vh' },
+              maxHeight: '94vh',
+              bgcolor: 'background.default',
+              borderRadius: radius.md,
+            },
+          },
+        }}
+      >
+        <DialogContent
+          sx={{
+            position: 'relative',
+            p: { xs: 1, sm: 2 },
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            overflow: 'hidden',
+          }}
+        >
+          <IconButton
+            onClick={() => setImageViewerOpen(false)}
+            aria-label="Close image"
+            sx={{
+              position: 'absolute',
+              top: 12,
+              right: 12,
+              zIndex: 2,
+              bgcolor: 'background.paper',
+              boxShadow: 2,
+              '&:hover': {
+                bgcolor: 'background.paper',
+              },
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+
+          {postImages.length > 1 && (
+          <IconButton
+            onClick={handlePreviousImage}
+            aria-label="Previous image"
+            sx={{
+              position: 'absolute',
+              left: { xs: 8, sm: 20 },
+              top: '50%',
+              transform: 'translateY(-50%)',
+              zIndex: 2,
+              bgcolor: 'background.paper',
+              boxShadow: 2,
+              '&:hover': {
+                bgcolor: 'background.paper',
+              },
+            }}
+          >
+            <ChevronLeftIcon />
+          </IconButton>
+          )}
+
+          {(currentPostImage || post.previewUrl) && (
+            <img
+              src={currentPostImage ?? post.previewUrl}
+              alt={`Expanded Post ${currentImageIndex + 1}`}
+              style={{
+                maxWidth: '100%',
+                maxHeight: 'calc(94vh - 48px)',
+                width: 'auto',
+                height: 'auto',
+                objectFit: 'contain',
+              }}
+            />
+          )}
+
+          {postImages.length > 1 && (
+          <IconButton
+            onClick={handleNextImage}
+            aria-label="Next image"
+            sx={{
+              position: 'absolute',
+              right: { xs: 8, sm: 20 },
+              top: '50%',
+              transform: 'translateY(-50%)',
+              zIndex: 2,
+              bgcolor: 'background.paper',
+              boxShadow: 2,
+              '&:hover': {
+                bgcolor: 'background.paper',
+              },
+            }}
+          >
+            <ChevronRightIcon />
+          </IconButton>
+          )}
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }

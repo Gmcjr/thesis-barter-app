@@ -4,30 +4,34 @@ import React, { useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
-import Avatar from '@mui/material/Avatar';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import AddIcon from '@mui/icons-material/Add';
 import MessageIcon from '@mui/icons-material/Message';
 import SettingsIcon from '@mui/icons-material/Settings';
+import LogoutIcon from '@mui/icons-material/Logout';
+import LoginIcon from '@mui/icons-material/Login';
+import Fab from '@mui/material/Fab';
 import axios from 'axios';
 
 import Badge from '@mui/material/Badge';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import PersonIcon from '@mui/icons-material/Person';
+import GavelIcon from '@mui/icons-material/Gavel';
+import PersonOffIcon from '@mui/icons-material/PersonOff';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { Link, useRouter } from '../../context/RouterContext';
 import SettingsMenu from './SettingsMenu';
 import NotificationBell from './NotificationBell';
 import { useNotifications } from '../../context/NotificationContext';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth, isModerator } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import NewPost, { type PostFormData } from '../Posts/NewPost';
 import UserAvatar from '../common/UserAvatar';
 
 function NavBar() {
-  const { path, navigate } = useRouter();
+  const { navigate } = useRouter();
   const { user, loading, logout } = useAuth();
   const { unreadCount } = useNotifications();
   const { showToast } = useToast();
@@ -35,17 +39,12 @@ function NavBar() {
   const [modalOpen, setModalOpen] = useState(false);
   const [userMenuTarget, setUserMenuTarget] = useState<null | HTMLElement>(null);
 
-  const navLinks = [
-    { to: '/messages', label: 'Messages', icon: <MessageIcon /> },
-  ];
-
   // create a post
   const handleCreatePost = async (formData: PostFormData) => {
     showToast('Post submitted - running automatic screening...', 'info');
     try {
       await axios.post('/posts', {
         title: formData.title,
-        name: formData.name,
         offerType: formData.offerType,
         category: formData.category,
         message: formData.description,
@@ -55,6 +54,7 @@ function NavBar() {
         radiusMiles: formData.radiusMiles,
         previewMediaId: formData.previewMediaId,
         fullMediaId: formData.fullMediaId,
+        mediaIds: formData.mediaIds,
       });
 
       showToast('Screening complete. Your post is live', 'success');
@@ -70,104 +70,41 @@ function NavBar() {
   };
 
   return (
-    <AppBar position="fixed" elevation={2} sx={{ bgcolor: 'background.paper', color: 'text.primary' }}>
-      <Toolbar sx={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        py: 1,
-        px: { xs: 1.5, sm: 3, md: 4 },
-        gap: { xs: 1, sm: 2 },
-        flexWrap: { xs: 'wrap', md: 'nowrap' },
-        maxWidth: 'md',
-        width: '100%',
-        mx: 'auto',
-      }}
-      >
-
-        {/* App Name (maybe logo later?) */}
-        <Link to="/" style={{ textDecoration: 'none' }}>
-          <Typography
-            variant="h3"
-            sx={{
-              color: 'accent.main',
-              cursor: 'pointer',
-              fontSize: { xs: '1.4rem', sm: '1.75rem' },
-              flexShrink: 0,
-              textDecoration: 'none',
-              transition: 'color 0.15s ease',
-              '&:hover': { color: 'accent.dark' },
-            }}
-          >
-            Barta
-          </Typography>
-        </Link>
-
-        {/* NavLinks */}
-        <Box sx={{
+    <>
+      <AppBar position="fixed" elevation={2} sx={{ bgcolor: 'background.paper', color: 'text.primary' }}>
+        <Toolbar sx={{
           display: 'flex',
+          justifyContent: 'space-between',
           alignItems: 'center',
+          py: 1,
+          px: { xs: 1.5, sm: 3, md: 4 },
           gap: { xs: 1, sm: 2 },
-          flexShrink: 0,
-          order: { xs: 2, md: 3 },
+          flexWrap: { xs: 'wrap', md: 'nowrap' },
+          maxWidth: 'md',
+          width: '100%',
+          mx: 'auto',
         }}
         >
-          <Box sx={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: { xs: 0.5, sm: 1 },
-          }}
-          >
-            {navLinks.map(({ to, label, icon }) => {
-              const active = to === '/'
-                ? path === '/'
-                : path.startsWith(to);
-              return (
-                <Button
-                  key={to}
-                  variant="contained"
-                  size="small"
-                  startIcon={icon}
-                  disabled={!user}
-                  onClick={() => navigate(to)}
-                  sx={{
-                    textTransform: 'none',
-                    whiteSpace: 'nowrap',
-                    px: 2,
-                    fontWeight: active ? 700 : 600,
-                  }}
-                >
-                  {label}
-                </Button>
-              );
-            })}
 
-            {/* New Post Button */}
-            <Button
-              variant="contained"
-              size="small"
-              startIcon={<AddIcon />}
-              disabled={!user}
-              onClick={() => setModalOpen(true)}
+          {/* App Name (maybe logo later?) */}
+          <Link to="/" style={{ textDecoration: 'none' }}>
+            <Box
+              component="img"
+              src={new URL('../../assets/BartaNoBackground.png', import.meta.url).href}
+              alt="Barta"
               sx={{
-                textTransform: 'none',
-                whiteSpace: 'nowrap',
-                px: 2,
-                fontWeight: 600,
+                height: { xs: 70, sm: 80 },
+                width: 'auto',
+                display: 'block',
               }}
-            >
-              New Post
-            </Button>
-          </Box>
+            />
+          </Link>
 
-          {/* Username + Avatar + modal with: Google Login / Logout + Accessibility Settins + Profile link */}
+          {/* Username + Avatar + modal with: Google Login / Logout + Accessibility Settings + Profile link */}
           <Box sx={{
             display: 'flex',
             alignItems: 'center',
             gap: 1,
-            pl: 1,
-            borderLeft: '1px solid',
-            borderColor: 'divider',
             flexShrink: 0,
           }}
           >
@@ -175,35 +112,105 @@ function NavBar() {
               <Typography variant="caption" color="text.secondary">Loading…</Typography>
             ) : (
               <>
-                <Box
-                  onClick={(e) => setUserMenuTarget(e.currentTarget)}
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 1,
-                    cursor: 'pointer',
-                  }}
-                >
-                  {user ? (
-                    <UserAvatar user={user} size={28} sx={{ fontSize: '0.75rem' }} />
-                  ) : (
-                    <Avatar sx={{
-                      width: 28, height: 28, bgcolor: 'primary.main', fontSize: '0.75rem',
-                    }}
-                    >
-                      G
-                    </Avatar>
-                  )}
-                  <Typography
-                    variant="subtitle2"
+                {user && (
+                  <Box
                     sx={{
-                      fontWeight: 600,
-                      fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 1.5,
                     }}
                   >
-                    {user ? (user.name ?? user.email) : 'Guest User'}
-                  </Typography>
-                </Box>
+                    {/* Notifications only visible when logged in */}
+                    <Box
+                      sx={{
+                        position: 'relative',
+                        width: 36,
+                        height: 36,
+                        flexShrink: 0,
+                        borderRadius: '50%',
+                        bgcolor: 'primary.main',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        transition: 'background-color 0.15s ease',
+                        '&:hover': {
+                          bgcolor: 'primary.main',
+                        },
+                        '& button, & .MuiIconButton-root': {
+                          position: 'absolute',
+                          top: 0,
+                          left: 0,
+                          width: 36,
+                          height: 36,
+                          opacity: 0,
+                          zIndex: 2,
+                          cursor: 'pointer',
+                        },
+                      }}
+                    >
+                      <Badge
+                        badgeContent={unreadCount}
+                        color="error"
+                        sx={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          '& .MuiBadge-badge': {
+                            top: 1,
+                            right: 0,
+                          },
+                        }}
+                      >
+                        <NotificationsIcon
+                          sx={{
+                            fontSize: 22,
+                            display: 'block',
+                          }}
+                        />
+                      </Badge>
+                      <NotificationBell />
+                    </Box>
+
+                    <Box
+                      onClick={(e) => setUserMenuTarget(e.currentTarget)}
+                      sx={{
+                        width: 36,
+                        height: 36,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      <UserAvatar user={user} size={36} sx={{ fontSize: '0.8rem' }} />
+                    </Box>
+                  </Box>
+                )}
+
+                {!user && (
+                  <Box
+                    onClick={() => { window.location.href = '/oauth2/login'; }}
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 1,
+                      cursor: 'pointer',
+                    }}
+                  >
+                    <LoginIcon sx={{ fontSize: '1.25rem' }} />
+
+                    <Typography
+                      variant="subtitle2"
+                      sx={{
+                        fontWeight: 600,
+                        fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                      }}
+                    >
+                      Sign in with Google
+                    </Typography>
+                  </Box>
+                )}
+
                 <Menu
                   anchorEl={userMenuTarget}
                   open={Boolean(userMenuTarget)}
@@ -211,6 +218,14 @@ function NavBar() {
                   anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                   transformOrigin={{ vertical: 'top', horizontal: 'right' }}
                 >
+                  {user && (
+                    <Box sx={{ px: 2, pt: 1.5, pb: 0.5 }}>
+                      <Typography variant="subtitle2" sx={{ fontWeight: 700 }}>
+                        {user.name ?? user.email}
+                      </Typography>
+                    </Box>
+                  )}
+
                   {/* Profile only visible when logged in */}
                   {user && (
                     <MenuItem onClick={() => { setUserMenuTarget(null); navigate('/profile'); }}>
@@ -223,105 +238,130 @@ function NavBar() {
                     </MenuItem>
                   )}
 
-                  {/* Settings Item */}
-                  <MenuItem
-                    disableRipple
-                    sx={{
-                      p: 0,
-                      position: 'relative',
-                      '& button, & .MuiIconButton-root': {
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        width: '100%',
-                        height: '100%',
-                        opacity: 0,
-                        zIndex: 2,
-                        cursor: 'pointer',
-                      },
-                    }}
-                  >
-                    <Box sx={{
-                      display: 'flex', alignItems: 'center', gap: 1, px: 2, py: 1, width: '100%',
-                    }}
-                    >
-                      <SettingsIcon sx={{ fontSize: '1.25rem' }} />
-                      <Typography variant="body2" sx={{ fontWeight: 600, pointerEvents: 'none', zIndex: 1 }}>
-                        Settings
-                      </Typography>
-                      <SettingsMenu />
-                    </Box>
-                  </MenuItem>
+                  {/* Messages only visible when logged in */}
+                  {user && (
+                    <MenuItem onClick={() => { setUserMenuTarget(null); navigate('/messages'); }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <MessageIcon sx={{ fontSize: '1.25rem' }} />
+                        <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                          Messages
+                        </Typography>
+                      </Box>
+                    </MenuItem>
+                  )}
 
-                  {/* Notifications Item */}
-                  <MenuItem
-                    disableRipple
-                    sx={{
-                      p: 0,
-                      position: 'relative',
-                      '& button, & .MuiIconButton-root': {
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        width: '100%',
-                        height: '100%',
-                        opacity: 0,
-                        zIndex: 2,
-                        cursor: 'pointer',
-                      },
-                    }}
-                  >
-                    <Box sx={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 1,
-                      px: 2,
-                      py: 1,
-                      width:
-  '100%',
-                    }}
+                  {/* Deleted Conversations Item */}
+                  {user && (
+                    <MenuItem onClick={() => { setUserMenuTarget(null); navigate('/deleted-conversations'); }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <DeleteIcon sx={{ fontSize: '1.25rem' }} />
+                        <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                          Deleted Conversations
+                        </Typography>
+                      </Box>
+                    </MenuItem>
+                  )}
+
+                  {/* Blocked Users Item */}
+                  {user && (
+                    <MenuItem onClick={() => { setUserMenuTarget(null); navigate('/blocked-users'); }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <PersonOffIcon sx={{ fontSize: '1.25rem' }} />
+                        <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                          Blocked Users
+                        </Typography>
+                      </Box>
+                    </MenuItem>
+                  )}
+
+                  {/* Moderation Queue Item - moderators/admins only, hidden otherwise */}
+                  {isModerator(user?.role ?? null) && (
+                    <MenuItem onClick={() => { setUserMenuTarget(null); navigate('/moderation'); }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <GavelIcon sx={{ fontSize: '1.25rem' }} />
+                        <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                          Moderation Queue
+                        </Typography>
+                      </Box>
+                    </MenuItem>
+                  )}
+
+                  {/* Settings Item */}
+                  {user && (
+                    <MenuItem
+                      disableRipple
+                      sx={{
+                        p: 0,
+                        position: 'relative',
+                        '& button, & .MuiIconButton-root': {
+                          position: 'absolute',
+                          top: 0,
+                          left: 0,
+                          width: '100%',
+                          height: '100%',
+                          opacity: 0,
+                          zIndex: 2,
+                          cursor: 'pointer',
+                        },
+                      }}
                     >
-                      <Badge badgeContent={unreadCount} color="error">
-                        <NotificationsIcon sx={{ fontSize: '1.25rem' }} />
-                      </Badge>
-                      <Typography
-                        variant="body2"
-                        sx={{
-                          fontWeight: 600,
-                          pointerEvents: 'none',
-                          zIndex: 1,
-                        }}
+                      <Box sx={{
+                        display: 'flex', alignItems: 'center', gap: 1, px: 2, py: 1, width: '100%',
+                      }}
                       >
-                        Notifications
-                      </Typography>
-                      <NotificationBell />
-                    </Box>
-                  </MenuItem>
+                        <SettingsIcon sx={{ fontSize: '1.25rem' }} />
+                        <Typography variant="body2" sx={{ fontWeight: 600, pointerEvents: 'none', zIndex: 1 }}>
+                          Settings
+                        </Typography>
+                        <SettingsMenu />
+                      </Box>
+                    </MenuItem>
+                  )}
 
                   {/* Log out when logged in / Sign in with Google when logged out */}
-                  {user ? (
+                  {user && (
                     <MenuItem onClick={() => { setUserMenuTarget(null); logout(); }}>
-                      Log out
-                    </MenuItem>
-                  ) : (
-                    <MenuItem onClick={() => { setUserMenuTarget(null); window.location.href = '/oauth2/login'; }}>
-                      Sign in with Google
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <LogoutIcon sx={{ fontSize: '1.25rem' }} />
+                        <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                          Log out
+                        </Typography>
+                      </Box>
                     </MenuItem>
                   )}
                 </Menu>
               </>
             )}
           </Box>
-        </Box>
-      </Toolbar>
+        </Toolbar>
+      </AppBar>
 
+      {/* New Post Button (floating, renders on log in) */}
+      {user && (
+        <Fab
+          variant="extended"
+          color="primary"
+          onClick={() => setModalOpen(true)}
+          sx={{
+            position: 'fixed',
+            bottom: { xs: 24, sm: 32 },
+            right: { xs: 24, sm: 32 },
+            zIndex: (theme) => theme.zIndex.appBar + 10,
+            textTransform: 'none',
+            fontWeight: 600,
+            boxShadow: 3,
+          }}
+        >
+          <AddIcon />
+        </Fab>
+      )}
       {/* NewPost Modal */}
       <NewPost
         open={modalOpen}
         onClose={() => setModalOpen(false)}
         onSubmit={handleCreatePost}
       />
-    </AppBar>
+    </>
   );
 }
 

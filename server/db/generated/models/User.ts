@@ -28,10 +28,12 @@ export type AggregateUser = {
 
 export type UserAvgAggregateOutputType = {
   id: number | null
+  version: number | null
 }
 
 export type UserSumAggregateOutputType = {
   id: number | null
+  version: number | null
 }
 
 export type UserMinAggregateOutputType = {
@@ -47,6 +49,7 @@ export type UserMinAggregateOutputType = {
   isSystem: boolean | null
   pendingBio: string | null
   isPendingScreening: boolean | null
+  version: number | null
   emailVisible: boolean | null
   tradeHistoryVisible: boolean | null
 }
@@ -64,6 +67,7 @@ export type UserMaxAggregateOutputType = {
   isSystem: boolean | null
   pendingBio: string | null
   isPendingScreening: boolean | null
+  version: number | null
   emailVisible: boolean | null
   tradeHistoryVisible: boolean | null
 }
@@ -81,6 +85,7 @@ export type UserCountAggregateOutputType = {
   isSystem: number
   pendingBio: number
   isPendingScreening: number
+  version: number
   emailVisible: number
   tradeHistoryVisible: number
   _all: number
@@ -89,10 +94,12 @@ export type UserCountAggregateOutputType = {
 
 export type UserAvgAggregateInputType = {
   id?: true
+  version?: true
 }
 
 export type UserSumAggregateInputType = {
   id?: true
+  version?: true
 }
 
 export type UserMinAggregateInputType = {
@@ -108,6 +115,7 @@ export type UserMinAggregateInputType = {
   isSystem?: true
   pendingBio?: true
   isPendingScreening?: true
+  version?: true
   emailVisible?: true
   tradeHistoryVisible?: true
 }
@@ -125,6 +133,7 @@ export type UserMaxAggregateInputType = {
   isSystem?: true
   pendingBio?: true
   isPendingScreening?: true
+  version?: true
   emailVisible?: true
   tradeHistoryVisible?: true
 }
@@ -142,6 +151,7 @@ export type UserCountAggregateInputType = {
   isSystem?: true
   pendingBio?: true
   isPendingScreening?: true
+  version?: true
   emailVisible?: true
   tradeHistoryVisible?: true
   _all?: true
@@ -246,6 +256,7 @@ export type UserGroupByOutputType = {
   isSystem: boolean
   pendingBio: string | null
   isPendingScreening: boolean
+  version: number
   emailVisible: boolean
   tradeHistoryVisible: boolean
   _count: UserCountAggregateOutputType | null
@@ -286,6 +297,7 @@ export type UserWhereInput = {
   isSystem?: Prisma.BoolFilter<"User"> | boolean
   pendingBio?: Prisma.StringNullableFilter<"User"> | string | null
   isPendingScreening?: Prisma.BoolFilter<"User"> | boolean
+  version?: Prisma.IntFilter<"User"> | number
   emailVisible?: Prisma.BoolFilter<"User"> | boolean
   tradeHistoryVisible?: Prisma.BoolFilter<"User"> | boolean
   posts?: Prisma.PostListRelationFilter
@@ -328,6 +340,7 @@ export type UserOrderByWithRelationInput = {
   isSystem?: Prisma.SortOrder
   pendingBio?: Prisma.SortOrderInput | Prisma.SortOrder
   isPendingScreening?: Prisma.SortOrder
+  version?: Prisma.SortOrder
   emailVisible?: Prisma.SortOrder
   tradeHistoryVisible?: Prisma.SortOrder
   posts?: Prisma.PostOrderByRelationAggregateInput
@@ -373,6 +386,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   isSystem?: Prisma.BoolFilter<"User"> | boolean
   pendingBio?: Prisma.StringNullableFilter<"User"> | string | null
   isPendingScreening?: Prisma.BoolFilter<"User"> | boolean
+  version?: Prisma.IntFilter<"User"> | number
   emailVisible?: Prisma.BoolFilter<"User"> | boolean
   tradeHistoryVisible?: Prisma.BoolFilter<"User"> | boolean
   posts?: Prisma.PostListRelationFilter
@@ -415,6 +429,7 @@ export type UserOrderByWithAggregationInput = {
   isSystem?: Prisma.SortOrder
   pendingBio?: Prisma.SortOrderInput | Prisma.SortOrder
   isPendingScreening?: Prisma.SortOrder
+  version?: Prisma.SortOrder
   emailVisible?: Prisma.SortOrder
   tradeHistoryVisible?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
@@ -440,6 +455,7 @@ export type UserScalarWhereWithAggregatesInput = {
   isSystem?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   pendingBio?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   isPendingScreening?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
+  version?: Prisma.IntWithAggregatesFilter<"User"> | number
   emailVisible?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   tradeHistoryVisible?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
 }
@@ -456,6 +472,7 @@ export type UserCreateInput = {
   isSystem?: boolean
   pendingBio?: string | null
   isPendingScreening?: boolean
+  version?: number
   emailVisible?: boolean
   tradeHistoryVisible?: boolean
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
@@ -498,6 +515,7 @@ export type UserUncheckedCreateInput = {
   isSystem?: boolean
   pendingBio?: string | null
   isPendingScreening?: boolean
+  version?: number
   emailVisible?: boolean
   tradeHistoryVisible?: boolean
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
@@ -539,6 +557,7 @@ export type UserUpdateInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   emailVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tradeHistoryVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
@@ -581,6 +600,7 @@ export type UserUncheckedUpdateInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   emailVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tradeHistoryVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
@@ -623,6 +643,7 @@ export type UserCreateManyInput = {
   isSystem?: boolean
   pendingBio?: string | null
   isPendingScreening?: boolean
+  version?: number
   emailVisible?: boolean
   tradeHistoryVisible?: boolean
 }
@@ -639,6 +660,7 @@ export type UserUpdateManyMutationInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   emailVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tradeHistoryVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
@@ -656,6 +678,7 @@ export type UserUncheckedUpdateManyInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   emailVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tradeHistoryVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
@@ -673,12 +696,14 @@ export type UserCountOrderByAggregateInput = {
   isSystem?: Prisma.SortOrder
   pendingBio?: Prisma.SortOrder
   isPendingScreening?: Prisma.SortOrder
+  version?: Prisma.SortOrder
   emailVisible?: Prisma.SortOrder
   tradeHistoryVisible?: Prisma.SortOrder
 }
 
 export type UserAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  version?: Prisma.SortOrder
 }
 
 export type UserMaxOrderByAggregateInput = {
@@ -694,6 +719,7 @@ export type UserMaxOrderByAggregateInput = {
   isSystem?: Prisma.SortOrder
   pendingBio?: Prisma.SortOrder
   isPendingScreening?: Prisma.SortOrder
+  version?: Prisma.SortOrder
   emailVisible?: Prisma.SortOrder
   tradeHistoryVisible?: Prisma.SortOrder
 }
@@ -711,12 +737,14 @@ export type UserMinOrderByAggregateInput = {
   isSystem?: Prisma.SortOrder
   pendingBio?: Prisma.SortOrder
   isPendingScreening?: Prisma.SortOrder
+  version?: Prisma.SortOrder
   emailVisible?: Prisma.SortOrder
   tradeHistoryVisible?: Prisma.SortOrder
 }
 
 export type UserSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  version?: Prisma.SortOrder
 }
 
 export type UserScalarRelationFilter = {
@@ -1125,6 +1153,7 @@ export type UserCreateWithoutInitiatedDMsInput = {
   isSystem?: boolean
   pendingBio?: string | null
   isPendingScreening?: boolean
+  version?: number
   emailVisible?: boolean
   tradeHistoryVisible?: boolean
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
@@ -1166,6 +1195,7 @@ export type UserUncheckedCreateWithoutInitiatedDMsInput = {
   isSystem?: boolean
   pendingBio?: string | null
   isPendingScreening?: boolean
+  version?: number
   emailVisible?: boolean
   tradeHistoryVisible?: boolean
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
@@ -1211,6 +1241,7 @@ export type UserCreateWithoutRecievedDMsInput = {
   isSystem?: boolean
   pendingBio?: string | null
   isPendingScreening?: boolean
+  version?: number
   emailVisible?: boolean
   tradeHistoryVisible?: boolean
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
@@ -1252,6 +1283,7 @@ export type UserUncheckedCreateWithoutRecievedDMsInput = {
   isSystem?: boolean
   pendingBio?: string | null
   isPendingScreening?: boolean
+  version?: number
   emailVisible?: boolean
   tradeHistoryVisible?: boolean
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
@@ -1308,6 +1340,7 @@ export type UserUpdateWithoutInitiatedDMsInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   emailVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tradeHistoryVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
@@ -1349,6 +1382,7 @@ export type UserUncheckedUpdateWithoutInitiatedDMsInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   emailVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tradeHistoryVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
@@ -1400,6 +1434,7 @@ export type UserUpdateWithoutRecievedDMsInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   emailVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tradeHistoryVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
@@ -1441,6 +1476,7 @@ export type UserUncheckedUpdateWithoutRecievedDMsInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   emailVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tradeHistoryVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
@@ -1481,6 +1517,7 @@ export type UserCreateWithoutSMessagesInput = {
   isSystem?: boolean
   pendingBio?: string | null
   isPendingScreening?: boolean
+  version?: number
   emailVisible?: boolean
   tradeHistoryVisible?: boolean
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
@@ -1522,6 +1559,7 @@ export type UserUncheckedCreateWithoutSMessagesInput = {
   isSystem?: boolean
   pendingBio?: string | null
   isPendingScreening?: boolean
+  version?: number
   emailVisible?: boolean
   tradeHistoryVisible?: boolean
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
@@ -1567,6 +1605,7 @@ export type UserCreateWithoutRMessagesInput = {
   isSystem?: boolean
   pendingBio?: string | null
   isPendingScreening?: boolean
+  version?: number
   emailVisible?: boolean
   tradeHistoryVisible?: boolean
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
@@ -1608,6 +1647,7 @@ export type UserUncheckedCreateWithoutRMessagesInput = {
   isSystem?: boolean
   pendingBio?: string | null
   isPendingScreening?: boolean
+  version?: number
   emailVisible?: boolean
   tradeHistoryVisible?: boolean
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
@@ -1664,6 +1704,7 @@ export type UserUpdateWithoutSMessagesInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   emailVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tradeHistoryVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
@@ -1705,6 +1746,7 @@ export type UserUncheckedUpdateWithoutSMessagesInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   emailVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tradeHistoryVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
@@ -1756,6 +1798,7 @@ export type UserUpdateWithoutRMessagesInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   emailVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tradeHistoryVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
@@ -1797,6 +1840,7 @@ export type UserUncheckedUpdateWithoutRMessagesInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   emailVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tradeHistoryVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
@@ -1837,6 +1881,7 @@ export type UserCreateWithoutLogsInput = {
   isSystem?: boolean
   pendingBio?: string | null
   isPendingScreening?: boolean
+  version?: number
   emailVisible?: boolean
   tradeHistoryVisible?: boolean
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
@@ -1878,6 +1923,7 @@ export type UserUncheckedCreateWithoutLogsInput = {
   isSystem?: boolean
   pendingBio?: string | null
   isPendingScreening?: boolean
+  version?: number
   emailVisible?: boolean
   tradeHistoryVisible?: boolean
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
@@ -1934,6 +1980,7 @@ export type UserUpdateWithoutLogsInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   emailVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tradeHistoryVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
@@ -1975,6 +2022,7 @@ export type UserUncheckedUpdateWithoutLogsInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   emailVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tradeHistoryVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
@@ -2015,6 +2063,7 @@ export type UserCreateWithoutPostsInput = {
   isSystem?: boolean
   pendingBio?: string | null
   isPendingScreening?: boolean
+  version?: number
   emailVisible?: boolean
   tradeHistoryVisible?: boolean
   reqTrades?: Prisma.TradeCreateNestedManyWithoutRequesterInput
@@ -2056,6 +2105,7 @@ export type UserUncheckedCreateWithoutPostsInput = {
   isSystem?: boolean
   pendingBio?: string | null
   isPendingScreening?: boolean
+  version?: number
   emailVisible?: boolean
   tradeHistoryVisible?: boolean
   reqTrades?: Prisma.TradeUncheckedCreateNestedManyWithoutRequesterInput
@@ -2112,6 +2162,7 @@ export type UserUpdateWithoutPostsInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   emailVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tradeHistoryVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   reqTrades?: Prisma.TradeUpdateManyWithoutRequesterNestedInput
@@ -2153,6 +2204,7 @@ export type UserUncheckedUpdateWithoutPostsInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   emailVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tradeHistoryVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   reqTrades?: Prisma.TradeUncheckedUpdateManyWithoutRequesterNestedInput
@@ -2193,6 +2245,7 @@ export type UserCreateWithoutOwnedTradesInput = {
   isSystem?: boolean
   pendingBio?: string | null
   isPendingScreening?: boolean
+  version?: number
   emailVisible?: boolean
   tradeHistoryVisible?: boolean
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
@@ -2234,6 +2287,7 @@ export type UserUncheckedCreateWithoutOwnedTradesInput = {
   isSystem?: boolean
   pendingBio?: string | null
   isPendingScreening?: boolean
+  version?: number
   emailVisible?: boolean
   tradeHistoryVisible?: boolean
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
@@ -2279,6 +2333,7 @@ export type UserCreateWithoutReqTradesInput = {
   isSystem?: boolean
   pendingBio?: string | null
   isPendingScreening?: boolean
+  version?: number
   emailVisible?: boolean
   tradeHistoryVisible?: boolean
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
@@ -2320,6 +2375,7 @@ export type UserUncheckedCreateWithoutReqTradesInput = {
   isSystem?: boolean
   pendingBio?: string | null
   isPendingScreening?: boolean
+  version?: number
   emailVisible?: boolean
   tradeHistoryVisible?: boolean
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
@@ -2376,6 +2432,7 @@ export type UserUpdateWithoutOwnedTradesInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   emailVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tradeHistoryVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
@@ -2417,6 +2474,7 @@ export type UserUncheckedUpdateWithoutOwnedTradesInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   emailVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tradeHistoryVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
@@ -2468,6 +2526,7 @@ export type UserUpdateWithoutReqTradesInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   emailVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tradeHistoryVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
@@ -2509,6 +2568,7 @@ export type UserUncheckedUpdateWithoutReqTradesInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   emailVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tradeHistoryVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
@@ -2549,6 +2609,7 @@ export type UserCreateWithoutTradeOffersInput = {
   isSystem?: boolean
   pendingBio?: string | null
   isPendingScreening?: boolean
+  version?: number
   emailVisible?: boolean
   tradeHistoryVisible?: boolean
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
@@ -2590,6 +2651,7 @@ export type UserUncheckedCreateWithoutTradeOffersInput = {
   isSystem?: boolean
   pendingBio?: string | null
   isPendingScreening?: boolean
+  version?: number
   emailVisible?: boolean
   tradeHistoryVisible?: boolean
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
@@ -2646,6 +2708,7 @@ export type UserUpdateWithoutTradeOffersInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   emailVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tradeHistoryVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
@@ -2687,6 +2750,7 @@ export type UserUncheckedUpdateWithoutTradeOffersInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   emailVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tradeHistoryVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
@@ -2727,6 +2791,7 @@ export type UserCreateWithoutTradeRequestsInput = {
   isSystem?: boolean
   pendingBio?: string | null
   isPendingScreening?: boolean
+  version?: number
   emailVisible?: boolean
   tradeHistoryVisible?: boolean
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
@@ -2768,6 +2833,7 @@ export type UserUncheckedCreateWithoutTradeRequestsInput = {
   isSystem?: boolean
   pendingBio?: string | null
   isPendingScreening?: boolean
+  version?: number
   emailVisible?: boolean
   tradeHistoryVisible?: boolean
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
@@ -2824,6 +2890,7 @@ export type UserUpdateWithoutTradeRequestsInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   emailVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tradeHistoryVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
@@ -2865,6 +2932,7 @@ export type UserUncheckedUpdateWithoutTradeRequestsInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   emailVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tradeHistoryVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
@@ -2905,6 +2973,7 @@ export type UserCreateWithoutCommentsInput = {
   isSystem?: boolean
   pendingBio?: string | null
   isPendingScreening?: boolean
+  version?: number
   emailVisible?: boolean
   tradeHistoryVisible?: boolean
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
@@ -2946,6 +3015,7 @@ export type UserUncheckedCreateWithoutCommentsInput = {
   isSystem?: boolean
   pendingBio?: string | null
   isPendingScreening?: boolean
+  version?: number
   emailVisible?: boolean
   tradeHistoryVisible?: boolean
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
@@ -3002,6 +3072,7 @@ export type UserUpdateWithoutCommentsInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   emailVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tradeHistoryVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
@@ -3043,6 +3114,7 @@ export type UserUncheckedUpdateWithoutCommentsInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   emailVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tradeHistoryVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
@@ -3083,6 +3155,7 @@ export type UserCreateWithoutProductsInput = {
   isSystem?: boolean
   pendingBio?: string | null
   isPendingScreening?: boolean
+  version?: number
   emailVisible?: boolean
   tradeHistoryVisible?: boolean
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
@@ -3124,6 +3197,7 @@ export type UserUncheckedCreateWithoutProductsInput = {
   isSystem?: boolean
   pendingBio?: string | null
   isPendingScreening?: boolean
+  version?: number
   emailVisible?: boolean
   tradeHistoryVisible?: boolean
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
@@ -3180,6 +3254,7 @@ export type UserUpdateWithoutProductsInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   emailVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tradeHistoryVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
@@ -3221,6 +3296,7 @@ export type UserUncheckedUpdateWithoutProductsInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   emailVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tradeHistoryVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
@@ -3261,6 +3337,7 @@ export type UserCreateWithoutServicesInput = {
   isSystem?: boolean
   pendingBio?: string | null
   isPendingScreening?: boolean
+  version?: number
   emailVisible?: boolean
   tradeHistoryVisible?: boolean
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
@@ -3302,6 +3379,7 @@ export type UserUncheckedCreateWithoutServicesInput = {
   isSystem?: boolean
   pendingBio?: string | null
   isPendingScreening?: boolean
+  version?: number
   emailVisible?: boolean
   tradeHistoryVisible?: boolean
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
@@ -3358,6 +3436,7 @@ export type UserUpdateWithoutServicesInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   emailVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tradeHistoryVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
@@ -3399,6 +3478,7 @@ export type UserUncheckedUpdateWithoutServicesInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   emailVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tradeHistoryVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
@@ -3439,6 +3519,7 @@ export type UserCreateWithoutSReviewsInput = {
   isSystem?: boolean
   pendingBio?: string | null
   isPendingScreening?: boolean
+  version?: number
   emailVisible?: boolean
   tradeHistoryVisible?: boolean
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
@@ -3480,6 +3561,7 @@ export type UserUncheckedCreateWithoutSReviewsInput = {
   isSystem?: boolean
   pendingBio?: string | null
   isPendingScreening?: boolean
+  version?: number
   emailVisible?: boolean
   tradeHistoryVisible?: boolean
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
@@ -3525,6 +3607,7 @@ export type UserCreateWithoutRReviewsInput = {
   isSystem?: boolean
   pendingBio?: string | null
   isPendingScreening?: boolean
+  version?: number
   emailVisible?: boolean
   tradeHistoryVisible?: boolean
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
@@ -3566,6 +3649,7 @@ export type UserUncheckedCreateWithoutRReviewsInput = {
   isSystem?: boolean
   pendingBio?: string | null
   isPendingScreening?: boolean
+  version?: number
   emailVisible?: boolean
   tradeHistoryVisible?: boolean
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
@@ -3622,6 +3706,7 @@ export type UserUpdateWithoutSReviewsInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   emailVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tradeHistoryVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
@@ -3663,6 +3748,7 @@ export type UserUncheckedUpdateWithoutSReviewsInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   emailVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tradeHistoryVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
@@ -3714,6 +3800,7 @@ export type UserUpdateWithoutRReviewsInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   emailVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tradeHistoryVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
@@ -3755,6 +3842,7 @@ export type UserUncheckedUpdateWithoutRReviewsInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   emailVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tradeHistoryVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
@@ -3795,6 +3883,7 @@ export type UserCreateWithoutBlocksInitiatedInput = {
   isSystem?: boolean
   pendingBio?: string | null
   isPendingScreening?: boolean
+  version?: number
   emailVisible?: boolean
   tradeHistoryVisible?: boolean
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
@@ -3836,6 +3925,7 @@ export type UserUncheckedCreateWithoutBlocksInitiatedInput = {
   isSystem?: boolean
   pendingBio?: string | null
   isPendingScreening?: boolean
+  version?: number
   emailVisible?: boolean
   tradeHistoryVisible?: boolean
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
@@ -3881,6 +3971,7 @@ export type UserCreateWithoutBlocksReceivedInput = {
   isSystem?: boolean
   pendingBio?: string | null
   isPendingScreening?: boolean
+  version?: number
   emailVisible?: boolean
   tradeHistoryVisible?: boolean
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
@@ -3922,6 +4013,7 @@ export type UserUncheckedCreateWithoutBlocksReceivedInput = {
   isSystem?: boolean
   pendingBio?: string | null
   isPendingScreening?: boolean
+  version?: number
   emailVisible?: boolean
   tradeHistoryVisible?: boolean
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
@@ -3978,6 +4070,7 @@ export type UserUpdateWithoutBlocksInitiatedInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   emailVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tradeHistoryVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
@@ -4019,6 +4112,7 @@ export type UserUncheckedUpdateWithoutBlocksInitiatedInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   emailVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tradeHistoryVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
@@ -4070,6 +4164,7 @@ export type UserUpdateWithoutBlocksReceivedInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   emailVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tradeHistoryVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
@@ -4111,6 +4206,7 @@ export type UserUncheckedUpdateWithoutBlocksReceivedInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   emailVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tradeHistoryVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
@@ -4151,6 +4247,7 @@ export type UserCreateWithoutReportsFiledInput = {
   isSystem?: boolean
   pendingBio?: string | null
   isPendingScreening?: boolean
+  version?: number
   emailVisible?: boolean
   tradeHistoryVisible?: boolean
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
@@ -4192,6 +4289,7 @@ export type UserUncheckedCreateWithoutReportsFiledInput = {
   isSystem?: boolean
   pendingBio?: string | null
   isPendingScreening?: boolean
+  version?: number
   emailVisible?: boolean
   tradeHistoryVisible?: boolean
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
@@ -4237,6 +4335,7 @@ export type UserCreateWithoutReportsAgainstInput = {
   isSystem?: boolean
   pendingBio?: string | null
   isPendingScreening?: boolean
+  version?: number
   emailVisible?: boolean
   tradeHistoryVisible?: boolean
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
@@ -4278,6 +4377,7 @@ export type UserUncheckedCreateWithoutReportsAgainstInput = {
   isSystem?: boolean
   pendingBio?: string | null
   isPendingScreening?: boolean
+  version?: number
   emailVisible?: boolean
   tradeHistoryVisible?: boolean
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
@@ -4323,6 +4423,7 @@ export type UserCreateWithoutReportsResolvedInput = {
   isSystem?: boolean
   pendingBio?: string | null
   isPendingScreening?: boolean
+  version?: number
   emailVisible?: boolean
   tradeHistoryVisible?: boolean
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
@@ -4364,6 +4465,7 @@ export type UserUncheckedCreateWithoutReportsResolvedInput = {
   isSystem?: boolean
   pendingBio?: string | null
   isPendingScreening?: boolean
+  version?: number
   emailVisible?: boolean
   tradeHistoryVisible?: boolean
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
@@ -4420,6 +4522,7 @@ export type UserUpdateWithoutReportsFiledInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   emailVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tradeHistoryVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
@@ -4461,6 +4564,7 @@ export type UserUncheckedUpdateWithoutReportsFiledInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   emailVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tradeHistoryVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
@@ -4512,6 +4616,7 @@ export type UserUpdateWithoutReportsAgainstInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   emailVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tradeHistoryVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
@@ -4553,6 +4658,7 @@ export type UserUncheckedUpdateWithoutReportsAgainstInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   emailVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tradeHistoryVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
@@ -4604,6 +4710,7 @@ export type UserUpdateWithoutReportsResolvedInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   emailVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tradeHistoryVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
@@ -4645,6 +4752,7 @@ export type UserUncheckedUpdateWithoutReportsResolvedInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   emailVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tradeHistoryVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
@@ -4685,6 +4793,7 @@ export type UserCreateWithoutAppealsFiledInput = {
   isSystem?: boolean
   pendingBio?: string | null
   isPendingScreening?: boolean
+  version?: number
   emailVisible?: boolean
   tradeHistoryVisible?: boolean
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
@@ -4726,6 +4835,7 @@ export type UserUncheckedCreateWithoutAppealsFiledInput = {
   isSystem?: boolean
   pendingBio?: string | null
   isPendingScreening?: boolean
+  version?: number
   emailVisible?: boolean
   tradeHistoryVisible?: boolean
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
@@ -4771,6 +4881,7 @@ export type UserCreateWithoutAppealsResolvedInput = {
   isSystem?: boolean
   pendingBio?: string | null
   isPendingScreening?: boolean
+  version?: number
   emailVisible?: boolean
   tradeHistoryVisible?: boolean
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
@@ -4812,6 +4923,7 @@ export type UserUncheckedCreateWithoutAppealsResolvedInput = {
   isSystem?: boolean
   pendingBio?: string | null
   isPendingScreening?: boolean
+  version?: number
   emailVisible?: boolean
   tradeHistoryVisible?: boolean
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
@@ -4868,6 +4980,7 @@ export type UserUpdateWithoutAppealsFiledInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   emailVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tradeHistoryVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
@@ -4909,6 +5022,7 @@ export type UserUncheckedUpdateWithoutAppealsFiledInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   emailVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tradeHistoryVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
@@ -4960,6 +5074,7 @@ export type UserUpdateWithoutAppealsResolvedInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   emailVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tradeHistoryVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
@@ -5001,6 +5116,7 @@ export type UserUncheckedUpdateWithoutAppealsResolvedInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   emailVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tradeHistoryVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
@@ -5041,6 +5157,7 @@ export type UserCreateWithoutMediaInput = {
   isSystem?: boolean
   pendingBio?: string | null
   isPendingScreening?: boolean
+  version?: number
   emailVisible?: boolean
   tradeHistoryVisible?: boolean
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
@@ -5082,6 +5199,7 @@ export type UserUncheckedCreateWithoutMediaInput = {
   isSystem?: boolean
   pendingBio?: string | null
   isPendingScreening?: boolean
+  version?: number
   emailVisible?: boolean
   tradeHistoryVisible?: boolean
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
@@ -5138,6 +5256,7 @@ export type UserUpdateWithoutMediaInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   emailVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tradeHistoryVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
@@ -5179,6 +5298,7 @@ export type UserUncheckedUpdateWithoutMediaInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   emailVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tradeHistoryVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
@@ -5219,6 +5339,7 @@ export type UserCreateWithoutUserMediaInput = {
   isSystem?: boolean
   pendingBio?: string | null
   isPendingScreening?: boolean
+  version?: number
   emailVisible?: boolean
   tradeHistoryVisible?: boolean
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
@@ -5260,6 +5381,7 @@ export type UserUncheckedCreateWithoutUserMediaInput = {
   isSystem?: boolean
   pendingBio?: string | null
   isPendingScreening?: boolean
+  version?: number
   emailVisible?: boolean
   tradeHistoryVisible?: boolean
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
@@ -5316,6 +5438,7 @@ export type UserUpdateWithoutUserMediaInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   emailVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tradeHistoryVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
@@ -5357,6 +5480,7 @@ export type UserUncheckedUpdateWithoutUserMediaInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   emailVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tradeHistoryVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
@@ -5397,6 +5521,7 @@ export type UserCreateWithoutNotificationsInput = {
   isSystem?: boolean
   pendingBio?: string | null
   isPendingScreening?: boolean
+  version?: number
   emailVisible?: boolean
   tradeHistoryVisible?: boolean
   posts?: Prisma.PostCreateNestedManyWithoutUserInput
@@ -5438,6 +5563,7 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   isSystem?: boolean
   pendingBio?: string | null
   isPendingScreening?: boolean
+  version?: number
   emailVisible?: boolean
   tradeHistoryVisible?: boolean
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutUserInput
@@ -5494,6 +5620,7 @@ export type UserUpdateWithoutNotificationsInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   emailVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tradeHistoryVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUpdateManyWithoutUserNestedInput
@@ -5535,6 +5662,7 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pendingBio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   emailVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tradeHistoryVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   posts?: Prisma.PostUncheckedUpdateManyWithoutUserNestedInput
@@ -5823,6 +5951,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   isSystem?: boolean
   pendingBio?: boolean
   isPendingScreening?: boolean
+  version?: boolean
   emailVisible?: boolean
   tradeHistoryVisible?: boolean
   posts?: boolean | Prisma.User$postsArgs<ExtArgs>
@@ -5866,6 +5995,7 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   isSystem?: boolean
   pendingBio?: boolean
   isPendingScreening?: boolean
+  version?: boolean
   emailVisible?: boolean
   tradeHistoryVisible?: boolean
 }, ExtArgs["result"]["user"]>
@@ -5883,6 +6013,7 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   isSystem?: boolean
   pendingBio?: boolean
   isPendingScreening?: boolean
+  version?: boolean
   emailVisible?: boolean
   tradeHistoryVisible?: boolean
 }, ExtArgs["result"]["user"]>
@@ -5900,11 +6031,12 @@ export type UserSelectScalar = {
   isSystem?: boolean
   pendingBio?: boolean
   isPendingScreening?: boolean
+  version?: boolean
   emailVisible?: boolean
   tradeHistoryVisible?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "googleId" | "name" | "email" | "phone" | "role" | "bio" | "createdAt" | "zipCode" | "isSystem" | "pendingBio" | "isPendingScreening" | "emailVisible" | "tradeHistoryVisible", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "googleId" | "name" | "email" | "phone" | "role" | "bio" | "createdAt" | "zipCode" | "isSystem" | "pendingBio" | "isPendingScreening" | "version" | "emailVisible" | "tradeHistoryVisible", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   posts?: boolean | Prisma.User$postsArgs<ExtArgs>
   reqTrades?: boolean | Prisma.User$reqTradesArgs<ExtArgs>
@@ -5978,6 +6110,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     isSystem: boolean
     pendingBio: string | null
     isPendingScreening: boolean
+    version: number
     emailVisible: boolean
     tradeHistoryVisible: boolean
   }, ExtArgs["result"]["user"]>
@@ -6440,6 +6573,7 @@ export interface UserFieldRefs {
   readonly isSystem: Prisma.FieldRef<"User", 'Boolean'>
   readonly pendingBio: Prisma.FieldRef<"User", 'String'>
   readonly isPendingScreening: Prisma.FieldRef<"User", 'Boolean'>
+  readonly version: Prisma.FieldRef<"User", 'Int'>
   readonly emailVisible: Prisma.FieldRef<"User", 'Boolean'>
   readonly tradeHistoryVisible: Prisma.FieldRef<"User", 'Boolean'>
 }

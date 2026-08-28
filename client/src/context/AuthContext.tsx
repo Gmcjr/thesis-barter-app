@@ -3,6 +3,17 @@ import React, {
   createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode,
 } from 'react';
 
+// Which roles count as moderator
+export const MODERATOR_ROLES = ['MODERATOR', 'ADMIN'] as const;
+export type ModeratorRole = typeof MODERATOR_ROLES[number];
+export type UserRole = 'USER' | ModeratorRole | null;
+
+// Safe for logged-out/loading users, returns false
+export function isModerator(role: UserRole): boolean {
+  if (role === null) return false;
+  return (MODERATOR_ROLES as readonly string[]).includes(role);
+}
+
 interface AuthUser {
   id: number;
   name: string | null;

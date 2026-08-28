@@ -7,6 +7,7 @@ import http from 'http';
 import router from './routes/router.js';
 import { initSocket } from './middleware/socket.js';
 import { startJobWorker } from './services/jobs.js';
+import { startNotificationCleanup } from './services/notificationsCleanup.js';
 
 dotenv.config({ path: path.join('config', '.env') });
 
@@ -51,5 +52,6 @@ app.get(/.*/, (req, res) => {
 const httpServer = http.createServer(app);
 initSocket(httpServer, sessionMiddleware);
 startJobWorker();
+startNotificationCleanup();
 
 httpServer.listen(port, () => console.info(`Listening on ${process.env.CLIENT_URL}`));

@@ -30,12 +30,14 @@ export type CommentAvgAggregateOutputType = {
   id: number | null
   postId: number | null
   userId: number | null
+  version: number | null
 }
 
 export type CommentSumAggregateOutputType = {
   id: number | null
   postId: number | null
   userId: number | null
+  version: number | null
 }
 
 export type CommentMinAggregateOutputType = {
@@ -46,6 +48,7 @@ export type CommentMinAggregateOutputType = {
   userId: number | null
   isPendingScreening: boolean | null
   isRemoved: boolean | null
+  version: number | null
 }
 
 export type CommentMaxAggregateOutputType = {
@@ -56,6 +59,7 @@ export type CommentMaxAggregateOutputType = {
   userId: number | null
   isPendingScreening: boolean | null
   isRemoved: boolean | null
+  version: number | null
 }
 
 export type CommentCountAggregateOutputType = {
@@ -66,6 +70,7 @@ export type CommentCountAggregateOutputType = {
   userId: number
   isPendingScreening: number
   isRemoved: number
+  version: number
   _all: number
 }
 
@@ -74,12 +79,14 @@ export type CommentAvgAggregateInputType = {
   id?: true
   postId?: true
   userId?: true
+  version?: true
 }
 
 export type CommentSumAggregateInputType = {
   id?: true
   postId?: true
   userId?: true
+  version?: true
 }
 
 export type CommentMinAggregateInputType = {
@@ -90,6 +97,7 @@ export type CommentMinAggregateInputType = {
   userId?: true
   isPendingScreening?: true
   isRemoved?: true
+  version?: true
 }
 
 export type CommentMaxAggregateInputType = {
@@ -100,6 +108,7 @@ export type CommentMaxAggregateInputType = {
   userId?: true
   isPendingScreening?: true
   isRemoved?: true
+  version?: true
 }
 
 export type CommentCountAggregateInputType = {
@@ -110,6 +119,7 @@ export type CommentCountAggregateInputType = {
   userId?: true
   isPendingScreening?: true
   isRemoved?: true
+  version?: true
   _all?: true
 }
 
@@ -207,6 +217,7 @@ export type CommentGroupByOutputType = {
   userId: number
   isPendingScreening: boolean
   isRemoved: boolean
+  version: number
   _count: CommentCountAggregateOutputType | null
   _avg: CommentAvgAggregateOutputType | null
   _sum: CommentSumAggregateOutputType | null
@@ -240,6 +251,7 @@ export type CommentWhereInput = {
   userId?: Prisma.IntFilter<"Comment"> | number
   isPendingScreening?: Prisma.BoolFilter<"Comment"> | boolean
   isRemoved?: Prisma.BoolFilter<"Comment"> | boolean
+  version?: Prisma.IntFilter<"Comment"> | number
   post?: Prisma.XOR<Prisma.PostScalarRelationFilter, Prisma.PostWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   commentMedia?: Prisma.CommentMediaListRelationFilter
@@ -254,6 +266,7 @@ export type CommentOrderByWithRelationInput = {
   userId?: Prisma.SortOrder
   isPendingScreening?: Prisma.SortOrder
   isRemoved?: Prisma.SortOrder
+  version?: Prisma.SortOrder
   post?: Prisma.PostOrderByWithRelationInput
   user?: Prisma.UserOrderByWithRelationInput
   commentMedia?: Prisma.CommentMediaOrderByRelationAggregateInput
@@ -271,6 +284,7 @@ export type CommentWhereUniqueInput = Prisma.AtLeast<{
   userId?: Prisma.IntFilter<"Comment"> | number
   isPendingScreening?: Prisma.BoolFilter<"Comment"> | boolean
   isRemoved?: Prisma.BoolFilter<"Comment"> | boolean
+  version?: Prisma.IntFilter<"Comment"> | number
   post?: Prisma.XOR<Prisma.PostScalarRelationFilter, Prisma.PostWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   commentMedia?: Prisma.CommentMediaListRelationFilter
@@ -285,6 +299,7 @@ export type CommentOrderByWithAggregationInput = {
   userId?: Prisma.SortOrder
   isPendingScreening?: Prisma.SortOrder
   isRemoved?: Prisma.SortOrder
+  version?: Prisma.SortOrder
   _count?: Prisma.CommentCountOrderByAggregateInput
   _avg?: Prisma.CommentAvgOrderByAggregateInput
   _max?: Prisma.CommentMaxOrderByAggregateInput
@@ -303,6 +318,7 @@ export type CommentScalarWhereWithAggregatesInput = {
   userId?: Prisma.IntWithAggregatesFilter<"Comment"> | number
   isPendingScreening?: Prisma.BoolWithAggregatesFilter<"Comment"> | boolean
   isRemoved?: Prisma.BoolWithAggregatesFilter<"Comment"> | boolean
+  version?: Prisma.IntWithAggregatesFilter<"Comment"> | number
 }
 
 export type CommentCreateInput = {
@@ -310,6 +326,7 @@ export type CommentCreateInput = {
   createdAt?: Date | string
   isPendingScreening?: boolean
   isRemoved?: boolean
+  version?: number
   post: Prisma.PostCreateNestedOneWithoutCommentsInput
   user: Prisma.UserCreateNestedOneWithoutCommentsInput
   commentMedia?: Prisma.CommentMediaCreateNestedManyWithoutCommentInput
@@ -324,6 +341,7 @@ export type CommentUncheckedCreateInput = {
   userId: number
   isPendingScreening?: boolean
   isRemoved?: boolean
+  version?: number
   commentMedia?: Prisma.CommentMediaUncheckedCreateNestedManyWithoutCommentInput
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutCommentInput
 }
@@ -333,6 +351,7 @@ export type CommentUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   post?: Prisma.PostUpdateOneRequiredWithoutCommentsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutCommentsNestedInput
   commentMedia?: Prisma.CommentMediaUpdateManyWithoutCommentNestedInput
@@ -347,6 +366,7 @@ export type CommentUncheckedUpdateInput = {
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   commentMedia?: Prisma.CommentMediaUncheckedUpdateManyWithoutCommentNestedInput
   reports?: Prisma.ReportUncheckedUpdateManyWithoutCommentNestedInput
 }
@@ -359,6 +379,7 @@ export type CommentCreateManyInput = {
   userId: number
   isPendingScreening?: boolean
   isRemoved?: boolean
+  version?: number
 }
 
 export type CommentUpdateManyMutationInput = {
@@ -366,6 +387,7 @@ export type CommentUpdateManyMutationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type CommentUncheckedUpdateManyInput = {
@@ -376,6 +398,7 @@ export type CommentUncheckedUpdateManyInput = {
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type CommentListRelationFilter = {
@@ -396,12 +419,14 @@ export type CommentCountOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   isPendingScreening?: Prisma.SortOrder
   isRemoved?: Prisma.SortOrder
+  version?: Prisma.SortOrder
 }
 
 export type CommentAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
   postId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  version?: Prisma.SortOrder
 }
 
 export type CommentMaxOrderByAggregateInput = {
@@ -412,6 +437,7 @@ export type CommentMaxOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   isPendingScreening?: Prisma.SortOrder
   isRemoved?: Prisma.SortOrder
+  version?: Prisma.SortOrder
 }
 
 export type CommentMinOrderByAggregateInput = {
@@ -422,12 +448,14 @@ export type CommentMinOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   isPendingScreening?: Prisma.SortOrder
   isRemoved?: Prisma.SortOrder
+  version?: Prisma.SortOrder
 }
 
 export type CommentSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
   postId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  version?: Prisma.SortOrder
 }
 
 export type CommentNullableScalarRelationFilter = {
@@ -559,6 +587,7 @@ export type CommentCreateWithoutUserInput = {
   createdAt?: Date | string
   isPendingScreening?: boolean
   isRemoved?: boolean
+  version?: number
   post: Prisma.PostCreateNestedOneWithoutCommentsInput
   commentMedia?: Prisma.CommentMediaCreateNestedManyWithoutCommentInput
   reports?: Prisma.ReportCreateNestedManyWithoutCommentInput
@@ -571,6 +600,7 @@ export type CommentUncheckedCreateWithoutUserInput = {
   postId: number
   isPendingScreening?: boolean
   isRemoved?: boolean
+  version?: number
   commentMedia?: Prisma.CommentMediaUncheckedCreateNestedManyWithoutCommentInput
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutCommentInput
 }
@@ -612,6 +642,7 @@ export type CommentScalarWhereInput = {
   userId?: Prisma.IntFilter<"Comment"> | number
   isPendingScreening?: Prisma.BoolFilter<"Comment"> | boolean
   isRemoved?: Prisma.BoolFilter<"Comment"> | boolean
+  version?: Prisma.IntFilter<"Comment"> | number
 }
 
 export type CommentCreateWithoutPostInput = {
@@ -619,6 +650,7 @@ export type CommentCreateWithoutPostInput = {
   createdAt?: Date | string
   isPendingScreening?: boolean
   isRemoved?: boolean
+  version?: number
   user: Prisma.UserCreateNestedOneWithoutCommentsInput
   commentMedia?: Prisma.CommentMediaCreateNestedManyWithoutCommentInput
   reports?: Prisma.ReportCreateNestedManyWithoutCommentInput
@@ -631,6 +663,7 @@ export type CommentUncheckedCreateWithoutPostInput = {
   userId: number
   isPendingScreening?: boolean
   isRemoved?: boolean
+  version?: number
   commentMedia?: Prisma.CommentMediaUncheckedCreateNestedManyWithoutCommentInput
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutCommentInput
 }
@@ -666,6 +699,7 @@ export type CommentCreateWithoutReportsInput = {
   createdAt?: Date | string
   isPendingScreening?: boolean
   isRemoved?: boolean
+  version?: number
   post: Prisma.PostCreateNestedOneWithoutCommentsInput
   user: Prisma.UserCreateNestedOneWithoutCommentsInput
   commentMedia?: Prisma.CommentMediaCreateNestedManyWithoutCommentInput
@@ -679,6 +713,7 @@ export type CommentUncheckedCreateWithoutReportsInput = {
   userId: number
   isPendingScreening?: boolean
   isRemoved?: boolean
+  version?: number
   commentMedia?: Prisma.CommentMediaUncheckedCreateNestedManyWithoutCommentInput
 }
 
@@ -703,6 +738,7 @@ export type CommentUpdateWithoutReportsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   post?: Prisma.PostUpdateOneRequiredWithoutCommentsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutCommentsNestedInput
   commentMedia?: Prisma.CommentMediaUpdateManyWithoutCommentNestedInput
@@ -716,6 +752,7 @@ export type CommentUncheckedUpdateWithoutReportsInput = {
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   commentMedia?: Prisma.CommentMediaUncheckedUpdateManyWithoutCommentNestedInput
 }
 
@@ -724,6 +761,7 @@ export type CommentCreateWithoutCommentMediaInput = {
   createdAt?: Date | string
   isPendingScreening?: boolean
   isRemoved?: boolean
+  version?: number
   post: Prisma.PostCreateNestedOneWithoutCommentsInput
   user: Prisma.UserCreateNestedOneWithoutCommentsInput
   reports?: Prisma.ReportCreateNestedManyWithoutCommentInput
@@ -737,6 +775,7 @@ export type CommentUncheckedCreateWithoutCommentMediaInput = {
   userId: number
   isPendingScreening?: boolean
   isRemoved?: boolean
+  version?: number
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutCommentInput
 }
 
@@ -761,6 +800,7 @@ export type CommentUpdateWithoutCommentMediaInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   post?: Prisma.PostUpdateOneRequiredWithoutCommentsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutCommentsNestedInput
   reports?: Prisma.ReportUpdateManyWithoutCommentNestedInput
@@ -774,6 +814,7 @@ export type CommentUncheckedUpdateWithoutCommentMediaInput = {
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   reports?: Prisma.ReportUncheckedUpdateManyWithoutCommentNestedInput
 }
 
@@ -784,6 +825,7 @@ export type CommentCreateManyUserInput = {
   postId: number
   isPendingScreening?: boolean
   isRemoved?: boolean
+  version?: number
 }
 
 export type CommentUpdateWithoutUserInput = {
@@ -791,6 +833,7 @@ export type CommentUpdateWithoutUserInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   post?: Prisma.PostUpdateOneRequiredWithoutCommentsNestedInput
   commentMedia?: Prisma.CommentMediaUpdateManyWithoutCommentNestedInput
   reports?: Prisma.ReportUpdateManyWithoutCommentNestedInput
@@ -803,6 +846,7 @@ export type CommentUncheckedUpdateWithoutUserInput = {
   postId?: Prisma.IntFieldUpdateOperationsInput | number
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   commentMedia?: Prisma.CommentMediaUncheckedUpdateManyWithoutCommentNestedInput
   reports?: Prisma.ReportUncheckedUpdateManyWithoutCommentNestedInput
 }
@@ -814,6 +858,7 @@ export type CommentUncheckedUpdateManyWithoutUserInput = {
   postId?: Prisma.IntFieldUpdateOperationsInput | number
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type CommentCreateManyPostInput = {
@@ -823,6 +868,7 @@ export type CommentCreateManyPostInput = {
   userId: number
   isPendingScreening?: boolean
   isRemoved?: boolean
+  version?: number
 }
 
 export type CommentUpdateWithoutPostInput = {
@@ -830,6 +876,7 @@ export type CommentUpdateWithoutPostInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   user?: Prisma.UserUpdateOneRequiredWithoutCommentsNestedInput
   commentMedia?: Prisma.CommentMediaUpdateManyWithoutCommentNestedInput
   reports?: Prisma.ReportUpdateManyWithoutCommentNestedInput
@@ -842,6 +889,7 @@ export type CommentUncheckedUpdateWithoutPostInput = {
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   commentMedia?: Prisma.CommentMediaUncheckedUpdateManyWithoutCommentNestedInput
   reports?: Prisma.ReportUncheckedUpdateManyWithoutCommentNestedInput
 }
@@ -853,6 +901,7 @@ export type CommentUncheckedUpdateManyWithoutPostInput = {
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 
@@ -903,6 +952,7 @@ export type CommentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   userId?: boolean
   isPendingScreening?: boolean
   isRemoved?: boolean
+  version?: boolean
   post?: boolean | Prisma.PostDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   commentMedia?: boolean | Prisma.Comment$commentMediaArgs<ExtArgs>
@@ -918,6 +968,7 @@ export type CommentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   userId?: boolean
   isPendingScreening?: boolean
   isRemoved?: boolean
+  version?: boolean
   post?: boolean | Prisma.PostDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["comment"]>
@@ -930,6 +981,7 @@ export type CommentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   userId?: boolean
   isPendingScreening?: boolean
   isRemoved?: boolean
+  version?: boolean
   post?: boolean | Prisma.PostDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["comment"]>
@@ -942,9 +994,10 @@ export type CommentSelectScalar = {
   userId?: boolean
   isPendingScreening?: boolean
   isRemoved?: boolean
+  version?: boolean
 }
 
-export type CommentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "text" | "createdAt" | "postId" | "userId" | "isPendingScreening" | "isRemoved", ExtArgs["result"]["comment"]>
+export type CommentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "text" | "createdAt" | "postId" | "userId" | "isPendingScreening" | "isRemoved" | "version", ExtArgs["result"]["comment"]>
 export type CommentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   post?: boolean | Prisma.PostDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -977,6 +1030,7 @@ export type $CommentPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     userId: number
     isPendingScreening: boolean
     isRemoved: boolean
+    version: number
   }, ExtArgs["result"]["comment"]>
   composites: {}
 }
@@ -1411,6 +1465,7 @@ export interface CommentFieldRefs {
   readonly userId: Prisma.FieldRef<"Comment", 'Int'>
   readonly isPendingScreening: Prisma.FieldRef<"Comment", 'Boolean'>
   readonly isRemoved: Prisma.FieldRef<"Comment", 'Boolean'>
+  readonly version: Prisma.FieldRef<"Comment", 'Int'>
 }
     
 

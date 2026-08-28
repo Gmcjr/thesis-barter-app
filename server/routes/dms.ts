@@ -3,8 +3,8 @@ import { prisma } from '../db/index.js';
 import requireAuth from '../middleware/requireAuth.js';
 import { isBlocked } from '../services/blocks.js';
 import { getIo } from '../middleware/socket';
-import { enqueueJob } from '../services/jobs.js';
 import { getAvatarUrlMap } from '../services/userMedia.js';
+import { enqueueJob } from '../services/jobQueue.js';
 
 const dms = Router();
 
@@ -23,7 +23,7 @@ dms.get('/', async (req, res) => {
       include: {
         user1: { select: { id: true, name: true } },
         user2: { select: { id: true, name: true } },
-        messages: { orderBy: { createdAt: 'desc' }, take: 1 },
+        messages: { where: { isRemoved: false }, orderBy: { createdAt: 'desc' }, take: 1 },
       },
     });
 

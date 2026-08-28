@@ -36,6 +36,7 @@ export type PostData = {
   updatedAt?: string;
   previewUrl?: string | null;
   fullUrl?: string | null;
+  imageUrls?: string[];
   tradeOffers?: {
     id: number;
     offererId: number;

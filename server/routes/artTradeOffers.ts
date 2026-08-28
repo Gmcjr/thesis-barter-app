@@ -6,8 +6,7 @@ import requireAuth from '../middleware/requireAuth.js';
 import { getDownloadUrl } from '../services/s3.js';
 import { getBlockedRelationshipIds, isBlocked } from '../services/blocks.js';
 import { Status } from '../db/generated/enums.js';
-import { queueScreening } from '../services/moderation.js';
-import { enqueueJob } from '../services/jobs.js';
+import { enqueueJob } from '../services/jobQueue.js';
 import { getAvatarUrlMap } from '../services/userMedia.js';
 
 const artTradeOffers = Router();
@@ -154,52 +153,45 @@ artTradeOffers.post('/', requireAuth, async (req, res) => {
       return res.status(400).json({ error: 'Post not found or trade already completed.' });
     }
 
-    const offer = await prisma.tradeOffer.create({
-      data: {
-        postId: Number(postId),
-        offererId,
-        message,
-        isPendingScreening: true,
-        tradeOfferMedia: {
-          create: [
-            { mediaId: Number(previewMediaId), sortOrder: 0 },
-            { mediaId: Number(fullMediaId), sortOrder: 1 },
-          ],
+    const offer = await prisma.$transaction(async (tx) => {
+      const created = await tx.tradeOffer.create({
+        data: {
+          postId: Number(postId),
+          offererId,
+          message,
+          isPendingScreening: true,
+          tradeOfferMedia: {
+            create: [
+              { mediaId: Number(previewMediaId), sortOrder: 0 },
+              { mediaId: Number(fullMediaId), sortOrder: 1 },
+            ],
+          },
         },
-      },
-      include: {
-        offerer: { select: { id: true, name: true, email: true } },
-        tradeOfferMedia: { include: { media: true } },
-      },
-    });
+        include: {
+          offerer: { select: { id: true, name: true, email: true } },
+          tradeOfferMedia: { include: { media: true } },
+        },
+      });
 
-    queueScreening({
-      targetType: 'TRADE_OFFER',
-      targetId: offer.id,
-      authorId: offererId,
-      text: message ?? '',
-      imageKeys: offer.tradeOfferMedia.map((m) => m.media.s3Key),
-
-      onApproved: async () => {
-        await prisma.tradeOffer.update({ where: { id: offer.id }, data: { isPendingScreening: false } });
-        const preview = message && message.length > 80 ? `${message.slice(0, 80)}...` : message;
-        await enqueueJob(prisma, 'SEND_NOTIFICATION', {
+      const preview = message && message.length > 80 ? `${message.slice(0, 80)}...` : message;
+      await enqueueJob(tx, 'SCREEN_CONTENT', {
+        targetType: 'TRADE_OFFER',
+        targetId: created.id,
+        authorId: offererId,
+        text: message ?? '',
+        imageKeys: created.tradeOfferMedia.map((m) => m.media.s3Key),
+        notifyOnApprove: {
           userId: post.userId,
           type: 'TRADE_OFFER_RECEIVED',
-          title: 'New trade offer on your post',
+          title: `New trade offer on "${post.title}"`,
           body: preview || undefined,
-          link: `/profile?postId=${postId}`,
+          link: `/profile/offers/${created.id}`,
           entityType: 'TRADE_OFFER',
-          entityId: offer.id,
-        });
-      },
+          entityId: created.id,
+        },
+      });
 
-      onRemoved: async () => {
-        await prisma.tradeOffer.update({
-          where: { id: offer.id },
-          data: { isPendingScreening: false, isRemoved: true },
-        });
-      },
+      return created;
     });
 
     return res.status(201).json(offer);
@@ -291,18 +283,18 @@ artTradeOffers.patch('/:offerId/approve', requireAuth, async (req, res) => {
         await enqueueJob(tx, 'SEND_NOTIFICATION', {
           userId: offer.post.userId,
           type: 'TRADE_OFFER_ACCEPTED',
-          title: 'Trade completed',
-          body: 'Your trade offer was fully approved and marked complete.',
-          link: '/profile?mine=true',
+          title: `Trade completed: "${offer.post.title}"`,
+          body: 'Your trade offer was fully approved and marked complete',
+          link: `/profile/history/${offer.postId}`,
           entityType: 'TRADE_OFFER',
           entityId: offerId,
         });
         await enqueueJob(tx, 'SEND_NOTIFICATION', {
           userId: offer.offererId,
           type: 'TRADE_OFFER_ACCEPTED',
-          title: 'Trade completed',
-          body: 'Your trade offer was fully approved and marked complete.',
-          link: '/profile?mine=true',
+          title: `Trade completed: "${offer.post.title}"`,
+          body: 'Your trade offer was fully approved and marked complete',
+          link: `/profile/history/${offer.postId}`,
           entityType: 'TRADE_OFFER',
           entityId: offerId,
         });
@@ -396,9 +388,9 @@ artTradeOffers.patch('/:offerId/accept', requireAuth, async (req, res) => {
       await enqueueJob(tx, 'SEND_NOTIFICATION', {
         userId: offer.offererId,
         type: 'TRADE_OFFER_ACCEPTED',
-        title: 'Your trade offer was accepted',
-        body: 'The post owner accepted your offer and marked the trade complete.',
-        link: '/profile?mine=true',
+        title: `Trade completed: "${offer.post.title}"`,
+        body: 'The post owner accepted your offer and marked the trade complete',
+        link: `/profile/history/${offer.postId}`,
         entityType: 'TRADE_OFFER',
         entityId: offerId,
       });

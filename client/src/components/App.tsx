@@ -4,7 +4,7 @@ import ThemeProvider from '@mui/system/ThemeProvider';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import getTheme from '../theme';
-import { AuthProvider } from '../context/AuthContext';
+import { AuthProvider, MODERATOR_ROLES } from '../context/AuthContext';
 import { ToastProvider } from '../context/ToastContext';
 import { SettingsProvider, useSettings } from '../context/SettingsContext';
 import { RouterProvider, Router, type RouteDef } from '../context/RouterContext';
@@ -27,11 +27,13 @@ const routes: RouteDef[] = [
     path: '/moderation',
     component: ModQueue,
     requiresAuth: true,
-    requiresRole: ['MODERATOR', 'ADMIN'],
+    requiresRole: [...MODERATOR_ROLES],
   },
   { path: '/blocked-users', component: BlockedUsers, requiresAuth: true },
   { path: '/profile', component: Profile, requiresAuth: true },
   { path: '/profile/:id', component: Profile },
+  { path: '/profile/offers/:offerId', component: Profile },
+  { path: '/profile/history/:postId', component: Profile },
   { path: '/messages', component: Messages, requiresAuth: true },
   { path: '/messages/:id', component: Messages, requiresAuth: true },
   { path: '/deleted-conversations', component: DeletedConversations, requiresAuth: true },

@@ -32,6 +32,7 @@ export type ReviewAvgAggregateOutputType = {
   reviewerId: number | null
   revieweeId: number | null
   rating: number | null
+  version: number | null
 }
 
 export type ReviewSumAggregateOutputType = {
@@ -40,6 +41,7 @@ export type ReviewSumAggregateOutputType = {
   reviewerId: number | null
   revieweeId: number | null
   rating: number | null
+  version: number | null
 }
 
 export type ReviewMinAggregateOutputType = {
@@ -52,6 +54,7 @@ export type ReviewMinAggregateOutputType = {
   createdAt: Date | null
   isPendingScreening: boolean | null
   isRemoved: boolean | null
+  version: number | null
 }
 
 export type ReviewMaxAggregateOutputType = {
@@ -64,6 +67,7 @@ export type ReviewMaxAggregateOutputType = {
   createdAt: Date | null
   isPendingScreening: boolean | null
   isRemoved: boolean | null
+  version: number | null
 }
 
 export type ReviewCountAggregateOutputType = {
@@ -76,6 +80,7 @@ export type ReviewCountAggregateOutputType = {
   createdAt: number
   isPendingScreening: number
   isRemoved: number
+  version: number
   _all: number
 }
 
@@ -86,6 +91,7 @@ export type ReviewAvgAggregateInputType = {
   reviewerId?: true
   revieweeId?: true
   rating?: true
+  version?: true
 }
 
 export type ReviewSumAggregateInputType = {
@@ -94,6 +100,7 @@ export type ReviewSumAggregateInputType = {
   reviewerId?: true
   revieweeId?: true
   rating?: true
+  version?: true
 }
 
 export type ReviewMinAggregateInputType = {
@@ -106,6 +113,7 @@ export type ReviewMinAggregateInputType = {
   createdAt?: true
   isPendingScreening?: true
   isRemoved?: true
+  version?: true
 }
 
 export type ReviewMaxAggregateInputType = {
@@ -118,6 +126,7 @@ export type ReviewMaxAggregateInputType = {
   createdAt?: true
   isPendingScreening?: true
   isRemoved?: true
+  version?: true
 }
 
 export type ReviewCountAggregateInputType = {
@@ -130,6 +139,7 @@ export type ReviewCountAggregateInputType = {
   createdAt?: true
   isPendingScreening?: true
   isRemoved?: true
+  version?: true
   _all?: true
 }
 
@@ -229,6 +239,7 @@ export type ReviewGroupByOutputType = {
   createdAt: Date
   isPendingScreening: boolean
   isRemoved: boolean
+  version: number
   _count: ReviewCountAggregateOutputType | null
   _avg: ReviewAvgAggregateOutputType | null
   _sum: ReviewSumAggregateOutputType | null
@@ -264,6 +275,7 @@ export type ReviewWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Review"> | Date | string
   isPendingScreening?: Prisma.BoolFilter<"Review"> | boolean
   isRemoved?: Prisma.BoolFilter<"Review"> | boolean
+  version?: Prisma.IntFilter<"Review"> | number
   trade?: Prisma.XOR<Prisma.TradeScalarRelationFilter, Prisma.TradeWhereInput>
   reviewer?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   reviewee?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -280,6 +292,7 @@ export type ReviewOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   isPendingScreening?: Prisma.SortOrder
   isRemoved?: Prisma.SortOrder
+  version?: Prisma.SortOrder
   trade?: Prisma.TradeOrderByWithRelationInput
   reviewer?: Prisma.UserOrderByWithRelationInput
   reviewee?: Prisma.UserOrderByWithRelationInput
@@ -300,6 +313,7 @@ export type ReviewWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Review"> | Date | string
   isPendingScreening?: Prisma.BoolFilter<"Review"> | boolean
   isRemoved?: Prisma.BoolFilter<"Review"> | boolean
+  version?: Prisma.IntFilter<"Review"> | number
   trade?: Prisma.XOR<Prisma.TradeScalarRelationFilter, Prisma.TradeWhereInput>
   reviewer?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   reviewee?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -316,6 +330,7 @@ export type ReviewOrderByWithAggregationInput = {
   createdAt?: Prisma.SortOrder
   isPendingScreening?: Prisma.SortOrder
   isRemoved?: Prisma.SortOrder
+  version?: Prisma.SortOrder
   _count?: Prisma.ReviewCountOrderByAggregateInput
   _avg?: Prisma.ReviewAvgOrderByAggregateInput
   _max?: Prisma.ReviewMaxOrderByAggregateInput
@@ -336,6 +351,7 @@ export type ReviewScalarWhereWithAggregatesInput = {
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Review"> | Date | string
   isPendingScreening?: Prisma.BoolWithAggregatesFilter<"Review"> | boolean
   isRemoved?: Prisma.BoolWithAggregatesFilter<"Review"> | boolean
+  version?: Prisma.IntWithAggregatesFilter<"Review"> | number
 }
 
 export type ReviewCreateInput = {
@@ -344,6 +360,7 @@ export type ReviewCreateInput = {
   createdAt?: Date | string
   isPendingScreening?: boolean
   isRemoved?: boolean
+  version?: number
   trade: Prisma.TradeCreateNestedOneWithoutReviewsInput
   reviewer: Prisma.UserCreateNestedOneWithoutSReviewsInput
   reviewee: Prisma.UserCreateNestedOneWithoutRReviewsInput
@@ -360,6 +377,7 @@ export type ReviewUncheckedCreateInput = {
   createdAt?: Date | string
   isPendingScreening?: boolean
   isRemoved?: boolean
+  version?: number
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutReviewInput
 }
 
@@ -369,6 +387,7 @@ export type ReviewUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   trade?: Prisma.TradeUpdateOneRequiredWithoutReviewsNestedInput
   reviewer?: Prisma.UserUpdateOneRequiredWithoutSReviewsNestedInput
   reviewee?: Prisma.UserUpdateOneRequiredWithoutRReviewsNestedInput
@@ -385,6 +404,7 @@ export type ReviewUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   reports?: Prisma.ReportUncheckedUpdateManyWithoutReviewNestedInput
 }
 
@@ -398,6 +418,7 @@ export type ReviewCreateManyInput = {
   createdAt?: Date | string
   isPendingScreening?: boolean
   isRemoved?: boolean
+  version?: number
 }
 
 export type ReviewUpdateManyMutationInput = {
@@ -406,6 +427,7 @@ export type ReviewUpdateManyMutationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type ReviewUncheckedUpdateManyInput = {
@@ -418,6 +440,7 @@ export type ReviewUncheckedUpdateManyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type ReviewListRelationFilter = {
@@ -445,6 +468,7 @@ export type ReviewCountOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   isPendingScreening?: Prisma.SortOrder
   isRemoved?: Prisma.SortOrder
+  version?: Prisma.SortOrder
 }
 
 export type ReviewAvgOrderByAggregateInput = {
@@ -453,6 +477,7 @@ export type ReviewAvgOrderByAggregateInput = {
   reviewerId?: Prisma.SortOrder
   revieweeId?: Prisma.SortOrder
   rating?: Prisma.SortOrder
+  version?: Prisma.SortOrder
 }
 
 export type ReviewMaxOrderByAggregateInput = {
@@ -465,6 +490,7 @@ export type ReviewMaxOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   isPendingScreening?: Prisma.SortOrder
   isRemoved?: Prisma.SortOrder
+  version?: Prisma.SortOrder
 }
 
 export type ReviewMinOrderByAggregateInput = {
@@ -477,6 +503,7 @@ export type ReviewMinOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   isPendingScreening?: Prisma.SortOrder
   isRemoved?: Prisma.SortOrder
+  version?: Prisma.SortOrder
 }
 
 export type ReviewSumOrderByAggregateInput = {
@@ -485,6 +512,7 @@ export type ReviewSumOrderByAggregateInput = {
   reviewerId?: Prisma.SortOrder
   revieweeId?: Prisma.SortOrder
   rating?: Prisma.SortOrder
+  version?: Prisma.SortOrder
 }
 
 export type ReviewNullableScalarRelationFilter = {
@@ -640,6 +668,7 @@ export type ReviewCreateWithoutReviewerInput = {
   createdAt?: Date | string
   isPendingScreening?: boolean
   isRemoved?: boolean
+  version?: number
   trade: Prisma.TradeCreateNestedOneWithoutReviewsInput
   reviewee: Prisma.UserCreateNestedOneWithoutRReviewsInput
   reports?: Prisma.ReportCreateNestedManyWithoutReviewInput
@@ -654,6 +683,7 @@ export type ReviewUncheckedCreateWithoutReviewerInput = {
   createdAt?: Date | string
   isPendingScreening?: boolean
   isRemoved?: boolean
+  version?: number
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutReviewInput
 }
 
@@ -673,6 +703,7 @@ export type ReviewCreateWithoutRevieweeInput = {
   createdAt?: Date | string
   isPendingScreening?: boolean
   isRemoved?: boolean
+  version?: number
   trade: Prisma.TradeCreateNestedOneWithoutReviewsInput
   reviewer: Prisma.UserCreateNestedOneWithoutSReviewsInput
   reports?: Prisma.ReportCreateNestedManyWithoutReviewInput
@@ -687,6 +718,7 @@ export type ReviewUncheckedCreateWithoutRevieweeInput = {
   createdAt?: Date | string
   isPendingScreening?: boolean
   isRemoved?: boolean
+  version?: number
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutReviewInput
 }
 
@@ -729,6 +761,7 @@ export type ReviewScalarWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Review"> | Date | string
   isPendingScreening?: Prisma.BoolFilter<"Review"> | boolean
   isRemoved?: Prisma.BoolFilter<"Review"> | boolean
+  version?: Prisma.IntFilter<"Review"> | number
 }
 
 export type ReviewUpsertWithWhereUniqueWithoutRevieweeInput = {
@@ -753,6 +786,7 @@ export type ReviewCreateWithoutTradeInput = {
   createdAt?: Date | string
   isPendingScreening?: boolean
   isRemoved?: boolean
+  version?: number
   reviewer: Prisma.UserCreateNestedOneWithoutSReviewsInput
   reviewee: Prisma.UserCreateNestedOneWithoutRReviewsInput
   reports?: Prisma.ReportCreateNestedManyWithoutReviewInput
@@ -767,6 +801,7 @@ export type ReviewUncheckedCreateWithoutTradeInput = {
   createdAt?: Date | string
   isPendingScreening?: boolean
   isRemoved?: boolean
+  version?: number
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutReviewInput
 }
 
@@ -802,6 +837,7 @@ export type ReviewCreateWithoutReportsInput = {
   createdAt?: Date | string
   isPendingScreening?: boolean
   isRemoved?: boolean
+  version?: number
   trade: Prisma.TradeCreateNestedOneWithoutReviewsInput
   reviewer: Prisma.UserCreateNestedOneWithoutSReviewsInput
   reviewee: Prisma.UserCreateNestedOneWithoutRReviewsInput
@@ -817,6 +853,7 @@ export type ReviewUncheckedCreateWithoutReportsInput = {
   createdAt?: Date | string
   isPendingScreening?: boolean
   isRemoved?: boolean
+  version?: number
 }
 
 export type ReviewCreateOrConnectWithoutReportsInput = {
@@ -841,6 +878,7 @@ export type ReviewUpdateWithoutReportsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   trade?: Prisma.TradeUpdateOneRequiredWithoutReviewsNestedInput
   reviewer?: Prisma.UserUpdateOneRequiredWithoutSReviewsNestedInput
   reviewee?: Prisma.UserUpdateOneRequiredWithoutRReviewsNestedInput
@@ -856,6 +894,7 @@ export type ReviewUncheckedUpdateWithoutReportsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type ReviewCreateManyReviewerInput = {
@@ -867,6 +906,7 @@ export type ReviewCreateManyReviewerInput = {
   createdAt?: Date | string
   isPendingScreening?: boolean
   isRemoved?: boolean
+  version?: number
 }
 
 export type ReviewCreateManyRevieweeInput = {
@@ -878,6 +918,7 @@ export type ReviewCreateManyRevieweeInput = {
   createdAt?: Date | string
   isPendingScreening?: boolean
   isRemoved?: boolean
+  version?: number
 }
 
 export type ReviewUpdateWithoutReviewerInput = {
@@ -886,6 +927,7 @@ export type ReviewUpdateWithoutReviewerInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   trade?: Prisma.TradeUpdateOneRequiredWithoutReviewsNestedInput
   reviewee?: Prisma.UserUpdateOneRequiredWithoutRReviewsNestedInput
   reports?: Prisma.ReportUpdateManyWithoutReviewNestedInput
@@ -900,6 +942,7 @@ export type ReviewUncheckedUpdateWithoutReviewerInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   reports?: Prisma.ReportUncheckedUpdateManyWithoutReviewNestedInput
 }
 
@@ -912,6 +955,7 @@ export type ReviewUncheckedUpdateManyWithoutReviewerInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type ReviewUpdateWithoutRevieweeInput = {
@@ -920,6 +964,7 @@ export type ReviewUpdateWithoutRevieweeInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   trade?: Prisma.TradeUpdateOneRequiredWithoutReviewsNestedInput
   reviewer?: Prisma.UserUpdateOneRequiredWithoutSReviewsNestedInput
   reports?: Prisma.ReportUpdateManyWithoutReviewNestedInput
@@ -934,6 +979,7 @@ export type ReviewUncheckedUpdateWithoutRevieweeInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   reports?: Prisma.ReportUncheckedUpdateManyWithoutReviewNestedInput
 }
 
@@ -946,6 +992,7 @@ export type ReviewUncheckedUpdateManyWithoutRevieweeInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type ReviewCreateManyTradeInput = {
@@ -957,6 +1004,7 @@ export type ReviewCreateManyTradeInput = {
   createdAt?: Date | string
   isPendingScreening?: boolean
   isRemoved?: boolean
+  version?: number
 }
 
 export type ReviewUpdateWithoutTradeInput = {
@@ -965,6 +1013,7 @@ export type ReviewUpdateWithoutTradeInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   reviewer?: Prisma.UserUpdateOneRequiredWithoutSReviewsNestedInput
   reviewee?: Prisma.UserUpdateOneRequiredWithoutRReviewsNestedInput
   reports?: Prisma.ReportUpdateManyWithoutReviewNestedInput
@@ -979,6 +1028,7 @@ export type ReviewUncheckedUpdateWithoutTradeInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   reports?: Prisma.ReportUncheckedUpdateManyWithoutReviewNestedInput
 }
 
@@ -991,6 +1041,7 @@ export type ReviewUncheckedUpdateManyWithoutTradeInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isPendingScreening?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRemoved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 
@@ -1034,6 +1085,7 @@ export type ReviewSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   createdAt?: boolean
   isPendingScreening?: boolean
   isRemoved?: boolean
+  version?: boolean
   trade?: boolean | Prisma.TradeDefaultArgs<ExtArgs>
   reviewer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   reviewee?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1051,6 +1103,7 @@ export type ReviewSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   createdAt?: boolean
   isPendingScreening?: boolean
   isRemoved?: boolean
+  version?: boolean
   trade?: boolean | Prisma.TradeDefaultArgs<ExtArgs>
   reviewer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   reviewee?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1066,6 +1119,7 @@ export type ReviewSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   createdAt?: boolean
   isPendingScreening?: boolean
   isRemoved?: boolean
+  version?: boolean
   trade?: boolean | Prisma.TradeDefaultArgs<ExtArgs>
   reviewer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   reviewee?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1081,9 +1135,10 @@ export type ReviewSelectScalar = {
   createdAt?: boolean
   isPendingScreening?: boolean
   isRemoved?: boolean
+  version?: boolean
 }
 
-export type ReviewOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tradeId" | "reviewerId" | "revieweeId" | "rating" | "comment" | "createdAt" | "isPendingScreening" | "isRemoved", ExtArgs["result"]["review"]>
+export type ReviewOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tradeId" | "reviewerId" | "revieweeId" | "rating" | "comment" | "createdAt" | "isPendingScreening" | "isRemoved" | "version", ExtArgs["result"]["review"]>
 export type ReviewInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   trade?: boolean | Prisma.TradeDefaultArgs<ExtArgs>
   reviewer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1120,6 +1175,7 @@ export type $ReviewPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     createdAt: Date
     isPendingScreening: boolean
     isRemoved: boolean
+    version: number
   }, ExtArgs["result"]["review"]>
   composites: {}
 }
@@ -1556,6 +1612,7 @@ export interface ReviewFieldRefs {
   readonly createdAt: Prisma.FieldRef<"Review", 'DateTime'>
   readonly isPendingScreening: Prisma.FieldRef<"Review", 'Boolean'>
   readonly isRemoved: Prisma.FieldRef<"Review", 'Boolean'>
+  readonly version: Prisma.FieldRef<"Review", 'Int'>
 }
     
 
