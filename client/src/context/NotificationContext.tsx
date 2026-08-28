@@ -28,6 +28,7 @@ interface NotificationContextValue {
   deleteNotification: (id: number) => Promise<void>;
   deleteMany: (id: number[]) => Promise<void>;
   archiveNotification: (id: number) => Promise<void>;
+  unarchiveNotification: (id: number) => Promise<void>;
   archiveMany: (ids: number[]) => Promise<void>;
   refresh: () => Promise<void>;
   refreshArchived: () => Promise<void>;
