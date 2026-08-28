@@ -12,6 +12,7 @@ import tradeRequests from './tradeRequests';
 import dms from './dms';
 import reviews from './reviews';
 import notifications from './notifications';
+import comments from './comments';
 
 export default {
   auth,
@@ -28,4 +29,5 @@ export default {
   dms,
   reviews,
   notifications,
+  comments,
 };

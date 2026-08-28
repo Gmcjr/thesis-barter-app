@@ -42,6 +42,7 @@ app.use('/trade-requests', router.tradeRequests);
 app.use('/dms', router.dms);
 app.use('/reviews', router.reviews);
 app.use('/notifications', router.notifications);
+app.use('/comments', router.comments);
 
 app.get(/.*/, (req, res) => {
   res.sendFile(path.join(process.cwd(), 'client', 'dist', 'index.html'));
