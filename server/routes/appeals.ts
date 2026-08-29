@@ -16,6 +16,65 @@ const QUEUE_PAGE_SIZE = 50;
 // The screening system already wrote this row since it was read
 class ScreeningConflict extends Error {}
 
+// GET: checks to see if a user's post or message has been removed and thus, eligible for an appeal
+appeals.get('/eligible', requireAuth, async (req, res) => {
+  try {
+    const userId = (req.user as { id: number }).id;
+
+    const reports = await prisma.report.findMany({
+      where: {
+        status: ReportStatus.REMOVED,
+        targetType: {
+          in: [
+            TargetType.POST,
+            TargetType.MESSAGE,
+          ],
+        },
+        appeal: {
+          is: null,
+        },
+        OR: [
+          {
+            post: {
+              userId,
+            },
+          },
+          {
+            message: {
+              senderId: userId,
+            },
+          },
+        ],
+      },
+      select: {
+        id: true,
+        targetType: true,
+        post: {
+          select: {
+            id: true,
+            title: true,
+            message: true,
+          },
+        },
+        message: {
+          select: {
+            id: true,
+            text: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    return res.json(reports);
+  } catch (err) {
+    console.error('Failed to GET eligible appeals:', err);
+    return res.sendStatus(500);
+  }
+});
+
 // File an appeal (owner of the removed content)
 appeals.post('/', requireAuth, async (req, res) => {
   try {
