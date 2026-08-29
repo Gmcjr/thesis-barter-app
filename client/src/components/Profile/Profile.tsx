@@ -348,6 +348,7 @@ export default function Profile() {
             myReviews={myReviews}
             currentUserId={user?.id}
             onReviewSaved={handleReviewSaved}
+            highlightReviewId={reviewId ? Number(reviewId) : undefined}
           />
         </Box>
       </Collapse>

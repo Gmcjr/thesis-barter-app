@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Rating from '@mui/material/Rating';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
+import Alert from '@mui/material/Alert';
 import { radius } from '../../theme';
 
 import { formatPostDate } from '../../utils/utils';
@@ -26,14 +27,22 @@ interface ReviewsDetailPanelProps {
   myReviews: ReviewData[];
   currentUserId?: number;
   onReviewSaved: (review: ReviewData) => void;
+  highlightReviewId?: number;
 }
 
 export default function ReviewsDetailPanel({
   reviews, isOwnProfile, PendingTradeOffers, myReviews, currentUserId, onReviewSaved,
+  highlightReviewId,
 }: ReviewsDetailPanelProps) {
   const [queueOpen, setQueueOpen] = useState(false);
   const reviewedTradeIds = new Set(myReviews.map((r) => r.tradeId));
   const unreviewed = PendingTradeOffers.filter((t) => !reviewedTradeIds.has(t.id));
+  const highlightMissing = !!highlightReviewId && !reviews.some((r) => r.id === highlightReviewId);
+
+  useEffect(() => {
+    if (!highlightReviewId) return;
+    document.getElementById(`review-${highlightReviewId}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, [highlightReviewId, reviews]);
 
   return (
     <>
@@ -54,6 +63,10 @@ export default function ReviewsDetailPanel({
         </>
       )}
 
+      {highlightMissing && (
+        <Alert severity="info" sx={{ mb: 1.5 }}>This review is no longer available.</Alert>
+      )}
+
       {reviews.length === 0 ? (
         <Typography variant="body2" color="text.disabled" sx={{ fontStyle: 'italic' }}>
           No reviews yet.
@@ -61,7 +74,15 @@ export default function ReviewsDetailPanel({
       ) : (
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
           {reviews.map((review) => (
-            <Box key={review.id} sx={{ display: 'flex', gap: 1.5 }}>
+            <Box
+              key={review.id}
+              id={`review-${review.id}`}
+              sx={{
+                display: 'flex',
+                gap: 1.5,
+                ...(review.id === highlightReviewId && { outline: '2px solid', outlineColor: 'primary.main' }),
+              }}
+            >
               <Avatar sx={{
                 width: 32, height: 32, fontSize: '0.9rem', bgcolor: 'primary.main',
               }}
