@@ -8,6 +8,10 @@ interface AuthUser {
   name: string | null;
   email: string;
   role: 'USER' | 'MODERATOR' | 'ADMIN' | null;
+  zipCode: string | null;
+  country: string | null;
+  lat: number | null;
+  lng: number | null;
 }
 
 interface AuthContextValue {
@@ -17,6 +21,7 @@ interface AuthContextValue {
   blockedUserIds: number[];
   blockUser: (userId: number) => Promise<void>;
   unblockUser: (userId: number) => Promise<void>;
+  updateUser: (updates: Partial<AuthUser>) => void;
 }
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
@@ -60,9 +65,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setBlockedUserIds((ids) => ids.filter((id) => id !== userId));
   }, []);
 
+  const updateUser = useCallback((updates: Partial<AuthUser>) => {
+    setUser((currentUser) => (
+      currentUser ? { ...currentUser, ...updates } : currentUser
+    ));
+  }, []);
+
   const value = useMemo(() => ({
-    user, loading, logout, blockedUserIds, blockUser, unblockUser,
-  }), [user, loading, logout, blockedUserIds, blockUser, unblockUser]);
+    user, loading, logout, blockedUserIds, blockUser, unblockUser, updateUser,
+  }), [user, loading, logout, blockedUserIds, blockUser, unblockUser, updateUser]);
 
   return (
     <AuthContext.Provider value={value}>
