@@ -2414,6 +2414,7 @@ export const UserScalarFieldEnum = {
   role: 'role',
   bio: 'bio',
   createdAt: 'createdAt',
+  lastActive: 'lastActive',
   zipCode: 'zipCode',
   country: 'country',
   lat: 'lat',
