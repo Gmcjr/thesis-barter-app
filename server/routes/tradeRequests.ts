@@ -294,7 +294,7 @@ tradeRequests.patch('/:id/accept', requireAuth, async (req, res) => {
         type: 'TRADE_REQUEST_ACCEPTED',
         title: 'Your trade request was accepted',
         body: `Your trade request for "${tradeRequest.post.title}" was accepted.`,
-        link: '/profile?mine=true',
+        link: `/trade/${tradeRequest.postId}`,
         entityType: 'TRADE_REQUEST',
         entityId: tradeRequest.id,
       });

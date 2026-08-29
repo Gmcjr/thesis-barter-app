@@ -36,6 +36,7 @@ const routes: RouteDef[] = [
   { path: '/profile/history/:postId', component: Profile },
   { path: '/profile/reviews/:reviewId', component: Profile },
   { path: '/profile/requests/:postId/:requestId', component: Profile },
+  { path: '/trade/:postId', component: Posts },
   { path: '/messages', component: Messages, requiresAuth: true },
   { path: '/messages/:id', component: Messages, requiresAuth: true },
   { path: '/deleted-conversations', component: DeletedConversations, requiresAuth: true },
