@@ -57,6 +57,27 @@ notifications.patch('/:id/read', async (req, res) => {
   }
 });
 
+notifications.patch('/:id/unread', async (req, res) => {
+  try {
+    const userId = (req.user as { id: number }).id;
+    const id = Number(req.params.id);
+
+    const notification = await prisma.notification.findUnique({ where: { id } });
+    if (!notification || notification.userId !== userId) {
+      return res.sendStatus(404);
+    }
+
+    const updated = await prisma.notification.update({
+      where: { id },
+      data: { readAt: null },
+    });
+    return res.json(updated);
+  } catch (error) {
+    console.error('Failed to PATCH notification unread:', error);
+    return res.sendStatus(500);
+  }
+});
+
 notifications.patch('/:id/archive', async (req, res) => {
   try {
     const userId = (req.user as { id: number }).id;

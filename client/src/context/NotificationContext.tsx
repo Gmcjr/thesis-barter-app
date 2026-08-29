@@ -24,6 +24,7 @@ interface NotificationContextValue {
   unreadCount: number;
   archivedLoaded: boolean;
   markRead: (id: number) => Promise<void>;
+  markUnread: (id: number) => Promise<void>;
   markAllRead: () => Promise<void>;
   deleteNotification: (id: number) => Promise<void>;
   deleteMany: (id: number[]) => Promise<void>;
@@ -85,6 +86,14 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
         ? { ...n, readAt: new Date().toISOString() }
         : n)));
     setUnreadCount((count) => Math.max(0, count - 1));
+  }, [notifications]);
+
+  const markUnread = useCallback(async (id: number) => {
+    const target = notifications.find((n) => n.id === id);
+    if (!target || !target.readAt || target.archivedAt) return;
+    await axios.patch(`/notifications/${id}/unread`, {}, { withCredentials: true });
+    setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, readAt: null } : n)));
+    setUnreadCount((count) => count + 1);
   }, [notifications]);
 
   const markAllRead = useCallback(async () => {
@@ -159,6 +168,7 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
     unreadCount,
     archivedLoaded,
     markRead,
+    markUnread,
     markAllRead,
     deleteNotification,
     deleteMany,
@@ -167,8 +177,11 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
     archiveMany,
     refresh,
     refreshArchived,
-  }), [notifications, unreadCount, archivedLoaded, markRead, markAllRead, deleteNotification,
-    deleteMany, archiveNotification, unarchiveNotification, archiveMany, refresh, refreshArchived,
+  }), [notifications, unreadCount, archivedLoaded,
+    markRead, markUnread, markAllRead,
+    deleteNotification, deleteMany,
+    archiveNotification, unarchiveNotification, archiveMany,
+    refresh, refreshArchived,
   ]);
 
   return (

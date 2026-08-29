@@ -16,6 +16,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import CheckIcon from '@mui/icons-material/Check';
+import MarkEmailUnreadIcon from '@mui/icons-material/MarkEmailUnread';
 import ArchiveIcon from '@mui/icons-material/Archive';
 import UnarchiveIcon from '@mui/icons-material/Unarchive';
 import CloseIcon from '@mui/icons-material/Close';
@@ -32,8 +33,10 @@ interface NotificationPanelProps {
 
 export default function NotificationPanel({ onClose }: NotificationPanelProps) {
   const {
-    notifications, markRead, markAllRead, deleteNotification, deleteMany,
-    archiveNotification, unarchiveNotification, archiveMany, archivedLoaded, refreshArchived,
+    notifications, markRead, markUnread, markAllRead,
+    deleteNotification, deleteMany,
+    archiveNotification, unarchiveNotification, archiveMany,
+    archivedLoaded, refreshArchived,
   } = useNotifications();
   const { navigate } = useRouter();
   const prefersReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
@@ -47,7 +50,7 @@ export default function NotificationPanel({ onClose }: NotificationPanelProps) {
   const [menuTarget, setMenuTarget] = useState<Notification | null>(null);
 
   const visible = useMemo(() => notifications.filter((n) => {
-    if (showArchived ? !n.archivedAt : !n.archivedAt) return false;
+    if (showArchived ? !n.archivedAt : !!n.archivedAt) return false;
     if (unreadOnly && n.readAt) return false;
     if (category !== 'all' && categoryFor(n.type) !== category) return false;
     return true;
@@ -96,6 +99,11 @@ export default function NotificationPanel({ onClose }: NotificationPanelProps) {
 
   const handleMarkSelectedRead = async () => {
     await Promise.all(Array.from(selectedIds).map((id) => markRead(id)));
+    setSelectedIds(new Set());
+  };
+
+  const handleMarkSelectedUnread = async () => {
+    await Promise.all(Array.from(selectedIds).map((id) => markUnread(id)));
     setSelectedIds(new Set());
   };
 
@@ -204,8 +212,11 @@ export default function NotificationPanel({ onClose }: NotificationPanelProps) {
             <IconButton size="small" onClick={handleMarkSelectedRead} title="Mark selected read">
               <DoneAllIcon fontSize="small" />
             </IconButton>
+            <IconButton size="small" onClick={handleMarkSelectedUnread} title="Mark selected unread">
+              <MarkEmailUnreadIcon fontSize="small" />
+            </IconButton>
             <IconButton size="small" onClick={handleArchiveSelected} title="Archive selected">
-              <DoneAllIcon fontSize="small" />
+              <ArchiveIcon fontSize="small" />
             </IconButton>
             <IconButton size="small" onClick={handleDeleteSelected} title="Delete selected">
               <DeleteIcon fontSize="small" />
@@ -318,6 +329,20 @@ export default function NotificationPanel({ onClose }: NotificationPanelProps) {
               <CheckIcon fontSize="small" sx={{ color: 'primary.main' }} />
             </ListItemIcon>
             <ListItemText>Mark as read</ListItemText>
+          </MenuItem>
+        )}
+        {menuTarget && menuTarget.readAt && !menuTarget.archivedAt && (
+          <MenuItem
+            onClick={(e) => {
+              e.stopPropagation();
+              markUnread(menuTarget.id);
+              closeMenu();
+            }}
+          >
+            <ListItemIcon>
+              <MarkEmailUnreadIcon fontSize="small" sx={{ color: 'primary.main' }} />
+            </ListItemIcon>
+            <ListItemText>Mark as unread</ListItemText>
           </MenuItem>
         )}
         {menuTarget && !menuTarget.archivedAt && (
