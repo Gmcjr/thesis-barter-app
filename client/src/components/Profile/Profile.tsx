@@ -60,7 +60,7 @@ export default function Profile() {
   const [bannerUploading, setBannerUploading] = useState(false);
 
   const {
-    user, blockedUserIds, blockUser, unblockUser,
+    user, blockedUserIds, blockUser, unblockUser, updateUser,
   } = useAuth();
   const { navigate } = useRouter();
   const { showToast } = useToast();
@@ -78,16 +78,33 @@ export default function Profile() {
     const toNullable = (value: string) => (value.trim() ? value.trim() : null);
     const bio = toNullable(data.bio);
 
-    const res = await axios.patch<ProfileUser>('/user/me', {
-      user: {
-        name: data.name.trim(),
-        bio,
-        phone: toNullable(data.phone),
-        zipCode: toNullable(data.zipCode),
-      },
-    }, { withCredentials: true });
+    try {
+      const res = await axios.patch<ProfileUser>('/user/me', {
+        user: {
+          name: data.name.trim(),
+          bio,
+          phone: toNullable(data.phone),
+          zipCode: data.zipCode.trim(),
+          country: data.country.trim(),
+        },
+      }, { withCredentials: true });
 
-    setProfile((prev) => (prev ? { ...prev, ...res.data, bio } : res.data));
+      setProfile((prev) => (prev ? { ...prev, ...res.data, bio } : res.data));
+
+      updateUser({
+        name: res.data.name,
+        zipCode: res.data.zipCode,
+        country: res.data.country,
+        lat: res.data.lat,
+        lng: res.data.lng,
+      });
+    } catch (requestError) {
+      const message = axios.isAxiosError(requestError) && requestError.response?.data?.error
+        ? requestError.response.data.error
+        : 'Could not update profile.';
+      showToast(message, 'error');
+      throw requestError;
+    }
   };
 
   const uploadUserMedia = async (slot: 'avatar' | 'banner', file: File) => {
@@ -393,6 +410,7 @@ export default function Profile() {
             bio: profile.bio ?? '',
             phone: profile.phone ?? '',
             zipCode: profile.zipCode ?? '',
+            country: profile.country ?? '',
           }}
           onSave={handleUpdateProfile}
           avatarUrl={profile.avatarUrl}
