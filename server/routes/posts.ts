@@ -1,12 +1,30 @@
+/* eslint-disable no-underscore-dangle */
 import { Router, type Request } from 'express';
+import { getDistance } from 'geolib';
+import type { Prisma } from '../db/generated/client.js';
 import { prisma } from '../db/index.js';
 import { enqueueJob } from '../services/jobQueue.js';
 import requireAuth from '../middleware/requireAuth.js';
 import { getDownloadUrl } from '../services/s3.js';
 import { getBlockedRelationshipIds } from '../services/blocks.js';
 import { getIo } from '../middleware/socket.js';
+import { geocodePostalCode } from '../services/geocoding.js';
 
 const posts = Router();
+const METERS_PER_MILE = 1609.344;
+
+const DISTANCES = [
+  5, 6, 7, 8, 9, 10, 15, 20, 30, 40,
+  50, 60, 70, 80, 90, 100, 200, 300, '∞',
+];
+
+const CONDITIONS = [
+  'POOR',
+  'AVERAGE',
+  'GOOD',
+  'EXCELLENT',
+  'MINT',
+];
 
 // type definitions
 interface MediaItem {
@@ -85,17 +103,164 @@ const getPostImageUrls = async (
   return imageUrls.filter((url): url is string => Boolean(url));
 };
 
+// GET: all the categories of active posts + a count of each category (for advanced search feature)
+posts.get('/categories', async (req, res) => {
+  try {
+    const blockedRelationshipIds = req.user
+      ? await getBlockedRelationshipIds(getUserId(req))
+      : [];
+
+    const rows = await prisma.post.groupBy({
+      by: ['category'],
+      where: {
+        isRemoved: false,
+        isPendingScreening: false,
+        status: { not: 'COMPLETED' as const },
+        category: { not: null },
+        ...(blockedRelationshipIds.length
+          ? { userId: { notIn: blockedRelationshipIds } }
+          : {}),
+      },
+      _count: {
+        _all: true,
+      },
+    });
+
+    const categories = rows
+      .filter((row) => Boolean(row.category))
+      .map((row) => ({
+        category: row.category!,
+        count: row._count._all,
+      }))
+      .sort((a, b) => a.category.localeCompare(b.category));
+
+    return res.json(categories);
+  } catch (error) {
+    console.error('Failed to GET post categories:', error);
+    return res.status(500).json({ error: 'Unable to retrieve categories.' });
+  }
+});
+
 // GET: public feed excludes removed posts: ?mine=true returns
 // user's own posts including removed ones, for their Manage Posts view
 posts.get('/', async (req, res) => {
   try {
     const search = String(req.query.q ?? '').trim();
+    const titleSearch = String(req.query.title ?? '').trim();
+    const descriptionSearch = String(req.query.description ?? '').trim();
+    const userSearch = String(req.query.user ?? '').trim();
+    const listingType = String(req.query.listingType ?? '').trim();
+    const conditionSearch = String(req.query.condition ?? '').trim();
+    const hasImages = String(req.query.hasImages ?? '').trim() === 'true';
+    const includeCompleted = String(req.query.includeCompleted ?? '').trim() === 'true';
+    const dateMode = String(req.query.dateMode ?? '').trim();
+    const dateStart = String(req.query.dateStart ?? '').trim();
+    const dateEnd = String(req.query.dateEnd ?? '').trim();
+    const categorySearch = String(req.query.category ?? '').trim();
+    const distanceRange = String(req.query.distanceRange ?? '').trim();
+    const distancePostalCode = String(req.query.distancePostalCode ?? '').trim();
     const mine = req.query.mine === 'true';
     const profileUserId = req.query.userId
       ? Number(req.query.userId)
       : undefined;
 
     if (mine && !req.user) return res.status(401).json({ error: 'Unauthorized' });
+
+    if (
+      dateMode
+      && dateMode !== 'before'
+      && dateMode !== 'after'
+      && dateMode !== 'between'
+    ) {
+      return res.status(400).json({ error: 'Invalid date search.' });
+    }
+
+    if (
+      listingType
+      && listingType !== 'PRODUCT'
+      && listingType !== 'SERVICE'
+      && listingType !== 'DIGITAL'
+    ) {
+      return res.status(400).json({ error: 'Invalid listing type.' });
+    }
+
+    if (
+      conditionSearch
+      && !CONDITIONS.includes(conditionSearch)
+    ) {
+      return res.status(400).json({ error: 'Invalid item condition.' });
+    }
+
+    if (
+      distanceRange
+      && !DISTANCES.some((distance) => distanceRange === String(distance))
+    ) {
+      return res.status(400).json({ error: 'Invalid distance range.' });
+    }
+
+    let viewerCoordinates = null;
+
+    if (distanceRange && distanceRange !== '∞') {
+      if (!req.user) {
+        return res.status(401).json({
+          error: 'Sign in to search by distance.',
+        });
+      }
+
+      const viewer = await prisma.user.findUnique({
+        where: { id: getUserId(req) },
+        select: {
+          lat: true,
+          lng: true,
+          zipCode: true,
+          country: true,
+        },
+      });
+
+      if (!viewer || !viewer.country) {
+        return res.status(400).json({
+          error: 'Set your location before searching by distance.',
+        });
+      }
+
+      const searchPostalCode = distancePostalCode || viewer.zipCode?.trim() || '';
+
+      if (!searchPostalCode) {
+        return res.status(400).json({
+          error: 'Enter a postal code to search by distance.',
+        });
+      }
+
+      const savedPostalCode = viewer.zipCode?.trim() || '';
+
+      if (
+        savedPostalCode
+        && searchPostalCode.toUpperCase() === savedPostalCode.toUpperCase()
+        && viewer.lat !== null
+        && viewer.lng !== null
+      ) {
+        viewerCoordinates = {
+          lat: viewer.lat,
+          lng: viewer.lng,
+        };
+      } else {
+        const geocodedLocation = await geocodePostalCode(
+          searchPostalCode,
+          viewer.country,
+        );
+
+        if (!geocodedLocation) {
+          return res.status(400).json({
+            error: 'Could not find that postal code.',
+          });
+        }
+
+        viewerCoordinates = {
+          lat: geocodedLocation.lat,
+          lng: geocodedLocation.lng,
+        };
+      }
+    }
 
     const blockedRelationshipIds = !mine && !profileUserId && req.user
       ? await getBlockedRelationshipIds(getUserId(req))
@@ -135,6 +300,109 @@ posts.get('/', async (req, res) => {
       ]
       : [];
 
+    const advancedFilters: Prisma.PostWhereInput[] = [];
+
+    if (titleSearch) {
+      advancedFilters.push({
+        title: {
+          contains: titleSearch,
+          mode: 'insensitive' as const,
+        },
+      });
+    }
+
+    if (descriptionSearch) {
+      advancedFilters.push({
+        message: {
+          contains: descriptionSearch,
+          mode: 'insensitive' as const,
+        },
+      });
+    }
+
+    if (userSearch) {
+      advancedFilters.push({
+        user: {
+          name: {
+            contains: userSearch,
+            mode: 'insensitive' as const,
+          },
+        },
+      });
+    }
+
+    if (categorySearch) {
+      advancedFilters.push({
+        category: {
+          equals: categorySearch,
+          mode: 'insensitive' as const,
+        },
+      });
+    }
+
+    if (dateMode === 'before' || dateMode === 'after') {
+      if (!dateStart) {
+        return res.status(400).json({ error: 'Date is required.' });
+      }
+
+      const selectedDate = new Date(`${dateStart}T00:00:00.000Z`);
+
+      if (Number.isNaN(selectedDate.getTime())) {
+        return res.status(400).json({ error: 'Invalid date.' });
+      }
+
+      if (dateMode === 'before') {
+        advancedFilters.push({
+          createdAt: {
+            lt: selectedDate,
+          },
+        });
+      } else {
+        const nextDate = new Date(selectedDate);
+        nextDate.setUTCDate(nextDate.getUTCDate() + 1);
+
+        advancedFilters.push({
+          createdAt: {
+            gte: nextDate,
+          },
+        });
+      }
+    }
+
+    if (dateMode === 'between') {
+      if (!dateStart || !dateEnd) {
+        return res.status(400).json({
+          error: 'Start date and end date are required.',
+        });
+      }
+
+      const startDate = new Date(`${dateStart}T00:00:00.000Z`);
+      const endDate = new Date(`${dateEnd}T00:00:00.000Z`);
+
+      if (
+        Number.isNaN(startDate.getTime())
+        || Number.isNaN(endDate.getTime())
+      ) {
+        return res.status(400).json({ error: 'Invalid date.' });
+      }
+
+      if (startDate > endDate) {
+        return res.status(400).json({
+          error: 'End date must be on or after the start date.',
+        });
+      }
+
+      const endDateExclusive = new Date(endDate);
+      endDateExclusive.setUTCDate(endDateExclusive.getUTCDate() + 1);
+
+      advancedFilters.push({
+        createdAt: {
+          gte: startDate,
+          lt: endDateExclusive,
+        },
+      });
+    }
+
     const buildWhere = () => {
       if (mine) return ownedOrCompletedFilter(getUserId(req));
       if (profileUserId) {
@@ -146,21 +414,32 @@ posts.get('/', async (req, res) => {
           ],
         };
       }
+
       return {
         AND: [
           { isRemoved: false, isPendingScreening: false },
-          { status: { not: 'COMPLETED' as const } },
+          ...(includeCompleted
+            ? []
+            : [{ status: { not: 'COMPLETED' as const } }]),
           ...(blockedRelationshipIds.length
             ? [{ userId: { notIn: blockedRelationshipIds } }]
             : []),
           ...searchFilter,
+          ...advancedFilters,
         ],
       };
     };
 
+    const needsPostFilter = Boolean(
+      (distanceRange && distanceRange !== '∞')
+      || listingType
+      || conditionSearch
+      || hasImages,
+    );
+
     const rawPosts = await prisma.post.findMany({
       where: buildWhere(),
-      take: mine || profileUserId ? undefined : 50,
+      take: mine || profileUserId || needsPostFilter ? undefined : 50,
       orderBy: { createdAt: 'desc' },
       include: {
         user: { select: { id: true, name: true } },
@@ -200,10 +479,84 @@ posts.get('/', async (req, res) => {
       },
     });
 
+    const filteredPosts = rawPosts.filter((post) => {
+      const isDigital = post.postMedia.some(
+        (item) => (
+          item.media?.variant === 'PREVIEW'
+          || item.media?.variant === 'FULL'
+        ),
+      );
+
+      if (listingType === 'PRODUCT' && post.products.length === 0) {
+        return false;
+      }
+
+      if (listingType === 'SERVICE' && post.services.length === 0) {
+        return false;
+      }
+
+      if (listingType === 'DIGITAL' && !isDigital) {
+        return false;
+      }
+
+      if (
+        conditionSearch
+        && !post.products.some(
+          (product) => product.condition === conditionSearch,
+        )
+      ) {
+        return false;
+      }
+
+      if (hasImages) {
+        const postImageCount = isDigital
+          ? 1
+          : post.postMedia.filter(
+            (item) => item.media?.variant == null,
+          ).length;
+
+        if (postImageCount < 1) {
+          return false;
+        }
+      }
+
+      if (distanceRange && distanceRange !== '∞') {
+        if (
+          !viewerCoordinates
+          || post.lat === null
+          || post.lng === null
+        ) {
+          return false;
+        }
+
+        const distanceMeters = getDistance(
+          {
+            latitude: viewerCoordinates.lat,
+            longitude: viewerCoordinates.lng,
+          },
+          {
+            latitude: post.lat,
+            longitude: post.lng,
+          },
+        );
+
+        const distanceMiles = distanceMeters / METERS_PER_MILE;
+        const selectedDistance = Number(distanceRange);
+
+        return distanceMiles < selectedDistance;
+      }
+
+      return true;
+    });
+
+    const visibleRawPosts = !mine && !profileUserId
+      ? filteredPosts.slice(0, 50)
+      : filteredPosts;
+
     const viewerId = req.user?.id;
 
     const postsWithUrls = await Promise.all(
-      rawPosts.map(async (post) => {
+      visibleRawPosts.map(async (post) => {
         const { trades, ...postRest } = post;
         const isOwner = viewerId !== undefined && post.userId === viewerId;
         const viewerCompletedOffer = (post.tradeOffers || []).find(
@@ -221,6 +574,7 @@ posts.get('/', async (req, res) => {
           (post.tradeOffers || []).map(async (offer: TradeOfferItem) => {
             const isOfferer = viewerId !== undefined && offer.offererId === viewerId;
             const offerAllowFull = isOfferer || (isOwner && offer.status === 'COMPLETED');
+
             return {
               ...offer,
               ...(await getMediaUrls(offer.tradeOfferMedia, offerAllowFull)),
@@ -338,15 +692,26 @@ posts.post('/', requireAuth, async (req, res) => {
       }));
     }
 
+    const userLocation = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        lat: true,
+        lng: true,
+      },
+    });
+
     const newPost = await prisma.$transaction(async (tx) => {
       const post = await tx.post.create({
         data: {
           userId,
           title,
           message,
+          category: trimmedCategory || null,
           isLocal,
           zipCode: isLocal ? zipCode : null,
           radiusMiles: isLocal ? radiusMiles : null,
+          lat: userLocation?.lat ?? null,
+          lng: userLocation?.lng ?? null,
           isPendingScreening: true,
           ...(postMediaCreate.length > 0 && {
             postMedia: {
