@@ -43,6 +43,8 @@ app.use('/trade-requests', router.tradeRequests);
 app.use('/dms', router.dms);
 app.use('/reviews', router.reviews);
 app.use('/notifications', router.notifications);
+app.use('/contact', router.contact);
+app.use('/bug-reports', router.bugReports);
 
 app.get(/.*/, (req, res) => {
   res.sendFile(path.join(process.cwd(), 'client', 'dist', 'index.html'));
