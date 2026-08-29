@@ -77,7 +77,7 @@ tradeRequests.post('/', requireAuth, async (req, res) => {
             type: 'TRADE_REQUEST_RECEIVED',
             title: `New trade request on "${post.title}"`,
             body: preview,
-            link: `/profile?postId=${postId}`,
+            link: `/profile/requests/${postId}/${upserted.id}`,
             entityType: 'TRADE_REQUEST',
             entityId: upserted.id,
           },
@@ -93,7 +93,7 @@ tradeRequests.post('/', requireAuth, async (req, res) => {
         userId: post.userId,
         type: 'TRADE_REQUEST_RECEIVED',
         title: `New trade request on "${post.title}"`,
-        link: `/profile?postId=${postId}`,
+        link: `/profile/requests/${postId}/${tradeRequest.id}`,
         entityType: 'TRADE_REQUEST',
         entityId: tradeRequest.id,
       });
