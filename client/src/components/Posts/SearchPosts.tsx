@@ -2,19 +2,23 @@ import React from 'react';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
 import InputBase from '@mui/material/InputBase';
 import Paper from '@mui/material/Paper';
+import MenuIcon from '@mui/icons-material/Menu';
 
 interface SearchPostsProps {
   search: string;
   onSearchChange: (value: string) => void;
   onSubmit: (event: React.SubmitEvent<HTMLFormElement>) => void;
+  onAdvancedSearchClick: () => void;
 }
 
 export default function SearchPosts({
   search,
   onSearchChange,
   onSubmit,
+  onAdvancedSearchClick,
 }: SearchPostsProps) {
   return (
     <Box
@@ -36,6 +40,15 @@ export default function SearchPosts({
           placeholder="Search for listings..."
           sx={{ flex: 1, fontSize: '0.85rem' }}
         />
+
+        <IconButton
+          type="button"
+          color="primary"
+          aria-label="Advanced search"
+          onClick={onAdvancedSearchClick}
+        >
+          <MenuIcon />
+        </IconButton>
       </Paper>
 
       {/* Search Button */}
