@@ -6,6 +6,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
+import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import AddIcon from '@mui/icons-material/Add';
@@ -171,16 +172,12 @@ function NavBar() {
                       <NotificationBell />
                     </Box>
 
-                    <Box
+                    <IconButton
                       onClick={(e) => setUserMenuTarget(e.currentTarget)}
-                      sx={{
-                        width: 36,
-                        height: 36,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        cursor: 'pointer',
-                      }}
+                      aria-label="Account menu"
+                      aria-haspopup="true"
+                      aria-expanded={Boolean(userMenuTarget)}
+                      sx={{ p: 0, width: 36, height: 36 }}
                     >
                       <Avatar
                         sx={{
@@ -192,7 +189,7 @@ function NavBar() {
                       >
                         {(user.name ?? user.email).charAt(0).toUpperCase()}
                       </Avatar>
-                    </Box>
+                    </IconButton>
                   </Box>
                 )}
 

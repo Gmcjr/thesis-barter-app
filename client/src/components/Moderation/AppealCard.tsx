@@ -46,6 +46,15 @@ export default function AppealCard({
         >
           <Chip label="APPEAL" size="small" />
 
+          {appeal.status !== 'PENDING' && (
+            <Chip
+              label={humanizeStatus(appeal.status)}
+              color={appeal.status === 'GRANTED' ? 'success' : 'error'}
+              size="small"
+              variant="outlined"
+            />
+          )}
+
           <Box sx={{ minWidth: 0, flex: 1 }}>
             <Typography variant="subtitle2" sx={{ fontWeight: 600 }} noWrap>
               {appellant}
@@ -98,9 +107,7 @@ export default function AppealCard({
           color="text.secondary"
           sx={{ display: 'block', mb: 1.5 }}
         >
-          {humanizeStatus(appeal.status)}
-          {' '}
-          by
+          Resolved by
           {' '}
           {appeal.resolver?.name ?? `Moderator #${appeal.resolverId}`}
           {appeal.resolution ? ` - ${appeal.resolution}` : ''}
