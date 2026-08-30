@@ -76,19 +76,45 @@ function FilterSelect({
   value,
   onChange,
   children,
+  scale,
 }: {
   label: string;
   value: string;
   onChange: (newValue: string) => void;
   children: React.ReactNode;
+  scale: number;
 }) {
+  const [menuWidth, setMenuWidth] = useState<number | undefined>(undefined);
+  const selectControl = useRef<HTMLDivElement | null>(null);
+
   return (
-    <FormControl fullWidth>
+    <FormControl ref={selectControl} fullWidth>
       <InputLabel>{label}</InputLabel>
       <Select
         value={value}
         label={label}
-        MenuProps={SELECT_MENU_PROPS}
+        onOpen={() => setMenuWidth(selectControl.current?.getBoundingClientRect().width)}
+        MenuProps={{
+          ...SELECT_MENU_PROPS,
+          slotProps: {
+            paper: {
+              style: menuWidth ? { minWidth: menuWidth, width: menuWidth } : undefined,
+              sx: {
+                maxHeight: 220 * scale,
+                overflowY: 'auto',
+                '& .MuiList-root': {
+                  py: 1 * scale,
+                },
+                '& .MuiMenuItem-root': {
+                  minHeight: 48 * scale,
+                  px: 2 * scale,
+                  py: 0.75 * scale,
+                  fontSize: `${16 * scale}px`,
+                },
+              },
+            },
+          },
+        }}
         onChange={(event) => onChange(event.target.value)}
       >
         {children}
@@ -202,6 +228,7 @@ export default function SearchPostsAdvanced({
 
   const [draft, setDraft] = useState<AdvancedSearchFilters>(filters);
   const [categories, setCategories] = useState<CategoryCount[]>([]);
+  const [dialogScale, setDialogScale] = useState(1);
   const [distanceMenuMaxHeight, setDistanceMenuMaxHeight] = useState(220);
   const distanceSelect = useRef<HTMLDivElement | null>(null);
 
@@ -243,6 +270,29 @@ export default function SearchPostsAdvanced({
       });
   }, [open, filters, user?.zipCode]);
 
+  useEffect(() => {
+    if (!open) return undefined;
+
+    const updateDialogScale = () => {
+      const baseHeight = 760
+        + (draft.listingType === 'PRODUCT' ? 72 : 0)
+        + ((draft.dateMode === 'before' || draft.dateMode === 'after') ? 72 : 0)
+        + (draft.dateMode === 'between' ? 144 : 0)
+        + (dateRangeInvalid ? 24 : 0);
+      const widthScale = (window.innerWidth * 0.94) / 600;
+      const heightScale = (window.innerHeight * 0.94) / baseHeight;
+
+      setDialogScale(Math.min(1, widthScale, heightScale));
+    };
+
+    updateDialogScale();
+    window.addEventListener('resize', updateDialogScale);
+
+    return () => {
+      window.removeEventListener('resize', updateDialogScale);
+    };
+  }, [open, draft.listingType, draft.dateMode, dateRangeInvalid]);
+
   /* Filter Handlers */
   const updateDraft = (changes: Partial<AdvancedSearchFilters>) => {
     setDraft((current) => ({ ...current, ...changes }));
@@ -271,9 +321,12 @@ export default function SearchPostsAdvanced({
       slotProps={{
         paper: {
           sx: {
-            m: { xs: 1, sm: 4 },
-            width: { xs: 'calc(100% - 16px)', sm: 'calc(100% - 64px)' },
-            overflowX: 'hidden',
+            m: 0,
+            width: 600,
+            maxWidth: 'none',
+            maxHeight: 'none',
+            overflow: 'hidden',
+            zoom: dialogScale,
           },
         },
       }}
@@ -282,9 +335,9 @@ export default function SearchPostsAdvanced({
 
       <DialogContent
         dividers
-        sx={{ px: { xs: 1, sm: 3 }, py: { xs: 1.5, sm: 2.5 }, overflowX: 'hidden' }}
+        sx={{ px: 3, py: 2.5, overflow: 'hidden' }}
       >
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: { xs: 1.5, sm: 2.5 } }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}>
           {/* Search by Title */}
           <TextField
             label="Search by Title"
@@ -306,6 +359,7 @@ export default function SearchPostsAdvanced({
             label="Search by Category"
             value={draft.category}
             onChange={(value) => updateDraft({ category: value })}
+            scale={dialogScale}
           >
             <MenuItem value="">All Categories</MenuItem>
             {categories.map((category) => (
@@ -327,6 +381,7 @@ export default function SearchPostsAdvanced({
               listingType: value,
               condition: value === 'PRODUCT' ? draft.condition : '',
             })}
+            scale={dialogScale}
           >
             <MenuItem value="">Any Type</MenuItem>
             {TYPE_OPTIONS.map(([value, label]) => (
@@ -342,6 +397,7 @@ export default function SearchPostsAdvanced({
               label="Condition"
               value={draft.condition}
               onChange={(value) => updateDraft({ condition: value })}
+              scale={dialogScale}
             >
               <MenuItem value="">Any Condition</MenuItem>
               {CONDITION_OPTIONS.map(([value, label]) => (
@@ -365,9 +421,9 @@ export default function SearchPostsAdvanced({
             <Box
               sx={{
                 display: 'grid',
-                gridTemplateColumns: { xs: '52px minmax(0, 1fr)', sm: '80px minmax(0, 1fr)' },
+                gridTemplateColumns: '80px minmax(0, 1fr)',
                 alignItems: 'start',
-                columnGap: { xs: 0.5, sm: 1 },
+                columnGap: 1,
                 width: '100%',
               }}
             >
@@ -375,10 +431,9 @@ export default function SearchPostsAdvanced({
               <Typography
                 sx={{
                   flexShrink: 0,
-                  fontSize: { xs: '0.75rem', sm: '0.95rem' },
+                  fontSize: '0.95rem',
                   whiteSpace: 'nowrap',
                   pt: 0.75,
-                  '@media (max-width:360px)': { fontSize: '0.6rem' },
                 }}
               >
                 Filter By:
@@ -388,7 +443,7 @@ export default function SearchPostsAdvanced({
                 sx={{
                   display: 'grid',
                   gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
-                  columnGap: { xs: 0.25, sm: 2 },
+                  columnGap: 2,
                   rowGap: 0.25,
                   minWidth: 0,
                 }}
@@ -400,7 +455,7 @@ export default function SearchPostsAdvanced({
                       size="small"
                       checked={draft.hasImages}
                       onChange={(event) => updateDraft({ hasImages: event.target.checked })}
-                      sx={{ p: { xs: 0.4, sm: 0.75 } }}
+                      sx={{ p: 0.75 }}
                     />
                   )}
                   label="Has images"
@@ -408,9 +463,8 @@ export default function SearchPostsAdvanced({
                     m: 0,
                     minWidth: 0,
                     '& .MuiFormControlLabel-label': {
-                      fontSize: { xs: '0.72rem', sm: '0.9rem' },
+                      fontSize: '0.9rem',
                       whiteSpace: 'nowrap',
-                      '@media (max-width:360px)': { fontSize: '0.55rem' },
                     },
                   }}
                 />
@@ -422,7 +476,7 @@ export default function SearchPostsAdvanced({
                       size="small"
                       checked={draft.includeCompleted}
                       onChange={(event) => updateDraft({ includeCompleted: event.target.checked })}
-                      sx={{ p: { xs: 0.4, sm: 0.75 } }}
+                      sx={{ p: 0.75 }}
                     />
                   )}
                   label="Include completed trades"
@@ -430,9 +484,8 @@ export default function SearchPostsAdvanced({
                     m: 0,
                     minWidth: 0,
                     '& .MuiFormControlLabel-label': {
-                      fontSize: { xs: '0.72rem', sm: '0.9rem' },
+                      fontSize: '0.9rem',
                       whiteSpace: 'nowrap',
-                      '@media (max-width:360px)': { fontSize: '0.55rem' },
                     },
                   }}
                 />
@@ -444,7 +497,7 @@ export default function SearchPostsAdvanced({
                       size="small"
                       checked={draft.excludeInactive}
                       onChange={(event) => updateDraft({ excludeInactive: event.target.checked })}
-                      sx={{ p: { xs: 0.4, sm: 0.75 } }}
+                      sx={{ p: 0.75 }}
                     />
                   )}
                   label="Exclude inactive trades"
@@ -452,9 +505,8 @@ export default function SearchPostsAdvanced({
                     m: 0,
                     minWidth: 0,
                     '& .MuiFormControlLabel-label': {
-                      fontSize: { xs: '0.72rem', sm: '0.9rem' },
+                      fontSize: '0.9rem',
                       whiteSpace: 'nowrap',
-                      '@media (max-width:360px)': { fontSize: '0.55rem' },
                     },
                   }}
                 />
@@ -466,7 +518,7 @@ export default function SearchPostsAdvanced({
                       size="small"
                       checked={draft.includeOwn}
                       onChange={(event) => updateDraft({ includeOwn: event.target.checked })}
-                      sx={{ p: { xs: 0.4, sm: 0.75 } }}
+                      sx={{ p: 0.75 }}
                     />
                   )}
                   label="Include own trades"
@@ -474,9 +526,8 @@ export default function SearchPostsAdvanced({
                     m: 0,
                     minWidth: 0,
                     '& .MuiFormControlLabel-label': {
-                      fontSize: { xs: '0.72rem', sm: '0.9rem' },
+                      fontSize: '0.9rem',
                       whiteSpace: 'nowrap',
-                      '@media (max-width:360px)': { fontSize: '0.55rem' },
                     },
                   }}
                 />
@@ -486,9 +537,9 @@ export default function SearchPostsAdvanced({
             <Box
               sx={{
                 display: 'grid',
-                gridTemplateColumns: { xs: '52px minmax(0, 1fr)', sm: '80px minmax(0, 1fr)' },
+                gridTemplateColumns: '80px minmax(0, 1fr)',
                 alignItems: 'center',
-                columnGap: { xs: 0.5, sm: 1 },
+                columnGap: 1,
                 width: '100%',
                 whiteSpace: 'nowrap',
               }}
@@ -496,9 +547,8 @@ export default function SearchPostsAdvanced({
               <Typography
                 sx={{
                   flexShrink: 0,
-                  fontSize: { xs: '0.75rem', sm: '0.95rem' },
+                  fontSize: '0.95rem',
                   whiteSpace: 'nowrap',
-                  '@media (max-width:360px)': { fontSize: '0.6rem' },
                 }}
               >
                 Sort By:
@@ -513,22 +563,21 @@ export default function SearchPostsAdvanced({
                   alignItems: 'center',
                   justifyContent: 'flex-start',
                   flexWrap: 'nowrap',
-                  gap: { xs: 0.25, sm: 1 },
+                  gap: 1,
                   minWidth: 0,
                 }}
               >
                 {/* Most Recently Updated */}
                 <FormControlLabel
                   value="updated"
-                  control={<Radio size="small" sx={{ p: { xs: 0.35, sm: 0.75 } }} />}
+                  control={<Radio size="small" sx={{ p: 0.75 }} />}
                   label="Most recent updates"
                   onDoubleClick={() => updateDraft({ sortBy: '' })}
                   sx={{
                     m: 0,
                     '& .MuiFormControlLabel-label': {
-                      fontSize: { xs: '0.72rem', sm: '0.9rem' },
+                      fontSize: '0.9rem',
                       whiteSpace: 'nowrap',
-                      '@media (max-width:360px)': { fontSize: '0.55rem' },
                     },
                   }}
                 />
@@ -537,7 +586,7 @@ export default function SearchPostsAdvanced({
                   sx={{
                     display: 'flex',
                     alignItems: 'center',
-                    gap: { xs: 0.25, sm: 0.75 },
+                    gap: 0.75,
                     flexShrink: 1,
                     minWidth: 0,
                   }}
@@ -545,15 +594,14 @@ export default function SearchPostsAdvanced({
                   {/* Most Popular Within Time */}
                   <FormControlLabel
                     value="popularity"
-                    control={<Radio size="small" sx={{ p: { xs: 0.35, sm: 0.75 } }} />}
+                    control={<Radio size="small" sx={{ p: 0.75 }} />}
                     label="Most popular within"
                     onDoubleClick={() => updateDraft({ sortBy: '' })}
                     sx={{
                       m: 0,
                       '& .MuiFormControlLabel-label': {
-                        fontSize: { xs: '0.72rem', sm: '0.9rem' },
+                        fontSize: '0.9rem',
                         whiteSpace: 'nowrap',
-                        '@media (max-width:360px)': { fontSize: '0.55rem' },
                       },
                     }}
                   />
@@ -562,22 +610,40 @@ export default function SearchPostsAdvanced({
                     size="small"
                     disabled={draft.sortBy !== 'popularity'}
                     sx={{
-                      width: { xs: 82, sm: 105 },
-                      flexShrink: 1,
-                      '@media (max-width:360px)': { width: 62 },
+                      width: 105,
+                      flexShrink: 0,
                     }}
                   >
                     <Select
                       value={draft.popularityPeriod}
-                      MenuProps={SELECT_MENU_PROPS}
+                      MenuProps={{
+                        ...SELECT_MENU_PROPS,
+                        slotProps: {
+                          paper: {
+                            style: {
+                              minWidth: 105 * dialogScale,
+                              width: 105 * dialogScale,
+                            },
+                            sx: {
+                              maxHeight: 220 * dialogScale,
+                              overflowY: 'auto',
+                              '& .MuiList-root': {
+                                py: 1 * dialogScale,
+                              },
+                              '& .MuiMenuItem-root': {
+                                minHeight: 48 * dialogScale,
+                                px: 2 * dialogScale,
+                                py: 0.75 * dialogScale,
+                                fontSize: `${16 * dialogScale}px`,
+                              },
+                            },
+                          },
+                        },
+                      }}
                       onChange={(event) => updateDraft({
                         popularityPeriod: event.target.value,
                       })}
-                      sx={{
-                        fontSize: { xs: '0.72rem', sm: '0.9rem' },
-                        height: { xs: 34, sm: 40 },
-                        '@media (max-width:360px)': { fontSize: '0.55rem', height: 30 },
-                      }}
+                      sx={{ fontSize: '0.9rem', height: 40 }}
                     >
                       {POPULARITY_OPTIONS.map(([value, label]) => (
                         <MenuItem key={value} value={value}>
@@ -602,6 +668,7 @@ export default function SearchPostsAdvanced({
                 ? draft.dateEnd || getTodayDate()
                 : draft.dateEnd,
             })}
+            scale={dialogScale}
           >
             <MenuItem value="">Any Time</MenuItem>
             {DATE_OPTIONS.map(([value, label]) => (
@@ -655,7 +722,7 @@ export default function SearchPostsAdvanced({
             sx={{
               display: 'flex',
               alignItems: 'center',
-              gap: { xs: 0.5, sm: 1.5 },
+              gap: 1.5,
               width: '100%',
               flexWrap: 'nowrap',
               minWidth: 0,
@@ -665,8 +732,7 @@ export default function SearchPostsAdvanced({
               sx={{
                 flexShrink: 0,
                 whiteSpace: 'nowrap',
-                fontSize: { xs: '0.72rem', sm: '1rem' },
-                '@media (max-width:360px)': { fontSize: '0.58rem' },
+                fontSize: '1rem',
               }}
             >
               Less than
@@ -676,12 +742,7 @@ export default function SearchPostsAdvanced({
               ref={distanceSelect}
               disabled={!canSearchDistance}
               size="small"
-              sx={{
-                minWidth: { xs: 64, sm: 90 },
-                width: { xs: 64, sm: 90 },
-                flexShrink: 1,
-                '@media (max-width:360px)': { minWidth: 50, width: 50 },
-              }}
+              sx={{ minWidth: 90, width: 90, flexShrink: 0 }}
             >
               <Select
                 value={draft.distanceRange}
@@ -698,9 +759,22 @@ export default function SearchPostsAdvanced({
                   marginThreshold: null,
                   slotProps: {
                     paper: {
+                      style: {
+                        minWidth: 90 * dialogScale,
+                        width: 90 * dialogScale,
+                      },
                       sx: {
-                        maxHeight: distanceMenuMaxHeight,
+                        maxHeight: Math.min(distanceMenuMaxHeight, 220 * dialogScale),
                         overflowY: 'auto',
+                        '& .MuiList-root': {
+                          py: 1 * dialogScale,
+                        },
+                        '& .MuiMenuItem-root': {
+                          minHeight: 48 * dialogScale,
+                          px: 2 * dialogScale,
+                          py: 0.75 * dialogScale,
+                          fontSize: `${16 * dialogScale}px`,
+                        },
                       },
                     },
                   },
@@ -728,8 +802,7 @@ export default function SearchPostsAdvanced({
               sx={{
                 flexShrink: 0,
                 whiteSpace: 'nowrap',
-                fontSize: { xs: '0.72rem', sm: '1rem' },
-                '@media (max-width:360px)': { fontSize: '0.58rem' },
+                fontSize: '1rem',
               }}
             >
               miles
@@ -739,8 +812,7 @@ export default function SearchPostsAdvanced({
               sx={{
                 flexShrink: 0,
                 whiteSpace: 'nowrap',
-                fontSize: { xs: '0.72rem', sm: '1rem' },
-                '@media (max-width:360px)': { fontSize: '0.58rem' },
+                fontSize: '1rem',
               }}
             >
               from postal code
@@ -753,17 +825,13 @@ export default function SearchPostsAdvanced({
               onChange={(event) => updateDraft({
                 distancePostalCode: event.target.value,
               })}
-              sx={{
-                width: { xs: 86, sm: 120 },
-                flexShrink: 1,
-                '@media (max-width:360px)': { width: 68 },
-              }}
+              sx={{ width: 120, flexShrink: 0 }}
             />
           </Box>
         </Box>
       </DialogContent>
 
-      {/* Dialog Actions */}
+      {/* Dialog Actions: Cancel and Search */}
       <DialogActions>
         <Button onClick={onClose} color="inherit">
           Cancel
