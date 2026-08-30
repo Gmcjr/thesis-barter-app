@@ -1,4 +1,6 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, {
+  useCallback, useEffect, useRef, useState,
+} from 'react';
 import axios from 'axios';
 
 import Typography from '@mui/material/Typography';
@@ -17,6 +19,8 @@ import SearchPostsAdvanced, {
 } from './SearchPostsAdvanced';
 import { useSocket } from '../../context/SocketContext';
 
+const POSTS_PER_PAGE = 10;
+
 export default function Posts() {
   const { user, blockedUserIds } = useAuth();
   const socket = useSocket();
@@ -34,13 +38,22 @@ export default function Posts() {
   const [advancedSearchActive, setAdvancedSearchActive] = useState(false);
   const [error, setError] = useState('');
   const [reportDialogPostId, setReportDialogPostId] = useState<number | null>(null);
+  const [hasMorePosts, setHasMorePosts] = useState(false);
+  const loadMorePostsRef = useRef<HTMLDivElement | null>(null);
+  const loadingMorePostsRef = useRef(false);
 
   // get posts and optionally send the search value (this is a general search)
   const loadPosts = useCallback(async (
     searchValue = '',
     filters: AdvancedSearchFilters = EMPTY_ADVANCED_SEARCH,
     isAdvancedSearch = false,
+    offset = 0,
+    append = false,
   ) => {
+    if (append && loadingMorePostsRef.current) return;
+
+    if (append) loadingMorePostsRef.current = true;
+
     try {
       setError('');
       const response = await axios.get<PostData[]>('/posts', {
@@ -63,16 +76,22 @@ export default function Posts() {
           category: filters.category || undefined,
           distanceRange: filters.distanceRange || undefined,
           distancePostalCode: filters.distancePostalCode || undefined,
+          offset,
+          limit: POSTS_PER_PAGE,
         },
       });
-      setPosts(Array.isArray(response.data) ? response.data : []);
+      const loadedPosts = Array.isArray(response.data) ? response.data : [];
+      setPosts((currentPosts) => (append ? [...currentPosts, ...loadedPosts] : loadedPosts));
+      setHasMorePosts(loadedPosts.length === POSTS_PER_PAGE);
     } catch (requestError) {
       console.error('Failed to get posts:', requestError);
-      setPosts([]);
+      if (!append) setPosts([]);
       const message = axios.isAxiosError(requestError) && requestError.response?.data?.error
         ? requestError.response.data.error
         : 'Failed to get posts';
       setError(message);
+    } finally {
+      if (append) loadingMorePostsRef.current = false;
     }
   }, []);
 
@@ -119,6 +138,22 @@ export default function Posts() {
     if (!highlightPostId) return;
     document.getElementById(`post-${highlightPostId}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }, [highlightPostId, posts]);
+
+  useEffect(() => {
+    const loadMoreTarget = loadMorePostsRef.current;
+
+    if (!loadMoreTarget || !hasMorePosts) return undefined;
+
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0]?.isIntersecting) {
+        loadPosts(search, advancedSearch, advancedSearchActive, posts.length, true);
+      }
+    }, { rootMargin: '300px 0px' });
+
+    observer.observe(loadMoreTarget);
+
+    return () => observer.disconnect();
+  }, [hasMorePosts, loadPosts, search, advancedSearch, advancedSearchActive, posts.length]);
 
   // search posts
   const handleSearch = (event: React.SubmitEvent<HTMLFormElement>) => {
@@ -238,6 +273,8 @@ export default function Posts() {
             highlight={post.id === highlightPostId}
           />
         ))}
+
+        {hasMorePosts && <Box ref={loadMorePostsRef} sx={{ height: 1 }} />}
       </Box>
 
       <ReportDialog

@@ -166,8 +166,24 @@ posts.get('/', async (req, res) => {
     const profileUserId = req.query.userId
       ? Number(req.query.userId)
       : undefined;
+    const paginationRequested = req.query.offset !== undefined
+      || req.query.limit !== undefined;
+    const offset = Number(req.query.offset ?? 0);
+    const limit = Number(req.query.limit ?? 10);
 
     if (mine && !req.user) return res.status(401).json({ error: 'Unauthorized' });
+
+    if (
+      paginationRequested
+      && (
+        !Number.isInteger(offset)
+        || offset < 0
+        || !Number.isInteger(limit)
+        || limit < 1
+      )
+    ) {
+      return res.status(400).json({ error: 'Invalid post pagination.' });
+    }
 
     if (
       dateMode
@@ -448,9 +464,23 @@ posts.get('/', async (req, res) => {
       || hasImages,
     );
 
+    const databasePagination = paginationRequested
+      && !mine
+      && !profileUserId
+      && !needsPostFilter;
+
+    let postTake = mine || profileUserId || needsPostFilter ? undefined : 50;
+    let postSkip: number | undefined;
+
+    if (databasePagination) {
+      postTake = limit;
+      postSkip = offset;
+    }
+
     const rawPosts = await prisma.post.findMany({
       where: buildWhere(),
-      take: mine || profileUserId || needsPostFilter ? undefined : 50,
+      take: postTake,
+      skip: postSkip,
       orderBy: { createdAt: 'desc' },
       include: {
         user: { select: { id: true, name: true } },
@@ -560,9 +590,13 @@ posts.get('/', async (req, res) => {
       return true;
     });
 
-    const visibleRawPosts = !mine && !profileUserId
+    let visibleRawPosts = !mine && !profileUserId
       ? filteredPosts.slice(0, 50)
       : filteredPosts;
+
+    if (paginationRequested && !mine && !profileUserId && needsPostFilter) {
+      visibleRawPosts = filteredPosts.slice(offset, offset + limit);
+    }
 
     const viewerId = req.user?.id;
 
