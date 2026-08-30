@@ -147,6 +147,8 @@ export interface AdvancedSearchFilters {
   condition: string;
   hasImages: boolean;
   includeCompleted: boolean;
+  excludeInactive: boolean;
+  includeOwn: boolean;
   sortBy: string;
   popularityPeriod: string;
   dateMode: string;
@@ -177,6 +179,8 @@ export const EMPTY_ADVANCED_SEARCH: AdvancedSearchFilters = {
   condition: '',
   hasImages: false,
   includeCompleted: false,
+  excludeInactive: false,
+  includeOwn: false,
   sortBy: '',
   popularityPeriod: '24h',
   dateMode: '',
@@ -204,12 +208,6 @@ export default function SearchPostsAdvanced({
   /* Filter Validation */
   const canSearchDistance = user?.lat != null && user?.lng != null;
 
-  const distancePostalCodeMissing = (
-    canSearchDistance
-    && draft.distanceRange !== '∞'
-    && !draft.distancePostalCode.trim()
-  );
-
   const dateMissing = (
     (draft.dateMode === 'before' || draft.dateMode === 'after')
     && !draft.dateStart
@@ -233,7 +231,7 @@ export default function SearchPostsAdvanced({
       ...filters,
       popularityPeriod: filters.popularityPeriod || '24h',
       dateEnd: filters.dateEnd || getTodayDate(),
-      distanceRange: filters.distanceRange || '5',
+      distanceRange: filters.distanceRange,
       distancePostalCode: filters.distancePostalCode || user?.zipCode || '',
     });
 
@@ -251,7 +249,7 @@ export default function SearchPostsAdvanced({
   };
 
   const handleApply = () => {
-    if (dateMissing || dateRangeInvalid || distancePostalCodeMissing) return;
+    if (dateMissing || dateRangeInvalid) return;
     onApply(draft);
   };
 
@@ -275,14 +273,18 @@ export default function SearchPostsAdvanced({
           sx: {
             m: { xs: 1, sm: 4 },
             width: { xs: 'calc(100% - 16px)', sm: 'calc(100% - 64px)' },
+            overflowX: 'hidden',
           },
         },
       }}
     >
       <DialogTitle>Advanced Search</DialogTitle>
 
-      <DialogContent dividers>
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}>
+      <DialogContent
+        dividers
+        sx={{ px: { xs: 1, sm: 3 }, py: { xs: 1.5, sm: 2.5 }, overflowX: 'hidden' }}
+      >
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: { xs: 1.5, sm: 2.5 } }}>
           {/* Search by Title */}
           <TextField
             label="Search by Title"
@@ -334,7 +336,7 @@ export default function SearchPostsAdvanced({
             ))}
           </FilterSelect>
 
-          {/* Condition (Product Only) */}
+          {/* Search By Condition ( Only for Items) */}
           {draft.listingType === 'PRODUCT' && (
             <FilterSelect
               label="Condition"
@@ -350,7 +352,7 @@ export default function SearchPostsAdvanced({
             </FilterSelect>
           )}
 
-          {/* Image, Completed Trade, and Sort Options */}
+          {/* Filter By and Sort By Options */}
           <Box
             sx={{
               display: 'flex',
@@ -362,52 +364,146 @@ export default function SearchPostsAdvanced({
           >
             <Box
               sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: 3,
+                display: 'grid',
+                gridTemplateColumns: { xs: '52px minmax(0, 1fr)', sm: '80px minmax(0, 1fr)' },
+                alignItems: 'start',
+                columnGap: { xs: 0.5, sm: 1 },
                 width: '100%',
               }}
             >
-              {/* Has Images */}
-              <FormControlLabel
-                control={(
-                  <Checkbox
-                    checked={draft.hasImages}
-                    onChange={(event) => updateDraft({ hasImages: event.target.checked })}
-                  />
-                )}
-                label="Has images"
-                sx={{ m: 0 }}
-              />
-              {/* Include completed trades */}
-              <FormControlLabel
-                control={(
-                  <Checkbox
-                    checked={draft.includeCompleted}
-                    onChange={(event) => updateDraft({ includeCompleted: event.target.checked })}
-                  />
-                )}
-                label="Include completed trades"
-                sx={{ m: 0 }}
-              />
+              {/* Filter By */}
+              <Typography
+                sx={{
+                  flexShrink: 0,
+                  fontSize: { xs: '0.75rem', sm: '0.95rem' },
+                  whiteSpace: 'nowrap',
+                  pt: 0.75,
+                  '@media (max-width:360px)': { fontSize: '0.6rem' },
+                }}
+              >
+                Filter By:
+              </Typography>
+
+              <Box
+                sx={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+                  columnGap: { xs: 0.25, sm: 2 },
+                  rowGap: 0.25,
+                  minWidth: 0,
+                }}
+              >
+                {/* Has Images */}
+                <FormControlLabel
+                  control={(
+                    <Checkbox
+                      size="small"
+                      checked={draft.hasImages}
+                      onChange={(event) => updateDraft({ hasImages: event.target.checked })}
+                      sx={{ p: { xs: 0.4, sm: 0.75 } }}
+                    />
+                  )}
+                  label="Has images"
+                  sx={{
+                    m: 0,
+                    minWidth: 0,
+                    '& .MuiFormControlLabel-label': {
+                      fontSize: { xs: '0.72rem', sm: '0.9rem' },
+                      whiteSpace: 'nowrap',
+                      '@media (max-width:360px)': { fontSize: '0.55rem' },
+                    },
+                  }}
+                />
+
+                {/* Include completed trades */}
+                <FormControlLabel
+                  control={(
+                    <Checkbox
+                      size="small"
+                      checked={draft.includeCompleted}
+                      onChange={(event) => updateDraft({ includeCompleted: event.target.checked })}
+                      sx={{ p: { xs: 0.4, sm: 0.75 } }}
+                    />
+                  )}
+                  label="Include completed trades"
+                  sx={{
+                    m: 0,
+                    minWidth: 0,
+                    '& .MuiFormControlLabel-label': {
+                      fontSize: { xs: '0.72rem', sm: '0.9rem' },
+                      whiteSpace: 'nowrap',
+                      '@media (max-width:360px)': { fontSize: '0.55rem' },
+                    },
+                  }}
+                />
+
+                {/* Exclude inactive trades */}
+                <FormControlLabel
+                  control={(
+                    <Checkbox
+                      size="small"
+                      checked={draft.excludeInactive}
+                      onChange={(event) => updateDraft({ excludeInactive: event.target.checked })}
+                      sx={{ p: { xs: 0.4, sm: 0.75 } }}
+                    />
+                  )}
+                  label="Exclude inactive trades"
+                  sx={{
+                    m: 0,
+                    minWidth: 0,
+                    '& .MuiFormControlLabel-label': {
+                      fontSize: { xs: '0.72rem', sm: '0.9rem' },
+                      whiteSpace: 'nowrap',
+                      '@media (max-width:360px)': { fontSize: '0.55rem' },
+                    },
+                  }}
+                />
+
+                {/* Include own trades */}
+                <FormControlLabel
+                  control={(
+                    <Checkbox
+                      size="small"
+                      checked={draft.includeOwn}
+                      onChange={(event) => updateDraft({ includeOwn: event.target.checked })}
+                      sx={{ p: { xs: 0.4, sm: 0.75 } }}
+                    />
+                  )}
+                  label="Include own trades"
+                  sx={{
+                    m: 0,
+                    minWidth: 0,
+                    '& .MuiFormControlLabel-label': {
+                      fontSize: { xs: '0.72rem', sm: '0.9rem' },
+                      whiteSpace: 'nowrap',
+                      '@media (max-width:360px)': { fontSize: '0.55rem' },
+                    },
+                  }}
+                />
+              </Box>
             </Box>
 
-            {/* Sort Options- Most Popular and Recently Updated */}
             <Box
               sx={{
-                display: 'flex',
+                display: 'grid',
+                gridTemplateColumns: { xs: '52px minmax(0, 1fr)', sm: '80px minmax(0, 1fr)' },
                 alignItems: 'center',
-                justifyContent: 'center',
-                gap: 1,
+                columnGap: { xs: 0.5, sm: 1 },
                 width: '100%',
                 whiteSpace: 'nowrap',
               }}
             >
-              <Typography sx={{ flexShrink: 0, fontSize: '0.95rem' }}>
-                Sort by:
+              <Typography
+                sx={{
+                  flexShrink: 0,
+                  fontSize: { xs: '0.75rem', sm: '0.95rem' },
+                  whiteSpace: 'nowrap',
+                  '@media (max-width:360px)': { fontSize: '0.6rem' },
+                }}
+              >
+                Sort By:
               </Typography>
-
+              {/* Radio Group (either/or - Most Popular and Recently Updated */}
               <RadioGroup
                 row
                 value={draft.sortBy}
@@ -415,20 +511,24 @@ export default function SearchPostsAdvanced({
                 sx={{
                   display: 'flex',
                   alignItems: 'center',
-                  justifyContent: 'center',
+                  justifyContent: 'flex-start',
                   flexWrap: 'nowrap',
-                  gap: 1,
+                  gap: { xs: 0.25, sm: 1 },
+                  minWidth: 0,
                 }}
               >
+                {/* Most Recently Updated */}
                 <FormControlLabel
                   value="updated"
-                  control={<Radio size="small" sx={{ p: 0.75 }} />}
+                  control={<Radio size="small" sx={{ p: { xs: 0.35, sm: 0.75 } }} />}
                   label="Most recent updates"
+                  onDoubleClick={() => updateDraft({ sortBy: '' })}
                   sx={{
                     m: 0,
                     '& .MuiFormControlLabel-label': {
-                      fontSize: '0.9rem',
+                      fontSize: { xs: '0.72rem', sm: '0.9rem' },
                       whiteSpace: 'nowrap',
+                      '@media (max-width:360px)': { fontSize: '0.55rem' },
                     },
                   }}
                 />
@@ -437,19 +537,23 @@ export default function SearchPostsAdvanced({
                   sx={{
                     display: 'flex',
                     alignItems: 'center',
-                    gap: 0.75,
-                    flexShrink: 0,
+                    gap: { xs: 0.25, sm: 0.75 },
+                    flexShrink: 1,
+                    minWidth: 0,
                   }}
                 >
+                  {/* Most Popular Within Time */}
                   <FormControlLabel
                     value="popularity"
-                    control={<Radio size="small" sx={{ p: 0.75 }} />}
+                    control={<Radio size="small" sx={{ p: { xs: 0.35, sm: 0.75 } }} />}
                     label="Most popular within"
+                    onDoubleClick={() => updateDraft({ sortBy: '' })}
                     sx={{
                       m: 0,
                       '& .MuiFormControlLabel-label': {
-                        fontSize: '0.9rem',
+                        fontSize: { xs: '0.72rem', sm: '0.9rem' },
                         whiteSpace: 'nowrap',
+                        '@media (max-width:360px)': { fontSize: '0.55rem' },
                       },
                     }}
                   />
@@ -457,7 +561,11 @@ export default function SearchPostsAdvanced({
                   <FormControl
                     size="small"
                     disabled={draft.sortBy !== 'popularity'}
-                    sx={{ width: 105, flexShrink: 0 }}
+                    sx={{
+                      width: { xs: 82, sm: 105 },
+                      flexShrink: 1,
+                      '@media (max-width:360px)': { width: 62 },
+                    }}
                   >
                     <Select
                       value={draft.popularityPeriod}
@@ -465,7 +573,11 @@ export default function SearchPostsAdvanced({
                       onChange={(event) => updateDraft({
                         popularityPeriod: event.target.value,
                       })}
-                      sx={{ fontSize: '0.9rem', height: 40 }}
+                      sx={{
+                        fontSize: { xs: '0.72rem', sm: '0.9rem' },
+                        height: { xs: 34, sm: 40 },
+                        '@media (max-width:360px)': { fontSize: '0.55rem', height: 30 },
+                      }}
                     >
                       {POPULARITY_OPTIONS.map(([value, label]) => (
                         <MenuItem key={value} value={value}>
@@ -543,12 +655,20 @@ export default function SearchPostsAdvanced({
             sx={{
               display: 'flex',
               alignItems: 'center',
-              gap: 1.5,
+              gap: { xs: 0.5, sm: 1.5 },
               width: '100%',
-              flexWrap: 'wrap',
+              flexWrap: 'nowrap',
+              minWidth: 0,
             }}
           >
-            <Typography sx={{ flexShrink: 0, whiteSpace: 'nowrap' }}>
+            <Typography
+              sx={{
+                flexShrink: 0,
+                whiteSpace: 'nowrap',
+                fontSize: { xs: '0.72rem', sm: '1rem' },
+                '@media (max-width:360px)': { fontSize: '0.58rem' },
+              }}
+            >
               Less than
             </Typography>
 
@@ -556,10 +676,15 @@ export default function SearchPostsAdvanced({
               ref={distanceSelect}
               disabled={!canSearchDistance}
               size="small"
-              sx={{ minWidth: 90, width: 90, flexShrink: 0 }}
+              sx={{
+                minWidth: { xs: 64, sm: 90 },
+                width: { xs: 64, sm: 90 },
+                flexShrink: 1,
+                '@media (max-width:360px)': { minWidth: 50, width: 50 },
+              }}
             >
               <Select
-                value={draft.distanceRange || '5'}
+                value={draft.distanceRange}
                 onOpen={updateDistanceMenuHeight}
                 MenuProps={{
                   anchorOrigin: {
@@ -599,11 +724,25 @@ export default function SearchPostsAdvanced({
               </Select>
             </FormControl>
 
-            <Typography sx={{ flexShrink: 0, whiteSpace: 'nowrap' }}>
+            <Typography
+              sx={{
+                flexShrink: 0,
+                whiteSpace: 'nowrap',
+                fontSize: { xs: '0.72rem', sm: '1rem' },
+                '@media (max-width:360px)': { fontSize: '0.58rem' },
+              }}
+            >
               miles
             </Typography>
 
-            <Typography sx={{ flexShrink: 0, whiteSpace: 'nowrap' }}>
+            <Typography
+              sx={{
+                flexShrink: 0,
+                whiteSpace: 'nowrap',
+                fontSize: { xs: '0.72rem', sm: '1rem' },
+                '@media (max-width:360px)': { fontSize: '0.58rem' },
+              }}
+            >
               from postal code
             </Typography>
 
@@ -614,7 +753,11 @@ export default function SearchPostsAdvanced({
               onChange={(event) => updateDraft({
                 distancePostalCode: event.target.value,
               })}
-              sx={{ width: 120, flexShrink: 0 }}
+              sx={{
+                width: { xs: 86, sm: 120 },
+                flexShrink: 1,
+                '@media (max-width:360px)': { width: 68 },
+              }}
             />
           </Box>
         </Box>
@@ -628,7 +771,7 @@ export default function SearchPostsAdvanced({
 
         <Button
           variant="contained"
-          disabled={dateMissing || dateRangeInvalid || distancePostalCodeMissing}
+          disabled={dateMissing || dateRangeInvalid}
           onClick={handleApply}
         >
           Search
