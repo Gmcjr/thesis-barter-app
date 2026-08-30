@@ -1,4 +1,6 @@
-import React, { useMemo } from 'react';
+import React, {
+  useEffect, useMemo, useRef, useState,
+} from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import ThemeProvider from '@mui/system/ThemeProvider';
 import Box from '@mui/material/Box';
@@ -55,6 +57,27 @@ const routes: RouteDef[] = [
 function AppShell() {
   const { mode, contrast } = useSettings();
   const theme = useMemo(() => getTheme(mode, contrast), [mode, contrast]);
+  const footerRef = useRef<HTMLDivElement | null>(null);
+  const [footerHeight, setFooterHeight] = useState(0);
+
+  useEffect(() => {
+    const footer = footerRef.current;
+
+    if (!footer) return undefined;
+
+    const updateFooterHeight = () => {
+      setFooterHeight(footer.offsetHeight);
+    };
+
+    updateFooterHeight();
+
+    const observer = new ResizeObserver(updateFooterHeight);
+    observer.observe(footer);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
 
   return (
     <ThemeProvider theme={theme}>
@@ -70,7 +93,12 @@ function AppShell() {
                 <Box
                   component="main"
                   sx={{
-                    pt: 16, pb: 8, backgroundColor: 'background.default', minHeight: '100vh',
+                    pt: 16,
+                    pb: footerHeight > 0
+                      ? `calc(${theme.spacing(8)} + ${footerHeight}px)`
+                      : 8,
+                    backgroundColor: 'background.default',
+                    minHeight: '100vh',
                   }}
                 >
                   <Container maxWidth="md">
@@ -78,7 +106,18 @@ function AppShell() {
                   </Container>
                 </Box>
 
-                <Footer />
+                <Box
+                  ref={footerRef}
+                  sx={{
+                    position: 'fixed',
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    zIndex: theme.zIndex.appBar,
+                  }}
+                >
+                  <Footer />
+                </Box>
               </RouterProvider>
             </NotificationProvider>
           </SocketProvider>
