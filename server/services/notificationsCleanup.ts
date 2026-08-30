@@ -4,8 +4,9 @@ const SWEEP_INTERVAL_MS = 60 * 60 * 1000; // Hourly
 const RETENTION_MS = 7 * 24 * 60 * 60 * 1000; // 7 days after read
 
 // Deletes read notifications past the retention window
-async function sweepReadNotifications(): Promise<void> {
-  const cutoff = new Date(Date.now() - RETENTION_MS);
+export async function sweepReadNotifications(
+  cutoff: Date = new Date(Date.now() - RETENTION_MS),
+): Promise<void> {
   await prisma.notification.deleteMany({
     where: { readAt: { lt: cutoff } },
   });

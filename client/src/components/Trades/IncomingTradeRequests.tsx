@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import axios from 'axios';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
+import Alert from '@mui/material/Alert';
 import { radius } from '../../theme';
 import { useToast } from '../../context/ToastContext';
+import { useParams } from '../../context/RouterContext';
 
 interface IncomingRequest {
   id: number;
@@ -21,13 +23,15 @@ interface IncomingTradeRequestsProps {
 }
 
 export default function IncomingTradeRequests({ postId, onAccepted }: IncomingTradeRequestsProps) {
+  const { requestId } = useParams();
+  const highlightRequestId = requestId ? Number(requestId) : undefined;
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [requests, setRequests] = useState<IncomingRequest[]>([]);
   const [acceptingId, setAcceptingId] = useState<number | null>(null);
   const { showToast } = useToast();
 
-  const loadRequests = async () => {
+  const loadRequests = useCallback(async () => {
     setLoading(true);
     try {
       const res = await axios.get<IncomingRequest[]>(`/trade-requests/for-post/${postId}`);
@@ -37,7 +41,7 @@ export default function IncomingTradeRequests({ postId, onAccepted }: IncomingTr
     } finally {
       setLoading(false);
     }
-  };
+  }, [postId, showToast]);
 
   const handleToggle = () => {
     const next = !open;
@@ -45,10 +49,17 @@ export default function IncomingTradeRequests({ postId, onAccepted }: IncomingTr
     if (next) loadRequests();
   };
 
-  const handleAccept = async (requestId: number) => {
-    setAcceptingId(requestId);
+  useEffect(() => {
+    if (highlightRequestId) {
+      setOpen(true);
+      loadRequests();
+    }
+  }, [highlightRequestId, loadRequests]);
+
+  const handleAccept = async (tradeRequestId: number) => {
+    setAcceptingId(tradeRequestId);
     try {
-      await axios.patch(`/trade-requests/${requestId}/accept`);
+      await axios.patch(`/trade-requests/${tradeRequestId}/accept`);
       showToast('Trade accepted!', 'success');
       setOpen(false);
       await onAccepted();
@@ -63,6 +74,11 @@ export default function IncomingTradeRequests({ postId, onAccepted }: IncomingTr
   };
 
   const pendingRequests = requests.filter((r) => r.status === 'PENDING');
+  const highlightTarget = highlightRequestId
+    ? requests.find((r) => r.id === highlightRequestId)
+    : undefined;
+  const highlightNotFound = !!highlightRequestId && !loading && !highlightTarget;
+  const highlightCancelled = highlightTarget?.status === 'CANCELLED';
 
   return (
     <Box sx={{ mt: 2, pt: 2 }}>
@@ -77,6 +93,13 @@ export default function IncomingTradeRequests({ postId, onAccepted }: IncomingTr
         >
           {loading && <CircularProgress size={20} />}
 
+          {highlightNotFound && (
+            <Alert severity="info">This trade request is no longer available.</Alert>
+          )}
+          {highlightCancelled && (
+            <Alert severity="info">This trade request was withdrawn by the requester.</Alert>
+          )}
+
           {!loading && pendingRequests.length === 0 && (
             <Typography variant="body2" color="text.secondary">No pending requests yet.</Typography>
           )}
@@ -85,7 +108,14 @@ export default function IncomingTradeRequests({ postId, onAccepted }: IncomingTr
             <Box
               key={request.id}
               sx={{
-                display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 1.5, bgcolor: 'surface.sunken', borderRadius: radius.md, gap: 2,
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                p: 1.5,
+                bgcolor: 'surface.sunken',
+                borderRadius: radius.md,
+                gap: 2,
+                ...(request.id === highlightRequestId && { outline: '2px solid', outlineColor: 'primary.main' }),
               }}
             >
               <Box sx={{ minWidth: 0 }}>

@@ -7,6 +7,7 @@ import Box from '@mui/material/Box';
 import { type PostData, type PostUpdateData } from './ManagePosts';
 import type { TradeRequestData } from '../Trades/RequestTradeButton';
 import { useAuth } from '../../context/AuthContext';
+import { useParams } from '../../context/RouterContext';
 import Post from './Post';
 import ReportDialog from './ReportDialog';
 import SearchPosts from './SearchPosts';
@@ -19,6 +20,8 @@ import { useSocket } from '../../context/SocketContext';
 export default function Posts() {
   const { user, blockedUserIds } = useAuth();
   const socket = useSocket();
+  const { postId: highlightPostIdParam } = useParams();
+  const highlightPostId = highlightPostIdParam ? Number(highlightPostIdParam) : undefined;
 
   const [posts, setPosts] = useState<PostData[]>([]);
   const [myTradeRequests, setMyTradeRequests] = useState<TradeRequestData[]>([]);
@@ -111,6 +114,11 @@ export default function Posts() {
       socket.off('posts:changed', handleChange);
     };
   }, [socket, search, advancedSearch, advancedSearchActive, loadPosts]);
+
+  useEffect(() => {
+    if (!highlightPostId) return;
+    document.getElementById(`post-${highlightPostId}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, [highlightPostId, posts]);
 
   // search posts
   const handleSearch = (event: React.SubmitEvent<HTMLFormElement>) => {
@@ -227,6 +235,7 @@ export default function Posts() {
             onUpdate={handleUpdatePost}
             onDelete={handleDeletePost}
             onComplete={handleCompleteTrade}
+            highlight={post.id === highlightPostId}
           />
         ))}
       </Box>

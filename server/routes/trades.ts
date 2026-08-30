@@ -208,7 +208,7 @@ trades.patch('/:id/complete', requireAuth, async (req, res) => {
           type: 'TRADE_COMPLETED',
           title: `Trade completed: "${trade.post.title}"`,
           body: 'Leave a review for your trade partner!',
-          link: '/profile',
+          link: `/profile/history/${trade.postId}`,
           entityType: 'TRADE',
           entityId: trade.id,
         });
@@ -217,7 +217,7 @@ trades.patch('/:id/complete', requireAuth, async (req, res) => {
           type: 'TRADE_COMPLETED',
           title: `Trade completed: "${trade.post.title}"`,
           body: 'Leave a review for your trade partner!',
-          link: '/profile',
+          link: `/profile/history/${trade.postId}`,
           entityType: 'TRADE',
           entityId: trade.id,
         });
@@ -228,7 +228,7 @@ trades.patch('/:id/complete', requireAuth, async (req, res) => {
           type: 'TRADE_PARTNER_COMPLETED',
           title: 'Your trade partner completed their side of the trade',
           body: `Finish "${trade.post.title}" by marking your side complete.`,
-          link: '/profile',
+          link: `/trade/${trade.postId}`,
           entityType: 'TRADE',
           entityId: trade.id,
         });

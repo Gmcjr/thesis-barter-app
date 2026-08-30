@@ -16,21 +16,20 @@ import LoginIcon from '@mui/icons-material/Login';
 import Fab from '@mui/material/Fab';
 import axios from 'axios';
 
-import Badge from '@mui/material/Badge';
-import NotificationsIcon from '@mui/icons-material/Notifications';
 import PersonIcon from '@mui/icons-material/Person';
+import GavelIcon from '@mui/icons-material/Gavel';
+import PersonOffIcon from '@mui/icons-material/PersonOff';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { Link, useRouter } from '../../context/RouterContext';
 import SettingsMenu from './SettingsMenu';
 import NotificationBell from './NotificationBell';
-import { useNotifications } from '../../context/NotificationContext';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth, isModerator } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import NewPost, { type PostFormData } from '../Posts/NewPost';
 
 function NavBar() {
   const { navigate } = useRouter();
   const { user, loading, logout } = useAuth();
-  const { unreadCount } = useNotifications();
   const { showToast } = useToast();
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -97,7 +96,7 @@ function NavBar() {
             />
           </Link>
 
-          {/* Username + Avatar + modal with: Google Login / Logout + Accessibility Settins + Profile link */}
+          {/* Username + Avatar + modal with: Google Login / Logout + Accessibility Settings + Profile link */}
           <Box sx={{
             display: 'flex',
             alignItems: 'center',
@@ -117,56 +116,8 @@ function NavBar() {
                       gap: 1.5,
                     }}
                   >
-                    {/* Notifications only visible when logged in */}
-                    <Box
-                      sx={{
-                        position: 'relative',
-                        width: 36,
-                        height: 36,
-                        flexShrink: 0,
-                        borderRadius: '50%',
-                        bgcolor: 'primary.main',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        transition: 'background-color 0.15s ease',
-                        '&:hover': {
-                          bgcolor: 'primary.main',
-                        },
-                        '& button, & .MuiIconButton-root': {
-                          position: 'absolute',
-                          top: 0,
-                          left: 0,
-                          width: 36,
-                          height: 36,
-                          opacity: 0,
-                          zIndex: 2,
-                          cursor: 'pointer',
-                        },
-                      }}
-                    >
-                      <Badge
-                        badgeContent={unreadCount}
-                        color="error"
-                        sx={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          '& .MuiBadge-badge': {
-                            top: 1,
-                            right: 0,
-                          },
-                        }}
-                      >
-                        <NotificationsIcon
-                          sx={{
-                            fontSize: 22,
-                            display: 'block',
-                          }}
-                        />
-                      </Badge>
-                      <NotificationBell />
-                    </Box>
+                    {/* Notification Bell - standalone, hidden for guests */}
+                    <NotificationBell filled />
 
                     <Box
                       onClick={(e) => setUserMenuTarget(e.currentTarget)}
@@ -251,6 +202,42 @@ function NavBar() {
                         <MessageIcon sx={{ fontSize: '1.25rem' }} />
                         <Typography variant="body2" sx={{ fontWeight: 600 }}>
                           Messages
+                        </Typography>
+                      </Box>
+                    </MenuItem>
+                  )}
+
+                  {/* Deleted Conversations Item */}
+                  {user && (
+                    <MenuItem onClick={() => { setUserMenuTarget(null); navigate('/deleted-conversations'); }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <DeleteIcon sx={{ fontSize: '1.25rem' }} />
+                        <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                          Deleted Conversations
+                        </Typography>
+                      </Box>
+                    </MenuItem>
+                  )}
+
+                  {/* Blocked Users Item */}
+                  {user && (
+                    <MenuItem onClick={() => { setUserMenuTarget(null); navigate('/blocked-users'); }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <PersonOffIcon sx={{ fontSize: '1.25rem' }} />
+                        <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                          Blocked Users
+                        </Typography>
+                      </Box>
+                    </MenuItem>
+                  )}
+
+                  {/* Moderation Queue Item - moderators/admins only, hidden otherwise */}
+                  {isModerator(user?.role ?? null) && (
+                    <MenuItem onClick={() => { setUserMenuTarget(null); navigate('/moderation'); }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <GavelIcon sx={{ fontSize: '1.25rem' }} />
+                        <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                          Moderation Queue
                         </Typography>
                       </Box>
                     </MenuItem>
