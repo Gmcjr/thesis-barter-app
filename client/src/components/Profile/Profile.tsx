@@ -342,7 +342,7 @@ export default function Profile() {
   }
 
   return (
-    <Box sx={{ width: '100%', mt: -4 }}>
+    <Box sx={{ width: '100%', mt: 0 }}>
       <ProfileHeader
         profile={profile}
         isOwnProfile={isOwnProfile}

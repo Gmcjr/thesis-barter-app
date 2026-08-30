@@ -14,7 +14,7 @@ interface TermsProps {
 
 export default function Terms({ embedded = false }: TermsProps) {
   return (
-    <Box sx={{ width: '100%', mt: embedded ? 0 : -4 }}>
+    <Box sx={{ width: '100%', mt: embedded ? 0 : 0 }}>
       <Typography variant="h4" sx={{ mb: 1 }}>
         Barta Community Code of Conduct
       </Typography>

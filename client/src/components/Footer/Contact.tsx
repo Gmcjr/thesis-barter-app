@@ -95,7 +95,7 @@ export default function Contact() {
   };
 
   return (
-    <Box sx={{ width: '100%', mt: -4 }}>
+    <Box sx={{ width: '100%', mt: 0 }}>
       <Typography variant="h4" sx={{ mb: 1 }}>
         Contact Barta
       </Typography>
