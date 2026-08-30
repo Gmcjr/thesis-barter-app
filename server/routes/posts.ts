@@ -153,6 +153,9 @@ posts.get('/', async (req, res) => {
     const conditionSearch = String(req.query.condition ?? '').trim();
     const hasImages = String(req.query.hasImages ?? '').trim() === 'true';
     const includeCompleted = String(req.query.includeCompleted ?? '').trim() === 'true';
+    const excludeInactive = String(req.query.excludeInactive ?? '').trim() === 'true';
+    const includeOwn = String(req.query.includeOwn ?? '').trim() === 'true';
+    const advancedSearch = String(req.query.advancedSearch ?? '').trim() === 'true';
     const dateMode = String(req.query.dateMode ?? '').trim();
     const dateStart = String(req.query.dateStart ?? '').trim();
     const dateEnd = String(req.query.dateEnd ?? '').trim();
@@ -200,7 +203,7 @@ posts.get('/', async (req, res) => {
 
     let viewerCoordinates = null;
 
-    if (distanceRange && distanceRange !== '∞') {
+    if (distanceRange && distancePostalCode && distanceRange !== '∞') {
       if (!req.user) {
         return res.status(401).json({
           error: 'Sign in to search by distance.',
@@ -223,13 +226,7 @@ posts.get('/', async (req, res) => {
         });
       }
 
-      const searchPostalCode = distancePostalCode || viewer.zipCode?.trim() || '';
-
-      if (!searchPostalCode) {
-        return res.status(400).json({
-          error: 'Enter a postal code to search by distance.',
-        });
-      }
+      const searchPostalCode = distancePostalCode;
 
       const savedPostalCode = viewer.zipCode?.trim() || '';
 
@@ -340,6 +337,17 @@ posts.get('/', async (req, res) => {
       });
     }
 
+    if (excludeInactive) {
+      const activeSince = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+
+      advancedFilters.push({
+        OR: [
+          { status: { not: 'OPEN' as const } },
+          { user: { lastActive: { gte: activeSince } } },
+        ],
+      });
+    }
+
     if (dateMode === 'before' || dateMode === 'after') {
       if (!dateStart) {
         return res.status(400).json({ error: 'Date is required.' });
@@ -424,6 +432,9 @@ posts.get('/', async (req, res) => {
           ...(blockedRelationshipIds.length
             ? [{ userId: { notIn: blockedRelationshipIds } }]
             : []),
+          ...(advancedSearch && req.user && !includeOwn
+            ? [{ userId: { not: getUserId(req) } }]
+            : []),
           ...searchFilter,
           ...advancedFilters,
         ],
@@ -431,7 +442,7 @@ posts.get('/', async (req, res) => {
     };
 
     const needsPostFilter = Boolean(
-      (distanceRange && distanceRange !== '∞')
+      (distanceRange && distancePostalCode && distanceRange !== '∞')
       || listingType
       || conditionSearch
       || hasImages,
@@ -520,7 +531,7 @@ posts.get('/', async (req, res) => {
         }
       }
 
-      if (distanceRange && distanceRange !== '∞') {
+      if (distanceRange && distancePostalCode && distanceRange !== '∞') {
         if (
           !viewerCoordinates
           || post.lat === null
