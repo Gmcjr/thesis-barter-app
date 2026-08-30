@@ -34,16 +34,17 @@ model User {
   userMedia     UserMedia[]
   notifications Notification[]
 
-  name      String
-  email     String   @unique
-  phone     String?
-  role      Role?    @default(USER)
-  bio       String?
-  createdAt DateTime @default(now())
-  zipCode   String?
-  country   String?
-  lat       Float?
-  lng       Float?
+  name       String
+  email      String   @unique
+  phone      String?
+  role       Role?    @default(USER)
+  bio        String?
+  createdAt  DateTime @default(now())
+  lastActive DateTime @default(now())
+  zipCode    String?
+  country    String?
+  lat        Float?
+  lng        Float?
 
   isSystem           Boolean @default(false)
   pendingBio         String?
