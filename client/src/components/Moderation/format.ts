@@ -42,6 +42,22 @@ export const humanizeStatus = (status: string) => (
 
 export const humanizeReason = (reason: string) => reason.replace(/_/g, ' ');
 
+// Screening thresholds - mirror server/services/moderation.ts
+// AUTO_REMOVE_THRESHOLD, AUTO_DISMISS_CATEGORIES, ZERO_TOLERANCE_CATEGORIES
+// No client/server shared-constants module exists, keep these in sync by hand
+export const AI_AUTO_REMOVE_THRESHOLD = 0.85;
+export const AI_AUTO_DISMISS_THRESHOLD = 0.15;
+export const AI_ZERO_TOLERANCE_CATEGORIES = ['ILLEGAL'];
+
+export type AiScoreVerdict = 'pass' | 'review' | 'fail';
+
+export const aiScoreVerdict = (score: number, categories: string[]): AiScoreVerdict => {
+  const hasZeroTolerance = categories.some((c) => AI_ZERO_TOLERANCE_CATEGORIES.includes(c));
+  if (hasZeroTolerance || score >= AI_AUTO_REMOVE_THRESHOLD) return 'fail';
+  if (score <= AI_AUTO_DISMISS_THRESHOLD) return 'pass';
+  return 'review';
+};
+
 export const targetSnippet = (report: ReportRow) => {
   if (report.targetType === 'POST') return report.post?.message ?? '(post not found)';
   if (report.targetType === 'MESSAGE') return report.message?.text ?? '(message not found)';
