@@ -45,14 +45,40 @@ export const humanizeReason = (reason: string) => reason.replace(/_/g, ' ');
 export const targetSnippet = (report: ReportRow) => {
   if (report.targetType === 'POST') return report.post?.message ?? '(post not found)';
   if (report.targetType === 'MESSAGE') return report.message?.text ?? '(message not found)';
-  return `User: ${report.targetUser?.name ?? '(user not found)'}`;
+  if (report.targetType === 'TRADE_OFFER') {
+    if (!report.offer) return '(trade offer not found)';
+    return report.offer.message ?? '(no offer message)';
+  }
+  if (report.targetType === 'REVIEW') {
+    if (!report.review) return '(review not found)';
+    return report.review.comment ?? '(no review comment)';
+  }
+  if (report.targetType === 'TRADE_REQUEST') {
+    if (!report.tradeRequest) return '(trade request not found)';
+    return report.tradeRequest.message ?? '(no request message)';
+  }
+  if (report.targetType === 'USER') return `User: ${report.targetUser?.name ?? '(user not found)'}`;
+  return '(unknown target)';
 };
 
 // Collapsed-row label: post title where one exists, otherwise the content itself
 export const reportSummary = (report: ReportRow) => {
   if (report.targetType === 'POST') return report.post?.title ?? '(post not found)';
   if (report.targetType === 'MESSAGE') return report.message?.text ?? '(message not found)';
-  return report.targetUser?.name ?? '(user not found)';
+  if (report.targetType === 'TRADE_OFFER') {
+    if (!report.offer) return '(trade offer not found)';
+    return report.offer.message ?? 'Trade offer';
+  }
+  if (report.targetType === 'REVIEW') {
+    if (!report.review) return '(review not found)';
+    return `Review by ${report.review.reviewer.name ?? `User #${report.review.reviewer.id}`}`;
+  }
+  if (report.targetType === 'TRADE_REQUEST') {
+    if (!report.tradeRequest) return '(trade request not found)';
+    return `Trade request from ${report.tradeRequest.requester.name ?? `User #${report.tradeRequest.requester.id}`}`;
+  }
+  if (report.targetType === 'USER') return report.targetUser?.name ?? '(User not found)';
+  return '(unknown target)';
 };
 
 export const appealTargetSnippet = (appeal: AppealRow) => {
