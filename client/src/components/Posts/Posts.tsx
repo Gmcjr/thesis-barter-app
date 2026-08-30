@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-one-expression-per-line */
 import React, { useCallback, useEffect, useState } from 'react';
 import axios from 'axios';
 
@@ -29,6 +28,7 @@ export default function Posts() {
     EMPTY_ADVANCED_SEARCH,
   );
   const [advancedSearchOpen, setAdvancedSearchOpen] = useState(false);
+  const [advancedSearchActive, setAdvancedSearchActive] = useState(false);
   const [error, setError] = useState('');
   const [reportDialogPostId, setReportDialogPostId] = useState<number | null>(null);
 
@@ -36,6 +36,7 @@ export default function Posts() {
   const loadPosts = useCallback(async (
     searchValue = '',
     filters: AdvancedSearchFilters = EMPTY_ADVANCED_SEARCH,
+    isAdvancedSearch = false,
   ) => {
     try {
       setError('');
@@ -48,6 +49,9 @@ export default function Posts() {
           condition: filters.condition || undefined,
           hasImages: filters.hasImages || undefined,
           includeCompleted: filters.includeCompleted || undefined,
+          excludeInactive: filters.excludeInactive || undefined,
+          includeOwn: filters.includeOwn || undefined,
+          advancedSearch: isAdvancedSearch || undefined,
           dateMode: filters.dateMode || undefined,
           dateStart: filters.dateStart || undefined,
           dateEnd: filters.dateMode === 'between'
@@ -70,7 +74,7 @@ export default function Posts() {
   }, []);
 
   useEffect(() => {
-    loadPosts(search, advancedSearch);
+    loadPosts(search, advancedSearch, advancedSearchActive);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadPosts, blockedUserIds]);
 
@@ -92,7 +96,7 @@ export default function Posts() {
 
   const handleTradeActivity = async () => {
     await Promise.all([
-      loadPosts(search, advancedSearch),
+      loadPosts(search, advancedSearch, advancedSearchActive),
       loadMyTradeRequests(),
     ]);
   };
@@ -100,31 +104,34 @@ export default function Posts() {
   useEffect(() => {
     if (!socket) return undefined;
     const handleChange = () => {
-      loadPosts(search, advancedSearch);
+      loadPosts(search, advancedSearch, advancedSearchActive);
     };
     socket.on('posts:changed', handleChange);
     return () => {
       socket.off('posts:changed', handleChange);
     };
-  }, [socket, search, advancedSearch, loadPosts]);
+  }, [socket, search, advancedSearch, advancedSearchActive, loadPosts]);
 
   // search posts
   const handleSearch = (event: React.SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
     setAdvancedSearch(EMPTY_ADVANCED_SEARCH);
+    setAdvancedSearchActive(false);
     loadPosts(search, EMPTY_ADVANCED_SEARCH);
   };
 
   const handleAdvancedSearch = (filters: AdvancedSearchFilters) => {
     setSearch('');
     setAdvancedSearch(filters);
+    setAdvancedSearchActive(true);
     setAdvancedSearchOpen(false);
-    loadPosts('', filters);
+    loadPosts('', filters, true);
   };
 
   const handleAdvancedSearchCancel = () => {
     setSearch('');
     setAdvancedSearch(EMPTY_ADVANCED_SEARCH);
+    setAdvancedSearchActive(false);
     setAdvancedSearchOpen(false);
     loadPosts('', EMPTY_ADVANCED_SEARCH);
   };
@@ -137,7 +144,7 @@ export default function Posts() {
     try {
       setError('');
       await axios.patch(`/posts/${postId}`, postData);
-      await loadPosts(search, advancedSearch);
+      await loadPosts(search, advancedSearch, advancedSearchActive);
     } catch (requestError) {
       console.error('Failed to update post:', requestError);
       setError('Failed to update post');
@@ -149,7 +156,7 @@ export default function Posts() {
     try {
       setError('');
       await axios.delete(`/posts/${postId}`);
-      await loadPosts(search, advancedSearch);
+      await loadPosts(search, advancedSearch, advancedSearchActive);
     } catch (requestError) {
       console.error('Failed to delete post:', requestError);
       setError('Failed to delete post');
@@ -161,7 +168,7 @@ export default function Posts() {
     try {
       setError('');
       await axios.patch(`/trades/${tradeId}/complete`);
-      await loadPosts(search, advancedSearch);
+      await loadPosts(search, advancedSearch, advancedSearchActive);
     } catch (requestError) {
       console.error('Failed to complete trade:', requestError);
       setError('Failed to complete trade');
