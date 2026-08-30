@@ -97,6 +97,23 @@ export const reportSummary = (report: ReportRow) => {
   return '(unknown target)';
 };
 
+// Friendly label per report target type for moderator-facing toasts
+export const TARGET_TYPE_LABEL: Record<ReportRow['targetType'], string> = {
+  POST: 'Post',
+  USER: 'User',
+  MESSAGE: 'Message',
+  TRADE_OFFER: 'Trade offer',
+  REVIEW: 'Review',
+  TRADE_REQUEST: 'Trade request',
+};
+
+// Toast copy after a removal
+export const removalMessage = (report: ReportRow): string => {
+  const summary = reportSummary(report);
+  const trimmed = summary.length > 60 ? `${summary.slice(0, 57)}...` : summary;
+  return `${TARGET_TYPE_LABEL[report.targetType]} removed: "${trimmed}"`;
+};
+
 export const appealTargetSnippet = (appeal: AppealRow) => {
   if (appeal.report.post) return appeal.report.post.message;
   if (appeal.report.message) return appeal.report.message.text;

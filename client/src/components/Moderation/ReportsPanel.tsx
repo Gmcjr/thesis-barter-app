@@ -6,7 +6,9 @@ import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Typography from '@mui/material/Typography';
 import { useToast } from '../../context/ToastContext';
-import { EMPTY_FILTERS, REPORT_STATUS_OPTIONS, toQueryParams } from './format';
+import {
+  EMPTY_FILTERS, REPORT_STATUS_OPTIONS, removalMessage, toQueryParams,
+} from './format';
 import HistoryFilterBar from './HistoryFilterBar';
 import ReportCard from './ReportCard';
 import useDebouncedValue from './useDebouncedValue';
@@ -51,9 +53,13 @@ export default function ReportsPanel() {
 
   const resolve = async (id: number, action: 'approve' | 'remove') => {
     setResolvingId(id);
+    // Capture target row before it is filtered out for toast
+    const target = rows.find((r) => r.id === id);
     try {
       await axios.patch(`/reports/${id}`, { action }, { withCredentials: true });
-      showToast(action === 'remove' ? 'Content removed' : 'Report allowed', 'success');
+      let message = 'Report allowed';
+      if (action === 'remove') message = target ? removalMessage(target) : 'Content removed';
+      showToast(message, 'success');
       // Remove row since actions are only available in PENDING scope
       setRows((prev) => prev.filter((r) => r.id !== id));
     } catch (err) {
