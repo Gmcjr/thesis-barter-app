@@ -127,7 +127,7 @@ export default function Contact() {
           >
             <MenuItem value="BUG">Bug</MenuItem>
             <MenuItem value="FEEDBACK">Feedback</MenuItem>
-            <MenuItem value="BUSINESS">Business Related Offer</MenuItem>
+            <MenuItem value="BUSINESS">Business/Offer Related</MenuItem>
           </Select>
         </FormControl>
 
