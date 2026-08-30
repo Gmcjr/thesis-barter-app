@@ -7,8 +7,19 @@ import Tab from '@mui/material/Tab';
 import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import CheckIcon from '@mui/icons-material/Check';
+import MarkEmailUnreadIcon from '@mui/icons-material/MarkEmailUnread';
+import ArchiveIcon from '@mui/icons-material/Archive';
+import UnarchiveIcon from '@mui/icons-material/Unarchive';
+import CloseIcon from '@mui/icons-material/Close';
 import { useNotifications, type Notification } from '../../context/NotificationContext';
 import { useRouter } from '../../context/RouterContext';
 import { groupByBucket } from '../../utils/notificationBuckets';
@@ -22,20 +33,28 @@ interface NotificationPanelProps {
 
 export default function NotificationPanel({ onClose }: NotificationPanelProps) {
   const {
-    notifications, markRead, markAllRead, deleteNotification, deleteMany,
+    notifications, markRead, markUnread, markAllRead,
+    deleteNotification, deleteMany,
+    archiveNotification, unarchiveNotification, archiveMany,
+    archivedLoaded, refreshArchived,
   } = useNotifications();
   const { navigate } = useRouter();
+  const prefersReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
 
   const [category, setCategory] = useState<NotificationCategory | 'all'>('all');
   const [unreadOnly, setUnreadOnly] = useState(false);
+  const [showArchived, setShowArchived] = useState(false);
   const [selectMode, setSelectMode] = useState(false);
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
+  const [menuAnchorEl, setMenuAnchorEl] = useState<HTMLElement | null>(null);
+  const [menuTarget, setMenuTarget] = useState<Notification | null>(null);
 
   const visible = useMemo(() => notifications.filter((n) => {
+    if (showArchived ? !n.archivedAt : !!n.archivedAt) return false;
     if (unreadOnly && n.readAt) return false;
     if (category !== 'all' && categoryFor(n.type) !== category) return false;
     return true;
-  }), [notifications, unreadOnly, category]);
+  }), [notifications, showArchived, unreadOnly, category]);
 
   const grouped = useMemo(() => groupByBucket(visible), [visible]);
 
@@ -60,6 +79,14 @@ export default function NotificationPanel({ onClose }: NotificationPanelProps) {
     setSelectedIds(new Set());
   };
 
+  const toggleShowArchived = () => {
+    setShowArchived((prev) => {
+      const next = !prev;
+      if (next && !archivedLoaded) refreshArchived();
+      return next;
+    });
+  };
+
   const handleRowClick = async (n: Notification) => {
     if (selectMode) {
       toggleSelect(n.id);
@@ -75,9 +102,30 @@ export default function NotificationPanel({ onClose }: NotificationPanelProps) {
     setSelectedIds(new Set());
   };
 
+  const handleMarkSelectedUnread = async () => {
+    await Promise.all(Array.from(selectedIds).map((id) => markUnread(id)));
+    setSelectedIds(new Set());
+  };
+
   const handleDeleteSelected = async () => {
     await deleteMany(Array.from(selectedIds));
     setSelectedIds(new Set());
+  };
+
+  const handleArchiveSelected = async () => {
+    await archiveMany(Array.from(selectedIds));
+    setSelectedIds(new Set());
+  };
+
+  const openMenu = (e: React.MouseEvent<HTMLElement>, n: Notification) => {
+    e.stopPropagation();
+    setMenuAnchorEl(e.currentTarget);
+    setMenuTarget(n);
+  };
+
+  const closeMenu = () => {
+    setMenuAnchorEl(null);
+    setMenuTarget(null);
   };
 
   return (
@@ -120,14 +168,32 @@ export default function NotificationPanel({ onClose }: NotificationPanelProps) {
         ))}
       </Tabs>
 
-      <Box sx={{ px: 2, pb: 1 }}>
+      <Box sx={{
+        px: 2, pb: 1, display: 'flex', gap: 2,
+      }}
+      >
         <Typography
           variant="caption"
           color={unreadOnly ? 'primary' : 'text.secondary'}
-          sx={{ cursor: 'pointer' }}
+          sx={{
+            cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 0.25,
+          }}
           onClick={() => setUnreadOnly((v) => !v)}
         >
-          {unreadOnly ? 'x Unread only' : 'Unread only'}
+          {unreadOnly && <CheckIcon fontSize="inherit" />}
+          Unread only
+        </Typography>
+        <Typography
+          variant="caption"
+          component="span"
+          color={showArchived ? 'primary' : 'text.secondary'}
+          sx={{
+            cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 0.25,
+          }}
+          onClick={toggleShowArchived}
+        >
+          {showArchived && <CheckIcon fontSize="inherit" />}
+          Show archived
         </Typography>
       </Box>
 
@@ -145,6 +211,12 @@ export default function NotificationPanel({ onClose }: NotificationPanelProps) {
             </Typography>
             <IconButton size="small" onClick={handleMarkSelectedRead} title="Mark selected read">
               <DoneAllIcon fontSize="small" />
+            </IconButton>
+            <IconButton size="small" onClick={handleMarkSelectedUnread} title="Mark selected unread">
+              <MarkEmailUnreadIcon fontSize="small" />
+            </IconButton>
+            <IconButton size="small" onClick={handleArchiveSelected} title="Archive selected">
+              <ArchiveIcon fontSize="small" />
             </IconButton>
             <IconButton size="small" onClick={handleDeleteSelected} title="Delete selected">
               <DeleteIcon fontSize="small" />
@@ -220,16 +292,102 @@ export default function NotificationPanel({ onClose }: NotificationPanelProps) {
                 </Box>
                 <IconButton
                   size="small"
-                  onClick={(e) => { e.stopPropagation(); deleteNotification(n.id); }}
-                  title="Delete"
+                  onClick={(e) => openMenu(e, n)}
+                  aria-label={`Actions for notification: ${n.title}`}
+                  aria-haspopup="true"
+                  aria-expanded={menuAnchorEl !== null && menuTarget?.id === n.id}
+                  aria-controls={menuAnchorEl !== null && menuTarget?.id === n.id ? 'notification-row-menu' : undefined}
+                  id={`notification-row-menu-trigger-${n.id}`}
                 >
-                  <DeleteIcon fontSize="small" />
+                  <MoreVertIcon fontSize="small" />
                 </IconButton>
               </Box>
             ))}
           </Box>
         ))}
       </Box>
+
+      <Menu
+        id="notification-row-menu"
+        anchorEl={menuAnchorEl}
+        open={menuAnchorEl !== null}
+        onClose={closeMenu}
+        slotProps={{
+          list: { 'aria-labelledby': menuTarget ? `notification-row-menu-trigger-${menuTarget.id}` : undefined },
+        }}
+        transitionDuration={prefersReducedMotion ? 0 : undefined}
+      >
+        {menuTarget && !menuTarget.readAt && !menuTarget.archivedAt && (
+          <MenuItem
+            onClick={(e) => {
+              e.stopPropagation();
+              markRead(menuTarget.id);
+              closeMenu();
+            }}
+          >
+            <ListItemIcon>
+              <CheckIcon fontSize="small" sx={{ color: 'primary.main' }} />
+            </ListItemIcon>
+            <ListItemText>Mark as read</ListItemText>
+          </MenuItem>
+        )}
+        {menuTarget && menuTarget.readAt && !menuTarget.archivedAt && (
+          <MenuItem
+            onClick={(e) => {
+              e.stopPropagation();
+              markUnread(menuTarget.id);
+              closeMenu();
+            }}
+          >
+            <ListItemIcon>
+              <MarkEmailUnreadIcon fontSize="small" sx={{ color: 'primary.main' }} />
+            </ListItemIcon>
+            <ListItemText>Mark as unread</ListItemText>
+          </MenuItem>
+        )}
+        {menuTarget && !menuTarget.archivedAt && (
+          <MenuItem
+            onClick={(e) => {
+              e.stopPropagation();
+              archiveNotification(menuTarget.id);
+              closeMenu();
+            }}
+          >
+            <ListItemIcon>
+              <ArchiveIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>Archive</ListItemText>
+          </MenuItem>
+        )}
+        {menuTarget && menuTarget.archivedAt && (
+          <MenuItem
+            onClick={(e) => {
+              e.stopPropagation();
+              unarchiveNotification(menuTarget.id);
+              closeMenu();
+            }}
+          >
+            <ListItemIcon>
+              <UnarchiveIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>Unarchive</ListItemText>
+          </MenuItem>
+        )}
+        {menuTarget && (
+          <MenuItem
+            onClick={(e) => {
+              e.stopPropagation();
+              deleteNotification(menuTarget.id);
+              closeMenu();
+            }}
+          >
+            <ListItemIcon>
+              <CloseIcon fontSize="small" sx={{ color: 'error.main' }} />
+            </ListItemIcon>
+            <ListItemText sx={{ color: 'error.main' }}>Delete</ListItemText>
+          </MenuItem>
+        )}
+      </Menu>
     </Box>
   );
 }

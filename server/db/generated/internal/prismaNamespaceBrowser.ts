@@ -414,6 +414,7 @@ export const NotificationScalarFieldEnum = {
   entityType: 'entityType',
   entityId: 'entityId',
   readAt: 'readAt',
+  archivedAt: 'archivedAt',
   createdAt: 'createdAt'
 } as const
 

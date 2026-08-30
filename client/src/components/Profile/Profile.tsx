@@ -31,7 +31,9 @@ function initialTabFor(hasOffer: boolean, hasPost: boolean): 'current' | 'histor
 }
 
 export default function Profile() {
-  const { id, offerId, postId } = useParams();
+  const {
+    id, offerId, postId, requestId, reviewId,
+  } = useParams();
   const isOwnProfile = !id;
   const [posts, setPosts] = useState<PostData[]>([]);
   const highlightOfferId = offerId ? Number(offerId) : undefined;
@@ -40,6 +42,13 @@ export default function Profile() {
   const [activeTab, setActiveTab] = useState<'current' | 'history' | 'offers'>(
     initialTabFor(!!offerId, !!postId),
   );
+
+  useEffect(() => {
+    if (requestId) setActiveTab('current');
+    else if (offerId) setActiveTab('offers');
+    else if (postId) setActiveTab('history');
+    else setActiveTab(initialTabFor(false, false)); // reset when neither param is present
+  }, [requestId, offerId, postId]);
 
   const visiblePosts = posts.filter((post) => (
     activeTab === 'history' ? post.status === 'COMPLETED' : post.status !== 'COMPLETED'
@@ -54,6 +63,9 @@ export default function Profile() {
   const [myTradeRequests, setMyTradeRequests] = useState<TradeRequestData[]>([]);
   const [reviewsSummary, setReviewsSummary] = useState<ReviewsSummary | null>(null);
   const [reviewsExpanded, setReviewsExpanded] = useState(false);
+
+  useEffect(() => { if (reviewId) setReviewsExpanded(true); }, [reviewId]);
+
   const [myCompletedTrades, setMyCompletedTrades] = useState<MyCompletedTrade[]>([]);
   const [myReviews, setMyReviews] = useState<ReviewData[]>([]);
   const [avatarUploading, setAvatarUploading] = useState(false);
@@ -336,6 +348,7 @@ export default function Profile() {
             myReviews={myReviews}
             currentUserId={user?.id}
             onReviewSaved={handleReviewSaved}
+            highlightReviewId={reviewId ? Number(reviewId) : undefined}
           />
         </Box>
       </Collapse>
