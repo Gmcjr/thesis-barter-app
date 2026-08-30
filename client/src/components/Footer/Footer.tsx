@@ -5,7 +5,11 @@ import Box from '@mui/material/Box';
 
 import { Link } from '../../context/RouterContext';
 
-export default function Footer() {
+interface FooterProps {
+  scrollingDown: boolean;
+}
+
+export default function Footer({ scrollingDown }: FooterProps) {
   return (
     <Box
       component="footer"
@@ -18,6 +22,8 @@ export default function Footer() {
         minHeight: { xs: 86, sm: 96 },
         display: 'flex',
         alignItems: 'center',
+        opacity: scrollingDown ? 0.15 : 1,
+        transition: 'opacity 0.2s ease',
       }}
     >
       <Box

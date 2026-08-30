@@ -27,7 +27,11 @@ import { useAuth, isModerator } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import NewPost, { type PostFormData } from '../Posts/NewPost';
 
-function NavBar() {
+interface NavBarProps {
+  scrollingDown: boolean;
+}
+
+function NavBar({ scrollingDown }: NavBarProps) {
   const { navigate } = useRouter();
   const { user, loading, logout } = useAuth();
   const { showToast } = useToast();
@@ -67,7 +71,17 @@ function NavBar() {
 
   return (
     <>
-      <AppBar position="fixed" elevation={2} sx={{ bgcolor: 'background.paper', color: 'text.primary' }}>
+      <AppBar
+        position="fixed"
+        elevation={2}
+        sx={{
+          bgcolor: 'background.paper',
+          color: 'text.primary',
+          opacity: scrollingDown ? 0.88 : 1,
+          backdropFilter: scrollingDown ? 'blur(12px) saturate(160%)' : 'none',
+          transition: 'opacity 0.2s ease',
+        }}
+      >
         <Toolbar sx={{
           display: 'flex',
           justifyContent: 'space-between',
@@ -294,23 +308,34 @@ function NavBar() {
       </AppBar>
 
       {/* New Post Button (floating, renders on log in) */}
-      {user && (
-        <Fab
-          variant="extended"
-          color="primary"
-          onClick={() => setModalOpen(true)}
+      {user && window.location.pathname === '/' && (
+        <Box
+          className="mui-fixed"
           sx={{
             position: 'fixed',
-            bottom: { xs: 24, sm: 32 },
-            right: { xs: 24, sm: 32 },
+            bottom: { xs: 118, sm: 128 },
+            right: {
+              xs: 16,
+              sm: 'max(32px, calc((100vw - 900px) / 2 - 44px))',
+            },
             zIndex: (theme) => theme.zIndex.appBar + 10,
-            textTransform: 'none',
-            fontWeight: 600,
-            boxShadow: 3,
           }}
         >
-          <AddIcon />
-        </Fab>
+          <Fab
+            variant="extended"
+            color="primary"
+            onClick={() => setModalOpen(true)}
+            sx={{
+              textTransform: 'none',
+              fontWeight: 600,
+              boxShadow: 3,
+              opacity: scrollingDown ? 0.15 : 1,
+              transition: 'opacity 0.2s ease',
+            }}
+          >
+            <AddIcon />
+          </Fab>
+        </Box>
       )}
       {/* NewPost Modal */}
       <NewPost

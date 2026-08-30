@@ -58,7 +58,9 @@ function AppShell() {
   const { mode, contrast } = useSettings();
   const theme = useMemo(() => getTheme(mode, contrast), [mode, contrast]);
   const footerRef = useRef<HTMLDivElement | null>(null);
+  const lastScrollYRef = useRef(0);
   const [footerHeight, setFooterHeight] = useState(0);
+  const [scrollingDown, setScrollingDown] = useState(false);
 
   useEffect(() => {
     const footer = footerRef.current;
@@ -79,6 +81,28 @@ function AppShell() {
     };
   }, []);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      if (currentScrollY <= 0) {
+        setScrollingDown(false);
+      } else if (currentScrollY > lastScrollYRef.current) {
+        setScrollingDown(true);
+      } else if (currentScrollY < lastScrollYRef.current) {
+        setScrollingDown(false);
+      }
+
+      lastScrollYRef.current = currentScrollY;
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -87,12 +111,13 @@ function AppShell() {
           <SocketProvider>
             <NotificationProvider>
               <RouterProvider>
-                <NavBar />
+                <NavBar scrollingDown={scrollingDown} />
                 <LocationSetupModal />
 
                 <Box
                   component="main"
                   sx={{
+                    '--header-scroll-opacity': scrollingDown ? '0.88' : '1',
                     pt: 16,
                     pb: footerHeight > 0
                       ? `calc(${theme.spacing(8)} + ${footerHeight}px)`
@@ -108,6 +133,7 @@ function AppShell() {
 
                 <Box
                   ref={footerRef}
+                  className="mui-fixed"
                   sx={{
                     position: 'fixed',
                     bottom: 0,
@@ -116,7 +142,7 @@ function AppShell() {
                     zIndex: theme.zIndex.appBar,
                   }}
                 >
-                  <Footer />
+                  <Footer scrollingDown={scrollingDown} />
                 </Box>
               </RouterProvider>
             </NotificationProvider>

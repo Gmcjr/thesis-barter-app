@@ -25,7 +25,7 @@ export default function SearchPosts({
       component="form"
       onSubmit={onSubmit}
       sx={{
-        position: 'sticky', top: { xs: 86, sm: 96 }, zIndex: 10, bgcolor: 'background.default', py: 1, display: 'flex', gap: 1, mb: 3, px: { xs: 2, md: 0 },
+        position: 'sticky', top: { xs: 86, sm: 96 }, zIndex: 10, bgcolor: 'background.default', py: 1, display: 'flex', gap: 1, mb: 3, px: { xs: 2, md: 0 }, opacity: 'var(--header-scroll-opacity, 1)', transition: 'opacity 0.2s ease',
       }}
     >
       <Paper
