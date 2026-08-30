@@ -209,11 +209,19 @@ reports.get('/', requireModerator, async (req, res) => {
         isRemoved: report.offer.isRemoved,
         imageUrls: await getQueueImageUrls(report.offer.tradeOfferMedia),
       } : null,
+      review: report.review ? {
+        id: report.review.id,
+        comment: report.review.comment,
+        reviewer: report.review.reviewer,
+      } : null,
+      tradeRequest: report.tradeRequest ? {
+        id: report.tradeRequest.id,
+        message: report.tradeRequest.message,
+        requester: report.tradeRequest.requester,
+      } : null,
     })));
 
     res.json(queueWithImages);
-
-    res.json(queue);
   } catch (err) {
     console.error(err);
     res.sendStatus(500);
