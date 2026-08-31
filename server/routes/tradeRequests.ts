@@ -314,6 +314,49 @@ tradeRequests.patch('/:id/accept', requireAuth, async (req, res) => {
   }
 });
 
+// Owner rejects one trade request
+tradeRequests.patch('/:id/reject', requireAuth, async (req, res) => {
+  try {
+    const ownerId = (req.user as { id: number }).id;
+    const requestId = Number(req.params.id);
+
+    const tradeRequest = await prisma.tradeRequest.findUnique({
+      where: { id: requestId },
+      include: {
+        post: {
+          select: {
+            userId: true,
+          },
+        },
+      },
+    });
+
+    if (!tradeRequest) {
+      return res.sendStatus(404);
+    }
+
+    if (tradeRequest.post.userId !== ownerId) {
+      return res.sendStatus(403);
+    }
+
+    if (tradeRequest.status !== TradeRequestStatus.PENDING) {
+      return res.status(400).json({
+        error: `Cannot reject trade request from ${tradeRequest.status} status.`,
+      });
+    }
+
+    await prisma.tradeRequest.update({
+      where: { id: tradeRequest.id },
+      data: { status: TradeRequestStatus.REJECTED },
+    });
+
+    return res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    return res.sendStatus(500);
+  }
+});
+
 // Requester cancels trade request
 tradeRequests.patch('/:id/cancel', requireAuth, async (req, res) => {
   try {

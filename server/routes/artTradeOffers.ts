@@ -254,6 +254,47 @@ artTradeOffers.patch('/:offerId/cancel', requireAuth, async (req, res) => {
   }
 });
 
+// PATCH: post owner rejects a pending art trade offer
+artTradeOffers.patch('/:offerId/reject', requireAuth, async (req, res) => {
+  try {
+    const offerId = Number(req.params.offerId);
+    const userId = getUserId(req);
+
+    const offer = await prisma.tradeOffer.findUnique({
+      where: { id: offerId },
+      include: {
+        post: {
+          select: {
+            userId: true,
+          },
+        },
+      },
+    });
+
+    if (!offer) {
+      return res.status(404).json({ error: 'Trade offer not found.' });
+    }
+
+    if (offer.post.userId !== userId) {
+      return res.status(403).json({ error: 'Unauthorized to reject this offer.' });
+    }
+
+    if (offer.status !== 'PENDING' || offer.isRemoved) {
+      return res.status(400).json({ error: 'Trade offer is no longer pending.' });
+    }
+
+    await prisma.tradeOffer.update({
+      where: { id: offerId },
+      data: { isRemoved: true },
+    });
+
+    return res.json({ success: true });
+  } catch (error) {
+    console.error('Failed to reject art trade offer:', error);
+    return res.status(500).json({ error: 'Unable to reject the trade offer.' });
+  }
+});
+
 // PATCH: mutual approval for trade logic
 artTradeOffers.patch('/:offerId/approve', requireAuth, async (req, res) => {
   try {
@@ -342,6 +383,7 @@ artTradeOffers.patch('/:offerId/approve', requireAuth, async (req, res) => {
           entityType: 'TRADE_OFFER',
           entityId: offerId,
         });
+
         await enqueueJob(tx, 'SEND_NOTIFICATION', {
           userId: offer.offererId,
           type: 'TRADE_OFFER_ACCEPTED',
