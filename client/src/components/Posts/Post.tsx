@@ -102,12 +102,22 @@ export default function Post({
       id={`post-${post.id}`}
       variant="outlined"
       sx={{
+        width: '100%',
+        minWidth: 0,
+        containerType: 'inline-size',
         borderRadius: radius.md,
         borderColor: 'border.default',
         ...(highlight && { outline: '2px solid', outlineColor: 'primary.main' }),
       }}
     >
-      <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
+      <CardContent
+        sx={{
+          p: 'clamp(8px, 2cqw, 16px)',
+          '&:last-child': {
+            pb: 'clamp(8px, 2cqw, 16px)',
+          },
+        }}
+      >
         {editing ? (
           <PostEdit
             post={post}
@@ -117,38 +127,77 @@ export default function Post({
           />
         ) : (
           <>
-            <Box sx={{
-              display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, justifyContent: { xs: 'flex-start', sm: 'space-between' }, alignItems: { xs: 'stretch', sm: 'flex-start' }, mb: 2, gap: { xs: 1, sm: 2 },
-            }}
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'flex-start',
+                mb: 'clamp(5px, 1cqw, 10px)',
+                gap: 'clamp(6px, 1.5cqw, 14px)',
+                minWidth: 0,
+              }}
             >
               {/* title, date, "Trade Complete" chip */}
               <Box sx={{ minWidth: 0, flex: 1 }}>
-                <Box sx={{
-                  display: 'flex', alignItems: 'baseline', flexWrap: 'wrap', gap: 1.5,
-                }}
+                <Box
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'baseline',
+                    flexWrap: 'nowrap',
+                    gap: 'clamp(4px, 1cqw, 10px)',
+                    minWidth: 0,
+                  }}
                 >
-                  <Typography variant="h5" sx={{ wordBreak: 'break-word' }}>
+                  <Typography
+                    variant="h5"
+                    sx={{
+                      wordBreak: 'break-word',
+                      fontSize: 'clamp(0.8rem, 2.4cqw, 1.5rem)',
+                      lineHeight: 1.2,
+                    }}
+                  >
                     {post.title}
                   </Typography>
 
                   {post.status === 'COMPLETED' && (
-                  <Chip
-                    size="small"
-                    color="success"
-                    label="Trade Completed"
-                  />
+                    <Chip
+                      size="small"
+                      color="success"
+                      label="Trade Completed"
+                      sx={{
+                        height: 'clamp(18px, 3.2cqw, 24px)',
+                        fontSize: 'clamp(0.5rem, 1.25cqw, 0.75rem)',
+                        '& .MuiChip-label': {
+                          px: 'clamp(4px, 1cqw, 8px)',
+                        },
+                      }}
+                    />
                   )}
                 </Box>
 
-                <Typography variant="caption" color="text.secondary">
+                <Typography
+                  variant="caption"
+                  color="text.secondary"
+                  sx={{
+                    fontSize: 'clamp(0.5rem, 1.35cqw, 0.75rem)',
+                    lineHeight: 1.2,
+                  }}
+                >
                   {((post.updatedAt && post.updatedAt !== post.createdAt) && `Updated on ${formatPostDate(post.updatedAt)}`) || `Posted on ${formatPostDate(post.createdAt)}`}
                 </Typography>
               </Box>
 
               {/* user avatar, name, DM button and report modal */}
-              <Box sx={{
-                display: 'flex', alignItems: 'center', gap: 1, flexShrink: 0, flexWrap: 'wrap',
-              }}
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 'clamp(4px, 1cqw, 8px)',
+                  flexShrink: 0,
+                  flexWrap: 'nowrap',
+                  minWidth: 0,
+                }}
               >
                 <Box
                   onClick={() => navigate(`/profile/${post.user.id}`)}
@@ -157,26 +206,56 @@ export default function Post({
                   sx={{
                     display: 'flex',
                     alignItems: 'center',
-                    gap: 1,
+                    gap: 'clamp(4px, 1cqw, 8px)',
                     cursor: 'pointer',
+                    flexShrink: 0,
                     '&:hover .post-username': { textDecoration: 'underline' },
                   }}
                 >
-                  <Avatar sx={{
-                    bgcolor: 'primary.main', width: 32, height: 32, fontSize: '0.9rem',
-                  }}
+                  <Avatar
+                    sx={{
+                      bgcolor: 'primary.main',
+                      width: 'clamp(20px, 4cqw, 32px)',
+                      height: 'clamp(20px, 4cqw, 32px)',
+                      fontSize: 'clamp(0.55rem, 1.5cqw, 0.9rem)',
+                      flexShrink: 0,
+                    }}
                   >
                     {postUser.charAt(0).toUpperCase()}
                   </Avatar>
-                  <Typography variant="subtitle2" className="post-username">
+
+                  <Typography
+                    variant="subtitle2"
+                    className="post-username"
+                    sx={{
+                      whiteSpace: 'nowrap',
+                      fontSize: 'clamp(0.55rem, 1.55cqw, 0.875rem)',
+                      lineHeight: 1.2,
+                    }}
+                  >
                     {postUser}
                   </Typography>
                 </Box>
+
                 {!isOwnPost && (
-                <Button size="small" variant="outlined" onClick={handleOpenDM} sx={{ borderRadius: radius.md, textTransform: 'none' }}>
-                  Open DM
-                </Button>
+                  <Button
+                    size="small"
+                    variant="outlined"
+                    onClick={handleOpenDM}
+                    sx={{
+                      borderRadius: radius.md,
+                      textTransform: 'none',
+                      whiteSpace: 'nowrap',
+                      minWidth: 0,
+                      px: 'clamp(4px, 1.2cqw, 10px)',
+                      py: 'clamp(2px, 0.5cqw, 4px)',
+                      fontSize: 'clamp(0.5rem, 1.35cqw, 0.8rem)',
+                    }}
+                  >
+                    Open DM
+                  </Button>
                 )}
+
                 <PostActionsMenu
                   onReport={onReport}
                   showReport={!isOwnPost}
@@ -192,48 +271,117 @@ export default function Post({
 
             <PostImageGallery post={post} isArtTrade={isArtTrade} />
 
-            <Typography variant="body1" sx={{ mb: 3, lineHeight: 1.6 }}>
+            <Typography
+              variant="body1"
+              sx={{
+                mb: 'clamp(6px, 1.4cqw, 12px)',
+                lineHeight: 1.4,
+                fontSize: 'clamp(0.65rem, 1.9cqw, 1rem)',
+              }}
+            >
               {post.message}
             </Typography>
           </>
         )}
 
-        <Divider sx={{ mb: 2 }} />
+        <Divider sx={{ mb: 'clamp(5px, 1.2cqw, 10px)' }} />
 
-        <Typography variant="subtitle2" sx={{ mb: 1.5, color: 'text.secondary' }}>
+        <Typography
+          variant="subtitle2"
+          sx={{
+            mb: 'clamp(3px, 0.7cqw, 6px)',
+            color: 'text.secondary',
+            fontSize: 'clamp(0.55rem, 1.5cqw, 0.875rem)',
+          }}
+        >
           Comments
         </Typography>
 
         {post.comments.length > 0 ? (
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 'clamp(4px, 0.8cqw, 8px)',
+            }}
+          >
             {post.comments.map((comment) => (
               <Box
                 key={comment.id}
                 sx={{
-                  display: 'flex', gap: 2, alignItems: 'flex-start', p: 1.5, bgcolor: 'surface.sunken', borderRadius: radius.md,
+                  display: 'flex',
+                  gap: 'clamp(6px, 1.4cqw, 12px)',
+                  alignItems: 'flex-start',
+                  p: 'clamp(5px, 1.2cqw, 10px)',
+                  bgcolor: 'surface.sunken',
+                  borderRadius: radius.md,
                 }}
               >
-                <Typography variant="body2" sx={{ flex: 1, color: 'text.primary' }}>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    flex: 1,
+                    color: 'text.primary',
+                    fontSize: 'clamp(0.55rem, 1.5cqw, 0.875rem)',
+                  }}
+                >
                   {comment.text}
                 </Typography>
               </Box>
             ))}
           </Box>
         ) : (
-          <Typography variant="body2" color="text.disabled" sx={{ mb: 2, fontStyle: 'italic' }}>
+          <Typography
+            variant="body2"
+            color="text.disabled"
+            sx={{
+              mb: 'clamp(4px, 0.9cqw, 8px)',
+              fontStyle: 'italic',
+              fontSize: 'clamp(0.55rem, 1.5cqw, 0.875rem)',
+            }}
+          >
             No comments...
           </Typography>
         )}
 
-        <Box sx={{ display: 'flex', mt: 3, gap: 1 }}>
+        <Box
+          sx={{
+            display: 'flex',
+            mt: 'clamp(5px, 1.2cqw, 10px)',
+            gap: 'clamp(4px, 1cqw, 8px)',
+          }}
+        >
           <TextField
             size="small"
             fullWidth
             placeholder="Add a comment..."
             variant="outlined"
-            sx={{ '& .MuiOutlinedInput-root': { borderRadius: radius.md } }}
+            sx={{
+              minWidth: 0,
+              '& .MuiOutlinedInput-root': {
+                borderRadius: radius.md,
+                height: 'clamp(30px, 5cqw, 40px)',
+                fontSize: 'clamp(0.6rem, 1.7cqw, 1rem)',
+              },
+              '& .MuiInputBase-input': {
+                px: 'clamp(7px, 1.5cqw, 14px)',
+                py: 'clamp(4px, 0.8cqw, 8px)',
+              },
+            }}
           />
-          <Button variant="contained" disableElevation sx={{ borderRadius: radius.md, textTransform: 'none' }}>
+
+          <Button
+            variant="contained"
+            disableElevation
+            sx={{
+              borderRadius: radius.md,
+              textTransform: 'none',
+              flexShrink: 0,
+              minWidth: 'clamp(42px, 8cqw, 64px)',
+              px: 'clamp(6px, 1.5cqw, 12px)',
+              fontSize: 'clamp(0.55rem, 1.45cqw, 0.875rem)',
+            }}
+          >
             Send
           </Button>
         </Box>
@@ -247,33 +395,45 @@ export default function Post({
 
         {/* Request to Trade + Offer buttons */}
         {!isOwnPost && post.status === 'OPEN' && (
-        <Box sx={{
-          mt: 2,
-          pt: 2,
-          display: 'flex',
-          justifyContent: 'flex-end',
-          gap: 1,
-          flexWrap: 'wrap',
-        }}
-        >
-          <RequestTradeButton
-            postId={post.id}
-            myRequest={myTradeRequests}
-            onRequestChanged={onTradeActivity}
-          />
-          {isArtTrade ? (
-            <ArtTradeOffer postId={post.id} onSuccess={onOfferSubmitted} />
-          ) : (
-            <Button variant="contained" onClick={onOfferSubmitted} sx={{ borderRadius: radius.pill, textTransform: 'none' }}>
-              Make Offer
-            </Button>
-          )}
-        </Box>
+          <Box
+            sx={{
+              mt: 'clamp(5px, 1.2cqw, 10px)',
+              pt: 'clamp(5px, 1.2cqw, 10px)',
+              display: 'flex',
+              justifyContent: 'flex-end',
+              gap: 'clamp(4px, 1cqw, 8px)',
+              flexWrap: 'nowrap',
+            }}
+          >
+            <RequestTradeButton
+              postId={post.id}
+              myRequest={myTradeRequests}
+              onRequestChanged={onTradeActivity}
+            />
+
+            {isArtTrade ? (
+              <ArtTradeOffer postId={post.id} onSuccess={onOfferSubmitted} />
+            ) : (
+              <Button
+                variant="contained"
+                onClick={onOfferSubmitted}
+                sx={{
+                  borderRadius: radius.pill,
+                  textTransform: 'none',
+                  whiteSpace: 'nowrap',
+                  fontSize: 'clamp(0.55rem, 1.45cqw, 0.875rem)',
+                  px: 'clamp(6px, 1.5cqw, 12px)',
+                }}
+              >
+                Make Offer
+              </Button>
+            )}
+          </Box>
         )}
 
         {/* Owner's view of incoming requests on their own open post */}
         {isOwnPost && post.status === 'OPEN' && (
-        <IncomingTradeRequests postId={post.id} onAccepted={onTradeActivity} />
+          <IncomingTradeRequests postId={post.id} onAccepted={onTradeActivity} />
         )}
       </CardContent>
     </Card>

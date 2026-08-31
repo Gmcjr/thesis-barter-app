@@ -68,7 +68,11 @@ export default function TradeOffersReceivedView({
 
   useEffect(() => {
     if (!highlightOfferId || loading) return;
-    document.getElementById(`offer-${highlightOfferId}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+    document.getElementById(`offer-${highlightOfferId}`)?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'center',
+    });
   }, [highlightOfferId, loading, artOffers]);
 
   const handleAcceptNormalOffer = async (requestId: number) => {
@@ -124,29 +128,73 @@ export default function TradeOffersReceivedView({
   const noOffers = normalOffers.length === 0 && artOffers.length === 0;
 
   return (
-    <Box sx={{
-      display: 'flex', flexDirection: 'column', gap: 3, px: { xs: 2, md: 0 },
-    }}
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 'clamp(8px, 2cqw, 20px)',
+        px: 'clamp(6px, 1.5cqw, 16px)',
+        containerType: 'inline-size',
+        width: '100%',
+        minWidth: 0,
+      }}
     >
       <PendingTradeOffers
         onTradeActivity={onOfferAccepted}
       />
 
       {loading && (
-        <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
-          <CircularProgress />
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            py: 'clamp(12px, 3cqw, 32px)',
+          }}
+        >
+          <CircularProgress
+            size="clamp(24px, 4cqw, 40px)"
+          />
         </Box>
       )}
 
-      {!loading && error && <Alert severity="error">{error}</Alert>}
+      {!loading && error && (
+        <Alert
+          severity="error"
+          sx={{
+            fontSize: 'clamp(0.6rem, 1.5cqw, 0.875rem)',
+          }}
+        >
+          {error}
+        </Alert>
+      )}
 
       {!loading && !error && noOffers && (
-        <Typography color="text.secondary">No pending offers received.</Typography>
+        <Typography
+          color="text.secondary"
+          sx={{
+            fontSize: 'clamp(0.65rem, 1.7cqw, 1rem)',
+          }}
+        >
+          No pending offers received.
+        </Typography>
       )}
 
       {!loading && !error && normalOffers.length > 0 && (
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-          <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 'clamp(6px, 1.5cqw, 14px)',
+          }}
+        >
+          <Typography
+            variant="h6"
+            sx={{
+              fontWeight: 'bold',
+              fontSize: 'clamp(0.8rem, 2.2cqw, 1.25rem)',
+              lineHeight: 1.2,
+            }}
+          >
             Local Trade Offers:
           </Typography>
 
@@ -154,27 +202,73 @@ export default function TradeOffersReceivedView({
             <Card
               key={offer.id}
               variant="outlined"
-              sx={{ borderRadius: radius.lg, flexShrink: 0 }}
+              sx={{
+                borderRadius: radius.lg,
+                flexShrink: 0,
+                width: '100%',
+                minWidth: 0,
+              }}
             >
-              <CardContent>
-                <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>
+              <CardContent
+                sx={{
+                  p: 'clamp(8px, 2cqw, 16px)',
+                  '&:last-child': {
+                    pb: 'clamp(8px, 2cqw, 16px)',
+                  },
+                }}
+              >
+                <Typography
+                  variant="subtitle2"
+                  sx={{
+                    fontWeight: 'bold',
+                    fontSize: 'clamp(0.6rem, 1.6cqw, 0.875rem)',
+                    lineHeight: 1.3,
+                  }}
+                >
                   Offer For: {offer.post.title}
                 </Typography>
 
-                <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>
+                <Typography
+                  variant="subtitle2"
+                  sx={{
+                    fontWeight: 'bold',
+                    fontSize: 'clamp(0.6rem, 1.6cqw, 0.875rem)',
+                    lineHeight: 1.3,
+                  }}
+                >
                   Offered by: {offer.requester.name ?? offer.requester.email}
                 </Typography>
 
-                <Typography variant="subtitle2" sx={{ my: 1 }}>
+                <Typography
+                  variant="subtitle2"
+                  sx={{
+                    my: 'clamp(4px, 1cqw, 8px)',
+                    fontSize: 'clamp(0.6rem, 1.6cqw, 0.875rem)',
+                    lineHeight: 1.35,
+                  }}
+                >
                   Offer Message: {offer.message || 'No details provided.'}
                 </Typography>
 
-                <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                    mt: 'clamp(5px, 1.2cqw, 10px)',
+                  }}
+                >
                   <Button
                     variant="contained"
                     color="success"
                     disabled={acceptingOffer}
                     onClick={() => handleAcceptNormalOffer(offer.id)}
+                    sx={{
+                      minWidth: 0,
+                      px: 'clamp(6px, 1.5cqw, 14px)',
+                      py: 'clamp(3px, 0.7cqw, 6px)',
+                      fontSize: 'clamp(0.55rem, 1.45cqw, 0.875rem)',
+                      whiteSpace: 'nowrap',
+                    }}
                   >
                     {acceptingNormalId === offer.id ? 'Accepting...' : 'Accept Trade'}
                   </Button>
@@ -186,8 +280,20 @@ export default function TradeOffersReceivedView({
       )}
 
       {!loading && !error && artOffers.length > 0 && (
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-          <Typography variant="h6">
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 'clamp(6px, 1.5cqw, 14px)',
+          }}
+        >
+          <Typography
+            variant="h6"
+            sx={{
+              fontSize: 'clamp(0.8rem, 2.2cqw, 1.25rem)',
+              lineHeight: 1.2,
+            }}
+          >
             Digital Trade Offers:
           </Typography>
 
@@ -199,39 +305,102 @@ export default function TradeOffersReceivedView({
               sx={{
                 borderRadius: radius.lg,
                 flexShrink: 0,
-                ...(offer.id === highlightOfferId && { outline: '2px solid', outlineColor: 'primary.main' }),
+                width: '100%',
+                minWidth: 0,
+                ...(offer.id === highlightOfferId && {
+                  outline: '2px solid',
+                  outlineColor: 'primary.main',
+                }),
               }}
             >
               {offer.previewUrl && (
-                <CardMedia
-                  component="img"
-                  image={offer.previewUrl}
-                  alt="Offered Watermarked Art"
+                <Box
                   sx={{
-                    width: '100%', height: 'auto', maxHeight: '350px', objectFit: 'contain', bgcolor: 'surface.sunken',
+                    width: '88%',
+                    mx: 'auto',
+                    mt: 'clamp(6px, 1.5cqw, 12px)',
+                    aspectRatio: '2.8 / 1',
+                    bgcolor: 'surface.sunken',
+                    borderRadius: radius.md,
+                    overflow: 'hidden',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
                   }}
-                />
+                >
+                  <CardMedia
+                    component="img"
+                    image={offer.previewUrl}
+                    alt="Offered Watermarked Art"
+                    sx={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'contain',
+                    }}
+                  />
+                </Box>
               )}
 
-              <CardContent>
-                <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>
+              <CardContent
+                sx={{
+                  p: 'clamp(8px, 2cqw, 16px)',
+                  '&:last-child': {
+                    pb: 'clamp(8px, 2cqw, 16px)',
+                  },
+                }}
+              >
+                <Typography
+                  variant="subtitle2"
+                  sx={{
+                    fontWeight: 'bold',
+                    fontSize: 'clamp(0.6rem, 1.6cqw, 0.875rem)',
+                    lineHeight: 1.3,
+                  }}
+                >
                   Offer For: {offer.post.title}
                 </Typography>
 
-                <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>
+                <Typography
+                  variant="subtitle2"
+                  sx={{
+                    fontWeight: 'bold',
+                    fontSize: 'clamp(0.6rem, 1.6cqw, 0.875rem)',
+                    lineHeight: 1.3,
+                  }}
+                >
                   Offered by: {offer.offerer.name || offer.offerer.email}
                 </Typography>
 
-                <Typography variant="subtitle2" sx={{ my: 1 }}>
+                <Typography
+                  variant="subtitle2"
+                  sx={{
+                    my: 'clamp(4px, 1cqw, 8px)',
+                    fontSize: 'clamp(0.6rem, 1.6cqw, 0.875rem)',
+                    lineHeight: 1.35,
+                  }}
+                >
                   Offer Message: {offer.message || 'No details provided.'}
                 </Typography>
 
-                <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                    mt: 'clamp(5px, 1.2cqw, 10px)',
+                  }}
+                >
                   <Button
                     variant="contained"
                     color="success"
                     onClick={() => handleAcceptArtOffer(offer.id)}
                     disabled={acceptingOffer}
+                    sx={{
+                      minWidth: 0,
+                      px: 'clamp(6px, 1.5cqw, 14px)',
+                      py: 'clamp(3px, 0.7cqw, 6px)',
+                      fontSize: 'clamp(0.55rem, 1.45cqw, 0.875rem)',
+                      whiteSpace: 'nowrap',
+                    }}
                   >
                     {acceptingArtId === offer.id ? 'Accepting...' : 'Accept Trade'}
                   </Button>

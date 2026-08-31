@@ -209,65 +209,91 @@ export default function PostEdit({
 
   return (
     <>
-      <Box sx={{
-        display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, justifyContent: { xs: 'flex-start', sm: 'space-between' }, alignItems: { xs: 'stretch', sm: 'flex-start' }, mb: 2, gap: { xs: 1, sm: 2 },
-      }}
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'flex-start',
+          mb: 'clamp(5px, 1cqw, 10px)',
+          gap: 'clamp(6px, 1.5cqw, 14px)',
+        }}
       >
         <Box sx={{ minWidth: 0, flex: 1 }}>
-          <Box sx={{
-            display: 'flex', alignItems: 'baseline', flexWrap: 'wrap', gap: 1.5,
-          }}
-          >
-            <TextField
-              label="Title"
-              required
-              fullWidth
-              value={editTitle}
-              onChange={(event) => setEditTitle(event.target.value)}
-            />
-          </Box>
+          <TextField
+            label="Title"
+            required
+            fullWidth
+            size="small"
+            value={editTitle}
+            onChange={(event) => setEditTitle(event.target.value)}
+            sx={{
+              '& .MuiInputBase-root': {
+                fontSize: 'clamp(0.65rem, 1.7cqw, 1rem)',
+                height: 'clamp(32px, 5cqw, 40px)',
+              },
+              '& .MuiInputLabel-root': {
+                fontSize: 'clamp(0.6rem, 1.55cqw, 0.9rem)',
+              },
+            }}
+          />
 
-          <Typography variant="caption" color="text.secondary">
+          <Typography
+            variant="caption"
+            color="text.secondary"
+            sx={{
+              fontSize: 'clamp(0.5rem, 1.35cqw, 0.75rem)',
+            }}
+          >
             {((post.updatedAt && post.updatedAt !== post.createdAt) && `Updated on ${formatPostDate(post.updatedAt)}`) || `Posted on ${formatPostDate(post.createdAt)}`}
           </Typography>
         </Box>
 
-        <Box sx={{
-          display: 'flex', alignItems: 'center', gap: 1, flexShrink: 0, flexWrap: 'wrap',
-        }}
+        <Box
+          onClick={() => navigate(`/profile/${post.user.id}`)}
+          role="button"
+          tabIndex={0}
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 'clamp(4px, 1cqw, 8px)',
+            cursor: 'pointer',
+            flexShrink: 0,
+            '&:hover .post-username': { textDecoration: 'underline' },
+          }}
         >
-          <Box
-            onClick={() => navigate(`/profile/${post.user.id}`)}
-            role="button"
-            tabIndex={0}
+          <Avatar
             sx={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 1,
-              cursor: 'pointer',
-              '&:hover .post-username': { textDecoration: 'underline' },
+              bgcolor: 'primary.main',
+              width: 'clamp(20px, 4cqw, 32px)',
+              height: 'clamp(20px, 4cqw, 32px)',
+              fontSize: 'clamp(0.55rem, 1.5cqw, 0.9rem)',
             }}
           >
-            <Avatar sx={{
-              bgcolor: 'primary.main', width: 32, height: 32, fontSize: '0.9rem',
+            {postUser.charAt(0).toUpperCase()}
+          </Avatar>
+
+          <Typography
+            variant="subtitle2"
+            className="post-username"
+            sx={{
+              whiteSpace: 'nowrap',
+              fontSize: 'clamp(0.55rem, 1.55cqw, 0.875rem)',
             }}
-            >
-              {postUser.charAt(0).toUpperCase()}
-            </Avatar>
-            <Typography variant="subtitle2" className="post-username">
-              {postUser}
-            </Typography>
-          </Box>
+          >
+            {postUser}
+          </Typography>
         </Box>
       </Box>
 
       {isArtTrade && (
-        <Box sx={{ mb: 2 }}>
+        <Box sx={{ mb: 'clamp(6px, 1.5cqw, 12px)' }}>
           <Box
             sx={{
               position: 'relative',
-              width: '100%',
-              height: { xs: 280, sm: 400 },
+              width: '88%',
+              mx: 'auto',
+              aspectRatio: '2.8 / 1',
               bgcolor: 'surface.sunken',
               borderRadius: radius.md,
               overflow: 'hidden',
@@ -288,11 +314,30 @@ export default function PostEdit({
               />
             )}
           </Box>
-          <Box sx={{
-            display: 'flex', alignItems: 'center', gap: 2, mt: 1.5,
-          }}
+
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 'clamp(5px, 1.2cqw, 10px)',
+              mt: 'clamp(5px, 1.2cqw, 10px)',
+            }}
           >
-            <Button variant="outlined" component="label" startIcon={<CloudUploadIcon />} disabled={saving}>
+            <Button
+              variant="outlined"
+              component="label"
+              startIcon={<CloudUploadIcon />}
+              disabled={saving}
+              sx={{
+                minWidth: 0,
+                px: 'clamp(6px, 1.3cqw, 12px)',
+                py: 'clamp(2px, 0.5cqw, 4px)',
+                fontSize: 'clamp(0.5rem, 1.35cqw, 0.8125rem)',
+                '& .MuiSvgIcon-root': {
+                  fontSize: 'clamp(14px, 2cqw, 20px)',
+                },
+              }}
+            >
               Replace Artwork
               <input
                 type="file"
@@ -301,8 +346,17 @@ export default function PostEdit({
                 onChange={(event) => handleDigitalFileChange(event.target.files?.[0] || null)}
               />
             </Button>
+
             {editDigitalFile && (
-              <Typography variant="body2" color="text.secondary" noWrap sx={{ maxWidth: 200 }}>
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                noWrap
+                sx={{
+                  maxWidth: '28%',
+                  fontSize: 'clamp(0.5rem, 1.35cqw, 0.8125rem)',
+                }}
+              >
                 {editDigitalFile.name}
               </Typography>
             )}
@@ -311,13 +365,14 @@ export default function PostEdit({
       )}
 
       {!isArtTrade && (
-        <Box sx={{ mb: 2 }}>
+        <Box sx={{ mb: 'clamp(6px, 1.5cqw, 12px)' }}>
           {editImages[0] && (
             <Box
               sx={{
                 position: 'relative',
-                width: '100%',
-                height: { xs: 280, sm: 400 },
+                width: '88%',
+                mx: 'auto',
+                aspectRatio: '2.8 / 1',
                 bgcolor: 'surface.sunken',
                 borderRadius: radius.md,
                 overflow: 'hidden',
@@ -342,10 +397,10 @@ export default function PostEdit({
             sx={{
               display: 'flex',
               justifyContent: 'center',
-              gap: 1,
-              mt: 1.5,
+              gap: 'clamp(4px, 1cqw, 8px)',
+              mt: 'clamp(5px, 1.2cqw, 10px)',
               overflowX: 'auto',
-              pb: 0.5,
+              pb: 'clamp(2px, 0.5cqw, 4px)',
             }}
           >
             {editImages.map((image, index) => (
@@ -359,8 +414,8 @@ export default function PostEdit({
                 role="button"
                 tabIndex={0}
                 sx={{
-                  width: 72,
-                  height: 72,
+                  width: 'clamp(38px, 8cqw, 72px)',
+                  aspectRatio: '1 / 1',
                   flexShrink: 0,
                   borderRadius: radius.sm,
                   overflow: 'hidden',
@@ -385,6 +440,7 @@ export default function PostEdit({
                     display: 'block',
                   }}
                 />
+
                 <IconButton
                   size="small"
                   aria-label="Remove image"
@@ -394,25 +450,46 @@ export default function PostEdit({
                   }}
                   sx={{
                     position: 'absolute',
-                    top: 2,
-                    right: 2,
+                    top: '2%',
+                    right: '2%',
+                    width: 'clamp(18px, 3.2cqw, 30px)',
+                    height: 'clamp(18px, 3.2cqw, 30px)',
                     bgcolor: 'background.paper',
                     '&:hover': {
                       bgcolor: 'background.paper',
                     },
                   }}
                 >
-                  <DeleteIcon fontSize="small" />
+                  <DeleteIcon
+                    sx={{
+                      fontSize: 'clamp(12px, 2cqw, 20px)',
+                    }}
+                  />
                 </IconButton>
               </Box>
             ))}
           </Box>
 
-          <Box sx={{
-            display: 'flex', alignItems: 'center', gap: 2, mt: 1.5,
-          }}
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 'clamp(5px, 1.2cqw, 10px)',
+              mt: 'clamp(5px, 1.2cqw, 10px)',
+            }}
           >
-            <Button variant="outlined" component="label" startIcon={<CloudUploadIcon />} disabled={saving || editImages.length >= 5}>
+            <Button
+              variant="outlined"
+              component="label"
+              startIcon={<CloudUploadIcon />}
+              disabled={saving || editImages.length >= 5}
+              sx={{
+                minWidth: 0,
+                px: 'clamp(6px, 1.3cqw, 12px)',
+                py: 'clamp(2px, 0.5cqw, 4px)',
+                fontSize: 'clamp(0.5rem, 1.35cqw, 0.8125rem)',
+              }}
+            >
               Add Images
               <input
                 type="file"
@@ -422,7 +499,14 @@ export default function PostEdit({
                 onChange={(event) => handleAddImages(event.target.files)}
               />
             </Button>
-            <Typography variant="body2" color="text.secondary">
+
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              sx={{
+                fontSize: 'clamp(0.5rem, 1.35cqw, 0.8125rem)',
+              }}
+            >
               {editImages.length}
               {' '}
               of 5 images selected
@@ -436,23 +520,58 @@ export default function PostEdit({
         required
         fullWidth
         multiline
-        rows={3}
+        rows={2}
         value={editMessage}
         onChange={(event) => setEditMessage(event.target.value)}
-        sx={{ mb: 3 }}
+        sx={{
+          mb: 'clamp(6px, 1.5cqw, 12px)',
+          '& .MuiInputBase-root': {
+            fontSize: 'clamp(0.65rem, 1.7cqw, 1rem)',
+            p: 'clamp(6px, 1.2cqw, 10px)',
+          },
+          '& .MuiInputBase-inputMultiline': {
+            p: 0,
+            lineHeight: 1.35,
+          },
+          '& .MuiInputLabel-root': {
+            fontSize: 'clamp(0.6rem, 1.55cqw, 0.9rem)',
+          },
+        }}
       />
 
-      <Box sx={{ display: 'flex', gap: 1, mb: 3 }}>
+      <Box
+        sx={{
+          display: 'flex',
+          gap: 'clamp(4px, 1cqw, 8px)',
+          mb: 'clamp(6px, 1.5cqw, 12px)',
+        }}
+      >
         <Button
           variant="contained"
           startIcon={saving ? <CircularProgress size={16} color="inherit" /> : <SaveIcon />}
           disabled={saving || !editTitle.trim() || !editMessage.trim()}
           onClick={handleSaveEdit}
+          sx={{
+            minWidth: 0,
+            px: 'clamp(6px, 1.5cqw, 12px)',
+            py: 'clamp(3px, 0.7cqw, 6px)',
+            fontSize: 'clamp(0.55rem, 1.45cqw, 0.875rem)',
+          }}
         >
           {saving ? 'Saving...' : 'Save'}
         </Button>
 
-        <Button color="inherit" disabled={saving} onClick={handleCancel}>
+        <Button
+          color="inherit"
+          disabled={saving}
+          onClick={handleCancel}
+          sx={{
+            minWidth: 0,
+            px: 'clamp(6px, 1.5cqw, 12px)',
+            py: 'clamp(3px, 0.7cqw, 6px)',
+            fontSize: 'clamp(0.55rem, 1.45cqw, 0.875rem)',
+          }}
+        >
           Cancel
         </Button>
       </Box>

@@ -48,176 +48,202 @@ export default function PostImageGallery({
   return (
     <>
       {currentPostImage && (
-      <Box sx={{ mb: 2 }}>
-        <Box
-          sx={{
-            position: 'relative',
-            width: '100%',
-            height: { xs: 280, sm: 400 },
-            bgcolor: 'surface.sunken',
-            borderRadius: radius.md,
-            overflow: 'hidden',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <img
-            src={currentPostImage}
-            alt={`Post ${currentImageIndex + 1}`}
-            loading="lazy"
-            decoding="async"
-            style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'contain',
-            }}
-          />
-
-          {postImages.length > 1 && (
-          <>
-            <IconButton
-              onClick={handlePreviousImage}
-              aria-label="Previous image"
-              sx={{
-                position: 'absolute',
-                left: 12,
-                top: '50%',
-                transform: 'translateY(-50%)',
-                bgcolor: 'background.paper',
-                boxShadow: 2,
-                '&:hover': {
-                  bgcolor: 'background.paper',
-                },
-              }}
-            >
-              <ChevronLeftIcon />
-            </IconButton>
-
-            <IconButton
-              onClick={handleNextImage}
-              aria-label="Next image"
-              sx={{
-                position: 'absolute',
-                right: 12,
-                top: '50%',
-                transform: 'translateY(-50%)',
-                bgcolor: 'background.paper',
-                boxShadow: 2,
-                '&:hover': {
-                  bgcolor: 'background.paper',
-                },
-              }}
-            >
-              <ChevronRightIcon />
-            </IconButton>
-          </>
-          )}
-
-          <IconButton
-            onClick={() => setImageViewerOpen(true)}
-            aria-label="Expand image"
-            sx={{
-              position: 'absolute',
-              right: 12,
-              bottom: 12,
-              bgcolor: 'background.paper',
-              boxShadow: 2,
-              '&:hover': {
-                bgcolor: 'background.paper',
-              },
-            }}
-          >
-            <OpenInFullIcon />
-          </IconButton>
-        </Box>
-
-        {postImages.length > 1 && (
-        <>
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              gap: 0.75,
-              mt: 1,
-            }}
-          >
-            {postImages.map((imageUrl, index) => (
-              <Box
-                key={`dot-${imageUrl}`}
-                onClick={() => setCurrentImageIndex(index)}
-                sx={{
-                  width: index === currentImageIndex ? 18 : 7,
-                  height: 7,
-                  borderRadius: radius.pill,
-                  bgcolor: index === currentImageIndex ? 'primary.main' : 'text.disabled',
-                  cursor: 'pointer',
-                  transition: 'width 0.2s ease',
-                }}
-              />
-            ))}
-          </Box>
-
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              gap: 1,
-              mt: 1.5,
-              overflowX: 'auto',
-              pb: 0.5,
-            }}
-          >
-            {postImages.map((imageUrl, index) => (
-              <Box
-                key={`thumbnail-${imageUrl}`}
-                onClick={() => setCurrentImageIndex(index)}
-                role="button"
-                tabIndex={0}
-                sx={{
-                  width: 72,
-                  height: 72,
-                  flexShrink: 0,
-                  borderRadius: radius.sm,
-                  overflow: 'hidden',
-                  cursor: 'pointer',
-                  border: '2px solid',
-                  borderColor: index === currentImageIndex ? 'primary.main' : 'border.default',
-                  opacity: index === currentImageIndex ? 1 : 0.7,
-                  transition: 'opacity 0.15s ease, border-color 0.15s ease',
-                  '&:hover': {
-                    opacity: 1,
-                  },
-                }}
-              >
-                <img
-                  src={imageUrl}
-                  alt={`Post Thumbnail ${index + 1}`}
-                  loading="lazy"
-                  decoding="async"
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
-                    display: 'block',
-                  }}
-                />
-              </Box>
-            ))}
-          </Box>
-        </>
-        )}
-      </Box>
-      )}
-
-      {feedDigitalImage && (
-        <Box sx={{ mb: 2 }}>
+        <Box sx={{ mb: 'clamp(6px, 1.5cqw, 12px)' }}>
           <Box
             sx={{
               position: 'relative',
-              width: '100%',
-              height: { xs: 280, sm: 400 },
+              width: '88%',
+              mx: 'auto',
+              aspectRatio: '2.8 / 1',
+              bgcolor: 'surface.sunken',
+              borderRadius: radius.md,
+              overflow: 'hidden',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <img
+              src={currentPostImage}
+              alt={`Post ${currentImageIndex + 1}`}
+              loading="lazy"
+              decoding="async"
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'contain',
+              }}
+            />
+
+            {postImages.length > 1 && (
+              <>
+                <IconButton
+                  onClick={handlePreviousImage}
+                  aria-label="Previous image"
+                  sx={{
+                    position: 'absolute',
+                    left: '1.5%',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    width: 'clamp(22px, 4.5cqw, 40px)',
+                    height: 'clamp(22px, 4.5cqw, 40px)',
+                    bgcolor: 'background.paper',
+                    boxShadow: 2,
+                    '&:hover': {
+                      bgcolor: 'background.paper',
+                    },
+                  }}
+                >
+                  <ChevronLeftIcon
+                    sx={{
+                      fontSize: 'clamp(14px, 2.5cqw, 24px)',
+                    }}
+                  />
+                </IconButton>
+
+                <IconButton
+                  onClick={handleNextImage}
+                  aria-label="Next image"
+                  sx={{
+                    position: 'absolute',
+                    right: '1.5%',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    width: 'clamp(22px, 4.5cqw, 40px)',
+                    height: 'clamp(22px, 4.5cqw, 40px)',
+                    bgcolor: 'background.paper',
+                    boxShadow: 2,
+                    '&:hover': {
+                      bgcolor: 'background.paper',
+                    },
+                  }}
+                >
+                  <ChevronRightIcon
+                    sx={{
+                      fontSize: 'clamp(14px, 2.5cqw, 24px)',
+                    }}
+                  />
+                </IconButton>
+              </>
+            )}
+
+            <IconButton
+              onClick={() => setImageViewerOpen(true)}
+              aria-label="Expand image"
+              sx={{
+                position: 'absolute',
+                right: '1.5%',
+                bottom: '3%',
+                width: 'clamp(22px, 4.5cqw, 40px)',
+                height: 'clamp(22px, 4.5cqw, 40px)',
+                bgcolor: 'background.paper',
+                boxShadow: 2,
+                '&:hover': {
+                  bgcolor: 'background.paper',
+                },
+              }}
+            >
+              <OpenInFullIcon
+                sx={{
+                  fontSize: 'clamp(14px, 2.5cqw, 24px)',
+                }}
+              />
+            </IconButton>
+          </Box>
+
+          {postImages.length > 1 && (
+            <>
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  gap: 'clamp(3px, 0.7cqw, 6px)',
+                  mt: 'clamp(4px, 1cqw, 8px)',
+                }}
+              >
+                {postImages.map((imageUrl, index) => (
+                  <Box
+                    key={`dot-${imageUrl}`}
+                    onClick={() => setCurrentImageIndex(index)}
+                    sx={{
+                      width: index === currentImageIndex
+                        ? 'clamp(12px, 2.25cqw, 18px)'
+                        : 'clamp(5px, 0.9cqw, 7px)',
+                      height: 'clamp(4px, 0.8cqw, 7px)',
+                      borderRadius: radius.pill,
+                      bgcolor: index === currentImageIndex
+                        ? 'primary.main'
+                        : 'text.disabled',
+                      cursor: 'pointer',
+                      transition: 'width 0.2s ease',
+                    }}
+                  />
+                ))}
+              </Box>
+
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  gap: 'clamp(4px, 1cqw, 8px)',
+                  mt: 'clamp(5px, 1.3cqw, 10px)',
+                  overflowX: 'auto',
+                  pb: 'clamp(2px, 0.5cqw, 4px)',
+                }}
+              >
+                {postImages.map((imageUrl, index) => (
+                  <Box
+                    key={`thumbnail-${imageUrl}`}
+                    onClick={() => setCurrentImageIndex(index)}
+                    role="button"
+                    tabIndex={0}
+                    sx={{
+                      width: 'clamp(38px, 8cqw, 72px)',
+                      aspectRatio: '1 / 1',
+                      flexShrink: 0,
+                      borderRadius: radius.sm,
+                      overflow: 'hidden',
+                      cursor: 'pointer',
+                      border: '2px solid',
+                      borderColor: index === currentImageIndex
+                        ? 'primary.main'
+                        : 'border.default',
+                      opacity: index === currentImageIndex ? 1 : 0.7,
+                      transition: 'opacity 0.15s ease, border-color 0.15s ease',
+                      '&:hover': {
+                        opacity: 1,
+                      },
+                    }}
+                  >
+                    <img
+                      src={imageUrl}
+                      alt={`Post Thumbnail ${index + 1}`}
+                      loading="lazy"
+                      decoding="async"
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        display: 'block',
+                      }}
+                    />
+                  </Box>
+                ))}
+              </Box>
+            </>
+          )}
+        </Box>
+      )}
+
+      {feedDigitalImage && (
+        <Box sx={{ mb: 'clamp(6px, 1.5cqw, 12px)' }}>
+          <Box
+            sx={{
+              position: 'relative',
+              width: '88%',
+              mx: 'auto',
+              aspectRatio: '2.8 / 1',
               bgcolor: 'surface.sunken',
               borderRadius: radius.md,
               overflow: 'hidden',
@@ -243,8 +269,10 @@ export default function PostImageGallery({
               aria-label="Expand image"
               sx={{
                 position: 'absolute',
-                right: 12,
-                bottom: 12,
+                right: '1.5%',
+                bottom: '3%',
+                width: 'clamp(22px, 4.5cqw, 40px)',
+                height: 'clamp(22px, 4.5cqw, 40px)',
                 bgcolor: 'background.paper',
                 boxShadow: 2,
                 '&:hover': {
@@ -252,7 +280,11 @@ export default function PostImageGallery({
                 },
               }}
             >
-              <OpenInFullIcon />
+              <OpenInFullIcon
+                sx={{
+                  fontSize: 'clamp(14px, 2.5cqw, 24px)',
+                }}
+              />
             </IconButton>
           </Box>
         </Box>
@@ -266,7 +298,7 @@ export default function PostImageGallery({
         slotProps={{
           paper: {
             sx: {
-              height: { xs: '90vh', md: '94vh' },
+              height: '94vh',
               maxHeight: '94vh',
               bgcolor: 'background.default',
               borderRadius: radius.md,
@@ -277,7 +309,7 @@ export default function PostImageGallery({
         <DialogContent
           sx={{
             position: 'relative',
-            p: { xs: 1, sm: 2 },
+            p: 2,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -303,24 +335,24 @@ export default function PostImageGallery({
           </IconButton>
 
           {postImages.length > 1 && (
-          <IconButton
-            onClick={handlePreviousImage}
-            aria-label="Previous image"
-            sx={{
-              position: 'absolute',
-              left: { xs: 8, sm: 20 },
-              top: '50%',
-              transform: 'translateY(-50%)',
-              zIndex: 2,
-              bgcolor: 'background.paper',
-              boxShadow: 2,
-              '&:hover': {
+            <IconButton
+              onClick={handlePreviousImage}
+              aria-label="Previous image"
+              sx={{
+                position: 'absolute',
+                left: 20,
+                top: '50%',
+                transform: 'translateY(-50%)',
+                zIndex: 2,
                 bgcolor: 'background.paper',
-              },
-            }}
-          >
-            <ChevronLeftIcon />
-          </IconButton>
+                boxShadow: 2,
+                '&:hover': {
+                  bgcolor: 'background.paper',
+                },
+              }}
+            >
+              <ChevronLeftIcon />
+            </IconButton>
           )}
 
           {expandedImageUrl && (
@@ -339,24 +371,24 @@ export default function PostImageGallery({
           )}
 
           {postImages.length > 1 && (
-          <IconButton
-            onClick={handleNextImage}
-            aria-label="Next image"
-            sx={{
-              position: 'absolute',
-              right: { xs: 8, sm: 20 },
-              top: '50%',
-              transform: 'translateY(-50%)',
-              zIndex: 2,
-              bgcolor: 'background.paper',
-              boxShadow: 2,
-              '&:hover': {
+            <IconButton
+              onClick={handleNextImage}
+              aria-label="Next image"
+              sx={{
+                position: 'absolute',
+                right: 20,
+                top: '50%',
+                transform: 'translateY(-50%)',
+                zIndex: 2,
                 bgcolor: 'background.paper',
-              },
-            }}
-          >
-            <ChevronRightIcon />
-          </IconButton>
+                boxShadow: 2,
+                '&:hover': {
+                  bgcolor: 'background.paper',
+                },
+              }}
+            >
+              <ChevronRightIcon />
+            </IconButton>
           )}
         </DialogContent>
       </Dialog>

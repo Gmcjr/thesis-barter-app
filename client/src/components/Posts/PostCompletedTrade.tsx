@@ -74,20 +74,49 @@ export default function PostCompletedTrade({
   };
 
   return (
-    <Box sx={{
-      mt: 2, pt: 2, borderTop: '1px solid', borderColor: 'divider',
-    }}
+    <Box
+      sx={{
+        mt: 'clamp(6px, 1.5cqw, 12px)',
+        pt: 'clamp(6px, 1.5cqw, 12px)',
+        borderTop: '1px solid',
+        borderColor: 'divider',
+      }}
     >
       {isArtTrade ? (
-        <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: 2 }}>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            gap: 'clamp(6px, 1.5cqw, 14px)',
+            width: '100%',
+          }}
+        >
           {/* Art Sent */}
-          <Box sx={{ flex: 1 }}>
-            <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 'bold' }}>
+          <Box sx={{ flex: 1, minWidth: 0 }}>
+            <Typography
+              variant="subtitle2"
+              sx={{
+                mb: 'clamp(3px, 0.7cqw, 6px)',
+                fontWeight: 'bold',
+                fontSize: 'clamp(0.55rem, 1.5cqw, 0.875rem)',
+              }}
+            >
               Art Sent:
             </Typography>
-            <Box sx={{
-              bgcolor: 'surface.sunken', borderRadius: radius.lg, p: 1, textAlign: 'center', minHeight: 200, display: 'flex', alignItems: 'center', justifyContent: 'center',
-            }}
+
+            <Box
+              sx={{
+                width: '100%',
+                aspectRatio: '2.8 / 1',
+                bgcolor: 'surface.sunken',
+                borderRadius: radius.lg,
+                p: 'clamp(3px, 0.7cqw, 6px)',
+                textAlign: 'center',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                overflow: 'hidden',
+              }}
             >
               {sentUrl ? (
                 <img
@@ -95,22 +124,59 @@ export default function PostCompletedTrade({
                   alt="Traded Away"
                   loading="lazy"
                   decoding="async"
-                  style={{ maxWidth: '100%', maxHeight: 200, objectFit: 'contain' }}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'contain',
+                  }}
                 />
               ) : (
-                <Typography variant="caption" color="text.secondary">No image available</Typography>
+                <Typography
+                  variant="caption"
+                  color="text.secondary"
+                  sx={{
+                    fontSize: 'clamp(0.45rem, 1.2cqw, 0.75rem)',
+                  }}
+                >
+                  No image available
+                </Typography>
               )}
             </Box>
           </Box>
 
           {/* Art Received */}
-          <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-            <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 'bold' }}>
+          <Box
+            sx={{
+              flex: 1,
+              minWidth: 0,
+              display: 'flex',
+              flexDirection: 'column',
+            }}
+          >
+            <Typography
+              variant="subtitle2"
+              sx={{
+                mb: 'clamp(3px, 0.7cqw, 6px)',
+                fontWeight: 'bold',
+                fontSize: 'clamp(0.55rem, 1.5cqw, 0.875rem)',
+              }}
+            >
               Art Received:
             </Typography>
-            <Box sx={{
-              bgcolor: 'surface.sunken', borderRadius: radius.lg, p: 1, textAlign: 'center', minHeight: 200, display: 'flex', alignItems: 'center', justifyContent: 'center',
-            }}
+
+            <Box
+              sx={{
+                width: '100%',
+                aspectRatio: '2.8 / 1',
+                bgcolor: 'surface.sunken',
+                borderRadius: radius.lg,
+                p: 'clamp(3px, 0.7cqw, 6px)',
+                textAlign: 'center',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                overflow: 'hidden',
+              }}
             >
               {receivedUrl ? (
                 <img
@@ -118,39 +184,81 @@ export default function PostCompletedTrade({
                   alt="Received Art"
                   loading="lazy"
                   decoding="async"
-                  style={{ maxWidth: '100%', maxHeight: 200, objectFit: 'contain' }}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'contain',
+                  }}
                 />
               ) : (
-                <Typography variant="caption" color="text.secondary">No image available</Typography>
+                <Typography
+                  variant="caption"
+                  color="text.secondary"
+                  sx={{
+                    fontSize: 'clamp(0.45rem, 1.2cqw, 0.75rem)',
+                  }}
+                >
+                  No image available
+                </Typography>
               )}
             </Box>
 
-            {/* Only render download button for the poster and the user they trade with */}
             {receivedUrl && isParticipant && (
-            <Button
-              variant="contained"
-              color="success"
-              size="small"
-              startIcon={downloadingFull ? <CircularProgress size={16} color="inherit" /> : <DownloadIcon />}
-              onClick={() => handleDownloadFull(receivedUrl)}
-              disabled={downloadingFull}
-              sx={{ mt: 1.5, alignSelf: 'flex-start' }}
-            >
-              {downloadingFull ? 'Saving File...' : 'Download Art Received'}
-            </Button>
+              <Button
+                variant="contained"
+                color="success"
+                size="small"
+                startIcon={downloadingFull
+                  ? <CircularProgress size={16} color="inherit" />
+                  : <DownloadIcon />}
+                onClick={() => handleDownloadFull(receivedUrl)}
+                disabled={downloadingFull}
+                sx={{
+                  mt: 'clamp(4px, 1cqw, 8px)',
+                  alignSelf: 'flex-start',
+                  minWidth: 0,
+                  px: 'clamp(5px, 1.2cqw, 10px)',
+                  py: 'clamp(2px, 0.5cqw, 4px)',
+                  fontSize: 'clamp(0.5rem, 1.35cqw, 0.8125rem)',
+                  '& .MuiSvgIcon-root': {
+                    fontSize: 'clamp(13px, 2cqw, 20px)',
+                  },
+                }}
+              >
+                {downloadingFull ? 'Saving File...' : 'Download Art Received'}
+              </Button>
             )}
           </Box>
         </Box>
       ) : (
         <Box>
-          <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 'bold' }}>
+          <Typography
+            variant="subtitle2"
+            sx={{
+              mb: 'clamp(3px, 0.7cqw, 6px)',
+              fontWeight: 'bold',
+              fontSize: 'clamp(0.55rem, 1.5cqw, 0.875rem)',
+            }}
+          >
             Trade Details & Summary:
           </Typography>
-          <Box sx={{
-            bgcolor: 'surface.sunken', borderRadius: radius.lg, p: 2, textAlign: 'left',
-          }}
+
+          <Box
+            sx={{
+              bgcolor: 'surface.sunken',
+              borderRadius: radius.lg,
+              p: 'clamp(6px, 1.5cqw, 12px)',
+              textAlign: 'left',
+            }}
           >
-            <Typography variant="body2" color="text.primary">
+            <Typography
+              variant="body2"
+              color="text.primary"
+              sx={{
+                fontSize: 'clamp(0.55rem, 1.5cqw, 0.875rem)',
+                lineHeight: 1.4,
+              }}
+            >
               {(completedOffer as { message?: string })?.message || post.message || 'Trade successfully completed between users.'}
             </Typography>
           </Box>
