@@ -188,6 +188,8 @@ function NavBar({ scrollingDown }: NavBarProps) {
                   onClose={() => setUserMenuTarget(null)}
                   anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                   transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                  autoFocus={false}
+                  disableAutoFocusItem
                 >
                   {user && (
                     <Box sx={{ px: 2, pt: 1.5, pb: 0.5 }}>
@@ -337,6 +339,7 @@ function NavBar({ scrollingDown }: NavBarProps) {
           </Fab>
         </Box>
       )}
+
       {/* NewPost Modal */}
       <NewPost
         open={modalOpen}
