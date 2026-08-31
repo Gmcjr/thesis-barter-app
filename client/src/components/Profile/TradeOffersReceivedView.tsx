@@ -14,6 +14,7 @@ import Typography from '@mui/material/Typography';
 import { radius } from '../../theme';
 
 import { useToast } from '../../context/ToastContext';
+import { useRouter } from '../../context/RouterContext';
 import PendingTradeOffers from './PendingTradeOffers';
 
 import type { ArtTradeOfferData, NormalTradeOffer, TradeOffersReceivedViewProps } from './types';
@@ -27,7 +28,10 @@ export default function TradeOffersReceivedView({
   const [error, setError] = useState('');
   const [acceptingNormalId, setAcceptingNormalId] = useState<number | null>(null);
   const [acceptingArtId, setAcceptingArtId] = useState<number | null>(null);
+  const [rejectingNormalId, setRejectingNormalId] = useState<number | null>(null);
+  const [rejectingArtId, setRejectingArtId] = useState<number | null>(null);
   const { showToast } = useToast();
+  const { navigate } = useRouter();
 
   const loadOffers = useCallback(async () => {
     setLoading(true);
@@ -124,8 +128,92 @@ export default function TradeOffersReceivedView({
     }
   };
 
-  const acceptingOffer = acceptingNormalId !== null || acceptingArtId !== null;
+  const handleRejectNormalOffer = async (requestId: number) => {
+    setRejectingNormalId(requestId);
+
+    try {
+      await axios.patch(`/trade-requests/${requestId}/reject`);
+      showToast('Trade request rejected.', 'info');
+
+      await Promise.all([
+        loadOffers(),
+        onOfferAccepted(),
+      ]);
+    } catch (err) {
+      const message = axios.isAxiosError(err) && err.response?.data?.error
+        ? err.response.data.error
+        : 'Could not reject this trade request.';
+
+      showToast(message, 'error');
+    } finally {
+      setRejectingNormalId(null);
+    }
+  };
+
+  const handleRejectArtOffer = async (offerId: number) => {
+    setRejectingArtId(offerId);
+
+    try {
+      await axios.patch(
+        `/artTradeOffers/${offerId}/reject`,
+        {},
+        { withCredentials: true },
+      );
+
+      showToast('Art trade offer rejected.', 'info');
+
+      await Promise.all([
+        loadOffers(),
+        onOfferAccepted(),
+      ]);
+    } catch (err) {
+      const message = axios.isAxiosError(err) && err.response?.data?.error
+        ? err.response.data.error
+        : 'Could not reject this art trade offer.';
+
+      showToast(message, 'error');
+    } finally {
+      setRejectingArtId(null);
+    }
+  };
+
+  const handleOpenDM = async (userId: number) => {
+    try {
+      const response = await axios.post<{ id: number }>(
+        '/dms',
+        { userId },
+        { withCredentials: true },
+      );
+
+      navigate(`/messages/${response.data.id}`);
+    } catch (err) {
+      const message = axios.isAxiosError(err) && err.response?.data?.error
+        ? err.response.data.error
+        : 'Could not start conversation.';
+
+      showToast(message, 'error');
+    }
+  };
+
+  const offerActionInProgress = acceptingNormalId !== null
+    || acceptingArtId !== null
+    || rejectingNormalId !== null
+    || rejectingArtId !== null;
+
   const noOffers = normalOffers.length === 0 && artOffers.length === 0;
+
+  const actionButtonSx = {
+    minWidth: 0,
+    px: 'clamp(6px, 1.5cqw, 14px)',
+    py: 'clamp(3px, 0.7cqw, 6px)',
+    fontSize: 'clamp(0.55rem, 1.45cqw, 0.875rem)',
+    whiteSpace: 'nowrap',
+    bgcolor: 'primary.main',
+    color: 'primary.contrastText',
+    '&:hover': {
+      bgcolor: 'primary.dark',
+    },
+  };
 
   return (
     <Box
@@ -254,21 +342,34 @@ export default function TradeOffersReceivedView({
                   sx={{
                     display: 'flex',
                     justifyContent: 'flex-end',
+                    gap: 'clamp(4px, 1cqw, 8px)',
                     mt: 'clamp(5px, 1.2cqw, 10px)',
+                    flexWrap: 'wrap',
                   }}
                 >
                   <Button
                     variant="contained"
-                    color="success"
-                    disabled={acceptingOffer}
+                    disabled={offerActionInProgress}
+                    onClick={() => handleOpenDM(offer.requester.id)}
+                    sx={actionButtonSx}
+                  >
+                    Open DM
+                  </Button>
+
+                  <Button
+                    variant="contained"
+                    disabled={offerActionInProgress}
+                    onClick={() => handleRejectNormalOffer(offer.id)}
+                    sx={actionButtonSx}
+                  >
+                    {rejectingNormalId === offer.id ? 'Rejecting...' : 'Reject Trade'}
+                  </Button>
+
+                  <Button
+                    variant="contained"
+                    disabled={offerActionInProgress}
                     onClick={() => handleAcceptNormalOffer(offer.id)}
-                    sx={{
-                      minWidth: 0,
-                      px: 'clamp(6px, 1.5cqw, 14px)',
-                      py: 'clamp(3px, 0.7cqw, 6px)',
-                      fontSize: 'clamp(0.55rem, 1.45cqw, 0.875rem)',
-                      whiteSpace: 'nowrap',
-                    }}
+                    sx={actionButtonSx}
                   >
                     {acceptingNormalId === offer.id ? 'Accepting...' : 'Accept Trade'}
                   </Button>
@@ -386,21 +487,34 @@ export default function TradeOffersReceivedView({
                   sx={{
                     display: 'flex',
                     justifyContent: 'flex-end',
+                    gap: 'clamp(4px, 1cqw, 8px)',
                     mt: 'clamp(5px, 1.2cqw, 10px)',
+                    flexWrap: 'wrap',
                   }}
                 >
                   <Button
                     variant="contained"
-                    color="success"
+                    disabled={offerActionInProgress}
+                    onClick={() => handleOpenDM(offer.offerer.id)}
+                    sx={actionButtonSx}
+                  >
+                    Open DM
+                  </Button>
+
+                  <Button
+                    variant="contained"
+                    disabled={offerActionInProgress}
+                    onClick={() => handleRejectArtOffer(offer.id)}
+                    sx={actionButtonSx}
+                  >
+                    {rejectingArtId === offer.id ? 'Rejecting...' : 'Reject Trade'}
+                  </Button>
+
+                  <Button
+                    variant="contained"
                     onClick={() => handleAcceptArtOffer(offer.id)}
-                    disabled={acceptingOffer}
-                    sx={{
-                      minWidth: 0,
-                      px: 'clamp(6px, 1.5cqw, 14px)',
-                      py: 'clamp(3px, 0.7cqw, 6px)',
-                      fontSize: 'clamp(0.55rem, 1.45cqw, 0.875rem)',
-                      whiteSpace: 'nowrap',
-                    }}
+                    disabled={offerActionInProgress}
+                    sx={actionButtonSx}
                   >
                     {acceptingArtId === offer.id ? 'Accepting...' : 'Accept Trade'}
                   </Button>
