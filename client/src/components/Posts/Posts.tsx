@@ -21,6 +21,12 @@ import { useSocket } from '../../context/SocketContext';
 
 const POSTS_PER_PAGE = 10;
 
+interface MyArtTradeOffer {
+  id: number;
+  postId: number;
+  status: string;
+}
+
 export default function Posts() {
   const { user, blockedUserIds } = useAuth();
   const socket = useSocket();
@@ -29,6 +35,7 @@ export default function Posts() {
 
   const [posts, setPosts] = useState<PostData[]>([]);
   const [myTradeRequests, setMyTradeRequests] = useState<TradeRequestData[]>([]);
+  const [myArtTradeOffers, setMyArtTradeOffers] = useState<MyArtTradeOffer[]>([]);
 
   const [search, setSearch] = useState('');
   const [advancedSearch, setAdvancedSearch] = useState<AdvancedSearchFilters>(
@@ -110,16 +117,35 @@ export default function Posts() {
     }
   }, [user]);
 
+  const loadMyArtTradeOffers = useCallback(async () => {
+    if (!user) { setMyArtTradeOffers([]); return; }
+    try {
+      const response = await axios.get<MyArtTradeOffer[]>('/artTradeOffers/sent', {
+        withCredentials: true,
+      });
+      setMyArtTradeOffers(Array.isArray(response.data) ? response.data : []);
+    } catch (requestError) {
+      console.error('Failed to get your art trade offers:', requestError);
+    }
+  }, [user]);
+
   useEffect(() => {
     loadMyTradeRequests().catch((requestError) => {
       console.error('Failed to load trade requests', requestError);
     });
   }, [loadMyTradeRequests]);
 
+  useEffect(() => {
+    loadMyArtTradeOffers().catch((requestError) => {
+      console.error('Failed to load art trade offers', requestError);
+    });
+  }, [loadMyArtTradeOffers]);
+
   const handleTradeActivity = async () => {
     await Promise.all([
       loadPosts(search, advancedSearch, advancedSearchActive),
       loadMyTradeRequests(),
+      loadMyArtTradeOffers(),
     ]);
   };
 
@@ -250,7 +276,16 @@ export default function Posts() {
             key={post.id}
             post={post}
             onReport={() => setReportDialogPostId(post.id)}
-            myTradeRequests={myTradeRequests.find((r) => r.postId === post.id) ?? null}
+            myTradeRequests={
+              myTradeRequests.find(
+                (r) => r.postId === post.id && r.status === 'PENDING',
+              ) ?? null
+            }
+            myArtTradeOffer={
+              myArtTradeOffers.find(
+                (offer) => offer.postId === post.id && offer.status === 'PENDING',
+              ) ?? null
+            }
             onTradeActivity={handleTradeActivity}
             onOfferSubmitted={handleTradeActivity}
             onUpdate={handleUpdatePost}

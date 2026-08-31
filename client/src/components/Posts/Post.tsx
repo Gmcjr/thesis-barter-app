@@ -36,6 +36,11 @@ interface PostProps {
   post: PostData;
   onReport: () => void;
   myTradeRequests: TradeRequestData | null;
+  myArtTradeOffer: {
+    id: number;
+    postId: number;
+    status: string;
+  } | null;
   onTradeActivity: () => void | Promise<void>;
   onOfferSubmitted?: () => void;
   onUpdate?: (postId: number, postData: PostUpdateData) => Promise<void>;
@@ -44,7 +49,7 @@ interface PostProps {
 }
 
 export default function Post({
-  post, onReport, myTradeRequests, onTradeActivity, onOfferSubmitted,
+  post, onReport, myTradeRequests, myArtTradeOffer, onTradeActivity, onOfferSubmitted,
   onUpdate, onDelete, highlight,
 }: PostProps) {
   const postUser = post.user.name ?? post.user.email;
@@ -59,9 +64,11 @@ export default function Post({
   const [offerTypeOpen, setOfferTypeOpen] = useState(false);
   const [requestTradeOpen, setRequestTradeOpen] = useState(false);
   const [artTradeOpen, setArtTradeOpen] = useState(false);
+  const [withdrawingArtTrade, setWithdrawingArtTrade] = useState(false);
 
   const isArtTrade = Boolean(post.previewUrl || post.fullUrl);
   const hasPendingRequest = myTradeRequests?.status === 'PENDING';
+  const hasPendingArtOffer = myArtTradeOffer?.status === 'PENDING';
 
   const handleDeletePost = async () => {
     if (!onDelete) return;
@@ -112,6 +119,29 @@ export default function Post({
   const handleArtTrade = () => {
     setOfferTypeOpen(false);
     setArtTradeOpen(true);
+  };
+
+  const handleWithdrawArtTrade = async () => {
+    if (!myArtTradeOffer) return;
+
+    setWithdrawingArtTrade(true);
+
+    try {
+      await axios.patch(
+        `/artTradeOffers/${myArtTradeOffer.id}/cancel`,
+        {},
+        { withCredentials: true },
+      );
+      showToast('Trade offer withdrawn.', 'info');
+      await onTradeActivity();
+    } catch (err) {
+      const message = axios.isAxiosError(err) && err.response?.data?.error
+        ? err.response.data.error
+        : 'Could not withdraw trade offer - try again.';
+      showToast(message, 'error');
+    } finally {
+      setWithdrawingArtTrade(false);
+    }
   };
 
   return (
@@ -420,13 +450,31 @@ export default function Post({
               justifyContent: 'flex-end',
             }}
           >
-            {hasPendingRequest ? (
+            {hasPendingRequest && (
               <RequestTradeButton
                 postId={post.id}
                 myRequest={myTradeRequests}
                 onRequestChanged={onTradeActivity}
               />
-            ) : (
+            )}
+
+            {!hasPendingRequest && hasPendingArtOffer && (
+              <Button
+                size="small"
+                variant="outlined"
+                color="inherit"
+                disabled={withdrawingArtTrade}
+                onClick={handleWithdrawArtTrade}
+                sx={{
+                  borderRadius: radius.md,
+                  textTransform: 'none',
+                }}
+              >
+                {withdrawingArtTrade ? 'Withdrawing...' : 'Withdraw Offer'}
+              </Button>
+            )}
+
+            {!hasPendingRequest && !hasPendingArtOffer && (
               <Button
                 variant="contained"
                 onClick={() => setOfferTypeOpen(true)}
@@ -476,22 +524,26 @@ export default function Post({
               </DialogContent>
             </Dialog>
 
-            <RequestTradeButton
-              postId={post.id}
-              myRequest={myTradeRequests}
-              onRequestChanged={onTradeActivity}
-              open={requestTradeOpen}
-              onClose={() => setRequestTradeOpen(false)}
-              hideButton
-            />
+            {!hasPendingRequest && !hasPendingArtOffer && (
+              <RequestTradeButton
+                postId={post.id}
+                myRequest={myTradeRequests}
+                onRequestChanged={onTradeActivity}
+                open={requestTradeOpen}
+                onClose={() => setRequestTradeOpen(false)}
+                hideButton
+              />
+            )}
 
-            <ArtTradeOffer
-              postId={post.id}
-              onSuccess={onOfferSubmitted}
-              open={artTradeOpen}
-              onClose={() => setArtTradeOpen(false)}
-              hideButton
-            />
+            {!hasPendingRequest && !hasPendingArtOffer && (
+              <ArtTradeOffer
+                postId={post.id}
+                onSuccess={onOfferSubmitted}
+                open={artTradeOpen}
+                onClose={() => setArtTradeOpen(false)}
+                hideButton
+              />
+            )}
           </Box>
         )}
 

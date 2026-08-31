@@ -30,6 +30,12 @@ function initialTabFor(hasOffer: boolean, hasPost: boolean): 'current' | 'histor
   return 'current';
 }
 
+interface MyArtTradeOffer {
+  id: number;
+  postId: number;
+  status: string;
+}
+
 export default function Profile() {
   const {
     id, offerId, postId, requestId, reviewId,
@@ -61,6 +67,7 @@ export default function Profile() {
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [reportUserDialogOpen, setReportUserDialogOpen] = useState(false);
   const [myTradeRequests, setMyTradeRequests] = useState<TradeRequestData[]>([]);
+  const [myArtTradeOffers, setMyArtTradeOffers] = useState<MyArtTradeOffer[]>([]);
   const [reviewsSummary, setReviewsSummary] = useState<ReviewsSummary | null>(null);
   const [reviewsExpanded, setReviewsExpanded] = useState(false);
 
@@ -125,6 +132,7 @@ export default function Profile() {
       { filename: file.name, contentType: file.type },
       { withCredentials: true },
     );
+
     const { uploadUrl, key } = presignRes.data;
 
     await axios.put(uploadUrl, file, { headers: { 'Content-Type': file.type } });
@@ -263,6 +271,21 @@ export default function Profile() {
     }
   }, [user]);
 
+  const loadMyArtTradeOffers = useCallback(async () => {
+    if (!user) {
+      setMyArtTradeOffers([]);
+      return;
+    }
+    try {
+      const res = await axios.get<MyArtTradeOffer[]>('/artTradeOffers/sent', {
+        withCredentials: true,
+      });
+      setMyArtTradeOffers(Array.isArray(res.data) ? res.data : []);
+    } catch (err) {
+      console.error('Failed to load art trade offers:', err);
+    }
+  }, [user]);
+
   const loadReviewsSummary = useCallback(async () => {
     if (!profile) return;
     try {
@@ -305,6 +328,10 @@ export default function Profile() {
   }, [loadMyTradeRequests]);
 
   useEffect(() => {
+    loadMyArtTradeOffers();
+  }, [loadMyArtTradeOffers]);
+
+  useEffect(() => {
     loadReviewsSummary();
   }, [loadReviewsSummary]);
 
@@ -318,7 +345,13 @@ export default function Profile() {
   }, [highlightPostId, loading, visiblePosts]);
 
   const handleTradeActivity = async () => {
-    await Promise.all([loadPosts(), loadMyTradeRequests(), loadReviewsSummary(), loadMyReviewStatus()]);
+    await Promise.all([
+      loadPosts(),
+      loadMyTradeRequests(),
+      loadMyArtTradeOffers(),
+      loadReviewsSummary(),
+      loadMyReviewStatus(),
+    ]);
   };
 
   const handleReviewSaved = (review: ReviewData) => {
@@ -405,7 +438,16 @@ export default function Profile() {
               key={post.id}
               post={post}
               onReport={() => setReportDialogPostId(post.id)}
-              myTradeRequests={myTradeRequests.find((r) => r.postId === post.id) ?? null}
+              myTradeRequests={
+                myTradeRequests.find(
+                  (r) => r.postId === post.id && r.status === 'PENDING',
+                ) ?? null
+              }
+              myArtTradeOffer={
+                myArtTradeOffers.find(
+                  (offer) => offer.postId === post.id && offer.status === 'PENDING',
+                ) ?? null
+              }
               onTradeActivity={handleTradeActivity}
               onOfferSubmitted={handleTradeActivity}
               highlight={post.id === highlightPostId}
