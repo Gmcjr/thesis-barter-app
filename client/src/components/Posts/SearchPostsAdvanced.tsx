@@ -233,7 +233,7 @@ export default function SearchPostsAdvanced({
   const distanceSelect = useRef<HTMLDivElement | null>(null);
 
   /* Filter Validation */
-  const canSearchDistance = user?.lat != null && user?.lng != null;
+  const canSearchDistance = !user || (user.lat != null && user.lng != null);
 
   const dateMissing = (
     (draft.dateMode === 'before' || draft.dateMode === 'after')
@@ -553,6 +553,7 @@ export default function SearchPostsAdvanced({
               >
                 Sort By:
               </Typography>
+
               {/* Radio Group (either/or - Most Popular and Recently Updated */}
               <RadioGroup
                 row
