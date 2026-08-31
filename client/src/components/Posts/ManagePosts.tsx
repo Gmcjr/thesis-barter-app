@@ -21,6 +21,11 @@ import WhyRemovedMenu from './WhyRemovedMenu';
 
 export type PostStatus = 'OPEN' | 'ACCEPTED' | 'IN_PROGRESS' | 'WAITING_FOR_OTHER_USER' | 'COMPLETED' | 'CANCELLED';
 
+export type PostImageData = {
+  mediaId: number;
+  url: string;
+};
+
 export type PostData = {
   id: number;
   userId: number;
@@ -35,7 +40,10 @@ export type PostData = {
   updatedAt?: string;
   previewUrl?: string | null;
   fullUrl?: string | null;
+  previewMediaId?: number | null;
+  fullMediaId?: number | null;
   imageUrls?: string[];
+  imageItems?: PostImageData[];
   tradeOffers?: {
     id: number;
     offererId: number;
@@ -80,6 +88,9 @@ export type PostUpdateData = {
   isLocal: boolean;
   zipCode: string | null;
   radiusMiles: number | null;
+  mediaIds?: number[];
+  previewMediaId?: number | null;
+  fullMediaId?: number | null;
 };
 
 interface ManagePostsProps {
