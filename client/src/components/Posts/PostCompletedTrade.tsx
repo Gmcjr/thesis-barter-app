@@ -36,8 +36,8 @@ export default function PostCompletedTrade({
   const isParticipant = isOwnPost || isOfferer;
 
   const sentUrl = isOfferer
-    ? completedOffer.previewUrl ?? undefined
-    : post.previewUrl ?? undefined;
+    ? completedOffer.fullUrl ?? completedOffer.previewUrl ?? undefined
+    : post.fullUrl ?? post.previewUrl ?? undefined;
 
   let receivedUrl = completedOffer.previewUrl ?? undefined;
 
