@@ -156,7 +156,7 @@ export default function Posts() {
   }, [hasMorePosts, loadPosts, search, advancedSearch, advancedSearchActive, posts.length]);
 
   // search posts
-  const handleSearch = (event: React.SubmitEvent<HTMLFormElement>) => {
+  const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setAdvancedSearch(EMPTY_ADVANCED_SEARCH);
     setAdvancedSearchActive(false);
@@ -187,7 +187,6 @@ export default function Posts() {
     try {
       setError('');
       await axios.patch(`/posts/${postId}`, postData);
-      await loadPosts(search, advancedSearch, advancedSearchActive);
     } catch (requestError) {
       console.error('Failed to update post:', requestError);
       setError('Failed to update post');
@@ -199,22 +198,9 @@ export default function Posts() {
     try {
       setError('');
       await axios.delete(`/posts/${postId}`);
-      await loadPosts(search, advancedSearch, advancedSearchActive);
     } catch (requestError) {
       console.error('Failed to delete post:', requestError);
       setError('Failed to delete post');
-    }
-  };
-
-  // mark a trade as complete
-  const handleCompleteTrade = async (tradeId: number) => {
-    try {
-      setError('');
-      await axios.patch(`/trades/${tradeId}/complete`);
-      await loadPosts(search, advancedSearch, advancedSearchActive);
-    } catch (requestError) {
-      console.error('Failed to complete trade:', requestError);
-      setError('Failed to complete trade');
     }
   };
 
@@ -269,7 +255,6 @@ export default function Posts() {
             onOfferSubmitted={handleTradeActivity}
             onUpdate={handleUpdatePost}
             onDelete={handleDeletePost}
-            onComplete={handleCompleteTrade}
             highlight={post.id === highlightPostId}
           />
         ))}
