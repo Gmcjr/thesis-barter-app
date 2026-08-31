@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
+import Autocomplete from '@mui/material/Autocomplete';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
@@ -15,10 +16,8 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
-import Switch from '@mui/material/Switch';
 import Checkbox from '@mui/material/Checkbox';
 import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
 import Collapse from '@mui/material/Collapse';
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -57,6 +56,73 @@ type FormState = {
   isLocal: boolean;
   zipCode: string;
   radiusMiles: number;
+};
+
+const PRODUCT_CATEGORIES = [
+  'Automotive Parts and Accessories',
+  'Beauty and Personal Care',
+  'Books',
+  'Cards',
+  'Clothing, Shoes and Accessories',
+  'Collectibles',
+  'Electronics',
+  'Food and Perishable Items',
+  'Health and Wellness',
+  'Home and Kitchen',
+  'Musical Instruments',
+  'Office Products',
+  'Pet Supplies',
+  'Raw Materials and Scraps',
+  'Sports and Outdoors',
+  'Tools and Home Improvement',
+  'Toys and Games',
+  'Video Games and Consoles',
+];
+
+const SERVICE_CATEGORIES = [
+  'Carpentry',
+  'Copywriting and Editing',
+  'Digital Design',
+  'Dog Walking',
+  'IT Support',
+  'Landscaping and Yard Work',
+  'Language Tutoring',
+  'Local Delivery',
+  'Math Tutoring',
+  'Moving Assistance',
+  'Musical Tutoring',
+  'Pet Sitting',
+  'Photography and Videography',
+  'Repairs',
+  'Science Tutoring',
+  'Technical Writing',
+  'Translation Services',
+];
+
+const DIGITAL_CATEGORIES = [
+  '3D Modeling',
+  'Art Studies',
+  'Character Concept Art',
+  'Character Design',
+  'Comics',
+  'Digital Drawings',
+  'Digital Paintings',
+  'Environments and Landscapes',
+  'Fan Art',
+  'Graphic Design',
+  'Graphic Novel',
+  'Photography',
+  'Pixel and Retro Art',
+  'Typography',
+  'Vector Art',
+  'Videogame Design Art',
+  'Webtoons',
+];
+
+const CATEGORY_OPTIONS: Record<CatType, string[]> = {
+  PRODUCT: PRODUCT_CATEGORIES,
+  SERVICE: SERVICE_CATEGORIES,
+  DIGITAL: DIGITAL_CATEGORIES,
 };
 
 const initialForm: FormState = {
@@ -275,13 +341,27 @@ export default function CreatePostModal({
             </RadioGroup>
 
             {/* Category */}
-            <TextField
-              label="Category"
-              fullWidth
-              required
-              value={formData.category}
-              onChange={(e) => handleChange('category', e.target.value)}
+            <Autocomplete
+              freeSolo
+              options={CATEGORY_OPTIONS[formData.offerType]}
+              inputValue={formData.category}
+              onInputChange={(_, value) => handleChange('category', value)}
               disabled={isSubmitting}
+              renderInput={(params) => (
+                <TextField
+                  id={params.id}
+                  disabled={params.disabled}
+                  size={params.size}
+                  slotProps={{
+                    inputLabel: params.slotProps.inputLabel,
+                    input: params.slotProps.input,
+                    htmlInput: params.slotProps.htmlInput,
+                  }}
+                  label="Category"
+                  fullWidth
+                  required
+                />
+              )}
             />
 
             {/* Digital Trade File Upload */}
@@ -367,51 +447,6 @@ export default function CreatePostModal({
                   <MenuItem value="MINT">Mint</MenuItem>
                 </Select>
               </FormControl>
-            </Collapse>
-
-            {/* Local Trade Toggle */}
-            <Collapse in={formData.offerType !== 'DIGITAL'} unmountOnExit>
-              <FormControlLabel
-                control={(
-                  <Switch
-                    checked={formData.isLocal}
-                    disabled={isSubmitting}
-                    onChange={(e) => handleChange('isLocal', e.target.checked)}
-                  />
-                )}
-                label="Local Trade Only"
-              />
-            </Collapse>
-
-            {/* Zip Code & Radius */}
-            <Collapse in={formData.isLocal && formData.offerType !== 'DIGITAL'} unmountOnExit>
-              <Grid container spacing={2}>
-                <Grid size={6}>
-                  <TextField
-                    label="Zip Code"
-                    fullWidth
-                    required
-                    value={formData.zipCode}
-                    onChange={(e) => handleChange('zipCode', e.target.value)}
-                    disabled={isSubmitting}
-                  />
-                </Grid>
-                <Grid size={6}>
-                  <FormControl fullWidth disabled={isSubmitting}>
-                    <InputLabel>Max Distance</InputLabel>
-                    <Select
-                      value={formData.radiusMiles}
-                      label="Max Distance"
-                      onChange={(e) => handleChange('radiusMiles', Number(e.target.value))}
-                    >
-                      <MenuItem value={5}>Within 5 miles</MenuItem>
-                      <MenuItem value={15}>Within 15 miles</MenuItem>
-                      <MenuItem value={30}>Within 30 miles</MenuItem>
-                      <MenuItem value={50}>Within 50 miles</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Grid>
-              </Grid>
             </Collapse>
           </Box>
         </DialogContent>

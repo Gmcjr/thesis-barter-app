@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import ManagePosts, { type PostData, type PostUpdateData } from './ManagePosts';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 interface PostActionsMenuProps {
   onReport: () => void;
@@ -12,18 +14,15 @@ interface PostActionsMenuProps {
   showBlock?: boolean;
   showReport?: boolean;
   showManage?: boolean;
-  managePosts?: PostData[];
-  onUpdate?: (postId: number, postData: PostUpdateData) => Promise<void>;
-  onDelete?: (postId: number) => Promise<void>;
-  onComplete?: (tradeId: number) => Promise<void>;
+  onEdit?: () => void;
+  onDeletePost?: () => void;
 }
 
 export default function PostActionsMenu({
   onReport, onBlock, blocked = false, showBlock = false, showReport = true,
-  showManage = false, managePosts = [], onUpdate, onDelete, onComplete,
+  showManage = false, onEdit, onDeletePost,
 }: PostActionsMenuProps) {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-  const [manageOpen, setManageOpen] = useState(false);
 
   const handleOpen = (e: React.MouseEvent<HTMLElement>) => setAnchorEl(e.currentTarget);
   const handleClose = () => setAnchorEl(null);
@@ -37,7 +36,20 @@ export default function PostActionsMenu({
       </IconButton>
       <Menu anchorEl={anchorEl} open={!!anchorEl} onClose={handleClose}>
         {showManage && (
-        <MenuItem onClick={() => { setManageOpen(true); handleClose(); }}>Manage post</MenuItem>
+        <MenuItem onClick={() => { onEdit?.(); handleClose(); }}>
+          <ListItemIcon>
+            <EditIcon fontSize="small" />
+          </ListItemIcon>
+          Edit
+        </MenuItem>
+        )}
+        {showManage && (
+        <MenuItem onClick={() => { onDeletePost?.(); handleClose(); }}>
+          <ListItemIcon>
+            <DeleteIcon fontSize="small" />
+          </ListItemIcon>
+          Delete
+        </MenuItem>
         )}
         {showReport && (
         <MenuItem onClick={() => { onReport(); handleClose(); }}>Report post</MenuItem>
@@ -48,16 +60,6 @@ export default function PostActionsMenu({
         </MenuItem>
         )}
       </Menu>
-      {showManage && (
-        <ManagePosts
-          open={manageOpen}
-          onClose={() => setManageOpen(false)}
-          posts={managePosts}
-          onUpdate={onUpdate}
-          onDelete={onDelete}
-          onComplete={onComplete}
-        />
-      )}
     </>
   );
 }

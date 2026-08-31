@@ -2414,7 +2414,11 @@ export const UserScalarFieldEnum = {
   role: 'role',
   bio: 'bio',
   createdAt: 'createdAt',
+  lastActive: 'lastActive',
   zipCode: 'zipCode',
+  country: 'country',
+  lat: 'lat',
+  lng: 'lng',
   isSystem: 'isSystem',
   pendingBio: 'pendingBio',
   isPendingScreening: 'isPendingScreening',
@@ -2464,6 +2468,7 @@ export const PostScalarFieldEnum = {
   status: 'status',
   title: 'title',
   message: 'message',
+  category: 'category',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   isLocal: 'isLocal',
@@ -2850,6 +2855,20 @@ export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaM
 
 
 /**
+ * Reference to a field of type 'Float'
+ */
+export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+/**
+ * Reference to a field of type 'Float[]'
+ */
+export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+    
+
+
+/**
  * Reference to a field of type 'Boolean'
  */
 export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
@@ -2867,20 +2886,6 @@ export type EnumStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaMod
  * Reference to a field of type 'Status[]'
  */
 export type ListEnumStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Status[]'>
-    
-
-
-/**
- * Reference to a field of type 'Float'
- */
-export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
-    
-
-
-/**
- * Reference to a field of type 'Float[]'
- */
-export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
 
 

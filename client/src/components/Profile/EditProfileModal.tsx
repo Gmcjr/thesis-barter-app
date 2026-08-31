@@ -9,10 +9,15 @@ import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
 import CircularProgress from '@mui/material/CircularProgress';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 import CloseIcon from '@mui/icons-material/Close';
 import ImageCropDialog from './ImageCropDialog';
 import type { EditProfileModalProps, ProfileUpdateData } from './types';
+import { COUNTRIES } from '../Location/Countries';
 
 export const BIO_MAX_LENGTH = 250;
 const AVATAR_ASPECT = 1;
@@ -24,17 +29,31 @@ interface PendingCrop {
   mimeType: string;
 }
 
+const normalizeCountry = (country: string) => (
+  COUNTRIES.find((option) => (
+    option.code === country || option.name === country
+  ))?.code ?? ''
+);
+
 export default function EditProfileModal({
   open, onClose, initialData, onSave,
   avatarUrl, bannerUrl, avatarUploading, bannerUploading,
   onAvatarChange, onAvatarRemove, onBannerChange, onBannerRemove,
 }: EditProfileModalProps) {
-  const [formData, setFormData] = useState<ProfileUpdateData>(initialData);
+  const [formData, setFormData] = useState<ProfileUpdateData>({
+    ...initialData,
+    country: normalizeCountry(initialData.country),
+  });
   const [saving, setSaving] = useState(false);
   const [pendingCrop, setPendingCrop] = useState<PendingCrop | null>(null);
 
   useEffect(() => {
-    if (open) setFormData(initialData);
+    if (open) {
+      setFormData({
+        ...initialData,
+        country: normalizeCountry(initialData.country),
+      });
+    }
   }, [open, initialData]);
 
   // Revoke the object URL we created for the crop dialog once it's no
@@ -214,6 +233,23 @@ export default function EditProfileModal({
             value={formData.phone}
             onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
           />
+          <FormControl fullWidth>
+            <InputLabel>Country</InputLabel>
+            <Select
+              value={formData.country}
+              label="Country"
+              onChange={(e) => setFormData({
+                ...formData,
+                country: e.target.value,
+              })}
+            >
+              {COUNTRIES.map((country) => (
+                <MenuItem key={country.code} value={country.code}>
+                  {country.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
           <TextField
             label="Zip Code"
             fullWidth

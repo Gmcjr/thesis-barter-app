@@ -1,5 +1,6 @@
-/* eslint-disable react/jsx-one-expression-per-line */
-import React, { useCallback, useEffect, useState } from 'react';
+import React, {
+  useCallback, useEffect, useRef, useState,
+} from 'react';
 import axios from 'axios';
 
 import Typography from '@mui/material/Typography';
@@ -12,7 +13,19 @@ import { useParams } from '../../context/RouterContext';
 import Post from './Post';
 import ReportDialog from './ReportDialog';
 import SearchPosts from './SearchPosts';
+import SearchPostsAdvanced, {
+  EMPTY_ADVANCED_SEARCH,
+  type AdvancedSearchFilters,
+} from './SearchPostsAdvanced';
 import { useSocket } from '../../context/SocketContext';
+
+const POSTS_PER_PAGE = 10;
+
+interface MyArtTradeOffer {
+  id: number;
+  postId: number;
+  status: string;
+}
 
 export default function Posts() {
   const { user, blockedUserIds } = useAuth();
@@ -22,30 +35,75 @@ export default function Posts() {
 
   const [posts, setPosts] = useState<PostData[]>([]);
   const [myTradeRequests, setMyTradeRequests] = useState<TradeRequestData[]>([]);
+  const [myArtTradeOffers, setMyArtTradeOffers] = useState<MyArtTradeOffer[]>([]);
 
   const [search, setSearch] = useState('');
+  const [advancedSearch, setAdvancedSearch] = useState<AdvancedSearchFilters>(
+    EMPTY_ADVANCED_SEARCH,
+  );
+  const [advancedSearchOpen, setAdvancedSearchOpen] = useState(false);
+  const [advancedSearchActive, setAdvancedSearchActive] = useState(false);
   const [error, setError] = useState('');
   const [reportDialogPostId, setReportDialogPostId] = useState<number | null>(null);
+  const [hasMorePosts, setHasMorePosts] = useState(false);
+  const loadMorePostsRef = useRef<HTMLDivElement | null>(null);
+  const loadingMorePostsRef = useRef(false);
 
   // get posts and optionally send the search value (this is a general search)
-  const loadPosts = useCallback(async (searchValue = '') => {
+  const loadPosts = useCallback(async (
+    searchValue = '',
+    filters: AdvancedSearchFilters = EMPTY_ADVANCED_SEARCH,
+    isAdvancedSearch = false,
+    offset = 0,
+    append = false,
+  ) => {
+    if (append && loadingMorePostsRef.current) return;
+
+    if (append) loadingMorePostsRef.current = true;
+
     try {
       setError('');
       const response = await axios.get<PostData[]>('/posts', {
         params: {
           q: searchValue,
+          title: filters.title || undefined,
+          description: filters.description || undefined,
+          listingType: filters.listingType || undefined,
+          condition: filters.condition || undefined,
+          hasImages: filters.hasImages || undefined,
+          includeCompleted: filters.includeCompleted || undefined,
+          excludeInactive: filters.excludeInactive || undefined,
+          includeOwn: filters.includeOwn || undefined,
+          advancedSearch: isAdvancedSearch || undefined,
+          dateMode: filters.dateMode || undefined,
+          dateStart: filters.dateStart || undefined,
+          dateEnd: filters.dateMode === 'between'
+            ? filters.dateEnd || undefined
+            : undefined,
+          category: filters.category || undefined,
+          distanceRange: filters.distanceRange || undefined,
+          distancePostalCode: filters.distancePostalCode || undefined,
+          offset,
+          limit: POSTS_PER_PAGE,
         },
       });
-      setPosts(Array.isArray(response.data) ? response.data : []);
+      const loadedPosts = Array.isArray(response.data) ? response.data : [];
+      setPosts((currentPosts) => (append ? [...currentPosts, ...loadedPosts] : loadedPosts));
+      setHasMorePosts(loadedPosts.length === POSTS_PER_PAGE);
     } catch (requestError) {
       console.error('Failed to get posts:', requestError);
-      setPosts([]);
-      setError('Failed to get posts');
+      if (!append) setPosts([]);
+      const message = axios.isAxiosError(requestError) && requestError.response?.data?.error
+        ? requestError.response.data.error
+        : 'Failed to get posts';
+      setError(message);
+    } finally {
+      if (append) loadingMorePostsRef.current = false;
     }
   }, []);
 
   useEffect(() => {
-    loadPosts(search);
+    loadPosts(search, advancedSearch, advancedSearchActive);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadPosts, blockedUserIds]);
 
@@ -59,36 +117,92 @@ export default function Posts() {
     }
   }, [user]);
 
+  const loadMyArtTradeOffers = useCallback(async () => {
+    if (!user) { setMyArtTradeOffers([]); return; }
+    try {
+      const response = await axios.get<MyArtTradeOffer[]>('/artTradeOffers/sent', {
+        withCredentials: true,
+      });
+      setMyArtTradeOffers(Array.isArray(response.data) ? response.data : []);
+    } catch (requestError) {
+      console.error('Failed to get your art trade offers:', requestError);
+    }
+  }, [user]);
+
   useEffect(() => {
     loadMyTradeRequests().catch((requestError) => {
       console.error('Failed to load trade requests', requestError);
     });
   }, [loadMyTradeRequests]);
 
+  useEffect(() => {
+    loadMyArtTradeOffers().catch((requestError) => {
+      console.error('Failed to load art trade offers', requestError);
+    });
+  }, [loadMyArtTradeOffers]);
+
   const handleTradeActivity = async () => {
-    await Promise.all([loadPosts(search), loadMyTradeRequests()]);
+    await Promise.all([
+      loadPosts(search, advancedSearch, advancedSearchActive),
+      loadMyTradeRequests(),
+      loadMyArtTradeOffers(),
+    ]);
   };
 
   useEffect(() => {
     if (!socket) return undefined;
     const handleChange = () => {
-      loadPosts(search);
+      loadPosts(search, advancedSearch, advancedSearchActive);
     };
     socket.on('posts:changed', handleChange);
     return () => {
       socket.off('posts:changed', handleChange);
     };
-  }, [socket, search, loadPosts]);
+  }, [socket, search, advancedSearch, advancedSearchActive, loadPosts]);
 
   useEffect(() => {
     if (!highlightPostId) return;
     document.getElementById(`post-${highlightPostId}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }, [highlightPostId, posts]);
 
+  useEffect(() => {
+    const loadMoreTarget = loadMorePostsRef.current;
+
+    if (!loadMoreTarget || !hasMorePosts) return undefined;
+
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0]?.isIntersecting) {
+        loadPosts(search, advancedSearch, advancedSearchActive, posts.length, true);
+      }
+    }, { rootMargin: '300px 0px' });
+
+    observer.observe(loadMoreTarget);
+
+    return () => observer.disconnect();
+  }, [hasMorePosts, loadPosts, search, advancedSearch, advancedSearchActive, posts.length]);
+
   // search posts
-  const handleSearch = (event: React.SubmitEvent<HTMLFormElement>) => {
+  const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    loadPosts(search);
+    setAdvancedSearch(EMPTY_ADVANCED_SEARCH);
+    setAdvancedSearchActive(false);
+    loadPosts(search, EMPTY_ADVANCED_SEARCH);
+  };
+
+  const handleAdvancedSearch = (filters: AdvancedSearchFilters) => {
+    setSearch('');
+    setAdvancedSearch(filters);
+    setAdvancedSearchActive(true);
+    setAdvancedSearchOpen(false);
+    loadPosts('', filters, true);
+  };
+
+  const handleAdvancedSearchCancel = () => {
+    setSearch('');
+    setAdvancedSearch(EMPTY_ADVANCED_SEARCH);
+    setAdvancedSearchActive(false);
+    setAdvancedSearchOpen(false);
+    loadPosts('', EMPTY_ADVANCED_SEARCH);
   };
 
   // update a post
@@ -99,7 +213,6 @@ export default function Posts() {
     try {
       setError('');
       await axios.patch(`/posts/${postId}`, postData);
-      await loadPosts(search);
     } catch (requestError) {
       console.error('Failed to update post:', requestError);
       setError('Failed to update post');
@@ -111,22 +224,9 @@ export default function Posts() {
     try {
       setError('');
       await axios.delete(`/posts/${postId}`);
-      await loadPosts(search);
     } catch (requestError) {
       console.error('Failed to delete post:', requestError);
       setError('Failed to delete post');
-    }
-  };
-
-  // mark a trade as complete
-  const handleCompleteTrade = async (tradeId: number) => {
-    try {
-      setError('');
-      await axios.patch(`/trades/${tradeId}/complete`);
-      await loadPosts(search);
-    } catch (requestError) {
-      console.error('Failed to complete trade:', requestError);
-      setError('Failed to complete trade');
     }
   };
 
@@ -138,6 +238,14 @@ export default function Posts() {
         search={search}
         onSearchChange={setSearch}
         onSubmit={handleSearch}
+        onAdvancedSearchClick={() => setAdvancedSearchOpen(true)}
+      />
+
+      <SearchPostsAdvanced
+        open={advancedSearchOpen}
+        onClose={handleAdvancedSearchCancel}
+        filters={advancedSearch}
+        onApply={handleAdvancedSearch}
       />
 
       {error && (
@@ -168,15 +276,25 @@ export default function Posts() {
             key={post.id}
             post={post}
             onReport={() => setReportDialogPostId(post.id)}
-            myTradeRequests={myTradeRequests.find((r) => r.postId === post.id) ?? null}
+            myTradeRequests={
+              myTradeRequests.find(
+                (r) => r.postId === post.id && r.status === 'PENDING',
+              ) ?? null
+            }
+            myArtTradeOffer={
+              myArtTradeOffers.find(
+                (offer) => offer.postId === post.id && offer.status === 'PENDING',
+              ) ?? null
+            }
             onTradeActivity={handleTradeActivity}
             onOfferSubmitted={handleTradeActivity}
             onUpdate={handleUpdatePost}
             onDelete={handleDeletePost}
-            onComplete={handleCompleteTrade}
             highlight={post.id === highlightPostId}
           />
         ))}
+
+        {hasMorePosts && <Box ref={loadMorePostsRef} sx={{ height: 1 }} />}
       </Box>
 
       <ReportDialog

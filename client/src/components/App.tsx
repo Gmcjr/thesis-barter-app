@@ -1,4 +1,6 @@
-import React, { useMemo } from 'react';
+import React, {
+  useEffect, useMemo, useRef, useState,
+} from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import ThemeProvider from '@mui/system/ThemeProvider';
 import Box from '@mui/material/Box';
@@ -20,6 +22,12 @@ import BlockedUsers from './BlockedUsers/BlockedUsers';
 import NotFound from './NotFound/NotFound';
 import Messages from './DMs/Messages';
 import DeletedConversations from './DMs/DeletedConversations';
+import LocationSetupModal from './Location/LocationSetupModal';
+import Footer from './Footer/Footer';
+import Terms from './Footer/Terms';
+import Privacy from './Footer/Privacy';
+import Contact from './Footer/Contact';
+import Help from './Footer/Help';
 
 const routes: RouteDef[] = [
   { path: '/', component: Posts },
@@ -40,11 +48,60 @@ const routes: RouteDef[] = [
   { path: '/messages', component: Messages, requiresAuth: true },
   { path: '/messages/:id', component: Messages, requiresAuth: true },
   { path: '/deleted-conversations', component: DeletedConversations, requiresAuth: true },
+  { path: '/terms', component: Terms },
+  { path: '/privacy', component: Privacy },
+  { path: '/contact', component: Contact },
+  { path: '/help', component: Help },
 ];
 
 function AppShell() {
   const { mode, contrast } = useSettings();
   const theme = useMemo(() => getTheme(mode, contrast), [mode, contrast]);
+  const footerRef = useRef<HTMLDivElement | null>(null);
+  const lastScrollYRef = useRef(0);
+  const [footerHeight, setFooterHeight] = useState(0);
+  const [scrollingDown, setScrollingDown] = useState(false);
+
+  useEffect(() => {
+    const footer = footerRef.current;
+
+    if (!footer) return undefined;
+
+    const updateFooterHeight = () => {
+      setFooterHeight(footer.offsetHeight);
+    };
+
+    updateFooterHeight();
+
+    const observer = new ResizeObserver(updateFooterHeight);
+    observer.observe(footer);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      if (currentScrollY <= 0) {
+        setScrollingDown(false);
+      } else if (currentScrollY > lastScrollYRef.current) {
+        setScrollingDown(true);
+      } else if (currentScrollY < lastScrollYRef.current) {
+        setScrollingDown(false);
+      }
+
+      lastScrollYRef.current = currentScrollY;
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   return (
     <ThemeProvider theme={theme}>
@@ -54,17 +111,38 @@ function AppShell() {
           <SocketProvider>
             <NotificationProvider>
               <RouterProvider>
-                <NavBar />
+                <NavBar scrollingDown={scrollingDown} />
+                <LocationSetupModal />
 
                 <Box
                   component="main"
                   sx={{
-                    pt: 16, pb: 8, backgroundColor: 'background.default', minHeight: '100vh',
+                    '--header-scroll-opacity': scrollingDown ? '0.88' : '1',
+                    pt: 16,
+                    pb: footerHeight > 0
+                      ? `calc(${theme.spacing(8)} + ${footerHeight}px)`
+                      : 8,
+                    backgroundColor: 'background.default',
+                    minHeight: '100vh',
                   }}
                 >
                   <Container maxWidth="md">
                     <Router routes={routes} notFound={NotFound} />
                   </Container>
+                </Box>
+
+                <Box
+                  ref={footerRef}
+                  className="mui-fixed"
+                  sx={{
+                    position: 'fixed',
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    zIndex: theme.zIndex.appBar,
+                  }}
+                >
+                  <Footer scrollingDown={scrollingDown} />
                 </Box>
               </RouterProvider>
             </NotificationProvider>
