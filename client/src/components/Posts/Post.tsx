@@ -111,6 +111,15 @@ export default function Post({
     }
   };
 
+  const handleOfferTradeClick = () => {
+    if (!user) {
+      showToast('To offer trades, sign in', 'info');
+      return;
+    }
+
+    setOfferTypeOpen(true);
+  };
+
   const handleRequestTrade = () => {
     setOfferTypeOpen(false);
     setRequestTradeOpen(true);
@@ -477,7 +486,7 @@ export default function Post({
             {!hasPendingRequest && !hasPendingArtOffer && (
               <Button
                 variant="contained"
-                onClick={() => setOfferTypeOpen(true)}
+                onClick={handleOfferTradeClick}
                 sx={{
                   borderRadius: radius.md,
                   textTransform: 'none',
