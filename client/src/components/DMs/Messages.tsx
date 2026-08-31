@@ -9,12 +9,13 @@ import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import CircularProgress from '@mui/material/CircularProgress';
 import SendIcon from '@mui/icons-material/Send';
-import DeleteOutlineIcon from '@mui/icons-material/Delete';
+import CloseIcon from '@mui/icons-material/Close';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import ReportDialog from '../Posts/ReportDialog';
+import ConfirmDialog from '../common/ConfirmDialog';
 import { radius } from '../../theme';
 import {
   formatInboxTime, formatDayDivider, formatClockTime, isSameDay,
@@ -59,6 +60,8 @@ export default function Messages() {
   const [pendingConversation, setPendingConversation] = useState<DMSummary | null>(null);
   const [menuAnchor, setMenuAnchor] = useState<{ el: HTMLElement; messageId: number } | null>(null);
   const [reportDialogMessageId, setReportDialogMessageId] = useState<number | null>(null);
+  const [confirmDeleteTarget, setConfirmDeleteTarget] = useState<DMSummary | null>(null);
+  const [deletingConversation, setDeletingConversation] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
 
   const loadInbox = useCallback(async () => {
@@ -133,8 +136,16 @@ export default function Messages() {
     loadInbox();
   };
 
-  const handleDelete = async (conversation: DMSummary, e: React.MouseEvent) => {
+  const handleRequestDelete = (conversation: DMSummary, e: React.MouseEvent) => {
     e.stopPropagation();
+    setConfirmDeleteTarget(conversation);
+  };
+
+  const handleConfirmDelete = async () => {
+    const conversation = confirmDeleteTarget;
+    if (!conversation) return;
+
+    setDeletingConversation(true);
     setInbox((prev) => prev.filter((c) => c.id !== conversation.id));
     if (activeDmId === conversation.id) navigate('/messages');
 
@@ -150,6 +161,9 @@ export default function Messages() {
     } catch {
       showToast('Could not delete conversation.', 'error');
       loadInbox();
+    } finally {
+      setDeletingConversation(false);
+      setConfirmDeleteTarget(null);
     }
   };
 
@@ -218,9 +232,9 @@ export default function Messages() {
             <IconButton
               size="small"
               aria-label="Delete conversation"
-              onClick={(e) => handleDelete(conversation, e)}
+              onClick={(e) => handleRequestDelete(conversation, e)}
             >
-              <DeleteOutlineIcon fontSize="small" />
+              <CloseIcon fontSize="small" />
             </IconButton>
           </Box>
         ))}
@@ -408,6 +422,18 @@ export default function Messages() {
           </>
         )}
       </Card>
+
+      <ConfirmDialog
+        open={confirmDeleteTarget !== null}
+        title="Delete conversation?"
+        message={confirmDeleteTarget
+          ? `This will delete your conversation with ${confirmDeleteTarget.otherUser.name}. You'll get a chance to undo it right after.`
+          : ''}
+        confirmLabel="Delete"
+        loading={deletingConversation}
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setConfirmDeleteTarget(null)}
+      />
     </Box>
   );
 }

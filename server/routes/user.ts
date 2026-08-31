@@ -132,8 +132,8 @@ router.patch('/me', requireAuth, async (req, res) => {
       if (bioChanged && bio) {
         await enqueueJob(tx, 'SCREEN_CONTENT', {
           targetType: 'USER',
-          targetId: user.id,
-          authorId: user.id,
+          targetId: updated.id,
+          authorId: updated.id,
           text: bio,
         });
       }

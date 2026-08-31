@@ -78,7 +78,7 @@ reviews.post('/', requireAuth, async (req, res) => {
             type: 'REVIEW_RECEIVED',
             title: 'You received a new review',
             body: `${rating}\u2605 - "${comment.length > 60 ? `${comment.slice(0, 60)}...` : comment}"`,
-            link: '/profile',
+            link: `/profile/reviews/${created.id}`,
             entityType: 'REVIEW',
             entityId: created.id,
           },
@@ -104,7 +104,7 @@ reviews.post('/', requireAuth, async (req, res) => {
           type: 'REVIEW_RECEIVED',
           title: 'You received a new review',
           body: `${rating}\u2605`,
-          link: '/profile',
+          link: `/profile/reviews/${created.id}`,
           entityType: 'REVIEW',
           entityId: created.id,
         });

@@ -48,6 +48,7 @@ export type NotificationMinAggregateOutputType = {
   entityType: string | null
   entityId: number | null
   readAt: Date | null
+  archivedAt: Date | null
   createdAt: Date | null
 }
 
@@ -61,6 +62,7 @@ export type NotificationMaxAggregateOutputType = {
   entityType: string | null
   entityId: number | null
   readAt: Date | null
+  archivedAt: Date | null
   createdAt: Date | null
 }
 
@@ -74,6 +76,7 @@ export type NotificationCountAggregateOutputType = {
   entityType: number
   entityId: number
   readAt: number
+  archivedAt: number
   createdAt: number
   _all: number
 }
@@ -101,6 +104,7 @@ export type NotificationMinAggregateInputType = {
   entityType?: true
   entityId?: true
   readAt?: true
+  archivedAt?: true
   createdAt?: true
 }
 
@@ -114,6 +118,7 @@ export type NotificationMaxAggregateInputType = {
   entityType?: true
   entityId?: true
   readAt?: true
+  archivedAt?: true
   createdAt?: true
 }
 
@@ -127,6 +132,7 @@ export type NotificationCountAggregateInputType = {
   entityType?: true
   entityId?: true
   readAt?: true
+  archivedAt?: true
   createdAt?: true
   _all?: true
 }
@@ -227,6 +233,7 @@ export type NotificationGroupByOutputType = {
   entityType: string | null
   entityId: number | null
   readAt: Date | null
+  archivedAt: Date | null
   createdAt: Date
   _count: NotificationCountAggregateOutputType | null
   _avg: NotificationAvgAggregateOutputType | null
@@ -263,6 +270,7 @@ export type NotificationWhereInput = {
   entityType?: Prisma.StringNullableFilter<"Notification"> | string | null
   entityId?: Prisma.IntNullableFilter<"Notification"> | number | null
   readAt?: Prisma.DateTimeNullableFilter<"Notification"> | Date | string | null
+  archivedAt?: Prisma.DateTimeNullableFilter<"Notification"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Notification"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
@@ -277,6 +285,7 @@ export type NotificationOrderByWithRelationInput = {
   entityType?: Prisma.SortOrderInput | Prisma.SortOrder
   entityId?: Prisma.SortOrderInput | Prisma.SortOrder
   readAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  archivedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
 }
@@ -294,6 +303,7 @@ export type NotificationWhereUniqueInput = Prisma.AtLeast<{
   entityType?: Prisma.StringNullableFilter<"Notification"> | string | null
   entityId?: Prisma.IntNullableFilter<"Notification"> | number | null
   readAt?: Prisma.DateTimeNullableFilter<"Notification"> | Date | string | null
+  archivedAt?: Prisma.DateTimeNullableFilter<"Notification"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Notification"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id">
@@ -308,6 +318,7 @@ export type NotificationOrderByWithAggregationInput = {
   entityType?: Prisma.SortOrderInput | Prisma.SortOrder
   entityId?: Prisma.SortOrderInput | Prisma.SortOrder
   readAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  archivedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.NotificationCountOrderByAggregateInput
   _avg?: Prisma.NotificationAvgOrderByAggregateInput
@@ -329,6 +340,7 @@ export type NotificationScalarWhereWithAggregatesInput = {
   entityType?: Prisma.StringNullableWithAggregatesFilter<"Notification"> | string | null
   entityId?: Prisma.IntNullableWithAggregatesFilter<"Notification"> | number | null
   readAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Notification"> | Date | string | null
+  archivedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Notification"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Notification"> | Date | string
 }
 
@@ -340,6 +352,7 @@ export type NotificationCreateInput = {
   entityType?: string | null
   entityId?: number | null
   readAt?: Date | string | null
+  archivedAt?: Date | string | null
   createdAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutNotificationsInput
 }
@@ -354,6 +367,7 @@ export type NotificationUncheckedCreateInput = {
   entityType?: string | null
   entityId?: number | null
   readAt?: Date | string | null
+  archivedAt?: Date | string | null
   createdAt?: Date | string
 }
 
@@ -365,6 +379,7 @@ export type NotificationUpdateInput = {
   entityType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   entityId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   readAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutNotificationsNestedInput
 }
@@ -379,6 +394,7 @@ export type NotificationUncheckedUpdateInput = {
   entityType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   entityId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   readAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -392,6 +408,7 @@ export type NotificationCreateManyInput = {
   entityType?: string | null
   entityId?: number | null
   readAt?: Date | string | null
+  archivedAt?: Date | string | null
   createdAt?: Date | string
 }
 
@@ -403,6 +420,7 @@ export type NotificationUpdateManyMutationInput = {
   entityType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   entityId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   readAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -416,6 +434,7 @@ export type NotificationUncheckedUpdateManyInput = {
   entityType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   entityId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   readAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -439,6 +458,7 @@ export type NotificationCountOrderByAggregateInput = {
   entityType?: Prisma.SortOrder
   entityId?: Prisma.SortOrder
   readAt?: Prisma.SortOrder
+  archivedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -458,6 +478,7 @@ export type NotificationMaxOrderByAggregateInput = {
   entityType?: Prisma.SortOrder
   entityId?: Prisma.SortOrder
   readAt?: Prisma.SortOrder
+  archivedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -471,6 +492,7 @@ export type NotificationMinOrderByAggregateInput = {
   entityType?: Prisma.SortOrder
   entityId?: Prisma.SortOrder
   readAt?: Prisma.SortOrder
+  archivedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -534,6 +556,7 @@ export type NotificationCreateWithoutUserInput = {
   entityType?: string | null
   entityId?: number | null
   readAt?: Date | string | null
+  archivedAt?: Date | string | null
   createdAt?: Date | string
 }
 
@@ -546,6 +569,7 @@ export type NotificationUncheckedCreateWithoutUserInput = {
   entityType?: string | null
   entityId?: number | null
   readAt?: Date | string | null
+  archivedAt?: Date | string | null
   createdAt?: Date | string
 }
 
@@ -588,6 +612,7 @@ export type NotificationScalarWhereInput = {
   entityType?: Prisma.StringNullableFilter<"Notification"> | string | null
   entityId?: Prisma.IntNullableFilter<"Notification"> | number | null
   readAt?: Prisma.DateTimeNullableFilter<"Notification"> | Date | string | null
+  archivedAt?: Prisma.DateTimeNullableFilter<"Notification"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Notification"> | Date | string
 }
 
@@ -600,6 +625,7 @@ export type NotificationCreateManyUserInput = {
   entityType?: string | null
   entityId?: number | null
   readAt?: Date | string | null
+  archivedAt?: Date | string | null
   createdAt?: Date | string
 }
 
@@ -611,6 +637,7 @@ export type NotificationUpdateWithoutUserInput = {
   entityType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   entityId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   readAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -623,6 +650,7 @@ export type NotificationUncheckedUpdateWithoutUserInput = {
   entityType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   entityId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   readAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -635,6 +663,7 @@ export type NotificationUncheckedUpdateManyWithoutUserInput = {
   entityType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   entityId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   readAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -650,6 +679,7 @@ export type NotificationSelect<ExtArgs extends runtime.Types.Extensions.Internal
   entityType?: boolean
   entityId?: boolean
   readAt?: boolean
+  archivedAt?: boolean
   createdAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["notification"]>
@@ -664,6 +694,7 @@ export type NotificationSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   entityType?: boolean
   entityId?: boolean
   readAt?: boolean
+  archivedAt?: boolean
   createdAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["notification"]>
@@ -678,6 +709,7 @@ export type NotificationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   entityType?: boolean
   entityId?: boolean
   readAt?: boolean
+  archivedAt?: boolean
   createdAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["notification"]>
@@ -692,10 +724,11 @@ export type NotificationSelectScalar = {
   entityType?: boolean
   entityId?: boolean
   readAt?: boolean
+  archivedAt?: boolean
   createdAt?: boolean
 }
 
-export type NotificationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "type" | "title" | "body" | "link" | "entityType" | "entityId" | "readAt" | "createdAt", ExtArgs["result"]["notification"]>
+export type NotificationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "type" | "title" | "body" | "link" | "entityType" | "entityId" | "readAt" | "archivedAt" | "createdAt", ExtArgs["result"]["notification"]>
 export type NotificationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -721,6 +754,7 @@ export type $NotificationPayload<ExtArgs extends runtime.Types.Extensions.Intern
     entityType: string | null
     entityId: number | null
     readAt: Date | null
+    archivedAt: Date | null
     createdAt: Date
   }, ExtArgs["result"]["notification"]>
   composites: {}
@@ -1155,6 +1189,7 @@ export interface NotificationFieldRefs {
   readonly entityType: Prisma.FieldRef<"Notification", 'String'>
   readonly entityId: Prisma.FieldRef<"Notification", 'Int'>
   readonly readAt: Prisma.FieldRef<"Notification", 'DateTime'>
+  readonly archivedAt: Prisma.FieldRef<"Notification", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"Notification", 'DateTime'>
 }
     

@@ -124,6 +124,21 @@ async function flipTargetRow(
       if (count === 0) console.warn(`OCC conflict on USER:${targetId} - already resolved, skipping stale verdict`);
       return;
     }
+    case TargetType.COMMENT: {
+      if (noVerdict) return; // Fail-closed
+      const { count } = await db.comment.updateMany({
+        where: { id: targetId, version: expectedVersion },
+        data: {
+          isPendingScreening: false,
+          ...(removed
+            ? { isRemoved: true }
+            : {}),
+          version: { increment: 1 },
+        },
+      });
+      if (count === 0) console.warn(`OCC conflict on COMMENT:${targetId} - already resolved, skipping stale verdict`);
+      return;
+    }
     case TargetType.MESSAGE: {
       // DMs are private by design
       // Only rescreened when reported
@@ -181,9 +196,22 @@ async function getCurrentVersion(
         where: { id: targetId },
         select: { version: true },
       })).version;
+    case TargetType.COMMENT:
+      return (await db.comment.findUniqueOrThrow({
+        where: { id: targetId },
+        select: { version: true },
+      })).version;
     default:
       throw new Error(`getCurrentVersion: no handler for targetType ${targetType}`);
   }
+}
+
+function autoApproveIfScreeningSkipped(): ReturnType<typeof decideAutoAction> {
+  if (process.env.SKIP_SCREENING !== 'true') return null;
+  return {
+    status: ReportStatus.APPROVED,
+    resolution: 'Screening skipped (SKIP_SCREENING=true) - auto-approved for local development',
+  };
 }
 
 export async function processScreenContent(payload: ScreenContentPayload): Promise<void> {
@@ -203,7 +231,7 @@ export async function processScreenContent(payload: ScreenContentPayload): Promi
   // Ask Gemini for verdict (internal 3x retry/backoff, returns null on exhaustion
   const screening = await screenContent(payload.text, images);
   // Translate score/categories into approve/remove, or null if ambiguous/unscreened
-  const action = screening ? decideAutoAction(screening) : null;
+  const action = screening ? decideAutoAction(screening) : autoApproveIfScreeningSkipped();
   const systemUserId = await getSystemUserId();
   // A rescreen is a report re-checking already-published content, not fresh content
   const isRescreen = payload.existingReportId !== undefined;

@@ -78,7 +78,7 @@ tradeRequests.post('/', requireAuth, async (req, res) => {
             type: 'TRADE_REQUEST_RECEIVED',
             title: `New trade request on "${post.title}"`,
             body: preview,
-            link: `/profile?postId=${postId}`,
+            link: `/profile/requests/${postId}/${upserted.id}`,
             entityType: 'TRADE_REQUEST',
             entityId: upserted.id,
           },
@@ -94,7 +94,7 @@ tradeRequests.post('/', requireAuth, async (req, res) => {
         userId: post.userId,
         type: 'TRADE_REQUEST_RECEIVED',
         title: `New trade request on "${post.title}"`,
-        link: `/profile?postId=${postId}`,
+        link: `/profile/requests/${postId}/${tradeRequest.id}`,
         entityType: 'TRADE_REQUEST',
         entityId: tradeRequest.id,
       });
@@ -307,7 +307,7 @@ tradeRequests.patch('/:id/accept', requireAuth, async (req, res) => {
         type: 'TRADE_REQUEST_ACCEPTED',
         title: 'Your trade request was accepted',
         body: `Your trade request for "${tradeRequest.post.title}" was accepted.`,
-        link: '/profile?mine=true',
+        link: `/trade/${tradeRequest.postId}`,
         entityType: 'TRADE_REQUEST',
         entityId: tradeRequest.id,
       });
