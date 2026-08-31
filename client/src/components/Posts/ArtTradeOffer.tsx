@@ -18,6 +18,9 @@ import { useAuth } from '../../context/AuthContext';
 interface ArtTradeOfferProps {
   postId: number;
   onSuccess?: () => void;
+  open?: boolean;
+  onClose?: () => void;
+  hideButton?: boolean;
 }
 
 // creates a watermark for the image preview
@@ -75,7 +78,13 @@ const createWatermark = (file: File, watermarkText?: string): Promise<Blob> => n
   sourceImage.src = URL.createObjectURL(file);
 });
 
-export const ArtTradeOffer: React.FC<ArtTradeOfferProps> = ({ postId, onSuccess }) => {
+export const ArtTradeOffer: React.FC<ArtTradeOfferProps> = ({
+  postId,
+  onSuccess,
+  open: externalOpen,
+  onClose,
+  hideButton = false,
+}) => {
   const { user } = useAuth();
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState('');
@@ -85,7 +94,10 @@ export const ArtTradeOffer: React.FC<ArtTradeOfferProps> = ({ postId, onSuccess 
   const [error, setError] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const modalOpen = externalOpen ?? open;
+
   const handleOpen = () => setOpen(true);
+
   const handleClose = () => {
     if (!isSubmitting) {
       setOpen(false);
@@ -94,6 +106,7 @@ export const ArtTradeOffer: React.FC<ArtTradeOfferProps> = ({ postId, onSuccess 
       setAddWatermark(false);
       setError('');
       if (fileInputRef.current) fileInputRef.current.value = '';
+      onClose?.();
     }
   };
 
@@ -163,11 +176,13 @@ export const ArtTradeOffer: React.FC<ArtTradeOfferProps> = ({ postId, onSuccess 
 
   return (
     <>
-      <Button variant="contained" color="primary" onClick={handleOpen}>
-        Offer Art
-      </Button>
+      {!hideButton && (
+        <Button variant="contained" color="primary" onClick={handleOpen}>
+          Offer Art
+        </Button>
+      )}
 
-      <Modal open={open} onClose={handleClose}>
+      <Modal open={modalOpen} onClose={handleClose}>
         <Box
           component="form"
           onSubmit={handleSubmit}

@@ -26,12 +26,18 @@ interface RequestTradeButtonProps {
   postId: number;
   myRequest: TradeRequestData | null;
   onRequestChanged: () => void | Promise<void>;
+  open?: boolean;
+  onClose?: () => void;
+  hideButton?: boolean;
 }
 
 export default function RequestTradeButton({
   postId,
   myRequest,
   onRequestChanged,
+  open: externalOpen,
+  onClose,
+  hideButton = false,
 }: RequestTradeButtonProps) {
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState('');
@@ -39,11 +45,13 @@ export default function RequestTradeButton({
   const { showToast } = useToast();
 
   const isPending = myRequest?.status === 'PENDING';
+  const dialogOpen = externalOpen ?? open;
 
   const handleClose = () => {
     if (submitting) return;
     setOpen(false);
     setMessage('');
+    onClose?.();
   };
 
   const handleSubmit = async () => {
@@ -53,6 +61,7 @@ export default function RequestTradeButton({
       showToast('Trade request sent!', 'success');
       setOpen(false);
       setMessage('');
+      onClose?.();
       await onRequestChanged();
     } catch (err) {
       const errMessage = axios.isAxiosError(err) && err.response?.data?.error
@@ -88,11 +97,13 @@ export default function RequestTradeButton({
 
   return (
     <>
-      <Button variant="contained" onClick={() => setOpen(true)} sx={{ borderRadius: radius.md, textTransform: 'none' }}>
-        Request to Trade
-      </Button>
+      {!hideButton && (
+        <Button variant="contained" onClick={() => setOpen(true)} sx={{ borderRadius: radius.md, textTransform: 'none' }}>
+          Request to Trade
+        </Button>
+      )}
 
-      <Dialog open={open} onClose={handleClose} maxWidth="xs" fullWidth>
+      <Dialog open={dialogOpen} onClose={handleClose} maxWidth="xs" fullWidth>
         <DialogTitle>Request to Trade</DialogTitle>
         <DialogContent>
           <TextField

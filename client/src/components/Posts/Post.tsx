@@ -12,6 +12,9 @@ import TextField from '@mui/material/TextField';
 import Avatar from '@mui/material/Avatar';
 import Divider from '@mui/material/Divider';
 import Chip from '@mui/material/Chip';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
 
 import { formatPostDate } from '../../utils/utils';
 import type { PostData, PostUpdateData } from './ManagePosts';
@@ -53,8 +56,12 @@ export default function Post({
   const isOwnPost = user?.id === post.userId;
   const isBlocked = blockedUserIds.includes(post.userId);
   const [editing, setEditing] = useState(false);
+  const [offerTypeOpen, setOfferTypeOpen] = useState(false);
+  const [requestTradeOpen, setRequestTradeOpen] = useState(false);
+  const [artTradeOpen, setArtTradeOpen] = useState(false);
 
   const isArtTrade = Boolean(post.previewUrl || post.fullUrl);
+  const hasPendingRequest = myTradeRequests?.status === 'PENDING';
 
   const handleDeletePost = async () => {
     if (!onDelete) return;
@@ -95,6 +102,16 @@ export default function Post({
         : 'Could not start conversation.';
       showToast(message, 'error');
     }
+  };
+
+  const handleRequestTrade = () => {
+    setOfferTypeOpen(false);
+    setRequestTradeOpen(true);
+  };
+
+  const handleArtTrade = () => {
+    setOfferTypeOpen(false);
+    setArtTradeOpen(true);
   };
 
   return (
@@ -401,33 +418,80 @@ export default function Post({
               pt: 'clamp(5px, 1.2cqw, 10px)',
               display: 'flex',
               justifyContent: 'flex-end',
-              gap: 'clamp(4px, 1cqw, 8px)',
-              flexWrap: 'nowrap',
             }}
           >
+            {hasPendingRequest ? (
+              <RequestTradeButton
+                postId={post.id}
+                myRequest={myTradeRequests}
+                onRequestChanged={onTradeActivity}
+              />
+            ) : (
+              <Button
+                variant="contained"
+                onClick={() => setOfferTypeOpen(true)}
+                sx={{
+                  borderRadius: radius.md,
+                  textTransform: 'none',
+                  whiteSpace: 'nowrap',
+                  minWidth: 0,
+                  px: 'clamp(6px, 1.5cqw, 12px)',
+                  py: 'clamp(3px, 0.7cqw, 6px)',
+                  fontSize: 'clamp(0.55rem, 1.45cqw, 0.875rem)',
+                }}
+              >
+                Offer Trade
+              </Button>
+            )}
+
+            <Dialog
+              open={offerTypeOpen}
+              onClose={() => setOfferTypeOpen(false)}
+              maxWidth="xs"
+              fullWidth
+            >
+              <DialogTitle>What would you like to offer?</DialogTitle>
+
+              <DialogContent>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 1,
+                    pt: 1,
+                  }}
+                >
+                  <Button variant="outlined" onClick={handleRequestTrade}>
+                    Service
+                  </Button>
+
+                  <Button variant="outlined" onClick={handleRequestTrade}>
+                    Item
+                  </Button>
+
+                  <Button variant="outlined" onClick={handleArtTrade}>
+                    Digital Art
+                  </Button>
+                </Box>
+              </DialogContent>
+            </Dialog>
+
             <RequestTradeButton
               postId={post.id}
               myRequest={myTradeRequests}
               onRequestChanged={onTradeActivity}
+              open={requestTradeOpen}
+              onClose={() => setRequestTradeOpen(false)}
+              hideButton
             />
 
-            {isArtTrade ? (
-              <ArtTradeOffer postId={post.id} onSuccess={onOfferSubmitted} />
-            ) : (
-              <Button
-                variant="contained"
-                onClick={onOfferSubmitted}
-                sx={{
-                  borderRadius: radius.pill,
-                  textTransform: 'none',
-                  whiteSpace: 'nowrap',
-                  fontSize: 'clamp(0.55rem, 1.45cqw, 0.875rem)',
-                  px: 'clamp(6px, 1.5cqw, 12px)',
-                }}
-              >
-                Make Offer
-              </Button>
-            )}
+            <ArtTradeOffer
+              postId={post.id}
+              onSuccess={onOfferSubmitted}
+              open={artTradeOpen}
+              onClose={() => setArtTradeOpen(false)}
+              hideButton
+            />
           </Box>
         )}
 
