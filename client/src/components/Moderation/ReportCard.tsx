@@ -8,8 +8,14 @@ import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import Chip from '@mui/material/Chip';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import { radius } from '../../theme';
-import { humanizeReason, reportSummary, targetSnippet } from './format';
+import {
+  aiScoreVerdict, humanizeReason, reportSummary, targetSnippet,
+} from './format';
+import type { AiScoreVerdict } from './format';
 import type { ReportRow } from './types';
 
   interface Props {
@@ -20,9 +26,34 @@ import type { ReportRow } from './types';
     onRemove: (id: number) => void;
   }
 
+// Maps the three screening bands to an at-a-glance icon
+// titleAccess gives each an accessible name
+const SCORE_INDICATOR: Record<AiScoreVerdict, { icon: React.ReactNode;
+    label: string }> = {
+      pass: {
+        icon: <CheckCircleOutlinedIcon fontSize="small" color="success" titleAccess="Passed screening" />,
+        label: 'Passed screening',
+      },
+      review: {
+        icon: <WarningAmberIcon fontSize="small" color="warning" titleAccess="Needs review" />,
+        label: 'Needs review',
+      },
+      fail: {
+        icon: <HighlightOffIcon fontSize="small" color="error" titleAccess="Failed screening" />,
+        label: 'Failed screening',
+      },
+    };
+
 export default function ReportCard({
   report, showActions, resolvingId, onApprove, onRemove,
 }: Props) {
+  // Only POST / TRADE_OFFER reports carry imageUrls
+  // FKs are mutually exclusive per target type
+  const reportedImage = (report.post?.imageUrls ?? report.offer?.imageUrls ?? [])[0];
+  const scoreVerdict = report.aiScore === null
+    ? null
+    : aiScoreVerdict(report.aiScore, report.aiCategories);
+
   return (
     <Accordion
       disableGutters
@@ -45,6 +76,15 @@ export default function ReportCard({
         >
           <Chip label={report.targetType} size="small" />
 
+          {report.status !== 'PENDING' && (
+            <Chip
+              label={report.status === 'REMOVED' ? 'Removed' : 'Allowed'}
+              color={report.status === 'REMOVED' ? 'error' : 'success'}
+              size="small"
+              variant="outlined"
+            />
+          )}
+
           <Box sx={{ minWidth: 0, flex: 1 }}>
             <Typography variant="subtitle2" sx={{ fontWeight: 600 }} noWrap>
               {reportSummary(report)}
@@ -61,6 +101,28 @@ export default function ReportCard({
       </AccordionSummary>
 
       <AccordionDetails sx={{ pt: 0 }}>
+        {reportedImage && (
+          <Box
+            sx={{
+              width: '100%',
+              height: { xs: 200, sm: 280 },
+              bgcolor: 'surface.sunken',
+              borderRadius: radius.md,
+              overflow: 'hidden',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              mb: 1,
+            }}
+          >
+            <img
+              src={reportedImage}
+              alt="Reported content"
+              style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+            />
+          </Box>
+        )}
+
         <Typography variant="body2" sx={{ mb: 1 }}>
           {targetSnippet(report)}
         </Typography>
@@ -87,11 +149,19 @@ export default function ReportCard({
 
         {report.aiScore !== null ? (
           <Box sx={{ mb: 1.5 }}>
-            <Typography variant="body2" sx={{ fontWeight: 600 }}>
-              Gemini score:
-              {' '}
-              {report.aiScore.toFixed(2)}
-            </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+              {scoreVerdict && SCORE_INDICATOR[scoreVerdict].icon}
+              <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                Gemini score:
+                {' '}
+                {report.aiScore.toFixed(2)}
+              </Typography>
+              {scoreVerdict && (
+                <Typography variant="caption" color="text.secondary">
+                  {SCORE_INDICATOR[scoreVerdict].label}
+                </Typography>
+              )}
+            </Box>
             {report.aiCategories.length > 0 && (
               <Box sx={{
                 display: 'flex', gap: 0.5, flexWrap: 'wrap', mt: 0.5,
@@ -116,9 +186,7 @@ export default function ReportCard({
 
         {report.status !== 'PENDING' && (
           <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1.5 }}>
-            {report.status === 'REMOVED' ? 'Removed' : 'Allowed'}
-            {' '}
-            by
+            Resolved by
             {' '}
             {report.resolverId === null ? 'Auto (Gemini)' : (report.resolver?.name ?? `Moderator #${report.resolverId}`)}
             {report.resolution ? ` - ${report.resolution}` : ''}
