@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable no-underscore-dangle */
 import { Router, type Request } from 'express';
 import { getDistance } from 'geolib';
@@ -30,6 +31,7 @@ const CONDITIONS = [
 interface MediaItem {
   sortOrder?: number;
   media?: {
+    id: number;
     variant?: string | null;
     s3Key: string;
   } | null;
@@ -79,28 +81,41 @@ const getMediaUrls = async (
   };
 };
 
-const getPostImageUrls = async (
+const getPostImageData = async (
   mediaArray?: MediaItem[],
 ) => {
-  if (!mediaArray) return [];
+  if (!mediaArray) return { imageUrls: [], imageItems: [] };
 
   const postImages = mediaArray
     .filter((m) => m.media?.variant == null && m.media?.s3Key)
     .sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0));
 
-  const imageUrls = await Promise.all(
-    postImages.map((item) => {
+  const imageItems = await Promise.all(
+    postImages.map(async (item) => {
       const key = item.media?.s3Key;
-      if (!key) return Promise.resolve(null);
+      const mediaId = item.media?.id;
 
-      return getDownloadUrl(key).catch((err) => {
+      if (!key || !mediaId) return null;
+
+      const url = await getDownloadUrl(key).catch((err) => {
         console.error('Error getting post image URL:', err);
         return null;
       });
+
+      if (!url) return null;
+
+      return { mediaId, url };
     }),
   );
 
-  return imageUrls.filter((url): url is string => Boolean(url));
+  const filteredImageItems = imageItems.filter(
+    (item): item is { mediaId: number; url: string } => Boolean(item),
+  );
+
+  return {
+    imageUrls: filteredImageItems.map((item) => item.url),
+    imageItems: filteredImageItems,
+  };
 };
 
 // GET: all the categories of active posts + a count of each category (for advanced search feature)
@@ -613,7 +628,9 @@ posts.get('/', async (req, res) => {
           isOwner || Boolean(viewerCompletedOffer),
         );
 
-        const imageUrls = await getPostImageUrls(post.postMedia);
+        const { imageUrls, imageItems } = await getPostImageData(post.postMedia);
+        const previewMedia = post.postMedia.find((item) => item.media?.variant === 'PREVIEW');
+        const fullMedia = post.postMedia.find((item) => item.media?.variant === 'FULL');
 
         const tradeOffers = await Promise.all(
           (post.tradeOffers || []).map(async (offer: TradeOfferItem) => {
@@ -631,7 +648,10 @@ posts.get('/', async (req, res) => {
           ...postRest,
           trade: trades[0] ?? null,
           ...postUrls,
+          previewMediaId: previewMedia?.media?.id ?? null,
+          fullMediaId: fullMedia?.media?.id ?? null,
           imageUrls,
+          imageItems,
           tradeOffers,
         };
       }),
@@ -826,8 +846,11 @@ posts.post('/', requireAuth, async (req, res) => {
 posts.patch('/:id', requireAuth, async (req, res) => {
   try {
     const {
-      title, message, isLocal = false, zipCode, radiusMiles,
+      title, message, isLocal = false, zipCode, radiusMiles, mediaIds, previewMediaId, fullMediaId,
     } = req.body;
+
+    const userId = getUserId(req);
+    const mediaUpdateRequested = mediaIds !== undefined || previewMediaId !== undefined || fullMediaId !== undefined;
 
     // This screens post edits when they're submitted
     if (
@@ -847,24 +870,129 @@ posts.patch('/:id', requireAuth, async (req, res) => {
         .json({ error: 'radiusMiles must be a number when isLocal is true.' });
     }
 
+    if (mediaIds !== undefined && !Array.isArray(mediaIds)) {
+      return res.status(400).json({ error: 'mediaIds must be an array.' });
+    }
+
+    const normalMediaIds = Array.isArray(mediaIds)
+      ? mediaIds.map(Number)
+      : [];
+
+    if (normalMediaIds.length > 5) {
+      return res.status(400).json({ error: 'Image limit is 5.' });
+    }
+
+    if (normalMediaIds.some((mediaId) => !Number.isInteger(mediaId) || mediaId <= 0)) {
+      return res.status(400).json({ error: 'Invalid media ID.' });
+    }
+
+    if (new Set(normalMediaIds).size !== normalMediaIds.length) {
+      return res.status(400).json({ error: 'Duplicate media IDs are not allowed.' });
+    }
+
+    if (normalMediaIds.length > 0) {
+      const normalMedia = await prisma.media.findMany({
+        where: {
+          id: { in: normalMediaIds },
+          uploaderId: userId,
+          variant: null,
+        },
+        select: {
+          id: true,
+        },
+      });
+
+      if (normalMedia.length !== normalMediaIds.length) {
+        return res.status(400).json({ error: 'One or more post images are invalid.' });
+      }
+    }
+
+    if (previewMediaId !== undefined || fullMediaId !== undefined) {
+      if (!previewMediaId || !fullMediaId) {
+        return res.status(400).json({ error: 'Preview and full media are required for digital posts.' });
+      }
+
+      const digitalMedia = await prisma.media.findMany({
+        where: {
+          id: { in: [Number(previewMediaId), Number(fullMediaId)] },
+          uploaderId: userId,
+        },
+        select: {
+          id: true,
+          variant: true,
+        },
+      });
+
+      const hasPreview = digitalMedia.some((mediaItem) => mediaItem.id === Number(previewMediaId) && mediaItem.variant === 'PREVIEW');
+      const hasFull = digitalMedia.some((mediaItem) => mediaItem.id === Number(fullMediaId) && mediaItem.variant === 'FULL');
+
+      if (!hasPreview || !hasFull) {
+        return res.status(400).json({ error: 'Invalid digital media.' });
+      }
+    }
+
     try {
       await prisma.$transaction(async (tx) => {
-        const { count } = await tx.post.updateMany({
+        const existingPost = await tx.post.findFirst({
           where: getOwnedOpenPostWhere(req),
+          select: {
+            title: true,
+            message: true,
+          },
+        });
+
+        if (!existingPost) throw new PostNotFoundForUpdate();
+
+        const textChanged = existingPost.title !== title || existingPost.message !== message;
+
+        await tx.post.update({
+          where: {
+            id: Number(req.params.id),
+          },
           data: {
             title,
             message,
             isLocal,
             zipCode: isLocal ? String(zipCode) : null,
             radiusMiles: parsedRadius,
-            ...(title || message ? { isPendingScreening: true } : {}),
+            ...(textChanged ? { isPendingScreening: true } : {}),
           },
         });
 
-        // Can't `return res.status(...)` from inside a transaction - signal via throw
-        if (!count) throw new PostNotFoundForUpdate();
+        if (mediaUpdateRequested) {
+          await tx.postMedia.deleteMany({
+            where: {
+              postId: Number(req.params.id),
+            },
+          });
 
-        if (title || message) {
+          if (normalMediaIds.length > 0) {
+            await tx.postMedia.createMany({
+              data: normalMediaIds.map((mediaId, sortOrder) => ({
+                postId: Number(req.params.id),
+                mediaId,
+                sortOrder,
+              })),
+            });
+          } else if (previewMediaId && fullMediaId) {
+            await tx.postMedia.createMany({
+              data: [
+                {
+                  postId: Number(req.params.id),
+                  mediaId: Number(previewMediaId),
+                  sortOrder: 0,
+                },
+                {
+                  postId: Number(req.params.id),
+                  mediaId: Number(fullMediaId),
+                  sortOrder: 1,
+                },
+              ],
+            });
+          }
+        }
+
+        if (textChanged) {
           await enqueueJob(tx, 'SCREEN_CONTENT', {
             targetType: 'POST',
             targetId: Number(req.params.id),
