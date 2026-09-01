@@ -266,7 +266,7 @@ export default function EditProfileModal({
             value={formData.zipCode}
             onChange={(e) => setFormData({ ...formData, zipCode: e.target.value })}
             error={zipError}
-            helperText={zipError ? 'Enter a valid zip code (e.g. 94103).' : ' '}
+            helperText={zipError ? 'Enter a valid postal code.' : ' '}
           />
 
           <Divider sx={{ my: 0.5 }} />
