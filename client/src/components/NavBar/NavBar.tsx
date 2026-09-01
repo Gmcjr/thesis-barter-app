@@ -11,7 +11,6 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import AddIcon from '@mui/icons-material/Add';
 import MessageIcon from '@mui/icons-material/Message';
-import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
 import LoginIcon from '@mui/icons-material/Login';
 import Fab from '@mui/material/Fab';
@@ -119,6 +118,9 @@ function NavBar({ scrollingDown }: NavBarProps) {
             flexShrink: 0,
           }}
           >
+
+            <SettingsMenu />
+
             {loading ? (
               <Typography variant="caption" color="text.secondary">Loading…</Typography>
             ) : (
@@ -252,38 +254,6 @@ function NavBar({ scrollingDown }: NavBarProps) {
                         <Typography variant="body2" sx={{ fontWeight: 600 }}>
                           Moderation Queue
                         </Typography>
-                      </Box>
-                    </MenuItem>
-                  )}
-
-                  {/* Settings Item */}
-                  {user && (
-                    <MenuItem
-                      disableRipple
-                      sx={{
-                        p: 0,
-                        position: 'relative',
-                        '& button, & .MuiIconButton-root': {
-                          position: 'absolute',
-                          top: 0,
-                          left: 0,
-                          width: '100%',
-                          height: '100%',
-                          opacity: 0,
-                          zIndex: 2,
-                          cursor: 'pointer',
-                        },
-                      }}
-                    >
-                      <Box sx={{
-                        display: 'flex', alignItems: 'center', gap: 1, px: 2, py: 1, width: '100%',
-                      }}
-                      >
-                        <SettingsIcon sx={{ fontSize: '1.25rem' }} />
-                        <Typography variant="body2" sx={{ fontWeight: 600, pointerEvents: 'none', zIndex: 1 }}>
-                          Settings
-                        </Typography>
-                        <SettingsMenu />
                       </Box>
                     </MenuItem>
                   )}
