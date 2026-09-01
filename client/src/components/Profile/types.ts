@@ -4,7 +4,7 @@ import type { ReceivedReview } from '../Reviews/ReviewsDetailPanel';
 export interface ProfileUser {
   id: number;
   name: string;
-  email: string;
+  email: string | null;
   bio: string | null;
   phone: string | null;
   zipCode: string | null;
@@ -14,6 +14,8 @@ export interface ProfileUser {
   createdAt: string;
   avatarUrl: string | null;
   bannerUrl: string | null;
+  emailVisible: boolean;
+  tradeHistoryVisible: boolean;
 }
 
 export interface ProfileHeaderProps {
@@ -34,6 +36,8 @@ export interface ProfileUpdateData {
   bio: string;
   phone: string;
   zipCode: string;
+  emailVisible: boolean;
+  tradeHistoryVisible: boolean;
   country: string;
 }
 
@@ -64,6 +68,7 @@ export interface ProfileTabsProps {
   tradeCount: number;
   isOwnProfile: boolean;
   onDM: () => void;
+  showTradeHistory: boolean;
 }
 
 export interface ReviewsSummary {
@@ -108,6 +113,7 @@ export interface NormalTradeOffer {
     id: number;
     name: string | null;
     email: string;
+    avatarUrl: string | null;
   };
   post: {
     id: number;
@@ -128,6 +134,7 @@ export interface ArtTradeOfferData {
     id: number;
     name: string;
     email: string;
+    avatarUrl: string | null;
   };
   post: {
     id: number;

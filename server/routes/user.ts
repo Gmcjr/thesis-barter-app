@@ -4,6 +4,7 @@ import requireAuth from '../middleware/requireAuth.js';
 import { isBlocked } from '../services/blocks.js';
 import { buildKey, getUploadUrl, getDownloadUrl } from '../services/s3.js';
 import { UserMediaSlot } from '../db/generated/enums.js';
+import { isValidZipCode, isValidPhone } from '../services/validation.js';
 import { enqueueJob } from '../services/jobQueue.js';
 import {
   geocodePostalCode,
@@ -53,6 +54,10 @@ router.post('/', async (req, res) => {
       return res.status(400).json({ error: 'name REQUIRED' });
     }
 
+    if (phone && !isValidPhone(phone)) {
+      return res.status(400).json({ error: 'Please enter a valid phone number.' });
+    }
+
     const user = await prisma.user.create({
       data: {
         email,
@@ -92,7 +97,7 @@ router.get('/me', requireAuth, async (req, res) => {
 
 router.patch('/me', requireAuth, async (req, res) => {
   const {
-    name, bio, phone, zipCode, country,
+    name, bio, phone, zipCode, country, emailVisible, tradeHistoryVisible,
   } = req.body.user ?? {};
 
   if (name !== undefined && (!name || !name.trim())) {
@@ -101,6 +106,14 @@ router.patch('/me', requireAuth, async (req, res) => {
 
   if (bio !== undefined && bio !== null && bio.length > BIO_MAX_LENGTH) {
     return res.status(400).json({ error: `bio must be ${BIO_MAX_LENGTH} characters or fewer` });
+  }
+
+  if (phone !== undefined && phone !== null && phone !== '' && !isValidPhone(phone)) {
+    return res.status(400).json({ error: 'Please enter a valid phone number.' });
+  }
+
+  if (zipCode !== undefined && zipCode !== null && zipCode !== '' && !isValidZipCode(zipCode)) {
+    return res.status(400).json({ error: 'Please enter a valid zip code.' });
   }
 
   try {
@@ -173,6 +186,8 @@ router.patch('/me', requireAuth, async (req, res) => {
         data: {
           name: name !== undefined ? name.trim() : undefined,
           phone,
+          emailVisible: typeof emailVisible === 'boolean' ? emailVisible : undefined,
+          tradeHistoryVisible: typeof tradeHistoryVisible === 'boolean' ? tradeHistoryVisible : undefined,
           ...locationData,
           ...(bioChanged ? { pendingBio: bio, isPendingScreening: true } : {}),
         },
@@ -276,8 +291,13 @@ router.get('/:id', async (req, res) => {
       return res.status(404).json({ error: 'user not found' });
     }
 
+    const isSelf = req.user?.id === id;
     const { userMedia, ...userRest } = user;
-    return res.status(200).json({ ...userRest, ...(await getUserMediaUrls(userMedia)) });
+    return res.status(200).json({
+      ...userRest,
+      email: isSelf || user.emailVisible ? user.email : null,
+      ...(await getUserMediaUrls(userMedia)),
+    });
   } catch (err) {
     console.error(err);
     return res.sendStatus(500);

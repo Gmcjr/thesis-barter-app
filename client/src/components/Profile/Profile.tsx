@@ -56,7 +56,7 @@ export default function Profile() {
     else setActiveTab(initialTabFor(false, false)); // reset when neither param is present
   }, [requestId, offerId, postId]);
 
-  const visiblePosts = posts.filter((post) => (
+  const postsForScroll = posts.filter((post) => (
     activeTab === 'history' ? post.status === 'COMPLETED' : post.status !== 'COMPLETED'
   ));
 
@@ -105,6 +105,8 @@ export default function Profile() {
           phone: toNullable(data.phone),
           zipCode: data.zipCode.trim(),
           country: data.country.trim(),
+          emailVisible: data.emailVisible,
+          tradeHistoryVisible: data.tradeHistoryVisible,
         },
       }, { withCredentials: true });
 
@@ -323,6 +325,36 @@ export default function Profile() {
     loadPosts();
   }, [loadPosts]);
 
+  // Keep this profile's post/comment list live, same as the main feed.
+  useEffect(() => {
+    if (!socket) return undefined;
+    const handleChange = () => {
+      loadPosts();
+      loadMyTradeRequests();
+      loadReviewsSummary();
+      loadMyReviewStatus();
+    };
+    socket.on('posts:changed', handleChange);
+    return () => { socket.off('posts:changed', handleChange); };
+  }, [socket, loadPosts, loadMyTradeRequests, loadReviewsSummary, loadMyReviewStatus]);
+
+  // Comment screening only ever emits into the author's own socket room, so
+  // this fires regardless of whose profile is currently being viewed.
+  useEffect(() => {
+    if (!socket || !user) return undefined;
+    const handleCommentScreened = (payload: {
+      targetType: string; targetId: number; ok: boolean; rationale?: string;
+    }) => {
+      if (payload.targetType !== 'COMMENT' || payload.ok) return;
+      showToast(
+        `Your comment was removed for violating our community guidelines${payload.rationale ? `: ${payload.rationale}` : '.'}`,
+        'error',
+      );
+    };
+    socket.on('content:screened', handleCommentScreened);
+    return () => { socket.off('content:screened', handleCommentScreened); };
+  }, [socket, user, showToast]);
+
   useEffect(() => {
     loadMyTradeRequests();
   }, [loadMyTradeRequests]);
@@ -342,7 +374,7 @@ export default function Profile() {
   useEffect(() => {
     if (!highlightPostId || loading) return;
     document.getElementById(`post-${highlightPostId}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }, [highlightPostId, loading, visiblePosts]);
+  }, [highlightPostId, loading, postsForScroll]);
 
   const handleTradeActivity = async () => {
     await Promise.all([
@@ -373,6 +405,13 @@ export default function Profile() {
       </Box>
     );
   }
+
+  const showTradeHistory = isOwnProfile || profile.tradeHistoryVisible;
+  const effectiveTab = !showTradeHistory && activeTab === 'history' ? 'current' : activeTab;
+
+  const visiblePosts = posts.filter((post) => (
+    effectiveTab === 'history' ? post.status === 'COMPLETED' : post.status !== 'COMPLETED'
+  ));
 
   return (
     <Box sx={{ width: '100%', mt: 0 }}>
@@ -415,11 +454,12 @@ export default function Profile() {
       )}
 
       <ProfileTabs
-        activeTab={activeTab}
+        activeTab={effectiveTab}
         onTabChange={setActiveTab}
         tradeCount={reviewsSummary?.totalTrades ?? 0}
         isOwnProfile={isOwnProfile}
         onDM={handleOpenDM}
+        showTradeHistory={showTradeHistory}
       />
 
       {isOwnProfile && activeTab === 'offers' ? (
@@ -465,6 +505,8 @@ export default function Profile() {
             bio: profile.bio ?? '',
             phone: profile.phone ?? '',
             zipCode: profile.zipCode ?? '',
+            emailVisible: profile.emailVisible,
+            tradeHistoryVisible: profile.tradeHistoryVisible,
             country: profile.country ?? '',
           }}
           onSave={handleUpdateProfile}

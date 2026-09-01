@@ -16,6 +16,7 @@ import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
 import { formatPostDate } from '../../utils/utils';
+import { isValidZipCode } from '../../utils/validation';
 import RemovedPostCard from './RemovedPostCard';
 import WhyRemovedMenu from './WhyRemovedMenu';
 
@@ -55,11 +56,20 @@ export type PostData = {
     id: number;
     name: string | null;
     email: string;
+    avatarUrl: string | null;
   };
   comments: {
     id: number;
     text: string;
     userId: number;
+    createdAt: string;
+    parentId: number | null;
+    user: {
+      id: number;
+      name: string | null;
+      email: string;
+      avatarUrl: string | null;
+    };
   }[];
   trade: {
     id: number;
@@ -211,7 +221,10 @@ export default function ManagePosts({
     }
   };
 
-  const isInvalid = (!formData || !formData.title.trim() || !formData.message.trim() || (formData.isLocal && (!formData.zipCode?.trim() || !formData.radiusMiles || formData.radiusMiles <= 0)));
+  const zipError = Boolean(
+    formData?.isLocal && formData.zipCode?.trim() && !isValidZipCode(formData.zipCode),
+  );
+  const isInvalid = (!formData || !formData.title.trim() || !formData.message.trim() || (formData.isLocal && (!formData.zipCode?.trim() || !isValidZipCode(formData.zipCode ?? '') || !formData.radiusMiles || formData.radiusMiles <= 0)));
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
@@ -271,6 +284,8 @@ export default function ManagePosts({
                   onChange={(event) => {
                     setFormData({ ...formData, zipCode: event.target.value });
                   }}
+                  error={zipError}
+                  helperText={zipError ? 'Enter a valid zip code' : ' '}
                 />
 
                 <TextField

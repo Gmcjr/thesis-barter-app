@@ -12,6 +12,7 @@ import tradeRequests from './tradeRequests';
 import dms from './dms';
 import reviews from './reviews';
 import notifications from './notifications';
+import comments from './comments';
 import contact from './contact';
 import bugReports from './bugReports';
 
@@ -30,6 +31,7 @@ export default {
   dms,
   reviews,
   notifications,
+  comments,
   contact,
   bugReports,
 };

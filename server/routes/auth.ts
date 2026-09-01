@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { Strategy as GoogleStrategy, type Profile } from 'passport-google-oauth20';
 import passport from 'passport';
 import { prisma } from '../db/index.js';
+import { withAvatarUrl } from '../services/userMedia.js';
 
 const auth = Router();
 
@@ -74,12 +75,12 @@ auth.get('/redirect/google', passport.authenticate('google', {
   successRedirect: '/',
 }));
 
-auth.get('/check', (req, res) => {
+auth.get('/check', async (req, res) => {
   if (!req.isAuthenticated()) {
     res.status(401).json({ user: null });
     return;
   }
-  res.json({ user: req.user });
+  res.json({ user: await withAvatarUrl(req.user) });
 });
 
 auth.post('/logout', (req, res, next) => {

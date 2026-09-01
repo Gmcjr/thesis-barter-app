@@ -18,6 +18,7 @@ import SearchPostsAdvanced, {
   type AdvancedSearchFilters,
 } from './SearchPostsAdvanced';
 import { useSocket } from '../../context/SocketContext';
+import { useToast } from '../../context/ToastContext';
 
 const POSTS_PER_PAGE = 10;
 
@@ -30,6 +31,7 @@ interface MyArtTradeOffer {
 export default function Posts() {
   const { user, blockedUserIds } = useAuth();
   const socket = useSocket();
+  const { showToast } = useToast();
   const { postId: highlightPostIdParam } = useParams();
   const highlightPostId = highlightPostIdParam ? Number(highlightPostIdParam) : undefined;
 
@@ -160,6 +162,22 @@ export default function Posts() {
     };
   }, [socket, search, advancedSearch, advancedSearchActive, loadPosts]);
 
+  // Comment screening only ever emits into the author's own socket room, so
+  // this is always about a comment the current user just posted.
+  useEffect(() => {
+    if (!socket || !user) return undefined;
+    const handleCommentScreened = (payload: {
+      targetType: string; targetId: number; ok: boolean; rationale?: string;
+    }) => {
+      if (payload.targetType !== 'COMMENT' || payload.ok) return;
+      showToast(
+        `Your comment was removed for violating our community guidelines${payload.rationale ? `: ${payload.rationale}` : '.'}`,
+        'error',
+      );
+    };
+    socket.on('content:screened', handleCommentScreened);
+    return () => { socket.off('content:screened', handleCommentScreened); };
+  }, [socket, user, showToast]);
   useEffect(() => {
     if (!highlightPostId) return;
     document.getElementById(`post-${highlightPostId}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });

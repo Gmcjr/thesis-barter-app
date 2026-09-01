@@ -19,11 +19,14 @@ import RadioGroup from '@mui/material/RadioGroup';
 import Checkbox from '@mui/material/Checkbox';
 import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
+import Grid from '@mui/material/Grid';
+import Switch from '@mui/material/Switch';
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 import type { CatType, Cond } from '../../../../server/db/generated/browser';
+import { isValidZipCode } from '../../utils/validation';
 import { useAuth } from '../../context/AuthContext';
 
 // type definitions
@@ -254,7 +257,14 @@ export default function CreatePostModal({
   };
 
   // check for valid data
-  const isInvalid = (!formData.title.trim() || !formData.category.trim() || !formData.description.trim() || (formData.isLocal && !formData.zipCode.trim()) || (formData.offerType === 'DIGITAL' && !file));
+  const zipError = formData.isLocal && Boolean(formData.zipCode.trim()) && !isValidZipCode(formData.zipCode);
+  const isInvalid = (
+    !formData.title.trim()
+    || !formData.category.trim()
+    || !formData.description.trim()
+    || (formData.isLocal && !isValidZipCode(formData.zipCode))
+    || (formData.offerType === 'DIGITAL' && !file)
+  );
 
   // submit handler for the form
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
@@ -447,6 +457,53 @@ export default function CreatePostModal({
                   <MenuItem value="MINT">Mint</MenuItem>
                 </Select>
               </FormControl>
+            </Collapse>
+
+            {/* Local Trade Toggle */}
+            <Collapse in={formData.offerType !== 'DIGITAL'} unmountOnExit>
+              <FormControlLabel
+                control={(
+                  <Switch
+                    checked={formData.isLocal}
+                    disabled={isSubmitting}
+                    onChange={(e) => handleChange('isLocal', e.target.checked)}
+                  />
+                )}
+                label="Local Trade Only"
+              />
+            </Collapse>
+
+            {/* Zip Code & Radius */}
+            <Collapse in={formData.isLocal && formData.offerType !== 'DIGITAL'} unmountOnExit>
+              <Grid container spacing={2}>
+                <Grid size={6}>
+                  <TextField
+                    label="Zip Code"
+                    fullWidth
+                    required
+                    value={formData.zipCode}
+                    onChange={(e) => handleChange('zipCode', e.target.value)}
+                    disabled={isSubmitting}
+                    error={zipError}
+                    helperText={zipError ? 'Enter a valid zip code' : ' '}
+                  />
+                </Grid>
+                <Grid size={6}>
+                  <FormControl fullWidth disabled={isSubmitting}>
+                    <InputLabel>Max Distance</InputLabel>
+                    <Select
+                      value={formData.radiusMiles}
+                      label="Max Distance"
+                      onChange={(e) => handleChange('radiusMiles', Number(e.target.value))}
+                    >
+                      <MenuItem value={5}>Within 5 miles</MenuItem>
+                      <MenuItem value={15}>Within 15 miles</MenuItem>
+                      <MenuItem value={30}>Within 30 miles</MenuItem>
+                      <MenuItem value={50}>Within 50 miles</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+              </Grid>
             </Collapse>
           </Box>
         </DialogContent>

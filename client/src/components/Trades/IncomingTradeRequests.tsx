@@ -7,7 +7,8 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
 import { radius } from '../../theme';
 import { useToast } from '../../context/ToastContext';
-import { useParams } from '../../context/RouterContext';
+import { useRouter, useParams } from '../../context/RouterContext';
+import UserAvatar from '../common/UserAvatar';
 
 interface IncomingRequest {
   id: number;
@@ -30,6 +31,7 @@ export default function IncomingTradeRequests({ postId, onAccepted }: IncomingTr
   const [requests, setRequests] = useState<IncomingRequest[]>([]);
   const [acceptingId, setAcceptingId] = useState<number | null>(null);
   const { showToast } = useToast();
+  const { navigate } = useRouter();
 
   const loadRequests = useCallback(async () => {
     setLoading(true);
@@ -119,11 +121,26 @@ export default function IncomingTradeRequests({ postId, onAccepted }: IncomingTr
               }}
             >
               <Box sx={{ minWidth: 0 }}>
-                <Typography variant="body2" sx={{ fontWeight: 600, color: 'text.primary' }}>
-                  {request.requester.name ?? request.requester.email}
-                </Typography>
+                <Box
+                  onClick={() => navigate(`/profile/${request.requester.id}`)}
+                  role="button"
+                  tabIndex={0}
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 1.5,
+                    width: 'fit-content',
+                    cursor: 'pointer',
+                    '&:hover .requester-name': { textDecoration: 'underline' },
+                  }}
+                >
+                  <UserAvatar user={request.requester} size={32} />
+                  <Typography variant="body2" className="requester-name" sx={{ fontWeight: 600, color: 'text.primary' }}>
+                    {request.requester.name ?? request.requester.email}
+                  </Typography>
+                </Box>
                 {request.message && (
-                  <Typography variant="body2" sx={{ color: 'text.primary' }}>{request.message}</Typography>
+                  <Typography variant="body2" sx={{ color: 'text.primary', mt: 0.5 }}>{request.message}</Typography>
                 )}
               </Box>
               <Button size="small" variant="contained" color="success" disabled={acceptingId !== null} onClick={() => handleAccept(request.id)}>

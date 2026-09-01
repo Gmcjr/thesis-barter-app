@@ -9,6 +9,8 @@ import requireAuth from '../middleware/requireAuth.js';
 import { getDownloadUrl } from '../services/s3.js';
 import { getBlockedRelationshipIds } from '../services/blocks.js';
 import { getIo } from '../middleware/socket.js';
+import { getAvatarUrlMap } from '../services/userMedia.js';
+import { isValidZipCode } from '../services/validation.js';
 import { geocodePostalCode } from '../services/geocoding.js';
 
 const posts = Router();
@@ -188,6 +190,7 @@ posts.get('/', async (req, res) => {
 
     if (mine && !req.user) return res.status(401).json({ error: 'Unauthorized' });
 
+    const viewerId = req.user?.id;
     if (
       paginationRequested
       && (
@@ -293,6 +296,15 @@ posts.get('/', async (req, res) => {
     const blockedRelationshipIds = !mine && !profileUserId && req.user
       ? await getBlockedRelationshipIds(getUserId(req))
       : [];
+
+    let hideTradeHistory = false;
+    if (profileUserId && profileUserId !== viewerId) {
+      const profileUser = await prisma.user.findUnique({
+        where: { id: profileUserId },
+        select: { tradeHistoryVisible: true },
+      });
+      hideTradeHistory = Boolean(profileUser && !profileUser.tradeHistoryVisible);
+    }
 
     // A user's 'trading history' includes posts they authored, posts where they
     // completed an art trade offer, and posts where they completed a generic
@@ -449,6 +461,7 @@ posts.get('/', async (req, res) => {
           AND: [
             { isRemoved: false, isPendingScreening: false },
             ownedOrCompletedFilter(profileUserId),
+            ...(hideTradeHistory ? [{ status: { not: 'COMPLETED' as const } }] : []),
             ...searchFilter,
           ],
         };
@@ -498,10 +511,24 @@ posts.get('/', async (req, res) => {
       skip: postSkip,
       orderBy: { createdAt: 'desc' },
       include: {
-        user: { select: { id: true, name: true } },
+        user: { select: { id: true, name: true, email: true } },
         products: true,
         services: true,
-        comments: true,
+        comments: {
+          // Everyone sees approved comments; the author of a comment still
+          // waiting on screening can also see their own until it resolves.
+          where: {
+            isRemoved: false,
+            OR: [
+              { isPendingScreening: false },
+              ...(viewerId !== undefined ? [{ userId: viewerId }] : []),
+            ],
+          },
+          orderBy: { createdAt: 'asc' },
+          include: {
+            user: { select: { id: true, name: true, email: true } },
+          },
+        },
         trades: {
           orderBy: { createdAt: 'desc' },
           take: 1,
@@ -613,7 +640,10 @@ posts.get('/', async (req, res) => {
       visibleRawPosts = filteredPosts.slice(offset, offset + limit);
     }
 
-    const viewerId = req.user?.id;
+    const authorAvatarMap = await getAvatarUrlMap([
+      ...visibleRawPosts.map((post) => post.user.id),
+      ...visibleRawPosts.flatMap((post) => post.comments.map((comment) => comment.userId)),
+    ]);
 
     const postsWithUrls = await Promise.all(
       visibleRawPosts.map(async (post) => {
@@ -646,6 +676,11 @@ posts.get('/', async (req, res) => {
 
         return {
           ...postRest,
+          user: { ...postRest.user, avatarUrl: authorAvatarMap.get(post.user.id) ?? null },
+          comments: post.comments.map((comment) => ({
+            ...comment,
+            user: { ...comment.user, avatarUrl: authorAvatarMap.get(comment.userId) ?? null },
+          })),
           trade: trades[0] ?? null,
           ...postUrls,
           previewMediaId: previewMedia?.media?.id ?? null,
@@ -681,6 +716,10 @@ posts.post('/', requireAuth, async (req, res) => {
       category,
       condition,
     } = req.body;
+
+    if (isLocal && (!zipCode || !isValidZipCode(String(zipCode)))) {
+      return res.status(400).json({ error: 'Please enter a valid zip code.' });
+    }
 
     const userId = getUserId(req);
     const trimmedCategory = typeof category === 'string' ? category.trim() : '';
@@ -860,6 +899,10 @@ posts.patch('/:id', requireAuth, async (req, res) => {
       return res
         .status(400)
         .json({ error: 'zipCode is required when isLocal is true.' });
+    }
+
+    if (isLocal && !isValidZipCode(String(zipCode))) {
+      return res.status(400).json({ error: 'Please enter a valid zip code.' });
     }
 
     const parsedRadius = isLocal ? Number(radiusMiles) : null;

@@ -20,6 +20,7 @@ interface AuthUser {
   email: string;
   role: UserRole;
   zipCode: string | null;
+  avatarUrl: string | null;
   country: string | null;
   lat: number | null;
   lng: number | null;
