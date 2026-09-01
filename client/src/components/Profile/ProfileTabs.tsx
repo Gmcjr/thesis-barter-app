@@ -23,7 +23,7 @@ export default function ProfileTabs({
         onClick={() => onTabChange('current')}
         sx={{ borderRadius: radius.md, textTransform: 'none', fontWeight: 600 }}
       >
-        Current Trades
+        Trades Listed
       </Button>
       {showTradeHistory && (
         <Button
@@ -41,7 +41,7 @@ export default function ProfileTabs({
           variant={activeTab === 'offers' ? 'contained' : 'outlined'}
           disableElevation
           onClick={() => onTabChange('offers')}
-          sx={{ borderRadius: radius.pill, textTransform: 'none', fontWeight: 600 }}
+          sx={{ borderRadius: radius.md, textTransform: 'none', fontWeight: 600 }}
         >
           Offers Received
         </Button>

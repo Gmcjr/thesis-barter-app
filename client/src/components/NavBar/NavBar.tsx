@@ -5,6 +5,7 @@ import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import AddIcon from '@mui/icons-material/Add';
@@ -27,7 +28,11 @@ import { useToast } from '../../context/ToastContext';
 import NewPost, { type PostFormData } from '../Posts/NewPost';
 import UserAvatar from '../common/UserAvatar';
 
-function NavBar() {
+interface NavBarProps {
+  scrollingDown: boolean;
+}
+
+function NavBar({ scrollingDown }: NavBarProps) {
   const { navigate } = useRouter();
   const { user, loading, logout } = useAuth();
   const { showToast } = useToast();
@@ -67,7 +72,17 @@ function NavBar() {
 
   return (
     <>
-      <AppBar position="fixed" elevation={2} sx={{ bgcolor: 'background.paper', color: 'text.primary' }}>
+      <AppBar
+        position="fixed"
+        elevation={2}
+        sx={{
+          bgcolor: 'background.paper',
+          color: 'text.primary',
+          opacity: scrollingDown ? 0.88 : 1,
+          backdropFilter: scrollingDown ? 'blur(12px) saturate(160%)' : 'none',
+          transition: 'opacity 0.2s ease',
+        }}
+      >
         <Toolbar sx={{
           display: 'flex',
           justifyContent: 'space-between',
@@ -119,19 +134,15 @@ function NavBar() {
                     {/* Notification Bell - standalone, hidden for guests */}
                     <NotificationBell filled />
 
-                    <Box
+                    <IconButton
                       onClick={(e) => setUserMenuTarget(e.currentTarget)}
-                      sx={{
-                        width: 36,
-                        height: 36,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        cursor: 'pointer',
-                      }}
+                      aria-label="Account menu"
+                      aria-haspopup="true"
+                      aria-expanded={Boolean(userMenuTarget)}
+                      sx={{ p: 0, width: 36, height: 36 }}
                     >
                       <UserAvatar user={user} size={36} sx={{ fontSize: '0.8rem' }} />
-                    </Box>
+                    </IconButton>
                   </Box>
                 )}
 
@@ -165,6 +176,8 @@ function NavBar() {
                   onClose={() => setUserMenuTarget(null)}
                   anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                   transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                  autoFocus={false}
+                  disableAutoFocusItem
                 >
                   {user && (
                     <Box sx={{ px: 2, pt: 1.5, pb: 0.5 }}>
@@ -285,24 +298,36 @@ function NavBar() {
       </AppBar>
 
       {/* New Post Button (floating, renders on log in) */}
-      {user && (
-        <Fab
-          variant="extended"
-          color="primary"
-          onClick={() => setModalOpen(true)}
+      {user && window.location.pathname === '/' && (
+        <Box
+          className="mui-fixed"
           sx={{
             position: 'fixed',
-            bottom: { xs: 24, sm: 32 },
-            right: { xs: 24, sm: 32 },
+            bottom: { xs: 118, sm: 128 },
+            right: {
+              xs: 16,
+              sm: 'max(32px, calc((100vw - 900px) / 2 - 44px))',
+            },
             zIndex: (theme) => theme.zIndex.appBar + 10,
-            textTransform: 'none',
-            fontWeight: 600,
-            boxShadow: 3,
           }}
         >
-          <AddIcon />
-        </Fab>
+          <Fab
+            variant="extended"
+            color="primary"
+            onClick={() => setModalOpen(true)}
+            sx={{
+              textTransform: 'none',
+              fontWeight: 600,
+              boxShadow: 3,
+              opacity: scrollingDown ? 0.15 : 1,
+              transition: 'opacity 0.2s ease',
+            }}
+          >
+            <AddIcon />
+          </Fab>
+        </Box>
       )}
+
       {/* NewPost Modal */}
       <NewPost
         open={modalOpen}

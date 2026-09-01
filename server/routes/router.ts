@@ -13,6 +13,8 @@ import dms from './dms';
 import reviews from './reviews';
 import notifications from './notifications';
 import comments from './comments';
+import contact from './contact';
+import bugReports from './bugReports';
 
 export default {
   auth,
@@ -30,4 +32,6 @@ export default {
   reviews,
   notifications,
   comments,
+  contact,
+  bugReports,
 };

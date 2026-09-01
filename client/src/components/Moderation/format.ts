@@ -42,17 +42,76 @@ export const humanizeStatus = (status: string) => (
 
 export const humanizeReason = (reason: string) => reason.replace(/_/g, ' ');
 
+// Screening thresholds - mirror server/services/moderation.ts
+// AUTO_REMOVE_THRESHOLD, AUTO_DISMISS_CATEGORIES, ZERO_TOLERANCE_CATEGORIES
+// No client/server shared-constants module exists, keep these in sync by hand
+export const AI_AUTO_REMOVE_THRESHOLD = 0.85;
+export const AI_AUTO_DISMISS_THRESHOLD = 0.15;
+export const AI_ZERO_TOLERANCE_CATEGORIES = ['ILLEGAL'];
+
+export type AiScoreVerdict = 'pass' | 'review' | 'fail';
+
+export const aiScoreVerdict = (score: number, categories: string[]): AiScoreVerdict => {
+  const hasZeroTolerance = categories.some((c) => AI_ZERO_TOLERANCE_CATEGORIES.includes(c));
+  if (hasZeroTolerance || score >= AI_AUTO_REMOVE_THRESHOLD) return 'fail';
+  if (score <= AI_AUTO_DISMISS_THRESHOLD) return 'pass';
+  return 'review';
+};
+
 export const targetSnippet = (report: ReportRow) => {
   if (report.targetType === 'POST') return report.post?.message ?? '(post not found)';
   if (report.targetType === 'MESSAGE') return report.message?.text ?? '(message not found)';
-  return `User: ${report.targetUser?.name ?? '(user not found)'}`;
+  if (report.targetType === 'TRADE_OFFER') {
+    if (!report.offer) return '(trade offer not found)';
+    return report.offer.message ?? '(no offer message)';
+  }
+  if (report.targetType === 'REVIEW') {
+    if (!report.review) return '(review not found)';
+    return report.review.comment ?? '(no review comment)';
+  }
+  if (report.targetType === 'TRADE_REQUEST') {
+    if (!report.tradeRequest) return '(trade request not found)';
+    return report.tradeRequest.message ?? '(no request message)';
+  }
+  if (report.targetType === 'USER') return `User: ${report.targetUser?.name ?? '(user not found)'}`;
+  return '(unknown target)';
 };
 
 // Collapsed-row label: post title where one exists, otherwise the content itself
 export const reportSummary = (report: ReportRow) => {
   if (report.targetType === 'POST') return report.post?.title ?? '(post not found)';
   if (report.targetType === 'MESSAGE') return report.message?.text ?? '(message not found)';
-  return report.targetUser?.name ?? '(user not found)';
+  if (report.targetType === 'TRADE_OFFER') {
+    if (!report.offer) return '(trade offer not found)';
+    return report.offer.message ?? 'Trade offer';
+  }
+  if (report.targetType === 'REVIEW') {
+    if (!report.review) return '(review not found)';
+    return `Review by ${report.review.reviewer.name ?? `User #${report.review.reviewer.id}`}`;
+  }
+  if (report.targetType === 'TRADE_REQUEST') {
+    if (!report.tradeRequest) return '(trade request not found)';
+    return `Trade request from ${report.tradeRequest.requester.name ?? `User #${report.tradeRequest.requester.id}`}`;
+  }
+  if (report.targetType === 'USER') return report.targetUser?.name ?? '(User not found)';
+  return '(unknown target)';
+};
+
+// Friendly label per report target type for moderator-facing toasts
+export const TARGET_TYPE_LABEL: Record<ReportRow['targetType'], string> = {
+  POST: 'Post',
+  USER: 'User',
+  MESSAGE: 'Message',
+  TRADE_OFFER: 'Trade offer',
+  REVIEW: 'Review',
+  TRADE_REQUEST: 'Trade request',
+};
+
+// Toast copy after a removal
+export const removalMessage = (report: ReportRow): string => {
+  const summary = reportSummary(report);
+  const trimmed = summary.length > 60 ? `${summary.slice(0, 57)}...` : summary;
+  return `${TARGET_TYPE_LABEL[report.targetType]} removed: "${trimmed}"`;
 };
 
 export const appealTargetSnippet = (appeal: AppealRow) => {

@@ -6,6 +6,10 @@ import { buildKey, getUploadUrl, getDownloadUrl } from '../services/s3.js';
 import { UserMediaSlot } from '../db/generated/enums.js';
 import { isValidZipCode, isValidPhone } from '../services/validation.js';
 import { enqueueJob } from '../services/jobQueue.js';
+import {
+  geocodePostalCode,
+  reverseGeocode,
+} from '../services/geocoding.js';
 
 const router = Router();
 
@@ -93,7 +97,7 @@ router.get('/me', requireAuth, async (req, res) => {
 
 router.patch('/me', requireAuth, async (req, res) => {
   const {
-    name, bio, phone, zipCode, emailVisible, tradeHistoryVisible,
+    name, bio, phone, zipCode, country, emailVisible, tradeHistoryVisible,
   } = req.body.user ?? {};
 
   if (name !== undefined && (!name || !name.trim())) {
@@ -113,6 +117,67 @@ router.patch('/me', requireAuth, async (req, res) => {
   }
 
   try {
+    const currentUser = await prisma.user.findUnique({
+      where: { id: req.user!.id },
+      select: {
+        zipCode: true,
+        country: true,
+        lat: true,
+        lng: true,
+      },
+    });
+
+    if (!currentUser) {
+      return res.status(404).json({ error: 'user not found' });
+    }
+
+    let locationData: {
+      zipCode?: string | null;
+      country?: string | null;
+      lat?: number | null;
+      lng?: number | null;
+    } = {};
+
+    if (zipCode !== undefined || country !== undefined) {
+      const nextZipCode = typeof zipCode === 'string' ? zipCode.trim() : '';
+      const nextCountry = typeof country === 'string' ? country.trim() : '';
+
+      if (!nextZipCode || !nextCountry) {
+        return res.status(400).json({
+          error: 'Location does not exist: please enter valid location.',
+        });
+      }
+
+      const locationChanged = (
+        nextZipCode !== currentUser.zipCode
+        || nextCountry !== currentUser.country
+      );
+
+      if (locationChanged) {
+        const location = await geocodePostalCode(nextZipCode, nextCountry);
+
+        if (!location) {
+          return res.status(400).json({
+            error: 'Location does not exist: please enter valid location.',
+          });
+        }
+
+        locationData = {
+          zipCode: location.postalCode,
+          country: location.country,
+          lat: location.lat,
+          lng: location.lng,
+        };
+      } else {
+        locationData = {
+          zipCode: currentUser.zipCode,
+          country: currentUser.country,
+          lat: currentUser.lat,
+          lng: currentUser.lng,
+        };
+      }
+    }
+
     const bioChanged = bio !== undefined;
 
     const user = await prisma.$transaction(async (tx) => {
@@ -121,9 +186,9 @@ router.patch('/me', requireAuth, async (req, res) => {
         data: {
           name: name !== undefined ? name.trim() : undefined,
           phone,
-          zipCode,
           emailVisible: typeof emailVisible === 'boolean' ? emailVisible : undefined,
           tradeHistoryVisible: typeof tradeHistoryVisible === 'boolean' ? tradeHistoryVisible : undefined,
+          ...locationData,
           ...(bioChanged ? { pendingBio: bio, isPendingScreening: true } : {}),
         },
         include: { userMedia: { include: { media: true } } },
@@ -145,6 +210,62 @@ router.patch('/me', requireAuth, async (req, res) => {
   } catch (err) {
     console.error(err);
     return res.sendStatus(500);
+  }
+});
+
+// PATCH: allows a user to update their location
+router.patch('/me/location', requireAuth, async (req, res) => {
+  try {
+    const {
+      postalCode, country, lat, lng,
+    } = req.body ?? {};
+
+    let location;
+
+    if (postalCode !== undefined || country !== undefined) {
+      const nextPostalCode = typeof postalCode === 'string' ? postalCode.trim() : '';
+      const nextCountry = typeof country === 'string' ? country.trim() : '';
+
+      if (!nextPostalCode || !nextCountry) {
+        return res.status(400).json({
+          error: 'Location does not exist: please enter valid location.',
+        });
+      }
+
+      location = await geocodePostalCode(nextPostalCode, nextCountry);
+    } else {
+      const numericLat = Number(lat);
+      const numericLng = Number(lng);
+
+      if (!Number.isFinite(numericLat) || !Number.isFinite(numericLng)) {
+        return res.status(400).json({
+          error: 'A postal code and country or valid coordinates are required.',
+        });
+      }
+
+      location = await reverseGeocode(numericLat, numericLng);
+    }
+
+    if (!location) {
+      return res.status(400).json({
+        error: 'Location does not exist: please enter valid location.',
+      });
+    }
+
+    const user = await prisma.user.update({
+      where: { id: req.user!.id },
+      data: {
+        zipCode: location.postalCode,
+        country: location.country,
+        lat: location.lat,
+        lng: location.lng,
+      },
+    });
+
+    return res.json(user);
+  } catch (err) {
+    console.error('Failed to update location:', err);
+    return res.status(500).json({ error: 'Unable to update location.' });
   }
 });
 

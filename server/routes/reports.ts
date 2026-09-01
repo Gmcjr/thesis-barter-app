@@ -6,10 +6,38 @@ import { TargetType, ReportReason, ReportStatus } from '../db/generated/enums.js
 import { Prisma } from '../db/generated/client.js';
 import { enqueueJob } from '../services/jobQueue.js';
 import { getIo } from '../middleware/socket.js';
+import { getDownloadUrl } from '../services/s3.js';
 
 const reports = Router();
 
 const QUEUE_PAGE_SIZE = 50;
+
+interface QueueMediaItem {
+  media?: { s3Key: string; variant: string | null } | null;
+  sortOrder?: number | null;
+}
+
+// Real images, sorted for display, mirrors posts.ts getPostImageUrls
+const getQueueImageUrls = async (mediaArray?: QueueMediaItem[]): Promise<string[]> => {
+  if (!mediaArray) return [];
+
+  const images = mediaArray
+    .filter((m) => m.media?.variant == null && m.media?.s3Key)
+    .sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0));
+
+  const urls = await Promise.all(
+    images.map((item) => {
+      const key = item.media?.s3Key;
+      if (!key) return Promise.resolve(null);
+      return getDownloadUrl(key).catch((err) => {
+        console.error('Error getting queue image URL:', err);
+        return null;
+      });
+    }),
+  );
+
+  return urls.filter((url): url is string => Boolean(url));
+};
 
 // Signals an OCC conflict out of a $transaction callback
 // The screening system already wrote this row since it was read, moderator action didn't land
@@ -154,14 +182,46 @@ reports.get('/', requireModerator, async (req, res) => {
       take: QUEUE_PAGE_SIZE,
       include: {
         reporter: { select: { id: true, name: true } },
-        post: true,
+        post: { include: { postMedia: { include: { media: true } } } },
         targetUser: { select: { id: true, name: true } },
         resolver: { select: { id: true, name: true } },
         message: true,
+        offer: { include: { tradeOfferMedia: { include: { media: true } } } },
+        review: { include: { reviewer: { select: { id: true, name: true } } } },
+        tradeRequest: { include: { requester: { select: { id: true, name: true } } } },
       },
       orderBy: { createdAt: 'desc' },
     });
-    res.json(queue);
+
+    // Presign image URLs per row
+    const queueWithImages = await Promise.all(queue.map(async (report) => ({
+      ...report,
+      post: report.post ? {
+        id: report.post.id,
+        title: report.post.title,
+        message: report.post.message,
+        isRemoved: report.post.isRemoved,
+        imageUrls: await getQueueImageUrls(report.post.postMedia),
+      } : null,
+      offer: report.offer ? {
+        id: report.offer.id,
+        message: report.offer.message,
+        isRemoved: report.offer.isRemoved,
+        imageUrls: await getQueueImageUrls(report.offer.tradeOfferMedia),
+      } : null,
+      review: report.review ? {
+        id: report.review.id,
+        comment: report.review.comment,
+        reviewer: report.review.reviewer,
+      } : null,
+      tradeRequest: report.tradeRequest ? {
+        id: report.tradeRequest.id,
+        message: report.tradeRequest.message,
+        requester: report.tradeRequest.requester,
+      } : null,
+    })));
+
+    res.json(queueWithImages);
   } catch (err) {
     console.error(err);
     res.sendStatus(500);

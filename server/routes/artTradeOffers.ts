@@ -133,6 +133,32 @@ artTradeOffers.get('/', requireAuth, async (req, res) => {
   }
 });
 
+// GET: get the logged-in user's pending art trade offers
+artTradeOffers.get('/sent', requireAuth, async (req, res) => {
+  try {
+    const userId = getUserId(req);
+
+    const offers = await prisma.tradeOffer.findMany({
+      where: {
+        offererId: userId,
+        status: 'PENDING',
+        isRemoved: false,
+        post: { status: Status.OPEN },
+      },
+      select: {
+        id: true,
+        postId: true,
+        status: true,
+      },
+    });
+
+    return res.json(offers);
+  } catch (error) {
+    console.error('Failed to get sent trade offers:', error);
+    return res.status(500).json({ error: 'Unable to retrieve sent trade offers.' });
+  }
+});
+
 // POST: submit a new offer
 artTradeOffers.post('/', requireAuth, async (req, res) => {
   try {
@@ -198,6 +224,77 @@ artTradeOffers.post('/', requireAuth, async (req, res) => {
   } catch (error) {
     console.error('Failed to submit trade offer:', error);
     return res.status(500).json({ error: 'Unable to submit trade offer.' });
+  }
+});
+
+// PATCH: withdraw a pending art trade offer
+artTradeOffers.patch('/:offerId/cancel', requireAuth, async (req, res) => {
+  try {
+    const offerId = Number(req.params.offerId);
+    const userId = getUserId(req);
+
+    const offer = await prisma.tradeOffer.findUnique({
+      where: { id: offerId },
+    });
+
+    if (!offer || offer.offererId !== userId) {
+      return res.status(403).json({ error: 'Unauthorized to withdraw this offer.' });
+    }
+
+    if (offer.status !== 'PENDING' || offer.isRemoved) {
+      return res.status(400).json({ error: 'Trade offer is no longer pending.' });
+    }
+
+    await prisma.tradeOffer.update({
+      where: { id: offerId },
+      data: { isRemoved: true },
+    });
+
+    return res.json({ success: true });
+  } catch (error) {
+    console.error('Failed to withdraw art trade offer:', error);
+    return res.status(500).json({ error: 'Unable to withdraw the trade offer.' });
+  }
+});
+
+// PATCH: post owner rejects a pending art trade offer
+artTradeOffers.patch('/:offerId/reject', requireAuth, async (req, res) => {
+  try {
+    const offerId = Number(req.params.offerId);
+    const userId = getUserId(req);
+
+    const offer = await prisma.tradeOffer.findUnique({
+      where: { id: offerId },
+      include: {
+        post: {
+          select: {
+            userId: true,
+          },
+        },
+      },
+    });
+
+    if (!offer) {
+      return res.status(404).json({ error: 'Trade offer not found.' });
+    }
+
+    if (offer.post.userId !== userId) {
+      return res.status(403).json({ error: 'Unauthorized to reject this offer.' });
+    }
+
+    if (offer.status !== 'PENDING' || offer.isRemoved) {
+      return res.status(400).json({ error: 'Trade offer is no longer pending.' });
+    }
+
+    await prisma.tradeOffer.update({
+      where: { id: offerId },
+      data: { isRemoved: true },
+    });
+
+    return res.json({ success: true });
+  } catch (error) {
+    console.error('Failed to reject art trade offer:', error);
+    return res.status(500).json({ error: 'Unable to reject the trade offer.' });
   }
 });
 
@@ -289,6 +386,7 @@ artTradeOffers.patch('/:offerId/approve', requireAuth, async (req, res) => {
           entityType: 'TRADE_OFFER',
           entityId: offerId,
         });
+
         await enqueueJob(tx, 'SEND_NOTIFICATION', {
           userId: offer.offererId,
           type: 'TRADE_OFFER_ACCEPTED',
