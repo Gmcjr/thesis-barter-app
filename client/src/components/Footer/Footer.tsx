@@ -18,12 +18,12 @@ export default function Footer({ scrollingDown }: FooterProps) {
         borderColor: 'divider',
         bgcolor: 'background.paper',
         px: { xs: 1, sm: 2 },
-        py: 1,
-        minHeight: { xs: 86, sm: 96 },
+        py: 0.375,
+        minHeight: { xs: 77, sm: 86 },
         display: 'flex',
         alignItems: 'center',
-        opacity: scrollingDown ? 0.15 : 1,
-        transition: 'opacity 0.2s ease',
+        transform: scrollingDown ? 'translateY(100%)' : 'translateY(0)',
+        transition: 'transform 0.2s ease',
       }}
     >
       <Box
