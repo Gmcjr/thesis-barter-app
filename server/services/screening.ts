@@ -310,7 +310,14 @@ export async function processScreenContent(payload: ScreenContentPayload): Promi
       rationale: action?.status === ReportStatus.REMOVED ? screening?.rationale : undefined,
     });
     // Feed listeners need a refresh signal too, same as the optimistic emit in posts.ts
-    if (payload.targetType === TargetType.POST) getIo().emit('posts:changed');
+    if (
+      payload.targetType === TargetType.POST
+      || payload.targetType === TargetType.COMMENT
+      || payload.targetType === TargetType.TRADE_REQUEST
+      || payload.targetType === TargetType.REVIEW
+    ) {
+      getIo().emit('posts:changed');
+    }
   } catch (err) {
     console.error('content:screened emit failed (job already committed):', err);
   }

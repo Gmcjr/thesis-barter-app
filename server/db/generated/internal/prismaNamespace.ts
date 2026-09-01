@@ -2533,6 +2533,7 @@ export const CommentScalarFieldEnum = {
   createdAt: 'createdAt',
   postId: 'postId',
   userId: 'userId',
+  parentId: 'parentId',
   isPendingScreening: 'isPendingScreening',
   isRemoved: 'isRemoved',
   version: 'version'

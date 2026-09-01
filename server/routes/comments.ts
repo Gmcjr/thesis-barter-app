@@ -15,7 +15,9 @@ const comments = Router();
 comments.post('/', requireAuth, async (req, res) => {
   try {
     const userId = req.user!.id;
-    const { postId, text } = req.body;
+    const {
+      postId, text, parentId,
+    } = req.body;
     const trimmed = typeof text === 'string' ? text.trim() : '';
 
     if (!Number.isInteger(postId)) {
@@ -23,6 +25,9 @@ comments.post('/', requireAuth, async (req, res) => {
     }
     if (!trimmed) {
       return res.status(400).json({ error: 'Comment text is required.' });
+    }
+    if (parentId !== undefined && parentId !== null && !Number.isInteger(parentId)) {
+      return res.status(400).json({ error: 'parentId must be an integer.' });
     }
 
     const post = await prisma.post.findUnique({
@@ -38,12 +43,27 @@ comments.post('/', requireAuth, async (req, res) => {
       return res.status(403).json({ error: 'Unable to comment on this post.' });
     }
 
+    // Replies are only ever one level deep: replying to a reply re-parents onto that
+    // reply's own top-level comment instead of erroring or nesting further.
+    let resolvedParentId: number | null = null;
+    if (Number.isInteger(parentId)) {
+      const parent = await prisma.comment.findUnique({
+        where: { id: parentId },
+        select: { id: true, postId: true, isRemoved: true },
+      });
+      if (!parent || parent.postId !== postId || parent.isRemoved) {
+        return res.status(404).json({ error: 'Comment being replied to was not found.' });
+      }
+      resolvedParentId = parent.id;
+    }
+
     const comment = await prisma.$transaction(async (tx) => {
       const created = await tx.comment.create({
         data: {
           postId,
           userId,
           text: trimmed,
+          parentId: resolvedParentId,
           isPendingScreening: true,
         },
       });

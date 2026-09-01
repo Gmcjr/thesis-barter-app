@@ -288,10 +288,15 @@ export default function Profile() {
   // Keep this profile's post/comment list live, same as the main feed.
   useEffect(() => {
     if (!socket) return undefined;
-    const handleChange = () => { loadPosts(); };
+    const handleChange = () => {
+      loadPosts();
+      loadMyTradeRequests();
+      loadReviewsSummary();
+      loadMyReviewStatus();
+    };
     socket.on('posts:changed', handleChange);
     return () => { socket.off('posts:changed', handleChange); };
-  }, [socket, loadPosts]);
+  }, [socket, loadPosts, loadMyTradeRequests, loadReviewsSummary, loadMyReviewStatus]);
 
   // Comment screening only ever emits into the author's own socket room, so
   // this fires regardless of whose profile is currently being viewed.

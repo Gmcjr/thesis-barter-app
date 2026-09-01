@@ -55,6 +55,7 @@ export type PostData = {
     text: string;
     userId: number;
     createdAt: string;
+    parentId: number | null;
     user: {
       id: number;
       name: string | null;

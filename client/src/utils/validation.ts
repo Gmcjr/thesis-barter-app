@@ -1,6 +1,7 @@
-// US 5-digit zip, optionally with a +4 suffix (e.g. "94103" or "94103-1234").
+// Global postal code check
 export function isValidZipCode(zipCode: string): boolean {
-  return /^\d{5}(-\d{4})?$/.test(zipCode.trim());
+  const trimmed = zipCode.trim();
+  return /^[A-Za-z0-9][A-Za-z0-9\s-]{1,9}$/.test(trimmed) && /\d/.test(trimmed);
 }
 
 // punctuation/spacing is stripped: 10 digits, or 11 with a leading country code 1.

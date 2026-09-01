@@ -11,4 +11,5 @@ export interface CommentData {
   userId: number;
   createdAt: string;
   user: CommentUser;
+  parentId: number | null;
 }
