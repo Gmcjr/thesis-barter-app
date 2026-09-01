@@ -6,7 +6,8 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
-import { radius } from '../../theme';
+import { useTheme } from '@mui/material/styles';
+
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 
@@ -18,6 +19,7 @@ import { useToast } from '../../context/ToastContext';
   }
 
 export default function BlockedUsers() {
+  const theme = useTheme();
   const { unblockUser } = useAuth();
   const { showToast } = useToast();
   const [rows, setRows] = useState<BlockRow[] | null>(null);
@@ -51,7 +53,7 @@ export default function BlockedUsers() {
       <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 1 }}>Blocked Users</Typography>
       {rows.length === 0 && <Typography color="text.secondary">You have not blocked anyone.</Typography>}
       {rows.map((row) => (
-        <Card key={row.id} variant="outlined" sx={{ borderRadius: radius.md, borderColor: 'border.default' }}>
+        <Card key={row.id} variant="outlined" sx={{ borderRadius: theme.radius.md, borderColor: 'border.default' }}>
           <CardContent sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <Typography>{row.blocked.name ?? row.blocked.email}</Typography>
             <Button variant="outlined" size="small" onClick={() => handleUnblock(row.blockedId)}>

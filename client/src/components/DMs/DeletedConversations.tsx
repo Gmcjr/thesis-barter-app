@@ -6,7 +6,8 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
-import { radius } from '../../theme';
+import { useTheme } from '@mui/material/styles';
+
 import { useToast } from '../../context/ToastContext';
 
 interface DeletedConversation {
@@ -16,6 +17,7 @@ interface DeletedConversation {
 }
 
 export default function DeletedConversations() {
+  const theme = useTheme();
   const { showToast } = useToast();
   const [rows, setRows] = useState<DeletedConversation[] | null>(null);
 
@@ -50,7 +52,7 @@ export default function DeletedConversations() {
         <Typography color="text.secondary">You have no deleted conversations.</Typography>
       )}
       {rows.map((row) => (
-        <Card key={row.id} variant="outlined" sx={{ borderRadius: radius.md, borderColor: 'border.default' }}>
+        <Card key={row.id} variant="outlined" sx={{ borderRadius: theme.radius.md, borderColor: 'border.default' }}>
           <CardContent sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <Box sx={{ minWidth: 0, mr: 2 }}>
               <Typography sx={{ fontWeight: 600 }}>{row.otherUser.name}</Typography>

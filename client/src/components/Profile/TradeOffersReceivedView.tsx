@@ -11,7 +11,7 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
-import { radius } from '../../theme';
+import { useTheme } from '@mui/material/styles';
 
 import { useToast } from '../../context/ToastContext';
 import { useRouter } from '../../context/RouterContext';
@@ -22,6 +22,7 @@ import type { ArtTradeOfferData, NormalTradeOffer, TradeOffersReceivedViewProps 
 export default function TradeOffersReceivedView({
   onOfferAccepted, highlightOfferId,
 }: TradeOffersReceivedViewProps) {
+  const theme = useTheme();
   const [normalOffers, setNormalOffers] = useState<NormalTradeOffer[]>([]);
   const [artOffers, setArtOffers] = useState<ArtTradeOfferData[]>([]);
   const [loading, setLoading] = useState(true);
@@ -291,7 +292,7 @@ export default function TradeOffersReceivedView({
               key={offer.id}
               variant="outlined"
               sx={{
-                borderRadius: radius.lg,
+                borderRadius: theme.radius.lg,
                 flexShrink: 0,
                 width: '100%',
                 minWidth: 0,
@@ -404,7 +405,7 @@ export default function TradeOffersReceivedView({
               id={`offer-${offer.id}`}
               variant="outlined"
               sx={{
-                borderRadius: radius.lg,
+                borderRadius: theme.radius.lg,
                 flexShrink: 0,
                 width: '100%',
                 minWidth: 0,
@@ -422,7 +423,7 @@ export default function TradeOffersReceivedView({
                     mt: 'clamp(6px, 1.5cqw, 12px)',
                     aspectRatio: '2.8 / 1',
                     bgcolor: 'surface.sunken',
-                    borderRadius: radius.md,
+                    borderRadius: theme.radius.md,
                     overflow: 'hidden',
                     display: 'flex',
                     alignItems: 'center',

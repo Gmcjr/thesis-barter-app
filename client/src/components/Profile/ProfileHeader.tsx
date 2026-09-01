@@ -6,14 +6,16 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
 import Rating from '@mui/material/Rating';
+import { useTheme } from '@mui/material/styles';
+
 import type { ProfileHeaderProps } from './types';
 import ProfileActionsMenu from './ProfileActionsMenu';
-import { radius } from '../../theme';
 
 export default function ProfileHeader({
   profile, isOwnProfile, onEditClick, onReport, onBlock, blocked,
   averageRating, totalReviews, totalTrades, onToggleReviews,
 }: ProfileHeaderProps) {
+  const theme = useTheme();
   const hasBanner = Boolean(profile.bannerUrl);
   const primaryTextColor = hasBanner ? 'common.white' : 'text.primary';
   const secondaryTextColor = hasBanner ? 'rgba(255,255,255,0.85)' : 'text.secondary';
@@ -25,7 +27,7 @@ export default function ProfileHeader({
     <Card
       variant="outlined"
       sx={{
-        borderRadius: radius.md,
+        borderRadius: theme.radius.md,
         borderColor: 'border.default',
         mb: 4,
         mx: { xs: 2, md: 0 },
@@ -96,7 +98,7 @@ export default function ProfileHeader({
               variant="outlined"
               size="small"
               onClick={onEditClick}
-              sx={{ borderRadius: radius.md, textTransform: 'none' }}
+              sx={{ borderRadius: theme.radius.md, textTransform: 'none' }}
             >
               Edit Profile
             </Button>
@@ -104,7 +106,7 @@ export default function ProfileHeader({
             <Button
               variant="outlined"
               size="small"
-              sx={{ borderRadius: radius.md, textTransform: 'none' }}
+              sx={{ borderRadius: theme.radius.md, textTransform: 'none' }}
             >
               Follow
             </Button>

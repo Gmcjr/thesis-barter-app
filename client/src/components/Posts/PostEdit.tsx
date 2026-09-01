@@ -11,12 +11,12 @@ import IconButton from '@mui/material/IconButton';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SaveIcon from '@mui/icons-material/Save';
+import { useTheme } from '@mui/material/styles';
 
 import type { PostData, PostUpdateData } from './ManagePosts';
 import { formatPostDate } from '../../utils/utils';
 import { useToast } from '../../context/ToastContext';
 import { useRouter } from '../../context/RouterContext';
-import { radius } from '../../theme';
 
 type EditableImage = {
   id: string;
@@ -38,6 +38,7 @@ export default function PostEdit({
   onUpdate,
   onCancel,
 }: PostEditProps) {
+  const theme = useTheme();
   const { showToast } = useToast();
   const { navigate } = useRouter();
 
@@ -295,7 +296,7 @@ export default function PostEdit({
               mx: 'auto',
               aspectRatio: '2.8 / 1',
               bgcolor: 'surface.sunken',
-              borderRadius: radius.md,
+              borderRadius: theme.radius.md,
               overflow: 'hidden',
               display: 'flex',
               alignItems: 'center',
@@ -374,7 +375,7 @@ export default function PostEdit({
                 mx: 'auto',
                 aspectRatio: '2.8 / 1',
                 bgcolor: 'surface.sunken',
-                borderRadius: radius.md,
+                borderRadius: theme.radius.md,
                 overflow: 'hidden',
                 display: 'flex',
                 alignItems: 'center',
@@ -417,7 +418,7 @@ export default function PostEdit({
                   width: 'clamp(38px, 8cqw, 72px)',
                   aspectRatio: '1 / 1',
                   flexShrink: 0,
-                  borderRadius: radius.sm,
+                  borderRadius: theme.radius.sm,
                   overflow: 'hidden',
                   cursor: 'grab',
                   border: '2px solid',

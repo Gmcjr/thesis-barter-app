@@ -21,23 +21,6 @@ export interface SurfaceContainerTokens {
   lowest: string; low: string; base: string; high: string; highest: string;
 }
 
-// Adds semantic palette slots MUI doesn't have by default
-// So components can read theme.palette.accent / .surface / .border / .link instead of hex
-declare module '@mui/material/styles' {
-  interface Palette {
-    accent: Palette['primary'];
-    surface: { sunken: string; overlay: string; container: SurfaceContainerTokens };
-    border: { subtle: string; default: string; strong: string };
-    link: { main: string; hover: string };
-  }
-  interface PaletteOptions {
-    accent?: PaletteOptions['primary'];
-    surface?: { sunken: string; overlay: string; container: SurfaceContainerTokens };
-    border?: { subtle: string; default: string; strong: string };
-    link?: { main: string; hover: string };
-  }
-}
-
 // A theme is a self-contained set of every palette value
 // A new theme (light/dark/custom) can fill in this shape with its own values
 export interface ThemeTokens {
@@ -330,6 +313,7 @@ export function buildTheme(tokens: ThemeTokens): Theme {
     shape: {
       borderRadius: 10,
     },
+    radius,
     typography: typographyTokens,
     components: {
       MuiPaper: {
@@ -353,9 +337,9 @@ export function buildTheme(tokens: ThemeTokens): Theme {
       },
       MuiButton: {
         styleOverrides: {
-          root: {
-            borderRadius: radius.md,
-          },
+          root: ({ theme }) => ({
+            borderRadius: theme.radius.md,
+          }),
         },
       },
       // Visible keyboard-focus ring

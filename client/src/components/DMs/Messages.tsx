@@ -15,8 +15,10 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import { useTheme } from '@mui/material/styles';
+
 import ReportDialog from '../Posts/ReportDialog';
-import { radius } from '../../theme';
+
 import {
   formatInboxTime, formatDayDivider, formatClockTime, isSameDay,
 } from '../../utils/utils';
@@ -42,6 +44,7 @@ interface DMMessage {
 }
 
 export default function Messages() {
+  const theme = useTheme();
   const { id } = useParams();
   const activeDmId = id ? Number(id) : null;
   const { navigate } = useRouter();
@@ -167,7 +170,7 @@ export default function Messages() {
         sx={{
           width: { xs: '100%', md: 280 },
           flexShrink: 0,
-          borderRadius: radius.md,
+          borderRadius: theme.radius.md,
           borderColor: 'border.default',
           overflowY: 'auto',
           display: { xs: activeDmId ? 'none' : 'block', md: 'block' },
@@ -232,7 +235,7 @@ export default function Messages() {
         variant="outlined"
         sx={{
           flex: 1,
-          borderRadius: radius.md,
+          borderRadius: theme.radius.md,
           borderColor: 'border.default',
           display: { xs: activeDmId ? 'flex' : 'none', md: 'flex' },
           flexDirection: 'column',
@@ -254,7 +257,7 @@ export default function Messages() {
               display: 'flex',
               alignItems: 'center',
               gap: 1,
-              borderBottom: (theme) => `1px solid ${theme.palette.border.default}`,
+              borderBottom: `1px solid ${theme.palette.border.default}`,
             }}
             >
               <IconButton
@@ -317,7 +320,7 @@ export default function Messages() {
                           sx={{
                             bgcolor: isMine ? 'primary.main' : 'surface.sunken',
                             color: isMine ? 'primary.contrastText' : 'text.primary',
-                            borderRadius: radius.lg,
+                            borderRadius: theme.radius.lg,
                             px: 1.5,
                             py: 0.75,
                           }}
@@ -367,7 +370,7 @@ export default function Messages() {
               display: 'flex',
               alignItems: 'center',
               gap: 1,
-              borderTop: (theme) => `1px solid ${theme.palette.border.default}`,
+              borderTop: `1px solid ${theme.palette.border.default}`,
             }}
             >
               <TextField

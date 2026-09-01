@@ -5,13 +5,14 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { radius } from '../../theme';
+import { useTheme } from '@mui/material/styles';
 
 import WhyRemovedMenu from './WhyRemovedMenu';
 import { formatPostDate } from '../../utils/utils';
 import type { PostData } from './ManagePosts';
 
 export default function RemovedPostCard({ post }: { post: PostData }) {
+  const theme = useTheme();
   const report = post.reports?.[0];
 
   return (
@@ -21,7 +22,7 @@ export default function RemovedPostCard({ post }: { post: PostData }) {
       sx={{
         border: '1px solid',
         borderColor: 'error.main',
-        borderRadius: radius.md,
+        borderRadius: theme.radius.md,
         '&:before': { display: 'none' },
       }}
     >

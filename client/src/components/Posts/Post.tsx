@@ -15,6 +15,7 @@ import Chip from '@mui/material/Chip';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
+import { useTheme } from '@mui/material/styles';
 
 import { formatPostDate } from '../../utils/utils';
 import type { PostData, PostUpdateData } from './ManagePosts';
@@ -30,7 +31,6 @@ import IncomingTradeRequests from '../Trades/IncomingTradeRequests';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import { useRouter } from '../../context/RouterContext';
-import { radius } from '../../theme';
 
 interface PostProps {
   post: PostData;
@@ -52,6 +52,7 @@ export default function Post({
   post, onReport, myTradeRequests, myArtTradeOffer, onTradeActivity, onOfferSubmitted,
   onUpdate, onDelete, highlight,
 }: PostProps) {
+  const theme = useTheme();
   const postUser = post.user.name ?? post.user.email;
   const {
     user, blockedUserIds, blockUser, unblockUser,
@@ -161,7 +162,7 @@ export default function Post({
         width: '100%',
         minWidth: 0,
         containerType: 'inline-size',
-        borderRadius: radius.md,
+        borderRadius: theme.radius.md,
         borderColor: 'border.default',
         ...(highlight && { outline: '2px solid', outlineColor: 'primary.main' }),
       }}
@@ -299,7 +300,7 @@ export default function Post({
                     variant="outlined"
                     onClick={handleOpenDM}
                     sx={{
-                      borderRadius: radius.md,
+                      borderRadius: theme.radius.md,
                       textTransform: 'none',
                       whiteSpace: 'nowrap',
                       minWidth: 0,
@@ -370,7 +371,7 @@ export default function Post({
                   alignItems: 'flex-start',
                   p: 'clamp(5px, 1.2cqw, 10px)',
                   bgcolor: 'surface.sunken',
-                  borderRadius: radius.md,
+                  borderRadius: theme.radius.md,
                 }}
               >
                 <Typography
@@ -415,7 +416,7 @@ export default function Post({
             sx={{
               minWidth: 0,
               '& .MuiOutlinedInput-root': {
-                borderRadius: radius.md,
+                borderRadius: theme.radius.md,
                 height: 'clamp(30px, 5cqw, 40px)',
                 fontSize: 'clamp(0.6rem, 1.7cqw, 1rem)',
               },
@@ -430,7 +431,7 @@ export default function Post({
             variant="contained"
             disableElevation
             sx={{
-              borderRadius: radius.md,
+              borderRadius: theme.radius.md,
               textTransform: 'none',
               flexShrink: 0,
               minWidth: 'clamp(42px, 8cqw, 64px)',
@@ -475,7 +476,7 @@ export default function Post({
                 disabled={withdrawingArtTrade}
                 onClick={handleWithdrawArtTrade}
                 sx={{
-                  borderRadius: radius.md,
+                  borderRadius: theme.radius.md,
                   textTransform: 'none',
                 }}
               >
@@ -488,7 +489,7 @@ export default function Post({
                 variant="contained"
                 onClick={handleOfferTradeClick}
                 sx={{
-                  borderRadius: radius.md,
+                  borderRadius: theme.radius.md,
                   textTransform: 'none',
                   whiteSpace: 'nowrap',
                   minWidth: 0,
