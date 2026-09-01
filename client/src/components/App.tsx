@@ -117,7 +117,11 @@ function AppShell() {
                 <Box
                   component="main"
                   sx={{
-                    '--header-scroll-opacity': scrollingDown ? '0.88' : '1',
+                    '--header-scroll-opacity': scrollingDown ? '0' : '1',
+                    '--header-scroll-transform': scrollingDown
+                      ? 'translateY(calc(-100% - 8px))'
+                      : 'translateY(0)',
+                    '--header-scroll-pointer-events': scrollingDown ? 'none' : 'auto',
                     pt: 16,
                     pb: footerHeight > 0
                       ? `calc(${theme.spacing(8)} + ${footerHeight}px)`
@@ -140,6 +144,7 @@ function AppShell() {
                     left: 0,
                     right: 0,
                     zIndex: theme.zIndex.appBar,
+                    pointerEvents: scrollingDown ? 'none' : 'auto',
                   }}
                 >
                   <Footer scrollingDown={scrollingDown} />
