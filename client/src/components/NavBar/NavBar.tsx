@@ -94,6 +94,7 @@ function NavBar({ scrollingDown }: NavBarProps) {
           maxWidth: 'md',
           width: '100%',
           mx: 'auto',
+          minHeight: { xs: 77, sm: 86 },
         }}
         >
 
@@ -104,7 +105,7 @@ function NavBar({ scrollingDown }: NavBarProps) {
               src={new URL('../../assets/BartaNoBackground.png', import.meta.url).href}
               alt="Barta"
               sx={{
-                height: { xs: 70, sm: 80 },
+                height: { xs: 52, sm: 60 },
                 width: 'auto',
                 display: 'block',
               }}
@@ -321,6 +322,9 @@ function NavBar({ scrollingDown }: NavBarProps) {
               boxShadow: 3,
               opacity: scrollingDown ? 0.15 : 1,
               transition: 'opacity 0.2s ease',
+              '&:hover': {
+                opacity: 1,
+              },
             }}
           >
             <AddIcon />
