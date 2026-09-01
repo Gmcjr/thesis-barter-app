@@ -187,7 +187,7 @@ export const ArtTradeOffer: React.FC<ArtTradeOfferProps> = ({
           component="form"
           onSubmit={handleSubmit}
           sx={{
-            position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 400, bgcolor: 'background.paper', boxShadow: 24, p: 4, borderRadius: radius.xl, display: 'flex', flexDirection: 'column', gap: 2,
+            position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 400, bgcolor: 'surface.container.high', boxShadow: 3, p: 4, borderRadius: radius.xl, display: 'flex', flexDirection: 'column', gap: 2,
           }}
         >
           <Typography variant="h6">Make an Art Trade Offer</Typography>

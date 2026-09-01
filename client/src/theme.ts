@@ -96,11 +96,11 @@ const schemes: Record<ThemeMode, Record<ContrastMode, SourceScheme>> = {
       onSurfaceVariant: '#40332C',
       outline: '#5E4F47',
       outlineVariant: '#7A6A61',
-      surfaceContainerLowest: '#FFFFFF',
-      surfaceContainerLow: '#F9F1F9',
-      surfaceContainer: '#EDE6EE',
-      surfaceContainerHigh: '#E2DBE2',
-      surfaceContainerHighest: '#D6CFD7',
+      surfaceContainerLowest: '#FFFDFB',
+      surfaceContainerLow: '#F7EFE4',
+      surfaceContainer: '#EFE4D3',
+      surfaceContainerHigh: '#E4D5BF',
+      surfaceContainerHighest: '#D6C3A8',
     },
     high: {
       primary: '#4F1D02',
@@ -113,11 +113,11 @@ const schemes: Record<ThemeMode, Record<ContrastMode, SourceScheme>> = {
       onSurfaceVariant: '#000000',
       outline: '#362A22',
       outlineVariant: '#54463E',
-      surfaceContainerLowest: '#f7f1fa',
-      surfaceContainerLow: '#ede0ed',
-      surfaceContainer: '#d5c8d5',
-      surfaceContainerHigh: '#c6bdc8',
-      surfaceContainerHighest: '#bab0bc',
+      surfaceContainerLowest: '#FBF4EA',
+      surfaceContainerLow: '#EFE2D0',
+      surfaceContainer: '#E1D0B7',
+      surfaceContainerHigh: '#D2BC9C',
+      surfaceContainerHighest: '#C3AB84',
     },
   },
   dark: {
@@ -332,11 +332,23 @@ export function buildTheme(tokens: ThemeTokens): Theme {
     },
     typography: typographyTokens,
     components: {
+      MuiPaper: {
+        styleOverrides: {
+          root: {
+            backgroundImage: 'none',
+          },
+        },
+      },
       MuiDialog: {
         defaultProps: {
           slotProps: {
             paper: { elevation: 3 },
           },
+        },
+        styleOverrides: {
+          paper: ({ theme }) => ({
+            backgroundColor: theme.palette.surface.container.high,
+          }),
         },
       },
       MuiButton: {

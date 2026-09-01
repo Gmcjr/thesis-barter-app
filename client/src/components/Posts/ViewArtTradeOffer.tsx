@@ -110,7 +110,7 @@ export const ViewArtTradeOffer: React.FC<ViewArtTradeOfferProps> = ({
     <Modal open={open} onClose={onClose}>
       <Box
         sx={{
-          position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: { xs: '90%', sm: 600 }, maxHeight: '80vh', bgcolor: 'background.paper', boxShadow: 24, p: 4, borderRadius: radius.xl, display: 'flex', flexDirection: 'column', gap: 2, overflowY: 'auto',
+          position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: { xs: '90%', sm: 600 }, maxHeight: '80vh', bgcolor: 'surface.container.high', boxShadow: 3, p: 4, borderRadius: radius.xl, display: 'flex', flexDirection: 'column', gap: 2, overflowY: 'auto',
         }}
       >
         <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
