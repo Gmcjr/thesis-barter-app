@@ -5,7 +5,6 @@ import { isBlocked } from '../services/blocks.js';
 import { buildKey, getUploadUrl, getDownloadUrl } from '../services/s3.js';
 import { UserMediaSlot } from '../db/generated/enums.js';
 import { isValidZipCode, isValidPhone } from '../services/validation.js';
-import { enqueueJob } from '../services/jobQueue.js';
 import {
   geocodePostalCode,
   reverseGeocode,
@@ -180,30 +179,17 @@ router.patch('/me', requireAuth, async (req, res) => {
 
     const bioChanged = bio !== undefined;
 
-    const user = await prisma.$transaction(async (tx) => {
-      const updated = await tx.user.update({
-        where: { id: req.user!.id },
-        data: {
-          name: name !== undefined ? name.trim() : undefined,
-          phone,
-          emailVisible: typeof emailVisible === 'boolean' ? emailVisible : undefined,
-          tradeHistoryVisible: typeof tradeHistoryVisible === 'boolean' ? tradeHistoryVisible : undefined,
-          ...locationData,
-          ...(bioChanged ? { pendingBio: bio, isPendingScreening: true } : {}),
-        },
-        include: { userMedia: { include: { media: true } } },
-      });
-
-      if (bioChanged && bio) {
-        await enqueueJob(tx, 'SCREEN_CONTENT', {
-          targetType: 'USER',
-          targetId: updated.id,
-          authorId: updated.id,
-          text: bio,
-        });
-      }
-
-      return updated;
+    const user = await prisma.user.update({
+      where: { id: req.user!.id },
+      data: {
+        name: name !== undefined ? name.trim() : undefined,
+        phone,
+        emailVisible: typeof emailVisible === 'boolean' ? emailVisible : undefined,
+        tradeHistoryVisible: typeof tradeHistoryVisible === 'boolean' ? tradeHistoryVisible : undefined,
+        ...locationData,
+        ...(bioChanged ? { bio } : {}),
+      },
+      include: { userMedia: { include: { media: true } } },
     });
     const { userMedia, ...userRest } = user;
     return res.status(200).json({ ...userRest, ...(await getUserMediaUrls(userMedia)) });

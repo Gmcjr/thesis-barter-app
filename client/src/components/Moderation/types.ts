@@ -1,6 +1,6 @@
 export interface ReportRow {
   id: number;
-  targetType: 'POST' | 'USER' | 'MESSAGE' | 'TRADE_OFFER' | 'REVIEW' | 'TRADE_REQUEST';
+  targetType: 'POST' | 'USER' | 'MESSAGE' | 'TRADE_OFFER' | 'REVIEW' | 'TRADE_REQUEST' | 'COMMENT';
   reason: string;
   details: string | null;
   aiScore: number | null;
@@ -20,6 +20,8 @@ id: number; title: string; message: string; isRemoved: boolean; imageUrls: strin
     id: number; comment: string | null; reviewer: { id: number; name: string | null } } | null;
   tradeRequest: {
     id: number; message: string | null; requester: { id: number; name: string | null } } | null;
+  comment: {
+    id: number; text: string; user: { id: number; name: string | null } } | null;
   resolver: { id: number; name: string | null } | null;
 }
 

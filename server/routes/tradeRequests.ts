@@ -56,49 +56,27 @@ tradeRequests.post('/', requireAuth, async (req, res) => {
           postId,
           requesterId,
           message: trimmedMessage,
-          isPendingScreening: !!trimmedMessage,
         },
         update: {
           status: TradeRequestStatus.PENDING,
           message: trimmedMessage,
           createdAt: new Date(),
-          isPendingScreening: !!trimmedMessage,
         },
       });
 
-      if (trimmedMessage) {
-        const preview = trimmedMessage.length > 80 ? `${trimmedMessage.slice(0, 80)}...` : trimmedMessage;
-        await enqueueJob(tx, 'SCREEN_CONTENT', {
-          targetType: 'TRADE_REQUEST',
-          targetId: upserted.id,
-          authorId: requesterId,
-          text: trimmedMessage,
-          notifyOnApprove: {
-            userId: post.userId,
-            type: 'TRADE_REQUEST_RECEIVED',
-            title: `New trade request on "${post.title}"`,
-            body: preview,
-            link: `/profile/requests/${postId}/${upserted.id}`,
-            entityType: 'TRADE_REQUEST',
-            entityId: upserted.id,
-          },
-        });
-      }
-
-      return upserted;
-    });
-
-    // No message = nothing to screen, notify immediately
-    if (!trimmedMessage) {
-      await enqueueJob(prisma, 'SEND_NOTIFICATION', {
+      const preview = trimmedMessage && trimmedMessage.length > 80 ? `${trimmedMessage.slice(0, 80)}...` : trimmedMessage;
+      await enqueueJob(tx, 'SEND_NOTIFICATION', {
         userId: post.userId,
         type: 'TRADE_REQUEST_RECEIVED',
         title: `New trade request on "${post.title}"`,
-        link: `/profile/requests/${postId}/${tradeRequest.id}`,
+        ...(preview ? { body: preview } : {}),
+        link: `/profile/requests/${postId}/${upserted.id}`,
         entityType: 'TRADE_REQUEST',
-        entityId: tradeRequest.id,
+        entityId: upserted.id,
       });
-    }
+
+      return upserted;
+    });
 
     return res.status(201).json(tradeRequest);
   } catch (err) {

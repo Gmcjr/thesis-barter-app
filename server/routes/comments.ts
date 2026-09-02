@@ -8,10 +8,8 @@ import { withAvatarUrl } from '../services/userMedia.js';
 
 const comments = Router();
 
-// POST: add a comment to a post. Screening runs as a background SCREEN_CONTENT job
-// so the commenter isn't blocked waiting on it - the comment is created right away
-// and only shown to its own author until it's approved, same pattern as
-// posts/trade requests/offers.
+// POST: add a comment to a post. Comments publish immediately - they're only
+// screened reactively if someone reports one (see server/routes/reports.ts).
 comments.post('/', requireAuth, async (req, res) => {
   try {
     const userId = req.user!.id;
@@ -64,36 +62,26 @@ comments.post('/', requireAuth, async (req, res) => {
           userId,
           text: trimmed,
           parentId: resolvedParentId,
-          isPendingScreening: true,
         },
       });
 
-      const preview = trimmed.length > 80 ? `${trimmed.slice(0, 80)}...` : trimmed;
-
-      await enqueueJob(tx, 'SCREEN_CONTENT', {
-        targetType: 'COMMENT',
-        targetId: created.id,
-        authorId: userId,
-        text: trimmed,
-        ...(post.userId !== userId ? {
-          notifyOnApprove: {
-            userId: post.userId,
-            type: 'COMMENT_RECIEVED',
-            title: 'New comment on your post',
-            body: preview,
-            link: `/profile?postId=${postId}`,
-            entityType: 'COMMENT',
-            entityId: created.id,
-          },
-        } : {}),
-      });
+      if (post.userId !== userId) {
+        const preview = trimmed.length > 80 ? `${trimmed.slice(0, 80)}...` : trimmed;
+        await enqueueJob(tx, 'SEND_NOTIFICATION', {
+          userId: post.userId,
+          type: 'COMMENT_RECIEVED',
+          title: 'New comment on your post',
+          body: preview,
+          link: `/profile?postId=${postId}`,
+          entityType: 'COMMENT',
+          entityId: created.id,
+        });
+      }
 
       return created;
     });
 
-    // Only the comment author sees their own pending comment right away;
-    // everyone else picks it up once processScreenContent approves it and
-    // emits content:screened / posts:changed.
+    // The comment is live for everyone right away - no pending screening gate.
     getIo().emit('posts:changed');
 
     const author = await withAvatarUrl({

@@ -5,8 +5,14 @@ import requireModerator from '../middleware/requireModerator.js';
 import { TargetType, ReportReason, ReportStatus } from '../db/generated/enums.js';
 import { Prisma } from '../db/generated/client.js';
 import { enqueueJob } from '../services/jobQueue.js';
+import type { Db } from '../services/jobQueue.js';
 import { getIo } from '../middleware/socket.js';
 import { getDownloadUrl } from '../services/s3.js';
+import { REPORT_FK_FIELD } from '../services/moderation.js';
+import {
+  applyRemovalVerdict, getTargetOwnerId, getTargetVersion,
+} from '../services/screening.js';
+import type { SendNotificationPayload } from '../services/notifications.js';
 
 const reports = Router();
 
@@ -55,19 +61,10 @@ reports.post('/', requireAuth, async (req, res) => {
       return;
     }
 
-    // Only these three target types are reportable from the client today -
-    // Explicit 400 rather than silently falling to USER lookup
-    if (
-      targetType === TargetType.TRADE_OFFER
-      || targetType === TargetType.REVIEW
-      || targetType === TargetType.TRADE_REQUEST
-    ) {
-      res.status(400).json({ error: `Reporting a ${targetType} is not supported yet.` });
-      return;
-    }
-
-    // Resolve the reported content's text (for screening) and its author
-    // A rescreen must notify the content's author, not the reporter
+    // Resolve the reported content's text (for screening) and its author -
+    // a rescreen must notify the content's author, not the reporter.
+    // Empty/no text (e.g. a bio-less profile, a message-less trade request) means
+    // there's nothing to screen - the report is still filed for a moderator either way.
     let text: string | null = null;
     let authorId: number | null = null;
 
@@ -92,12 +89,46 @@ reports.post('/', requireAuth, async (req, res) => {
       }
       text = message.text;
       authorId = message.senderId;
+    } else if (targetType === TargetType.TRADE_OFFER) {
+      const offer = await prisma.tradeOffer.findUnique({ where: { id: targetId } });
+      if (!offer) {
+        res.status(404).json({ error: 'Trade offer not found' });
+        return;
+      }
+      text = offer.message ?? '';
+      authorId = offer.offererId;
+    } else if (targetType === TargetType.TRADE_REQUEST) {
+      const tradeRequest = await prisma.tradeRequest.findUnique({ where: { id: targetId } });
+      if (!tradeRequest) {
+        res.status(404).json({ error: 'Trade request not found' });
+        return;
+      }
+      text = tradeRequest.message ?? '';
+      authorId = tradeRequest.requesterId;
+    } else if (targetType === TargetType.REVIEW) {
+      const review = await prisma.review.findUnique({ where: { id: targetId } });
+      if (!review) {
+        res.status(404).json({ error: 'Review not found' });
+        return;
+      }
+      text = review.comment ?? '';
+      authorId = review.reviewerId;
+    } else if (targetType === TargetType.COMMENT) {
+      const comment = await prisma.comment.findUnique({ where: { id: targetId } });
+      if (!comment) {
+        res.status(404).json({ error: 'Comment not found' });
+        return;
+      }
+      text = comment.text;
+      authorId = comment.userId;
     } else {
       const target = await prisma.user.findUnique({ where: { id: targetId } });
       if (!target) {
         res.status(404).json({ error: 'User not found' });
         return;
       }
+      text = target.bio ?? '';
+      authorId = target.id;
     }
 
     // Create report and enqueue its screening in one transaction
@@ -107,16 +138,13 @@ reports.post('/', requireAuth, async (req, res) => {
         data: {
           reporterId: req.user!.id,
           targetType,
-          postId: targetType === TargetType.POST ? targetId : null,
-          messageId: targetType === TargetType.MESSAGE ? targetId : null,
-          targetUserId: targetType === TargetType.USER ? targetId : null,
+          [REPORT_FK_FIELD[targetType]]: targetId,
           reason,
           details: details || null,
         },
       });
 
-      // USER reports aren't screened today (come back to this later)
-      if (text !== null && authorId !== null) {
+      if (text && authorId !== null) {
         await enqueueJob(tx, 'SCREEN_CONTENT', {
           targetType,
           targetId,
@@ -173,6 +201,13 @@ reports.get('/', requireModerator, async (req, res) => {
           { targetType: TargetType.POST, post: { user: { name: { contains: q, mode: 'insensitive' } } } },
           { targetType: TargetType.MESSAGE, message: { sender: { name: { contains: q, mode: 'insensitive' } } } },
           { targetType: TargetType.USER, targetUser: { name: { contains: q, mode: 'insensitive' } } },
+          { targetType: TargetType.TRADE_OFFER, offer: { offerer: { name: { contains: q, mode: 'insensitive' } } } },
+          { targetType: TargetType.REVIEW, review: { reviewer: { name: { contains: q, mode: 'insensitive' } } } },
+          {
+            targetType: TargetType.TRADE_REQUEST,
+            tradeRequest: { requester: { name: { contains: q, mode: 'insensitive' } } },
+          },
+          { targetType: TargetType.COMMENT, comment: { user: { name: { contains: q, mode: 'insensitive' } } } },
         ];
       }
     }
@@ -189,6 +224,7 @@ reports.get('/', requireModerator, async (req, res) => {
         offer: { include: { tradeOfferMedia: { include: { media: true } } } },
         review: { include: { reviewer: { select: { id: true, name: true } } } },
         tradeRequest: { include: { requester: { select: { id: true, name: true } } } },
+        comment: { include: { user: { select: { id: true, name: true } } } },
       },
       orderBy: { createdAt: 'desc' },
     });
@@ -219,6 +255,11 @@ reports.get('/', requireModerator, async (req, res) => {
         message: report.tradeRequest.message,
         requester: report.tradeRequest.requester,
       } : null,
+      comment: report.comment ? {
+        id: report.comment.id,
+        text: report.comment.text,
+        user: report.comment.user,
+      } : null,
     })));
 
     res.json(queueWithImages);
@@ -227,6 +268,92 @@ reports.get('/', requireModerator, async (req, res) => {
     res.sendStatus(500);
   }
 });
+
+// Builds the "your content was removed" notification for a moderator-resolved report.
+// Only called when isRemove is true, so targetType/targetId/ownerId are all already resolved.
+async function buildRemovalNotification(
+  tx: Db,
+  targetType: TargetType,
+  targetId: number,
+  ownerId: number,
+): Promise<SendNotificationPayload> {
+  const base = { userId: ownerId, type: 'REPORT_RESOLVED' as const };
+  switch (targetType) {
+    case TargetType.POST:
+      return {
+        ...base,
+        title: 'Your post was removed',
+        body: 'A moderator removed your post after a report.',
+        link: '/profile?mine=true',
+        entityType: 'POST',
+        entityId: targetId,
+      };
+    case TargetType.MESSAGE: {
+      const message = await tx.message.findUniqueOrThrow({
+        where: { id: targetId },
+        select: { dmId: true },
+      });
+      return {
+        ...base,
+        title: 'Your message was removed',
+        body: 'A moderator removed a message you sent after a report.',
+        link: `/messages/${message.dmId}`,
+        entityType: 'MESSAGE',
+        entityId: targetId,
+      };
+    }
+    case TargetType.TRADE_OFFER:
+      return {
+        ...base,
+        title: 'Your trade offer was removed',
+        body: 'A moderator removed your trade offer after a report.',
+        link: `/profile/offers/${targetId}`,
+        entityType: 'TRADE_OFFER',
+        entityId: targetId,
+      };
+    case TargetType.TRADE_REQUEST:
+      return {
+        ...base,
+        title: 'Your trade request was removed',
+        body: 'A moderator removed your trade request message after a report.',
+        link: '/profile?mine=true',
+        entityType: 'TRADE_REQUEST',
+        entityId: targetId,
+      };
+    case TargetType.REVIEW:
+      return {
+        ...base,
+        title: 'Your review was removed',
+        body: 'A moderator removed your review after a report.',
+        link: '/profile?mine=true',
+        entityType: 'REVIEW',
+        entityId: targetId,
+      };
+    case TargetType.COMMENT: {
+      const comment = await tx.comment.findUniqueOrThrow({
+        where: { id: targetId },
+        select: { postId: true },
+      });
+      return {
+        ...base,
+        title: 'Your comment was removed',
+        body: 'A moderator removed your comment after a report.',
+        link: `/profile?postId=${comment.postId}`,
+        entityType: 'COMMENT',
+        entityId: targetId,
+      };
+    }
+    default: // USER
+      return {
+        ...base,
+        title: 'Your bio was removed',
+        body: 'A moderator removed your bio after a report.',
+        link: '/profile',
+        entityType: 'USER',
+        entityId: targetId,
+      };
+  }
+}
 
 // Resolve a report
 reports.patch('/:id', requireModerator, async (req, res) => {
@@ -251,6 +378,9 @@ reports.patch('/:id', requireModerator, async (req, res) => {
     }
 
     const isRemove = action === 'remove';
+    // The report's FKs are mutually exclusive per target type - exactly one is set
+    const targetId = report.postId ?? report.messageId ?? report.offerId
+      ?? report.reviewId ?? report.tradeRequestId ?? report.commentId ?? report.targetUserId;
 
     let ownerId: number | undefined;
     let resolved;
@@ -266,52 +396,47 @@ reports.patch('/:id', requireModerator, async (req, res) => {
           },
         });
 
-        if (report.postId) {
+        // Defensive - every report has exactly one FK set
+        if (targetId === null) return updatedReport;
+
+        if (report.targetType === TargetType.POST) {
+          // POST is the only type still gated by proactive pre-publish screening, so a
+          // report can exist while the post is still isPendingScreening (a system-filed
+          // ambiguous verdict) - resolving it must release that gate too, not just isRemoved.
           const current = await tx.post.findUniqueOrThrow({
-            where: { id: report.postId },
+            where: { id: targetId },
             select: { version: true, userId: true },
           });
           ownerId = current.userId;
           const { count } = await tx.post.updateMany({
-            where: { id: report.postId, version: current.version },
+            where: { id: targetId, version: current.version },
             data: { isRemoved: isRemove, isPendingScreening: false, version: { increment: 1 } },
           });
           if (count === 0) throw new ScreeningConflict();
-          if (isRemove) {
-            await enqueueJob(tx, 'SEND_NOTIFICATION', {
-              userId: current.userId,
-              type: 'REPORT_RESOLVED',
-              title: 'Your post was removed',
-              body: 'A moderator removed your post after a report.',
-              link: '/profile?mine=true',
-              entityType: 'POST',
-              entityId: report.postId,
-            });
-          }
+        } else {
+          // Every other type publishes immediately and is never gated - moderator
+          // resolution here is the same shape as an automatic report-triggered rescreen:
+          // approving is a no-op (already live), removing flips isRemoved (or clears bio).
+          const expectedVersion = await getTargetVersion(tx, report.targetType, targetId);
+          ownerId = await getTargetOwnerId(tx, report.targetType, targetId);
+          const ok = await applyRemovalVerdict(
+            tx,
+            report.targetType,
+            targetId,
+            isRemove,
+            expectedVersion,
+          );
+          if (!ok) throw new ScreeningConflict();
         }
 
-        if (report.messageId) {
-          const current = await tx.message.findUniqueOrThrow({
-            where: { id: report.messageId },
-            select: { version: true, senderId: true, dmId: true },
-          });
-          ownerId = current.senderId;
-          const { count } = await tx.message.updateMany({
-            where: { id: report.messageId, version: current.version },
-            data: { isRemoved: isRemove, version: { increment: 1 } },
-          });
-          if (count === 0) throw new ScreeningConflict();
-          if (isRemove) {
-            await enqueueJob(tx, 'SEND_NOTIFICATION', {
-              userId: current.senderId,
-              type: 'REPORT_RESOLVED',
-              title: 'Your message was removed',
-              body: 'A moderator removed a message you sent after a report.',
-              link: `/messages/${current.dmId}`,
-              entityType: 'MESSAGE',
-              entityId: report.messageId,
-            });
-          }
+        if (isRemove) {
+          const notification = await buildRemovalNotification(
+            tx,
+            report.targetType,
+            targetId,
+            ownerId!,
+          );
+          await enqueueJob(tx, 'SEND_NOTIFICATION', notification);
         }
 
         return updatedReport;
@@ -325,16 +450,21 @@ reports.patch('/:id', requireModerator, async (req, res) => {
     }
 
     // Post-commit, best-effort - a socket failure must never fail a request already committed
-    if (ownerId !== undefined) {
+    if (ownerId !== undefined && targetId !== null) {
       try {
         getIo().to(`user:${ownerId}`).emit('content:screened', {
-          TargetType: report.postId ? TargetType.POST : TargetType.MESSAGE,
-          targetId: (report.postId ?? report.messageId)!,
+          targetType: report.targetType,
+          targetId,
           ok: !isRemove,
           pending: false,
           rationale: resolved.resolution,
         });
-        if (report.postId) getIo().emit('posts:changed');
+        if (
+          report.targetType === TargetType.POST
+          || report.targetType === TargetType.COMMENT
+          || report.targetType === TargetType.TRADE_REQUEST
+          || report.targetType === TargetType.REVIEW
+        ) getIo().emit('posts:changed');
       } catch (err) {
         console.error('content:screened emit failed (report already committed):', err);
       }
