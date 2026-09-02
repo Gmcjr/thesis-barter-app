@@ -20,7 +20,6 @@ import Checkbox from '@mui/material/Checkbox';
 import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
 import Grid from '@mui/material/Grid';
-import Switch from '@mui/material/Switch';
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
@@ -457,20 +456,6 @@ export default function CreatePostModal({
                   <MenuItem value="MINT">Mint</MenuItem>
                 </Select>
               </FormControl>
-            </Collapse>
-
-            {/* Local Trade Toggle */}
-            <Collapse in={formData.offerType !== 'DIGITAL'} unmountOnExit>
-              <FormControlLabel
-                control={(
-                  <Switch
-                    checked={formData.isLocal}
-                    disabled={isSubmitting}
-                    onChange={(e) => handleChange('isLocal', e.target.checked)}
-                  />
-                )}
-                label="Local Trade Only"
-              />
             </Collapse>
 
             {/* Zip Code & Radius */}

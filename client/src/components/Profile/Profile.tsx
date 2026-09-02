@@ -10,7 +10,7 @@ import { useRouter, useParams } from '../../context/RouterContext';
 import { useToast } from '../../context/ToastContext';
 import { useAuth } from '../../context/AuthContext';
 import { useSocket } from '../../context/SocketContext';
-import type { PostData } from '../Posts/ManagePosts';
+import type { PostData, PostUpdateData } from '../Posts/ManagePosts';
 import type { TradeRequestData } from '../Trades/RequestTradeButton';
 import Post from '../Posts/Post';
 import ReportDialog from '../Posts/ReportDialog';
@@ -351,6 +351,7 @@ export default function Profile() {
         'error',
       );
     };
+
     socket.on('content:screened', handleCommentScreened);
     return () => { socket.off('content:screened', handleCommentScreened); };
   }, [socket, user, showToast]);
@@ -384,6 +385,41 @@ export default function Profile() {
       loadReviewsSummary(),
       loadMyReviewStatus(),
     ]);
+  };
+
+  const handleUpdatePost = async (
+    postIdToUpdate: number,
+    postData: PostUpdateData,
+  ) => {
+    try {
+      await axios.patch(`/posts/${postIdToUpdate}`, postData);
+      await loadPosts();
+    } catch (requestError) {
+      console.error('Failed to update post:', requestError);
+
+      const message = axios.isAxiosError(requestError) && requestError.response?.data?.error
+        ? requestError.response.data.error
+        : 'Failed to update post';
+
+      showToast(message, 'error');
+      throw requestError;
+    }
+  };
+
+  const handleDeletePost = async (postIdToDelete: number) => {
+    try {
+      await axios.delete(`/posts/${postIdToDelete}`);
+      await loadPosts();
+    } catch (requestError) {
+      console.error('Failed to delete post:', requestError);
+
+      const message = axios.isAxiosError(requestError) && requestError.response?.data?.error
+        ? requestError.response.data.error
+        : 'Failed to delete post';
+
+      showToast(message, 'error');
+      throw requestError;
+    }
   };
 
   const handleReviewSaved = (review: ReviewData) => {
@@ -490,6 +526,8 @@ export default function Profile() {
               }
               onTradeActivity={handleTradeActivity}
               onOfferSubmitted={handleTradeActivity}
+              onUpdate={isOwnProfile ? handleUpdatePost : undefined}
+              onDelete={isOwnProfile ? handleDeletePost : undefined}
               highlight={post.id === highlightPostId}
             />
           ))}
