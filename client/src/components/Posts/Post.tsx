@@ -14,6 +14,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import { useTheme } from '@mui/material/styles';
 import Divider from '@mui/material/Divider';
+import TextField from '@mui/material/TextField';
 
 import { formatPostDate } from '../../utils/utils';
 import type { PostData, PostUpdateData } from './ManagePosts';
@@ -440,7 +441,7 @@ export default function Post({
             Send
           </Button>
         </Box>
-        
+
         <CommentsSection postId={post.id} comments={post.comments} />
 
         <PostCompletedTrade
