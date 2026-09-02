@@ -27,14 +27,7 @@ export default function ProfileTabs({
       >
         Trades Listed
       </Button>
-      <Button
-        variant={activeTab === 'history' ? 'contained' : 'outlined'}
-        disableElevation
-        onClick={() => onTabChange('history')}
-        sx={{ borderRadius: theme.radius.md, textTransform: 'none', fontWeight: 600 }}
-      >
-        Trade History
-      </Button>
+
       {showTradeHistory && (
         <Button
           variant={activeTab === 'history' ? 'contained' : 'outlined'}
