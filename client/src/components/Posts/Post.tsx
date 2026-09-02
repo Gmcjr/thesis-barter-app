@@ -14,7 +14,6 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import { useTheme } from '@mui/material/styles';
 import Divider from '@mui/material/Divider';
-import TextField from '@mui/material/TextField';
 
 import { formatPostDate } from '../../utils/utils';
 import type { PostData, PostUpdateData } from './ManagePosts';
@@ -399,48 +398,6 @@ export default function Post({
             No comments...
           </Typography>
         )}
-
-        <Box
-          sx={{
-            display: 'flex',
-            mt: 'clamp(5px, 1.2cqw, 10px)',
-            gap: 'clamp(4px, 1cqw, 8px)',
-          }}
-        >
-          <TextField
-            size="small"
-            fullWidth
-            placeholder="Add a comment..."
-            variant="outlined"
-            sx={{
-              minWidth: 0,
-              '& .MuiOutlinedInput-root': {
-                borderRadius: theme.radius.md,
-                height: 'clamp(30px, 5cqw, 40px)',
-                fontSize: 'clamp(0.6rem, 1.7cqw, 1rem)',
-              },
-              '& .MuiInputBase-input': {
-                px: 'clamp(7px, 1.5cqw, 14px)',
-                py: 'clamp(4px, 0.8cqw, 8px)',
-              },
-            }}
-          />
-
-          <Button
-            variant="contained"
-            disableElevation
-            sx={{
-              borderRadius: theme.radius.md,
-              textTransform: 'none',
-              flexShrink: 0,
-              minWidth: 'clamp(42px, 8cqw, 64px)',
-              px: 'clamp(6px, 1.5cqw, 12px)',
-              fontSize: 'clamp(0.55rem, 1.45cqw, 0.875rem)',
-            }}
-          >
-            Send
-          </Button>
-        </Box>
 
         <CommentsSection postId={post.id} comments={post.comments} />
 
