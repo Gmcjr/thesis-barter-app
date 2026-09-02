@@ -13,7 +13,6 @@ import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import { useTheme } from '@mui/material/styles';
-import Divider from '@mui/material/Divider';
 
 import { formatPostDate } from '../../utils/utils';
 import type { PostData, PostUpdateData } from './ManagePosts';
@@ -337,66 +336,6 @@ export default function Post({
               {post.message}
             </Typography>
           </>
-        )}
-
-        <Divider sx={{ mb: 'clamp(5px, 1.2cqw, 10px)' }} />
-
-        <Typography
-          variant="subtitle2"
-          sx={{
-            mb: 'clamp(3px, 0.7cqw, 6px)',
-            color: 'text.secondary',
-            fontSize: 'clamp(0.55rem, 1.5cqw, 0.875rem)',
-          }}
-        >
-          Comments
-        </Typography>
-
-        {post.comments.length > 0 ? (
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 'clamp(4px, 0.8cqw, 8px)',
-            }}
-          >
-            {post.comments.map((comment) => (
-              <Box
-                key={comment.id}
-                sx={{
-                  display: 'flex',
-                  gap: 'clamp(6px, 1.4cqw, 12px)',
-                  alignItems: 'flex-start',
-                  p: 'clamp(5px, 1.2cqw, 10px)',
-                  bgcolor: 'surface.sunken',
-                  borderRadius: theme.radius.md,
-                }}
-              >
-                <Typography
-                  variant="body2"
-                  sx={{
-                    flex: 1,
-                    color: 'text.primary',
-                    fontSize: 'clamp(0.55rem, 1.5cqw, 0.875rem)',
-                  }}
-                >
-                  {comment.text}
-                </Typography>
-              </Box>
-            ))}
-          </Box>
-        ) : (
-          <Typography
-            variant="body2"
-            color="text.disabled"
-            sx={{
-              mb: 'clamp(4px, 0.9cqw, 8px)',
-              fontStyle: 'italic',
-              fontSize: 'clamp(0.55rem, 1.5cqw, 0.875rem)',
-            }}
-          >
-            No comments...
-          </Typography>
         )}
 
         <CommentsSection postId={post.id} comments={post.comments} />
