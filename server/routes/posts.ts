@@ -1072,8 +1072,13 @@ posts.delete('/:id', requireAuth, async (req, res) => {
         id: postId,
         userId,
       },
-      select: {
-        status: true,
+      include: {
+        trades: {
+          select: {
+            id: true,
+            status: true,
+          },
+        },
       },
     });
 
@@ -1081,23 +1086,30 @@ posts.delete('/:id', requireAuth, async (req, res) => {
       return res.status(404).json({ error: 'Post not found to DELETE.' });
     }
 
-    if (
-      post.status === 'ACCEPTED'
-      || post.status === 'IN_PROGRESS'
-      || post.status === 'WAITING_FOR_OTHER_USER'
-    ) {
+    const hasBlockingTrade = post.trades.some(
+      (trade) => trade.status !== 'CANCELLED',
+    );
+
+    if (hasBlockingTrade) {
       return res.status(409).json({
         error: 'Cannot delete post while trade is in progress.',
       });
     }
 
-    const { count } = await prisma.post.deleteMany({
-      where: getOwnedOpenPostWhere(req),
-    });
+    await prisma.$transaction(async (tx) => {
+      await tx.trade.deleteMany({
+        where: {
+          postId,
+          status: 'CANCELLED',
+        },
+      });
 
-    if (!count) {
-      return res.status(404).json({ error: 'Post not found to DELETE.' });
-    }
+      await tx.post.delete({
+        where: {
+          id: postId,
+        },
+      });
+    });
 
     getIo().emit('posts:changed');
     return res.sendStatus(200);
