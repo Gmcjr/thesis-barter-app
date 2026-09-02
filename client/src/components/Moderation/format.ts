@@ -74,6 +74,10 @@ export const targetSnippet = (report: ReportRow) => {
     return report.tradeRequest.message ?? '(no request message)';
   }
   if (report.targetType === 'USER') return `User: ${report.targetUser?.name ?? '(user not found)'}`;
+  if (report.targetType === 'COMMENT') {
+    if (!report.comment) return '(comment not found)';
+    return report.comment.text;
+  }
   return '(unknown target)';
 };
 
@@ -94,6 +98,10 @@ export const reportSummary = (report: ReportRow) => {
     return `Trade request from ${report.tradeRequest.requester.name ?? `User #${report.tradeRequest.requester.id}`}`;
   }
   if (report.targetType === 'USER') return report.targetUser?.name ?? '(User not found)';
+  if (report.targetType === 'COMMENT') {
+    if (!report.comment) return '(comment not found)';
+    return `Comment by ${report.comment.user.name ?? `User #${report.comment.user.id}`}`;
+  }
   return '(unknown target)';
 };
 
@@ -105,6 +113,7 @@ export const TARGET_TYPE_LABEL: Record<ReportRow['targetType'], string> = {
   TRADE_OFFER: 'Trade offer',
   REVIEW: 'Review',
   TRADE_REQUEST: 'Trade request',
+  COMMENT: 'Comment',
 };
 
 // Toast copy after a removal

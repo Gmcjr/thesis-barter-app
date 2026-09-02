@@ -21,15 +21,89 @@ export interface ScreenContentPayload {
   existingReportId?: number;
 }
 
+// Shared by report-triggered rescreens (Gemini) and manual moderator resolution
+// (PATCH /reports/:id) - the only thing either of those can ever do to content that's
+// already published is remove it. Approval is a no-op: the content is already live,
+// there's nothing to write. USER has no isRemoved column, so "removing" a bio clears it
+// instead - the account itself isn't touched.
+// Returns false on an OCC conflict (row moved since expectedVersion was read) so callers
+// can tell a stale verdict from an applied one.
+export async function applyRemovalVerdict(
+  db: Db,
+  targetType: TargetTypeT,
+  targetId: number,
+  removed: boolean,
+  expectedVersion: number,
+): Promise<boolean> {
+  if (!removed) return true; // Nothing to write - already-published content stays as-is
+
+  switch (targetType) {
+    case TargetType.POST: {
+      const { count } = await db.post.updateMany({
+        where: { id: targetId, version: expectedVersion },
+        data: { isRemoved: true, version: { increment: 1 } },
+      });
+      return count > 0;
+    }
+    case TargetType.MESSAGE: {
+      const { count } = await db.message.updateMany({
+        where: { id: targetId, version: expectedVersion },
+        data: { isRemoved: true, version: { increment: 1 } },
+      });
+      return count > 0;
+    }
+    case TargetType.TRADE_OFFER: {
+      const { count } = await db.tradeOffer.updateMany({
+        where: { id: targetId, version: expectedVersion },
+        data: { isRemoved: true, version: { increment: 1 } },
+      });
+      return count > 0;
+    }
+    case TargetType.TRADE_REQUEST: {
+      const { count } = await db.tradeRequest.updateMany({
+        where: { id: targetId, version: expectedVersion },
+        data: { isRemoved: true, version: { increment: 1 } },
+      });
+      return count > 0;
+    }
+    case TargetType.REVIEW: {
+      const { count } = await db.review.updateMany({
+        where: { id: targetId, version: expectedVersion },
+        data: { isRemoved: true, version: { increment: 1 } },
+      });
+      return count > 0;
+    }
+    case TargetType.COMMENT: {
+      const { count } = await db.comment.updateMany({
+        where: { id: targetId, version: expectedVersion },
+        data: { isRemoved: true, version: { increment: 1 } },
+      });
+      return count > 0;
+    }
+    case TargetType.USER: {
+      const { count } = await db.user.updateMany({
+        where: { id: targetId, version: expectedVersion },
+        data: { bio: null, pendingBio: null, version: { increment: 1 } },
+      });
+      return count > 0;
+    }
+    default:
+      throw new Error(`applyRemovalVerdict: no handler for targetType ${targetType}`);
+  }
+}
+
 // Applies a screening verdict to the target row.
-// `null` action means no verdict was reached
-// (Gemini exhausted retries, or ambiguous - mid-confidence band)
-// Fail-closed: leave isPendingScreening true, never approve on an absent verdict
+// `null` action means no verdict was reached - either Gemini's API call failed after
+// retries, or it succeeded but came back genuinely ambiguous (mid-confidence band).
+// processScreenContent tells those two apart when deciding whether to file a report;
+// this function doesn't need to, because the row-level effect is identical either way.
+// Fail-OPEN: a fresh POST always publishes immediately no matter what the verdict is -
+// only a confident REMOVED verdict ever hides it. A rescreen never blocks anything either,
+// since the content it's re-checking was already live before the report was filed.
 async function flipTargetRow(
   db: Db,
   targetType: TargetTypeT,
   targetId: number,
-  text: string,
   action: ReturnType<typeof decideAutoAction>,
   isRescreen: boolean,
   expectedVersion: number,
@@ -37,130 +111,38 @@ async function flipTargetRow(
   const removed = action?.status === ReportStatus.REMOVED;
   const noVerdict = action === null;
 
-  switch (targetType) {
-    case TargetType.POST: {
-      if (isRescreen) {
-        if (noVerdict || !removed) return; // Rescreen only acts on removal
-        // OCC: read current version, only write if it hasn't moved
-        const { count } = await db.post.updateMany({
-          where: { id: targetId, version: expectedVersion },
-          data: { isRemoved: true, version: { increment: 1 } },
-        });
-        if (count === 0) console.warn(`OCC conflict on POST:${targetId} rescreen - already resolved, skipping stale verdict`);
-        return;
-      }
-      if (noVerdict) return; // Fail-closed leave isPendingScreening: true, no write
-      {
-        const { count } = await db.post.updateMany({
-          where: { id: targetId, version: expectedVersion },
-          data: {
-            isPendingScreening: false,
-            ...(removed
-              ? { isRemoved: true }
-              : {}),
-            version: { increment: 1 },
-          },
-        });
-        if (count === 0) console.warn(`OCC conflict on POST:${targetId} - already resolved, skipping stale verdict`);
-      }
-      return;
-    }
-    case TargetType.TRADE_OFFER: {
-      if (noVerdict) return; // Fail-closed
-      const { count } = await db.tradeOffer.updateMany({
-        where: { id: targetId, version: expectedVersion },
-        data: {
-          isPendingScreening: false,
-          ...(removed
-            ? { isRemoved: true }
-            : {}),
-          version: { increment: 1 },
-        },
-      });
-      if (count === 0) console.warn(`OCC conflict on TRADE_OFFER:${targetId} - already resolved, skipping stale verdict`);
-      return;
-    }
-    case TargetType.TRADE_REQUEST: {
-      if (noVerdict) return; // Fail-closed
-      const { count } = await db.tradeRequest.updateMany({
-        where: { id: targetId, version: expectedVersion },
-        data: {
-          isPendingScreening: false,
-          ...(removed
-            ? { isRemoved: true }
-            : {}),
-          version: { increment: 1 },
-        },
-      });
-      if (count === 0) console.warn(`OCC conflict on TRADE_REQUEST:${targetId} - already resolved, skipping stale verdict`);
-      return;
-    }
-    case TargetType.REVIEW: {
-      if (noVerdict) return; // Fail-closed
-      const { count } = await db.review.updateMany({
-        where: { id: targetId, version: expectedVersion },
-        data: {
-          isPendingScreening: false,
-          ...(removed
-            ? { isRemoved: true }
-            : {}),
-          version: { increment: 1 },
-        },
-      });
-      if (count === 0) console.warn(`OCC conflict on REVIEW:${targetId} - already resolved, skipping stale verdict`);
-      return;
-    }
-    case TargetType.USER: {
-      if (noVerdict) return; // Fail-closed: pendingBio stays queued, bio untouched
-      // Approve: promote pendingBio into bio / remove: drop pendingBio, keep old bio
-      const { count } = await db.user.updateMany({
-        where: { id: targetId, version: expectedVersion },
-        data: removed
-          ? { pendingBio: null, isPendingScreening: false, version: { increment: 1 } }
-          : {
-            bio: text, pendingBio: null, isPendingScreening: false, version: { increment: 1 },
-          },
-      });
-      if (count === 0) console.warn(`OCC conflict on USER:${targetId} - already resolved, skipping stale verdict`);
-      return;
-    }
-    case TargetType.COMMENT: {
-      if (noVerdict) return; // Fail-closed
-      const { count } = await db.comment.updateMany({
-        where: { id: targetId, version: expectedVersion },
-        data: {
-          isPendingScreening: false,
-          ...(removed
-            ? { isRemoved: true }
-            : {}),
-          version: { increment: 1 },
-        },
-      });
-      if (count === 0) console.warn(`OCC conflict on COMMENT:${targetId} - already resolved, skipping stale verdict`);
-      return;
-    }
-    case TargetType.MESSAGE: {
-      // DMs are private by design
-      // Only rescreened when reported
-      // Throw loudly if a fresh-content call site ever reaches here w/o updating this file first
-      if (!isRescreen) {
-        throw new Error(`processScreenContent: no fresh-content handler for targetType ${targetType}`);
-      }
-      // No isPendingScreening field on Message - nothing to do otherwise
-      if (noVerdict || !removed) return;
-      const { count } = await db.message.updateMany({
-        where: { id: targetId, version: expectedVersion },
-        data: { isRemoved: true, version: { increment: 1 } },
-      });
-      if (count === 0) console.warn(`OCC conflict on MESSAGE:${targetId} rescreen - already resolved, skipping stale verdict`);
-      return;
-    }
-    default:
-      throw new Error(`processScreenContent: no handler for targetType ${targetType}`);
+  if (isRescreen) {
+    // A report re-checking already-published content - only acts on removal.
+    // Approval/ambiguous leaves the content exactly as it was: already live.
+    if (noVerdict || !removed) return;
+    const ok = await applyRemovalVerdict(db, targetType, targetId, true, expectedVersion);
+    if (!ok) console.warn(`OCC conflict on ${targetType}:${targetId} rescreen - already resolved, skipping stale verdict`);
+    return;
   }
+
+  // Fresh-content (pre-publish) screening only runs for POST today. Every other type
+  // publishes immediately and is only ever rescreened if reported - throw loudly if a
+  // fresh-content call site for one of them ever reaches here w/o updating this file first.
+  if (targetType !== TargetType.POST) {
+    throw new Error(`processScreenContent: no fresh-content handler for targetType ${targetType} (screening is reactive-only for this type)`);
+  }
+
+  // Publish immediately regardless of verdict (including a failed or ambiguous one) -
+  // only a confident REMOVED verdict flips isRemoved too. See processScreenContent for
+  // the report that gets filed alongside a genuinely ambiguous (not failed) verdict.
+  const { count } = await db.post.updateMany({
+    where: { id: targetId, version: expectedVersion },
+    data: {
+      isPendingScreening: false,
+      ...(removed ? { isRemoved: true } : {}),
+      version: { increment: 1 },
+    },
+  });
+  if (count === 0) console.warn(`OCC conflict on POST:${targetId} - already resolved, skipping stale verdict`);
 }
 
-async function getCurrentVersion(
+// Exported for reports.ts (manual moderator resolution needs the same OCC read).
+export async function getTargetVersion(
   db: Db,
   targetType: TargetTypeT,
   targetId: number,
@@ -202,7 +184,53 @@ async function getCurrentVersion(
         select: { version: true },
       })).version;
     default:
-      throw new Error(`getCurrentVersion: no handler for targetType ${targetType}`);
+      throw new Error(`getTargetVersion: no handler for targetType ${targetType}`);
+  }
+}
+
+// Owner/author of the target row, for the moderator-resolution notification + socket room.
+// Kept separate from getTargetVersion so that function's shape doesn't change for its
+// one existing caller (processScreenContent, which never needs the owner - it already has it).
+export async function getTargetOwnerId(
+  db: Db,
+  targetType: TargetTypeT,
+  targetId: number,
+): Promise<number> {
+  switch (targetType) {
+    case TargetType.POST:
+      return (await db.post.findUniqueOrThrow({
+        where: { id: targetId },
+        select: { userId: true },
+      })).userId;
+    case TargetType.TRADE_OFFER:
+      return (await db.tradeOffer.findUniqueOrThrow({
+        where: { id: targetId },
+        select: { offererId: true },
+      })).offererId;
+    case TargetType.TRADE_REQUEST:
+      return (await db.tradeRequest.findUniqueOrThrow({
+        where: { id: targetId },
+        select: { requesterId: true },
+      })).requesterId;
+    case TargetType.REVIEW:
+      return (await db.review.findUniqueOrThrow({
+        where: { id: targetId },
+        select: { reviewerId: true },
+      })).reviewerId;
+    case TargetType.USER:
+      return targetId; // The report's target user IS the author of their own bio
+    case TargetType.MESSAGE:
+      return (await db.message.findUniqueOrThrow({
+        where: { id: targetId },
+        select: { senderId: true },
+      })).senderId;
+    case TargetType.COMMENT:
+      return (await db.comment.findUniqueOrThrow({
+        where: { id: targetId },
+        select: { userId: true },
+      })).userId;
+    default:
+      throw new Error(`getTargetOwnerId: no handler for targetType ${targetType}`);
   }
 }
 
@@ -215,7 +243,7 @@ function autoApproveIfScreeningSkipped(): ReturnType<typeof decideAutoAction> {
 }
 
 export async function processScreenContent(payload: ScreenContentPayload): Promise<void> {
-  const expectedVersion = await getCurrentVersion(prisma, payload.targetType, payload.targetId);
+  const expectedVersion = await getTargetVersion(prisma, payload.targetType, payload.targetId);
   // Fetch each reported image as base64 / Fallback to text-only screening
   const images = payload.imageKeys?.length
     ? (await Promise.all(payload.imageKeys.map(async (key) => {
@@ -237,12 +265,11 @@ export async function processScreenContent(payload: ScreenContentPayload): Promi
   const isRescreen = payload.existingReportId !== undefined;
 
   await prisma.$transaction(async (tx) => {
-    // Row flip (or no-op if fail-closed) - see flipTargetRow per-case
+    // Row flip - see flipTargetRow for the fail-open/rescreen-only-removes rules
     await flipTargetRow(
       tx,
       payload.targetType,
       payload.targetId,
-      payload.text,
       action,
       isRescreen,
       expectedVersion,
@@ -266,20 +293,24 @@ export async function processScreenContent(payload: ScreenContentPayload): Promi
       return;
     }
 
-    // Fresh-content path
+    // Fresh-content path (POST only). flipTargetRow already published it either way -
+    // this only decides whether a moderator needs to know about it afterward.
     if (action === null) {
-      // No verdict reached - file for human review
-      await fileSystemReport({
-        db: tx,
-        targetType: payload.targetType,
-        targetId: payload.targetId,
-        reporterId: systemUserId,
-        status: ReportStatus.PENDING,
-        resolution: screening
-          ? 'Ambiguous screening result - needs manual review'
-          : 'Screening unavailable after retries - needs manual review',
-        screening: screening ?? undefined,
-      });
+      if (screening) {
+        // Gemini answered, just genuinely ambiguous - flag it for a second look.
+        // The post is already live; this never blocks anything.
+        await fileSystemReport({
+          db: tx,
+          targetType: payload.targetType,
+          targetId: payload.targetId,
+          reporterId: systemUserId,
+          status: ReportStatus.PENDING,
+          resolution: 'Ambiguous screening result - published, flagged for moderator review',
+          screening,
+        });
+      }
+      // else: Gemini's API call itself failed after retries - no real answer came back,
+      // so there's nothing worth telling a moderator. Publish silently, no report filed.
       return;
     }
 
@@ -305,8 +336,11 @@ export async function processScreenContent(payload: ScreenContentPayload): Promi
     getIo().to(`user:${payload.authorId}`).emit('content:screened', {
       targetType: payload.targetType,
       targetId: payload.targetId,
-      ok: action !== null && action.status !== ReportStatus.REMOVED,
-      pending: action === null,
+      // Nothing is ever left blocked-and-invisible anymore - only a confident REMOVED
+      // verdict is not "ok". A failed/ambiguous verdict (action === null) already
+      // published, same as a clean APPROVED one.
+      ok: action?.status !== ReportStatus.REMOVED,
+      pending: false,
       rationale: action?.status === ReportStatus.REMOVED ? screening?.rationale : undefined,
     });
     // Feed listeners need a refresh signal too, same as the optimistic emit in posts.ts

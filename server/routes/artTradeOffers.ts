@@ -185,7 +185,6 @@ artTradeOffers.post('/', requireAuth, async (req, res) => {
           postId: Number(postId),
           offererId,
           message,
-          isPendingScreening: true,
           tradeOfferMedia: {
             create: [
               { mediaId: Number(previewMediaId), sortOrder: 0 },
@@ -200,21 +199,14 @@ artTradeOffers.post('/', requireAuth, async (req, res) => {
       });
 
       const preview = message && message.length > 80 ? `${message.slice(0, 80)}...` : message;
-      await enqueueJob(tx, 'SCREEN_CONTENT', {
-        targetType: 'TRADE_OFFER',
-        targetId: created.id,
-        authorId: offererId,
-        text: message ?? '',
-        imageKeys: created.tradeOfferMedia.map((m) => m.media.s3Key),
-        notifyOnApprove: {
-          userId: post.userId,
-          type: 'TRADE_OFFER_RECEIVED',
-          title: `New trade offer on "${post.title}"`,
-          body: preview || undefined,
-          link: `/profile/offers/${created.id}`,
-          entityType: 'TRADE_OFFER',
-          entityId: created.id,
-        },
+      await enqueueJob(tx, 'SEND_NOTIFICATION', {
+        userId: post.userId,
+        type: 'TRADE_OFFER_RECEIVED',
+        title: `New trade offer on "${post.title}"`,
+        body: preview || undefined,
+        link: `/profile/offers/${created.id}`,
+        entityType: 'TRADE_OFFER',
+        entityId: created.id,
       });
 
       return created;
