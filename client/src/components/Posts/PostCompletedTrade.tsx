@@ -7,9 +7,9 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import DownloadIcon from '@mui/icons-material/Download';
+import { useTheme } from '@mui/material/styles';
 
 import type { PostData } from './ManagePosts';
-import { radius } from '../../theme';
 
 interface PostCompletedTradeProps {
   post: PostData;
@@ -24,6 +24,7 @@ export default function PostCompletedTrade({
   isOwnPost,
   userId,
 }: PostCompletedTradeProps) {
+  const theme = useTheme();
   const [downloadingFull, setDownloadingFull] = useState(false);
 
   const completedOffer = post.tradeOffers?.find((o) => o.status === 'COMPLETED');
@@ -109,7 +110,7 @@ export default function PostCompletedTrade({
                 width: '100%',
                 aspectRatio: '2.8 / 1',
                 bgcolor: 'surface.sunken',
-                borderRadius: radius.lg,
+                borderRadius: theme.radius.lg,
                 p: 'clamp(3px, 0.7cqw, 6px)',
                 textAlign: 'center',
                 display: 'flex',
@@ -169,7 +170,7 @@ export default function PostCompletedTrade({
                 width: '100%',
                 aspectRatio: '2.8 / 1',
                 bgcolor: 'surface.sunken',
-                borderRadius: radius.lg,
+                borderRadius: theme.radius.lg,
                 p: 'clamp(3px, 0.7cqw, 6px)',
                 textAlign: 'center',
                 display: 'flex',
@@ -246,7 +247,7 @@ export default function PostCompletedTrade({
           <Box
             sx={{
               bgcolor: 'surface.sunken',
-              borderRadius: radius.lg,
+              borderRadius: theme.radius.lg,
               p: 'clamp(6px, 1.5cqw, 12px)',
               textAlign: 'left',
             }}

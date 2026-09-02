@@ -8,7 +8,8 @@ import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import Chip from '@mui/material/Chip';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { radius } from '../../theme';
+import { useTheme } from '@mui/material/styles';
+
 import { appealTargetSnippet, humanizeReason, humanizeStatus } from './format';
 import type { AppealRow } from './types';
 
@@ -23,6 +24,7 @@ import type { AppealRow } from './types';
 export default function AppealCard({
   appeal, showActions, resolvingId, onGrant, onDeny,
 }: Props) {
+  const theme = useTheme();
   const appellant = appeal.appellant.name ?? `User #${appeal.appellant.id}`;
 
   return (
@@ -32,7 +34,7 @@ export default function AppealCard({
       sx={{
         border: '1px solid',
         borderColor: 'divider',
-        borderRadius: radius.md,
+        borderRadius: theme.radius.md,
         '&:before': { display: 'none' },
       }}
     >

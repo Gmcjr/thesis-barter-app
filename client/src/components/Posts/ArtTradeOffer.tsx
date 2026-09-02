@@ -12,7 +12,7 @@ import Alert from '@mui/material/Alert';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import { radius } from '../../theme';
+import { useTheme } from '@mui/material/styles';
 import { useAuth } from '../../context/AuthContext';
 
 interface ArtTradeOfferProps {
@@ -85,6 +85,7 @@ export const ArtTradeOffer: React.FC<ArtTradeOfferProps> = ({
   onClose,
   hideButton = false,
 }) => {
+  const theme = useTheme();
   const { user } = useAuth();
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState('');
@@ -187,7 +188,7 @@ export const ArtTradeOffer: React.FC<ArtTradeOfferProps> = ({
           component="form"
           onSubmit={handleSubmit}
           sx={{
-            position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 400, bgcolor: 'background.paper', boxShadow: 24, p: 4, borderRadius: radius.xl, display: 'flex', flexDirection: 'column', gap: 2,
+            position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 400, bgcolor: 'surface.container.high', boxShadow: 3, p: 4, borderRadius: theme.radius.xl, display: 'flex', flexDirection: 'column', gap: 2,
           }}
         >
           <Typography variant="h6">Make an Art Trade Offer</Typography>

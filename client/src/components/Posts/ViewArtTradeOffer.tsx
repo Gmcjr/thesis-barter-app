@@ -11,7 +11,7 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
-import { radius } from '../../theme';
+import { useTheme } from '@mui/material/styles';
 
 interface TradeOffer {
   id: number;
@@ -34,6 +34,7 @@ interface ViewArtTradeOfferProps {
 export const ViewArtTradeOffer: React.FC<ViewArtTradeOfferProps> = ({
   open, onClose, postId, onAccept,
 }) => {
+  const theme = useTheme();
   const [offers, setOffers] = useState<TradeOffer[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -110,7 +111,7 @@ export const ViewArtTradeOffer: React.FC<ViewArtTradeOfferProps> = ({
     <Modal open={open} onClose={onClose}>
       <Box
         sx={{
-          position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: { xs: '90%', sm: 600 }, maxHeight: '80vh', bgcolor: 'background.paper', boxShadow: 24, p: 4, borderRadius: radius.xl, display: 'flex', flexDirection: 'column', gap: 2, overflowY: 'auto',
+          position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: { xs: '90%', sm: 600 }, maxHeight: '80vh', bgcolor: 'surface.container.high', boxShadow: 3, p: 4, borderRadius: theme.radius.xl, display: 'flex', flexDirection: 'column', gap: 2, overflowY: 'auto',
         }}
       >
         <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
@@ -138,7 +139,7 @@ export const ViewArtTradeOffer: React.FC<ViewArtTradeOfferProps> = ({
             <Card
               key={offer.id}
               variant="outlined"
-              sx={{ borderRadius: radius.md, flexShrink: 0 }}
+              sx={{ borderRadius: theme.radius.md, flexShrink: 0 }}
             >
               {offer.previewUrl && (
                 <CardMedia
