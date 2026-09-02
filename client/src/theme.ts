@@ -21,29 +21,12 @@ export interface SurfaceContainerTokens {
   lowest: string; low: string; base: string; high: string; highest: string;
 }
 
-// Adds semantic palette slots MUI doesn't have by default
-// So components can read theme.palette.accent / .surface / .border / .link instead of hex
-declare module '@mui/material/styles' {
-  interface Palette {
-    accent: Palette['primary'];
-    surface: { sunken: string; overlay: string; container: SurfaceContainerTokens };
-    border: { subtle: string; default: string; strong: string };
-    link: { main: string; hover: string };
-  }
-  interface PaletteOptions {
-    accent?: PaletteOptions['primary'];
-    surface?: { sunken: string; overlay: string; container: SurfaceContainerTokens };
-    border?: { subtle: string; default: string; strong: string };
-    link?: { main: string; hover: string };
-  }
-}
-
 // A theme is a self-contained set of every palette value
 // A new theme (light/dark/custom) can fill in this shape with its own values
 export interface ThemeTokens {
     mode: ThemeMode;
     background: { default: string; paper: string };
-    primary: { main: string; light: string; dark: string };
+    primary: { main: string; light: string; dark: string; contrastText?: string };
     secondary: { main: string; light: string; dark: string };
     accent: { main: string; light: string; dark: string };
     error: { main: string; light: string; dark: string };
@@ -63,6 +46,7 @@ export interface ThemeTokens {
     outline: string; outlineVariant: string;
     surfaceContainerLowest: string; surfaceContainerLow: string; surfaceContainer: string;
     surfaceContainerHigh: string; surfaceContainerHighest: string;
+    onPrimary?: string;
   }
 
 const schemes: Record<ThemeMode, Record<ContrastMode, SourceScheme>> = {
@@ -78,11 +62,11 @@ const schemes: Record<ThemeMode, Record<ContrastMode, SourceScheme>> = {
       onSurfaceVariant: '#29222b',
       outline: '#f9ddcb',
       outlineVariant: '#ece2d9',
-      surfaceContainerLowest: '#f8f2e4',
-      surfaceContainerLow: '#fbead3',
-      surfaceContainer: '#cada7ec4',
-      surfaceContainerHigh: '#e3ba2597',
-      surfaceContainerHighest: '#b66c05',
+      surfaceContainerLowest: '#fffdfb',
+      surfaceContainerLow: '#fff7ef',
+      surfaceContainer: '#fbeedf',
+      surfaceContainerHigh: '#f3e3cf',
+      surfaceContainerHighest: '#ead8c1',
     },
     medium: {
       primary: '#5C260A',
@@ -95,11 +79,11 @@ const schemes: Record<ThemeMode, Record<ContrastMode, SourceScheme>> = {
       onSurfaceVariant: '#40332C',
       outline: '#5E4F47',
       outlineVariant: '#7A6A61',
-      surfaceContainerLowest: '#FFFFFF',
-      surfaceContainerLow: '#F9F1F9',
-      surfaceContainer: '#EDE6EE',
-      surfaceContainerHigh: '#E2DBE2',
-      surfaceContainerHighest: '#D6CFD7',
+      surfaceContainerLowest: '#FFFDFB',
+      surfaceContainerLow: '#F7EFE4',
+      surfaceContainer: '#EFE4D3',
+      surfaceContainerHigh: '#E4D5BF',
+      surfaceContainerHighest: '#D6C3A8',
     },
     high: {
       primary: '#4F1D02',
@@ -112,79 +96,90 @@ const schemes: Record<ThemeMode, Record<ContrastMode, SourceScheme>> = {
       onSurfaceVariant: '#000000',
       outline: '#362A22',
       outlineVariant: '#54463E',
-      surfaceContainerLowest: '#f7f1fa',
-      surfaceContainerLow: '#ede0ed',
-      surfaceContainer: '#d5c8d5',
-      surfaceContainerHigh: '#c6bdc8',
-      surfaceContainerHighest: '#bab0bc',
+      surfaceContainerLowest: '#FBF4EA',
+      surfaceContainerLow: '#EFE2D0',
+      surfaceContainer: '#E1D0B7',
+      surfaceContainerHigh: '#D2BC9C',
+      surfaceContainerHighest: '#C3AB84',
     },
   },
   dark: {
     normal: {
-      primary: '#b05e12',
-      secondary: '#FFB596',
-      tertiary: '#7d8c4f',
+      primary: '#b0621b',
+      secondary: '#c9a98c',
+      tertiary: '#d98e5b',
       error: '#FFB4AB',
-      background: '#2a2826',
-      surface: '#2f2e31',
+      background: '#24201c',
+      surface: '#2e2823',
       onBackground: '#F1DFD8',
       onSurfaceVariant: '#D7C3B8',
-      outline: '#9F8D83',
-      outlineVariant: '#52443C',
-      surfaceContainerLowest: '#100D12',
-      surfaceContainerLow: '#1D1A20',
-      surfaceContainer: '#211E24',
-      surfaceContainerHigh: '#2C292F',
-      surfaceContainerHighest: '#373339',
+      outline: '#a08a7c',
+      outlineVariant: '#4a3f38',
+      surfaceContainerLowest: '#151210',
+      surfaceContainerLow: '#191410',
+      surfaceContainer: '#322a24',
+      surfaceContainerHigh: '#3c332c',
+      surfaceContainerHighest: '#473c34',
+      onPrimary: '#ffffff',
     },
     medium: {
-      primary: '#FFD3C1',
-      secondary: '#FFD3C1',
-      tertiary: '#E8DDA3',
+      primary: '#e58a45',
+      secondary: '#D9BFA3',
+      tertiary: '#E7A877',
       error: '#FFD2CC',
-      background: '#1A120E',
-      surface: '#151218',
+      background: '#1A140E',
+      surface: '#221B15',
       onBackground: '#F1DFD8',
       onSurfaceVariant: '#EDD8CD',
-      outline: '#C1AEA4',
-      outlineVariant: '#9F8D83',
-      surfaceContainerLowest: '#09070B',
-      surfaceContainerLow: '#1F1C22',
-      surfaceContainer: '#2A272C',
-      surfaceContainerHigh: '#353137',
-      surfaceContainerHighest: '#403C42',
+      outline: '#B8A597',
+      outlineVariant: '#5A4E45',
+      surfaceContainerLowest: '#0E0A07',
+      surfaceContainerLow: '#141009',
+      surfaceContainer: '#292219',
+      surfaceContainerHigh: '#322A20',
+      surfaceContainerHighest: '#3C3328',
+      onPrimary: '#2A1B0E',
     },
     high: {
-      primary: '#FFECE5',
-      secondary: '#FFECE5',
-      tertiary: '#FCF1B5',
+      primary: '#F2A968',
+      secondary: '#ECD8C4',
+      tertiary: '#F5C39B',
       error: '#FFECE9',
-      background: '#1A120E',
-      surface: '#151218',
+      background: '#16110D',
+      surface: '#1E1712',
       onBackground: '#F1DFD8',
-      onSurfaceVariant: '#FFFFFF',
-      outline: '#FFECE3',
-      outlineVariant: '#D3BFB4',
+      onSurfaceVariant: '#FCF3EE',
+      outline: '#C9B8AC',
+      outlineVariant: '#6B5D52',
       surfaceContainerLowest: '#000000',
-      surfaceContainerLow: '#211E24',
-      surfaceContainer: '#332F35',
-      surfaceContainerHigh: '#3E3A40',
-      surfaceContainerHighest: '#49454C',
+      surfaceContainerLow: '#100C08',
+      surfaceContainer: '#241D16',
+      surfaceContainerHigh: '#2E2620',
+      surfaceContainerHighest: '#382F27',
+      onPrimary: '#2A1B0E',
     },
   },
 };
 
-const WARNING_BASE = '#E7A900';
+const WARNING_BASE = '#F0B92E';
 const INFO_BASE = '#ACCCD8';
 const SUCCESS_LIGHT = '#827835'; // palettes.tertiary tone 50
 const SUCCESS_DARK = '#9C924C';
 
 function tokensFromScheme(mode: ThemeMode, s: SourceScheme): ThemeTokens {
   const light = mode === 'light';
+  const primary: ThemeTokens['primary'] = {
+    main: s.primary,
+    light: lighten(s.primary, 0.25),
+    // Dark contained-button :hover fill
+    dark: light ? darken(s.primary, 0.2) : darken(s.primary, 0.15),
+  };
+  // Explicit only where MUI's auto-derived label would fail
+  if (s.onPrimary) primary.contrastText = s.onPrimary;
   return {
     mode,
     background: { default: s.background, paper: s.surface },
-    primary: { main: s.primary, light: lighten(s.primary, 0.25), dark: darken(s.primary, 0.2) },
+    primary,
     secondary: {
       main: s.secondary,
       light: lighten(s.secondary, 0.25),
@@ -221,13 +216,12 @@ function tokensFromScheme(mode: ThemeMode, s: SourceScheme): ThemeTokens {
     border: {
       subtle: s.outlineVariant,
       default: s.outline,
-      // MD3 only ships 2 outline tiers (outline / outline-variant) — no third "strong" role,
-      // so this is derived rather than sourced.
-      strong: darken(s.outline, 0.25),
+      // MD3 only ships outline / outline-variant) — "strong" is derived
+      strong: light ? darken(s.outline, 0.25) : lighten(s.outline, 0.3),
     },
     link: {
-      main: darken(s.primary, 0.1),
-      hover: darken(s.primary, 0.25),
+      main: light ? darken(s.primary, 0.1) : lighten(s.primary, 0.35),
+      hover: light ? darken(s.primary, 0.25) : lighten(s.primary, 0.2),
     },
   };
 }
@@ -319,20 +313,33 @@ export function buildTheme(tokens: ThemeTokens): Theme {
     shape: {
       borderRadius: 10,
     },
+    radius,
     typography: typographyTokens,
     components: {
+      MuiPaper: {
+        styleOverrides: {
+          root: {
+            backgroundImage: 'none',
+          },
+        },
+      },
       MuiDialog: {
         defaultProps: {
           slotProps: {
             paper: { elevation: 3 },
           },
         },
+        styleOverrides: {
+          paper: ({ theme }) => ({
+            backgroundColor: theme.palette.surface.container.high,
+          }),
+        },
       },
       MuiButton: {
         styleOverrides: {
-          root: {
-            borderRadius: radius.md,
-          },
+          root: ({ theme }) => ({
+            borderRadius: theme.radius.md,
+          }),
         },
       },
       // Visible keyboard-focus ring

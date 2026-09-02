@@ -12,6 +12,7 @@ import Chip from '@mui/material/Chip';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
+import { useTheme } from '@mui/material/styles';
 import Divider from '@mui/material/Divider';
 
 import { formatPostDate } from '../../utils/utils';
@@ -30,7 +31,6 @@ import IncomingTradeRequests from '../Trades/IncomingTradeRequests';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import { useRouter } from '../../context/RouterContext';
-import { radius } from '../../theme';
 
 interface PostProps {
   post: PostData;
@@ -52,6 +52,7 @@ export default function Post({
   post, onReport, myTradeRequests, myArtTradeOffer, onTradeActivity, onOfferSubmitted,
   onUpdate, onDelete, highlight,
 }: PostProps) {
+  const theme = useTheme();
   const postUser = post.user.name ?? post.user.email;
   const {
     user, blockedUserIds, blockUser, unblockUser,
@@ -161,7 +162,7 @@ export default function Post({
         width: '100%',
         minWidth: 0,
         containerType: 'inline-size',
-        borderRadius: radius.md,
+        borderRadius: theme.radius.md,
         borderColor: 'border.default',
         ...(highlight && { outline: '2px solid', outlineColor: 'primary.main' }),
       }}
@@ -297,7 +298,7 @@ export default function Post({
                     variant="outlined"
                     onClick={handleOpenDM}
                     sx={{
-                      borderRadius: radius.md,
+                      borderRadius: theme.radius.md,
                       textTransform: 'none',
                       whiteSpace: 'nowrap',
                       minWidth: 0,
@@ -340,6 +341,106 @@ export default function Post({
 
         <Divider sx={{ mb: 'clamp(5px, 1.2cqw, 10px)' }} />
 
+        <Typography
+          variant="subtitle2"
+          sx={{
+            mb: 'clamp(3px, 0.7cqw, 6px)',
+            color: 'text.secondary',
+            fontSize: 'clamp(0.55rem, 1.5cqw, 0.875rem)',
+          }}
+        >
+          Comments
+        </Typography>
+
+        {post.comments.length > 0 ? (
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 'clamp(4px, 0.8cqw, 8px)',
+            }}
+          >
+            {post.comments.map((comment) => (
+              <Box
+                key={comment.id}
+                sx={{
+                  display: 'flex',
+                  gap: 'clamp(6px, 1.4cqw, 12px)',
+                  alignItems: 'flex-start',
+                  p: 'clamp(5px, 1.2cqw, 10px)',
+                  bgcolor: 'surface.sunken',
+                  borderRadius: theme.radius.md,
+                }}
+              >
+                <Typography
+                  variant="body2"
+                  sx={{
+                    flex: 1,
+                    color: 'text.primary',
+                    fontSize: 'clamp(0.55rem, 1.5cqw, 0.875rem)',
+                  }}
+                >
+                  {comment.text}
+                </Typography>
+              </Box>
+            ))}
+          </Box>
+        ) : (
+          <Typography
+            variant="body2"
+            color="text.disabled"
+            sx={{
+              mb: 'clamp(4px, 0.9cqw, 8px)',
+              fontStyle: 'italic',
+              fontSize: 'clamp(0.55rem, 1.5cqw, 0.875rem)',
+            }}
+          >
+            No comments...
+          </Typography>
+        )}
+
+        <Box
+          sx={{
+            display: 'flex',
+            mt: 'clamp(5px, 1.2cqw, 10px)',
+            gap: 'clamp(4px, 1cqw, 8px)',
+          }}
+        >
+          <TextField
+            size="small"
+            fullWidth
+            placeholder="Add a comment..."
+            variant="outlined"
+            sx={{
+              minWidth: 0,
+              '& .MuiOutlinedInput-root': {
+                borderRadius: theme.radius.md,
+                height: 'clamp(30px, 5cqw, 40px)',
+                fontSize: 'clamp(0.6rem, 1.7cqw, 1rem)',
+              },
+              '& .MuiInputBase-input': {
+                px: 'clamp(7px, 1.5cqw, 14px)',
+                py: 'clamp(4px, 0.8cqw, 8px)',
+              },
+            }}
+          />
+
+          <Button
+            variant="contained"
+            disableElevation
+            sx={{
+              borderRadius: theme.radius.md,
+              textTransform: 'none',
+              flexShrink: 0,
+              minWidth: 'clamp(42px, 8cqw, 64px)',
+              px: 'clamp(6px, 1.5cqw, 12px)',
+              fontSize: 'clamp(0.55rem, 1.45cqw, 0.875rem)',
+            }}
+          >
+            Send
+          </Button>
+        </Box>
+        
         <CommentsSection postId={post.id} comments={post.comments} />
 
         <PostCompletedTrade
@@ -375,7 +476,7 @@ export default function Post({
                 disabled={withdrawingArtTrade}
                 onClick={handleWithdrawArtTrade}
                 sx={{
-                  borderRadius: radius.md,
+                  borderRadius: theme.radius.md,
                   textTransform: 'none',
                 }}
               >
@@ -388,7 +489,7 @@ export default function Post({
                 variant="contained"
                 onClick={handleOfferTradeClick}
                 sx={{
-                  borderRadius: radius.md,
+                  borderRadius: theme.radius.md,
                   textTransform: 'none',
                   whiteSpace: 'nowrap',
                   minWidth: 0,

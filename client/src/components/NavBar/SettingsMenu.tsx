@@ -27,7 +27,12 @@ export default function SettingsMenu() {
 
   return (
     <>
-      <IconButton size="small" onClick={handleOpen} sx={{ color: 'inherit' }}>
+      <IconButton
+        size="small"
+        onClick={handleOpen}
+        aria-label="Display settings"
+        sx={{ color: 'inherit' }}
+      >
         <SettingsIcon fontSize="small" />
       </IconButton>
       <Menu anchorEl={anchorEl} open={!!anchorEl} onClose={handleClose}>

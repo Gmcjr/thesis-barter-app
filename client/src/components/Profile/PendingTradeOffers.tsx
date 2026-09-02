@@ -8,7 +8,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
-import { radius } from '../../theme';
+import { useTheme } from '@mui/material/styles';
 
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
@@ -18,6 +18,7 @@ import type { PendingTradeOffersProps, TradeData } from './types';
 export default function PendingTradeOffers({
   onTradeActivity,
 }:PendingTradeOffersProps) {
+  const theme = useTheme();
   const { user } = useAuth();
   const { showToast } = useToast();
   const [trades, setTrades] = useState<TradeData[]>([]);
@@ -146,7 +147,7 @@ export default function PendingTradeOffers({
           : 'Cancel Trade';
 
         return (
-          <Card key={trade.id} variant="outlined" sx={{ borderRadius: radius.lg }}>
+          <Card key={trade.id} variant="outlined" sx={{ borderRadius: theme.radius.lg }}>
             <CardContent>
               <Typography variant="subtitle1">
                 {trade.post.title}

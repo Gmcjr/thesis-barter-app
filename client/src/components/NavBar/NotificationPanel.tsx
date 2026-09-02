@@ -326,7 +326,7 @@ export default function NotificationPanel({ onClose }: NotificationPanelProps) {
             }}
           >
             <ListItemIcon>
-              <CheckIcon fontSize="small" sx={{ color: 'primary.main' }} />
+              <CheckIcon fontSize="small" sx={{ color: 'primary.light' }} />
             </ListItemIcon>
             <ListItemText>Mark as read</ListItemText>
           </MenuItem>
@@ -340,7 +340,7 @@ export default function NotificationPanel({ onClose }: NotificationPanelProps) {
             }}
           >
             <ListItemIcon>
-              <MarkEmailUnreadIcon fontSize="small" sx={{ color: 'primary.main' }} />
+              <MarkEmailUnreadIcon fontSize="small" sx={{ color: 'primary.light' }} />
             </ListItemIcon>
             <ListItemText>Mark as unread</ListItemText>
           </MenuItem>

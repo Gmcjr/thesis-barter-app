@@ -72,7 +72,7 @@ export default function Footer({ scrollingDown }: FooterProps) {
 
           <Box
             sx={{
-              color: 'primary.main',
+              color: 'link.main',
               fontSize: { xs: '0.68rem', sm: '1.15rem' },
               whiteSpace: 'nowrap',
             }}
@@ -96,7 +96,7 @@ export default function Footer({ scrollingDown }: FooterProps) {
           <Box
             component="span"
             sx={{
-              color: 'primary.main',
+              color: 'link.main',
               fontSize: { xs: '0.9rem', sm: '1.4rem' },
               lineHeight: 1,
             }}
@@ -109,7 +109,7 @@ export default function Footer({ scrollingDown }: FooterProps) {
           <Box
             component="span"
             sx={{
-              color: 'primary.main',
+              color: 'link.main',
               fontSize: { xs: '0.9rem', sm: '1.4rem' },
               lineHeight: 1,
             }}
@@ -122,7 +122,7 @@ export default function Footer({ scrollingDown }: FooterProps) {
           <Box
             component="span"
             sx={{
-              color: 'primary.main',
+              color: 'link.main',
               fontSize: { xs: '0.9rem', sm: '1.4rem' },
               lineHeight: 1,
             }}

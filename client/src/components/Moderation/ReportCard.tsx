@@ -11,7 +11,8 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
-import { radius } from '../../theme';
+import { useTheme } from '@mui/material/styles';
+
 import {
   aiScoreVerdict, humanizeReason, reportSummary, targetSnippet,
 } from './format';
@@ -47,6 +48,7 @@ const SCORE_INDICATOR: Record<AiScoreVerdict, { icon: React.ReactNode;
 export default function ReportCard({
   report, showActions, resolvingId, onApprove, onRemove,
 }: Props) {
+  const theme = useTheme();
   // Only POST / TRADE_OFFER reports carry imageUrls
   // FKs are mutually exclusive per target type
   const reportedImage = (report.post?.imageUrls ?? report.offer?.imageUrls ?? [])[0];
@@ -61,7 +63,7 @@ export default function ReportCard({
       sx={{
         border: '1px solid',
         borderColor: 'divider',
-        borderRadius: radius.md,
+        borderRadius: theme.radius.md,
         '&:before': { display: 'none' },
       }}
     >
@@ -107,7 +109,7 @@ export default function ReportCard({
               width: '100%',
               height: { xs: 200, sm: 280 },
               bgcolor: 'surface.sunken',
-              borderRadius: radius.md,
+              borderRadius: theme.radius.md,
               overflow: 'hidden',
               display: 'flex',
               alignItems: 'center',

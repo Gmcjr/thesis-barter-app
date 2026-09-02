@@ -9,9 +9,9 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import OpenInFullIcon from '@mui/icons-material/OpenInFull';
 import CloseIcon from '@mui/icons-material/Close';
+import { useTheme } from '@mui/material/styles';
 
 import type { PostData } from './ManagePosts';
-import { radius } from '../../theme';
 
 interface PostImageGalleryProps {
   post: PostData;
@@ -22,6 +22,7 @@ export default function PostImageGallery({
   post,
   isArtTrade,
 }: PostImageGalleryProps) {
+  const theme = useTheme();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [imageViewerOpen, setImageViewerOpen] = useState(false);
 
@@ -56,7 +57,7 @@ export default function PostImageGallery({
               mx: 'auto',
               aspectRatio: '2.8 / 1',
               bgcolor: 'surface.sunken',
-              borderRadius: radius.md,
+              borderRadius: theme.radius.md,
               overflow: 'hidden',
               display: 'flex',
               alignItems: 'center',
@@ -171,7 +172,7 @@ export default function PostImageGallery({
                         ? 'clamp(12px, 2.25cqw, 18px)'
                         : 'clamp(5px, 0.9cqw, 7px)',
                       height: 'clamp(4px, 0.8cqw, 7px)',
-                      borderRadius: radius.pill,
+                      borderRadius: theme.radius.pill,
                       bgcolor: index === currentImageIndex
                         ? 'primary.main'
                         : 'text.disabled',
@@ -202,7 +203,7 @@ export default function PostImageGallery({
                       width: 'clamp(38px, 8cqw, 72px)',
                       aspectRatio: '1 / 1',
                       flexShrink: 0,
-                      borderRadius: radius.sm,
+                      borderRadius: theme.radius.sm,
                       overflow: 'hidden',
                       cursor: 'pointer',
                       border: '2px solid',
@@ -245,7 +246,7 @@ export default function PostImageGallery({
               mx: 'auto',
               aspectRatio: '2.8 / 1',
               bgcolor: 'surface.sunken',
-              borderRadius: radius.md,
+              borderRadius: theme.radius.md,
               overflow: 'hidden',
               display: 'flex',
               alignItems: 'center',
@@ -301,7 +302,7 @@ export default function PostImageGallery({
               height: '94vh',
               maxHeight: '94vh',
               bgcolor: 'background.default',
-              borderRadius: radius.md,
+              borderRadius: theme.radius.md,
             },
           },
         }}

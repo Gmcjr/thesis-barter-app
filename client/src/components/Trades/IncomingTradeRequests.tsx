@@ -5,7 +5,8 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
-import { radius } from '../../theme';
+import { useTheme } from '@mui/material/styles';
+
 import { useToast } from '../../context/ToastContext';
 import { useRouter, useParams } from '../../context/RouterContext';
 import UserAvatar from '../common/UserAvatar';
@@ -24,6 +25,7 @@ interface IncomingTradeRequestsProps {
 }
 
 export default function IncomingTradeRequests({ postId, onAccepted }: IncomingTradeRequestsProps) {
+  const theme = useTheme();
   const { requestId } = useParams();
   const highlightRequestId = requestId ? Number(requestId) : undefined;
   const [open, setOpen] = useState(false);
@@ -84,7 +86,7 @@ export default function IncomingTradeRequests({ postId, onAccepted }: IncomingTr
 
   return (
     <Box sx={{ mt: 2, pt: 2 }}>
-      <Button size="small" variant="outlined" onClick={handleToggle} sx={{ borderRadius: radius.md, textTransform: 'none' }}>
+      <Button size="small" variant="outlined" onClick={handleToggle} sx={{ borderRadius: theme.radius.md, textTransform: 'none' }}>
         {open ? 'Hide Trade Requests' : 'View Trade Requests'}
       </Button>
 
@@ -115,7 +117,7 @@ export default function IncomingTradeRequests({ postId, onAccepted }: IncomingTr
                 alignItems: 'center',
                 p: 1.5,
                 bgcolor: 'surface.sunken',
-                borderRadius: radius.md,
+                borderRadius: theme.radius.md,
                 gap: 2,
                 ...(request.id === highlightRequestId && { outline: '2px solid', outlineColor: 'primary.main' }),
               }}
