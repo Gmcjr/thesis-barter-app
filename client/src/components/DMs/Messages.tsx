@@ -7,10 +7,9 @@ import Card from '@mui/material/Card';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
-import Avatar from '@mui/material/Avatar';
 import CircularProgress from '@mui/material/CircularProgress';
 import SendIcon from '@mui/icons-material/Send';
-import DeleteOutlineIcon from '@mui/icons-material/Delete';
+import CloseIcon from '@mui/icons-material/Close';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Menu from '@mui/material/Menu';
@@ -18,7 +17,7 @@ import MenuItem from '@mui/material/MenuItem';
 import { useTheme } from '@mui/material/styles';
 
 import ReportDialog from '../Posts/ReportDialog';
-
+import ConfirmDialog from '../common/ConfirmDialog';
 import {
   formatInboxTime, formatDayDivider, formatClockTime, isSameDay,
 } from '../../utils/utils';
@@ -27,10 +26,11 @@ import { useParams, useRouter } from '../../context/RouterContext';
 import { useAuth } from '../../context/AuthContext';
 import { useSocket } from '../../context/SocketContext';
 import { useToast } from '../../context/ToastContext';
+import UserAvatar from '../common/UserAvatar';
 
 interface DMSummary {
   id: number;
-  otherUser: { id: number; name: string };
+  otherUser: { id: number; name: string; avatarUrl: string | null };
   lastMessage: { text: string; createdAt: string; senderId: number } | null;
 }
 
@@ -62,6 +62,8 @@ export default function Messages() {
   const [pendingConversation, setPendingConversation] = useState<DMSummary | null>(null);
   const [menuAnchor, setMenuAnchor] = useState<{ el: HTMLElement; messageId: number } | null>(null);
   const [reportDialogMessageId, setReportDialogMessageId] = useState<number | null>(null);
+  const [confirmDeleteTarget, setConfirmDeleteTarget] = useState<DMSummary | null>(null);
+  const [deletingConversation, setDeletingConversation] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
 
   const loadInbox = useCallback(async () => {
@@ -101,7 +103,7 @@ export default function Messages() {
       return undefined;
     }
     let cancelled = false;
-    axios.get<{ id: number; otherUser: { id: number; name: string } }>(`/dms/${activeDmId}`, { withCredentials: true })
+    axios.get<{ id: number; otherUser: { id: number; name: string; avatarUrl: string | null } }>(`/dms/${activeDmId}`, { withCredentials: true })
       .then((res) => {
         if (cancelled) return;
         setPendingConversation({
@@ -136,8 +138,16 @@ export default function Messages() {
     loadInbox();
   };
 
-  const handleDelete = async (conversation: DMSummary, e: React.MouseEvent) => {
+  const handleRequestDelete = (conversation: DMSummary, e: React.MouseEvent) => {
     e.stopPropagation();
+    setConfirmDeleteTarget(conversation);
+  };
+
+  const handleConfirmDelete = async () => {
+    const conversation = confirmDeleteTarget;
+    if (!conversation) return;
+
+    setDeletingConversation(true);
     setInbox((prev) => prev.filter((c) => c.id !== conversation.id));
     if (activeDmId === conversation.id) navigate('/messages');
 
@@ -153,6 +163,9 @@ export default function Messages() {
     } catch {
       showToast('Could not delete conversation.', 'error');
       loadInbox();
+    } finally {
+      setDeletingConversation(false);
+      setConfirmDeleteTarget(null);
     }
   };
 
@@ -202,9 +215,7 @@ export default function Messages() {
               '&:hover': { bgcolor: 'action.hover' },
             }}
           >
-            <Avatar sx={{ width: 40, height: 40 }}>
-              {conversation.otherUser.name.charAt(0).toUpperCase()}
-            </Avatar>
+            <UserAvatar user={conversation.otherUser} size={40} />
             <Box sx={{ minWidth: 0, flex: 1 }}>
               <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1 }}>
                 <Typography variant="body2" sx={{ fontWeight: 600, flex: 1, minWidth: 0 }} noWrap>
@@ -223,9 +234,9 @@ export default function Messages() {
             <IconButton
               size="small"
               aria-label="Delete conversation"
-              onClick={(e) => handleDelete(conversation, e)}
+              onClick={(e) => handleRequestDelete(conversation, e)}
             >
-              <DeleteOutlineIcon fontSize="small" />
+              <CloseIcon fontSize="small" />
             </IconButton>
           </Box>
         ))}
@@ -268,9 +279,29 @@ export default function Messages() {
               >
                 <ArrowBackIcon fontSize="small" />
               </IconButton>
-              <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-                {activeConversation?.otherUser.name ?? 'Conversation'}
-              </Typography>
+              {activeConversation?.otherUser ? (
+                <Box
+                  onClick={() => navigate(`/profile/${activeConversation.otherUser.id}`)}
+                  role="button"
+                  tabIndex={0}
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 1,
+                    cursor: 'pointer',
+                    '&:hover .dm-header-name': { textDecoration: 'underline' },
+                  }}
+                >
+                  <UserAvatar user={activeConversation.otherUser} size={32} />
+                  <Typography variant="subtitle1" className="dm-header-name" sx={{ fontWeight: 600 }}>
+                    {activeConversation.otherUser.name}
+                  </Typography>
+                </Box>
+              ) : (
+                <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+                  Conversation
+                </Typography>
+              )}
             </Box>
 
             <Box sx={{
@@ -393,6 +424,18 @@ export default function Messages() {
           </>
         )}
       </Card>
+
+      <ConfirmDialog
+        open={confirmDeleteTarget !== null}
+        title="Delete conversation?"
+        message={confirmDeleteTarget
+          ? `This will delete your conversation with ${confirmDeleteTarget.otherUser.name}. You'll get a chance to undo it right after.`
+          : ''}
+        confirmLabel="Delete"
+        loading={deletingConversation}
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setConfirmDeleteTarget(null)}
+      />
     </Box>
   );
 }

@@ -6,7 +6,7 @@ import { useTheme } from '@mui/material/styles';
 import type { ProfileTabsProps } from './types';
 
 export default function ProfileTabs({
-  activeTab, onTabChange, isOwnProfile, onDM,
+  activeTab, onTabChange, isOwnProfile, onDM, showTradeHistory,
 }: ProfileTabsProps) {
   const theme = useTheme();
   return (
@@ -35,6 +35,16 @@ export default function ProfileTabs({
       >
         Trade History
       </Button>
+      {showTradeHistory && (
+        <Button
+          variant={activeTab === 'history' ? 'contained' : 'outlined'}
+          disableElevation
+          onClick={() => onTabChange('history')}
+          sx={{ borderRadius: theme.radius.md, textTransform: 'none', fontWeight: 600 }}
+        >
+          Trade History
+        </Button>
+      )}
 
       {isOwnProfile && (
         <Button

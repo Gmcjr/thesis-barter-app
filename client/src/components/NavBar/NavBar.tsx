@@ -5,7 +5,6 @@ import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -26,6 +25,7 @@ import NotificationBell from './NotificationBell';
 import { useAuth, isModerator } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import NewPost, { type PostFormData } from '../Posts/NewPost';
+import UserAvatar from '../common/UserAvatar';
 
 interface NavBarProps {
   scrollingDown: boolean;
@@ -93,6 +93,7 @@ function NavBar({ scrollingDown }: NavBarProps) {
           maxWidth: 'md',
           width: '100%',
           mx: 'auto',
+          minHeight: { xs: 77, sm: 86 },
         }}
         >
 
@@ -103,7 +104,7 @@ function NavBar({ scrollingDown }: NavBarProps) {
               src={new URL('../../assets/BartaNoBackground.png', import.meta.url).href}
               alt="Barta"
               sx={{
-                height: { xs: 70, sm: 80 },
+                height: { xs: 52, sm: 60 },
                 width: 'auto',
                 display: 'block',
               }}
@@ -143,16 +144,7 @@ function NavBar({ scrollingDown }: NavBarProps) {
                       aria-expanded={Boolean(userMenuTarget)}
                       sx={{ p: 0, width: 36, height: 36 }}
                     >
-                      <Avatar
-                        sx={{
-                          width: 36,
-                          height: 36,
-                          bgcolor: 'primary.main',
-                          fontSize: '0.8rem',
-                        }}
-                      >
-                        {(user.name ?? user.email).charAt(0).toUpperCase()}
-                      </Avatar>
+                      <UserAvatar user={user} size={36} sx={{ fontSize: '0.8rem' }} />
                     </IconButton>
                   </Box>
                 )}
@@ -300,6 +292,9 @@ function NavBar({ scrollingDown }: NavBarProps) {
               boxShadow: 3,
               opacity: scrollingDown ? 0.15 : 1,
               transition: 'opacity 0.2s ease',
+              '&:hover': {
+                opacity: 1,
+              },
             }}
           >
             <AddIcon />

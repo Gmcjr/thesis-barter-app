@@ -8,19 +8,19 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Avatar from '@mui/material/Avatar';
-import Divider from '@mui/material/Divider';
 import Chip from '@mui/material/Chip';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import { useTheme } from '@mui/material/styles';
+import Divider from '@mui/material/Divider';
 
 import { formatPostDate } from '../../utils/utils';
 import type { PostData, PostUpdateData } from './ManagePosts';
 
+import UserAvatar from '../common/UserAvatar';
 import PostActionsMenu from './PostActionsMenu';
+import CommentsSection from './Comments/CommentsSection';
 import PostEdit from './PostEdit';
 import PostImageGallery from './PostImageGallery';
 import PostCompletedTrade from './PostCompletedTrade';
@@ -269,17 +269,15 @@ export default function Post({
                     '&:hover .post-username': { textDecoration: 'underline' },
                   }}
                 >
-                  <Avatar
+                  <UserAvatar
+                    user={post.user}
                     sx={{
-                      bgcolor: 'primary.main',
                       width: 'clamp(20px, 4cqw, 32px)',
                       height: 'clamp(20px, 4cqw, 32px)',
                       fontSize: 'clamp(0.55rem, 1.5cqw, 0.9rem)',
                       flexShrink: 0,
                     }}
-                  >
-                    {postUser.charAt(0).toUpperCase()}
-                  </Avatar>
+                  />
 
                   <Typography
                     variant="subtitle2"
@@ -442,6 +440,8 @@ export default function Post({
             Send
           </Button>
         </Box>
+        
+        <CommentsSection postId={post.id} comments={post.comments} />
 
         <PostCompletedTrade
           post={post}

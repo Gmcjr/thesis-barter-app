@@ -43,6 +43,7 @@ app.use('/trade-requests', router.tradeRequests);
 app.use('/dms', router.dms);
 app.use('/reviews', router.reviews);
 app.use('/notifications', router.notifications);
+app.use('/comments', router.comments);
 app.use('/contact', router.contact);
 app.use('/bug-reports', router.bugReports);
 

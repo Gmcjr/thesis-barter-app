@@ -112,7 +112,9 @@ export const UserScalarFieldEnum = {
   isSystem: 'isSystem',
   pendingBio: 'pendingBio',
   isPendingScreening: 'isPendingScreening',
-  version: 'version'
+  version: 'version',
+  emailVisible: 'emailVisible',
+  tradeHistoryVisible: 'tradeHistoryVisible'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -225,7 +227,11 @@ export const CommentScalarFieldEnum = {
   text: 'text',
   createdAt: 'createdAt',
   postId: 'postId',
-  userId: 'userId'
+  userId: 'userId',
+  parentId: 'parentId',
+  isPendingScreening: 'isPendingScreening',
+  isRemoved: 'isRemoved',
+  version: 'version'
 } as const
 
 export type CommentScalarFieldEnum = (typeof CommentScalarFieldEnum)[keyof typeof CommentScalarFieldEnum]
@@ -302,6 +308,7 @@ export const ReportScalarFieldEnum = {
   offerId: 'offerId',
   reviewId: 'reviewId',
   tradeRequestId: 'tradeRequestId',
+  commentId: 'commentId',
   reason: 'reason',
   details: 'details',
   aiScore: 'aiScore',

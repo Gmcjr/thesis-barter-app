@@ -49,7 +49,7 @@ export default function ProfileHeader({
           <Box sx={{
             position: 'absolute',
             inset: 0,
-            background: 'linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.72) 100%)',
+            background: 'linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.05) 100%)',
             zIndex: 0,
           }}
           />
@@ -93,7 +93,7 @@ export default function ProfileHeader({
           >
             {profile.name.charAt(0).toUpperCase()}
           </Avatar>
-          {isOwnProfile ? (
+          {isOwnProfile && (
             <Button
               variant="outlined"
               size="small"
@@ -122,14 +122,16 @@ export default function ProfileHeader({
           >
             {profile.name}
           </Typography>
-          <Typography
-            variant="h1"
-            sx={{
-              fontWeight: 300, fontSize: 16, color: primaryTextColor, textShadow: textOutline,
-            }}
-          >
-            {profile.email}
-          </Typography>
+          {profile.email && (
+            <Typography
+              variant="h1"
+              sx={{
+                fontWeight: 300, fontSize: 16, color: primaryTextColor, textShadow: textOutline,
+              }}
+            >
+              {profile.email}
+            </Typography>
+          )}
           <Typography variant="caption" sx={{ color: secondaryTextColor, textShadow: textOutline }}>
             {`User since ${new Date(profile.createdAt).toLocaleDateString()}`}
           </Typography>
