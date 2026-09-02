@@ -93,7 +93,7 @@ export default function ProfileHeader({
           >
             {profile.name.charAt(0).toUpperCase()}
           </Avatar>
-          {isOwnProfile && (
+          {isOwnProfile ? (
             <Button
               variant="outlined"
               size="small"
