@@ -1,4 +1,4 @@
-# Barta (thesis-barter-app)
+# Barta - _A social/marketplace-style app for barter and digital art trade_
 
 Barta is a peer-to-peer marketplace for barter, digital art trade, and community engagement. Users post items, services, or digital art they're willing to trade, browse or search other members' posts, and negotiate trades directly. Trades, reviews, direct messages, and moderation (reports/appeals) are all first-class parts of the app, not bolted on later.
 
